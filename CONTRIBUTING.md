@@ -1,10 +1,8 @@
 # Contributing to Python 200
-Thanks for your interest in helping to develop Python 200! We're excited to have you on board! :tada:
+Thanks for your interest in helping to develop Python 200! We're excited to have you on board! :tada: If you ever need help with any of the steps here, please reach out and ask for help! 
 
-To contribute to Python 200 lesson, you will need to work on the lesson locally, and then open a pull request (PR). We'll discuss that first, and then provide some guidelines for making PRs. If you ever need help with any of the steps here, please reach out and ask for help! 
-
-## How to make a PR
-Before making a PR, you need to set up a local version of the repo.
+## How to contribute
+GitHub contributions will mainly come through PRs. Before making a PR, you need to first set up a local version of the repo. There, you can work on feature branches, such as individual lesson plans, that will get merged into `main`. 
 
 ### Fork and clone repo
 Firs, set things up so you have a local copy of the repo based on a fork of the CTD repo:
