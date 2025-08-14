@@ -3,10 +3,10 @@
 Brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
 
 # Table of Contents
- - [Topic 1](#topic-1)
-  - [Topic 2](#topic-2)
-  - [Topic 3](#topic-3)
-  - [Wrap-up](#wrap-up)
+- [Topic 1](#topic-1)
+- [Topic 2](#topic-2)
+- [Topic 3](#topic-3)
+- [Wrap-up](#wrap-up)
 
 
 ## Topic 1
