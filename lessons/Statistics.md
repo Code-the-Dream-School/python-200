@@ -4,7 +4,7 @@
 Every dataset tells a story - but without the right tools, we can’t understand it. Descriptive statistics and distributions help us summarize, visualize, and see patterns at a glance.  
 
 ## **Overview**
-This lesson introduces fundamental concepts in descriptive statistics, focusing on how to summarize and understand data through measures of central tendency, variability, and distribution shapes. (Students will learn to compute key statistics, interpret different distribution types, and create effective visualizations.)?
+This lesson introduces fundamental concepts in descriptive statistics, focusing on how to summarize and understand data through measures of central tendency, variability, and distribution shapes. 
 
 🎯 **Learning Goals**
 By the end of this lesson, you’ll be able to:
@@ -16,9 +16,9 @@ By the end of this lesson, you’ll be able to:
 
 ## Descriptive Statistics 
 Descriptive statistics are methods used to summarize and describe datasets. Instead of looking at thousands of raw values, descriptive statistics condense the information into numbers and visuals so we can quickly understand:
-What’s typical (center)
-How spread out the data is
-How values are distributed
+- What’s typical (center)
+- How spread out the data is
+- How values are distributed
 
 Descriptive statistics is divided into **three main categories**: 
 1. **Measures of Central Tendency**  
@@ -45,15 +45,17 @@ It gives the "balance point" of the dataset.
 
 We can calculate these values by hand, but in real data analysis we use Python libraries. 
 
-``python
+```python
+
 import numpy as np
 
 data = [10, 20, 30, 40, 50]
 print("Mean:", np.mean(data))
-``
-`Output: 
-Mean: 30.0`
 
+Output: 
+Mean: 30.0
+
+```
 ### Median
 The median is the middle value when the data is sorted. 
 If the dataset has an odd number of values → take the middle one.
@@ -64,13 +66,15 @@ If it has an even number of values → take the average of the two middle values
 ![Median-even illustration](Images_lesson_2&5_week1/Median-even.png)
 
 **Example**:
-`import numpy as np
+```python
+import numpy as np
 print("Median (odd count):", np.median([10,20,30,40,50]))
-print("Median (even count):", np.median([10,20,30,40]))`
+print("Median (even count):", np.median([10,20,30,40]))
 
-`Output:
+Output:
 Median (odd count): 30.0
-Median (even count): 25.0`
+Median (even count): 25.0
+```
 
 ### Mode
 The mode is the most frequently occurring value.
@@ -83,13 +87,16 @@ That’s why here we use the built-in **`statistics`** library for simplicity.
 
 **Example:**
 
-`import statistics as stats
+```python
+import statistics as stats
 
 flavors = ["Vanilla", "Chocolate", "Vanilla", "Strawberry", "Vanilla"]
 print("Mode:", stats.mode(flavors))
 Output:
 Mode: Vanilla
-`
+
+```
+
 ## 2. Measures of Variability (Spread)
 Knowing the **center** of the data (mean/median/mode) is useful, but not enough. Two students may have the same average exam score, yet one is very consistent while the other’s scores fluctuate widely.
 
@@ -103,36 +110,49 @@ Why Variability Matters
 Low variability: Data points cluster tightly around the mean (consistent, predictable)
 High variability: Data points are spread out (inconsistent, unpredictable)
 
+![Variance](variance.png)
+
 In NumPy:
-`python
+
+```python
 import numpy as np
 data = [10, 12, 23, 23, 16, 23, 21, 16]
 print("Variance:", np.var(data)) 
-
+```
 Output:
+```
 Variance: 20.0
-`
+```
+
+
 ### 2.2 Standard Deviation 
 The standard deviation is the square root of variance, expressed in the same units as the original data. It's more interpretable than variance.
 Small SD → stable, predictable.
 Large SD → highly variable.
 
 In NumPy:
-`print("Standard Deviation:", np.std(data))`
+
+```
+print("Standard Deviation:", np.std(data))
+```
 
 **Example: Student Exam Scores**
 Two students take 5 exams. Both have similar averages, but one is consistent while the other is not.
 
-`import numpy as np
+```python
+import numpy as np
 student_A = [80, 82, 81, 79, 83]   # very consistent
 student_B = [60, 95, 50, 90, 100]  # very variable
 
 print("Student A - Mean:", np.mean(student_A), "Std Dev:", np.std(student_A))
-print("Student B - Mean:", np.mean(student_B), "Std Dev:", np.std(student_B))`
+print("Student B - Mean:", np.mean(student_B), "Std Dev:", np.std(student_B))
+```
 
 Output:
-`Student A - Mean: 81.0 Std Dev: 1.41
-Student B - Mean: 79.0 Std Dev: 19.24`
+```
+Student A - Mean: 81.0 Std Dev: 1.41
+Student B - Mean: 79.0 Std Dev: 19.24
+```
 
 ➡️ Both have similar averages, but Student A is consistent (small SD) while Student B swings widely (large SD).
 
@@ -170,8 +190,8 @@ But numbers alone don’t always show the **shape** of the data.
 
 #### Syntax to Generate a normal distribution
 
-`data = np.random.normal(loc=mean_value, scale=standard_deviation_value, size=number_of_samples)
-`
+```data = np.random.normal(loc=mean_value, scale=standard_deviation_value, size=number_of_samples)
+```
 ### Skewed Distribution
 
 - Skewed Right (positive skew): Tail goes to the right. Mean > Median.
@@ -210,7 +230,8 @@ In Matplotlib, we use the **hist()** function to create histograms.
 
 #### Example: Normal Distribution
 
-`import numpy as np
+```python
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Generate 1000 data points from a normal distribution (mean=50, std=5)
@@ -220,7 +241,8 @@ plt.hist(data_normal, bins=30, color="skyblue", edgecolor="black")
 plt.title("Normal Distribution (Histogram)") #sets title of the histogram.
 plt.xlabel("Value")     # X-axis label
 plt.ylabel("Frequency") # Y-axis label
-plt.show()  #Displays the generated plot`
+plt.show()  #Displays the generated plot
+```
 
 **Explanation:** 
 np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
@@ -249,7 +271,8 @@ This is exactly how a **exponential data** looks like:
 
 To simulate this kind of skewed data in Python, we use the **exponential distribution** with `np.random.exponential()`.
 
-`import numpy as np
+```python
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Generate 1000 data points from a right-skewed distribution
@@ -259,12 +282,15 @@ plt.hist(data_skewed, bins=30, color="salmon", edgecolor="black")
 plt.title("Right-Skewed Distribution (Histogram)")
 plt.xlabel("Value")
 plt.ylabel("Frequency")
-plt.show()`
+plt.show()
+```
 
 ![Output](Images_lesson_2&5_week1/skewed_histogram.png)
 
 ### 4.2 Boxplots 
 A box plot, also known as a box-and-whisker plot, is a standardized way of displaying the distribution of data based on a **five-number summary**: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. It provides a visual representation of the center, spread, and skewness of a dataset, and can also highlight outliers. 
+
+![Boxplot](Images_lesson2_week1/boxplot.png)
 
 #### Here's a breakdown of the key components of a box plot:
 **Box**:
@@ -276,8 +302,6 @@ Lines extending from the box, called whiskers, typically extend to the minimum a
 **Outliers**:
 Data points that fall outside the whiskers are considered outliers, potentially indicating unusual or extreme values. 
 
-![Boxplot](Images_lesson_2&5_week1/boxplot.png)
-
 #### How to interpret a box plot:
 **Center**:
 The median line within the box indicates the center of the data. 
@@ -288,7 +312,7 @@ If the median line is not in the center of the box, or if the whiskers are of di
 
 [Checkout this video to see how to interpret and analyze data from Boxplot](https://www.youtube.com/watch?v=KwqWuRvt7XQ&t=6s)
 
-The matplotlib.pyplot module of matplotlib library provides boxplot() function with the help of which we can create box plots.
+The `matplotlib.pyplot` module of matplotlib library provides `boxplot()` function with the help of which we can create box plots.
 
 ### Boxplot Syntax in Python
 
@@ -298,7 +322,8 @@ We use `plt.boxplot()` function from **Matplotlib**’s library
 
 ### Boxplot: Normal vs Skewed Together
 
-`import numpy as np
+```python
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Generate Normal data (mean=50, std=5)
@@ -311,8 +336,9 @@ data_skewed = np.random.exponential(scale=10, size=200)
 plt.boxplot([data_normal, data_skewed], labels=["Normal", "Skewed"])
 plt.title("Boxplot Comparison: Normal vs Skewed Distribution")
 plt.ylabel("Value")
-plt.show()`
+plt.show()
 
+```
 ![Boxplot Comparison](Images_lesson_2&5_week1/Boxplot_comparsion.png)
 
 ### 📊 Observations from the Plot: 
@@ -341,7 +367,7 @@ So probability is the **foundation** of:
 #### 2. Quick Intuition for Probability  
 
 **Probability** = likelihood of an event happening.
-P = (Favorable Outcomes) / (Total Outcomes)
+`P = (Favorable Outcomes) / (Total Outcomes)`
 - Example: If you roll a fair die 🎲, each face (1–6) has an equal chance:  
   - Probability of rolling any number = **1/6 ≈ 0.1667 (16.7%)**.  
 - Probabilities of all outcomes always add up to **1 (100%)**.  
@@ -365,7 +391,7 @@ We’re simulating dice rolls to see probability in action. Before diving into t
    - Probabilities must sum to 1.  
    - Example: `np.random.choice([1,2,3,4,5,6], size=100, p=[0.1,0.1,0.1,0.1,0.1,0.5])` → biased die favoring 6.
 
-3. **Axes**(plural of axis): axes() method in Matplotlib is used to create a new Axes instance (i.e., a plot area) within a figure.
+3. **Axes**(plural of axis): `axes()` method in Matplotlib is used to create a new Axes instance (i.e., a plot area) within a figure.
 
 A Figure can contain multiple Axes objects, allowing for the creation of multi-panel plots or subplots within a single figure window.
 
@@ -374,10 +400,8 @@ A Figure can contain multiple Axes objects, allowing for the creation of multi-p
    - `bins` specify the edges of the histogram bars.  
    - `rwidth` controls the relative width of bars.
 
-xticks() Function:
-This function in Matplotlib allows you to control the x-axis ticks.
-
 **`axes[i].set_xticks(list_of_ticks)`**  
+   - `xticks()`:This function in Matplotlib allows you to control the x-axis ticks.
    - Manually sets x-axis labels.  
    - Useful for discrete outcomes like dice (1–6).
 
@@ -387,9 +411,10 @@ This function in Matplotlib allows you to control the x-axis ticks.
    - Returns `fig` (figure) and `axes` (array of plot spaces).  
    - Example: `fig, axes = plt.subplots(1, 2, figsize=(10,4))` → 1 row, 2 columns for side-by-side histograms.
 
-Let’s simulate rolling dice to see probability in action.  
+#### Let’s simulate rolling dice to see probability in action.  
 
-`import numpy as np
+```python
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Number of rolls
@@ -423,16 +448,26 @@ axes[1].hist(biased_rolls, bins=np.arange(0.5, 7.5, 1), rwidth=0.8, color="orang
 axes[1].set_title("Biased Die (6 is favored)")
 axes[1].set_xticks([1,2,3,4,5,6])
 
-plt.show()`
+plt.show()
+```
 
 ![Output](<fair & biased die.png>)
 
-Fair die: All outcomes (1–6) have roughly equal frequency → a uniform distribution.
-Biased die: The number 6 dominates the histogram because it has a much higher probability (50%). 
+**Fair die:** All outcomes (1–6) have roughly equal frequency → a uniform distribution.
+**Biased die:** The number 6 dominates the histogram because it has a much higher probability (50%). 
 
 In this lesson, we go beyond plt.hist() basics because we want two separate plots, bars aligned with dice values, clear spacing, and accurate x-axis labels. These small adjustments make the visualization accurate and easy to compare.
 
 Simulating a fair vs biased die helps us see how bias changes distributions. Understanding probability helps you detect whether data is balanced or biased and interpret random simulations, experiments, or surveys.  
+
+In this lesson, we explored the foundations of **Descriptive Statistics and Distributions**, key building blocks of data analysis.  
+
+You learned how to:  
+- Compute **mean, median, and mode** to summarize data.  
+- Use **variance and standard deviation** to measure spread.  
+- Recognize **normal vs skewed distributions**.  
+- Visualize data with **histograms and boxplots**.  
+- Simulate **fair vs biased dice** to understand probability.  
 
 ## 🎉 Well Done!
 **🙌 You’ve done a fantastic job working through concepts**
