@@ -8,7 +8,7 @@ Resources such as essential images, data (CSV/JSON files), etc., for Python 200.
 
 ## Guidelines for Contributors
 - Please put resources in their appropriate module's directory.
-- Keep file sizes small (ideally < 1MB); large datasets should live outside the repo (we will download them in lessons when needed).
+- Keep file sizes small (under 1MB); large datasets should live outside the repo to be downloaded in individual lessons.
 - Use jpg for images to keep files small.  
 - Use descriptive filenames, e.g. `histogram_example.jpg` or `mnist_sample.csv`.
 - Reference resources in lessons with relative paths, e.g.:
