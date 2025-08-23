@@ -10,4 +10,4 @@ Resources such as essential images, data (CSV/JSON files), etc., for the machine
 - Reference resources in lessons with relative paths, e.g.:
 
   ```markdown
-  ![Gradient Descent Example](resources/analysis/gradient_descent_example.jpg)
+  ![Gradient Descent Example](resources/ml/gradient_descent_example.jpg)
