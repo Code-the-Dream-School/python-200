@@ -164,7 +164,7 @@ def describe_and_plot(df: pd.DataFrame) -> None:
     - Make a boxplot comparing Class A vs Class B scores.
     - Save the plot AND show it.
     """
-    # Summary stats
+    # Generate descriptive statistics for each class
     summary = df.groupby("Class")["Score"].describe()
     print(summary)
 
@@ -182,7 +182,25 @@ def describe_and_plot(df: pd.DataFrame) -> None:
     plt.close()
 
 ```
-A **boxplot** shows median (line), quartiles (box), and potential outliers (points). A higher box/median means higher scores.
+
+When this task runs, it prints something like:
+
+```
+       count   mean   std   min   25%   50%   75%   max
+Class
+A        5.0  68.2   2.59  65.0  66.0  68.0  70.0  72.0
+B        5.0  80.0   1.87  78.0  79.0  80.0  81.0  82.0
+```
+
+**Explanation**
+Here, pandas `.describe()` automatically gives us a mini summary for each group (Class A and Class B):
+
+- **count** tells us how many scores are in the group.
+- **mean** is the average score.
+- **std** (standard deviation) shows how spread out the scores are.
+- **min** and **max** are the lowest and highest scores.
+- **25%, 50%, 75%** are the quartiles - with 50% being the median.
+- From the output, we can see that **Class B has higher average scores (80 vs 68.2)**, and both groups are fairly consistent since the standard deviation is small.
 
 #### 📌Function Reference: 
 
@@ -261,6 +279,8 @@ if __name__ == "__main__":
 ```
 - The **@flow** decorator turns analysis_pipeline into a complete workflow.
 - When called, it executes all steps in order, passing data between tasks.
+
+![Output](Output_pipeline.png)
 
 **Key takeaways**
 
