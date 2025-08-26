@@ -7,6 +7,7 @@ Every dataset tells a story - but without the right tools, we can’t understand
 This lesson introduces fundamental concepts in descriptive statistics, focusing on how to summarize and understand data through measures of central tendency, variability, and distribution shapes. 
 
 🎯 **Learning Goals**
+
 By the end of this lesson, you’ll be able to:
 - Understand measures of **central tendency** (mean, median, mode).  
 - Understand measures of **spread** (variance, standard deviation, IQR).  
