@@ -351,9 +351,9 @@ plt.show()
   - Long whisker on the right (tail).  
   - Many dots beyond whiskers → outliers.
 
-### Topic: Probability and Simulating Dice 🎲
+## Topic: Probability and Simulating Dice 🎲
 
-#### 1. Why Probability in Data Analysis?  
+### 1. Why Probability in Data Analysis?  
 
 When we work with data, we often don’t know outcomes for sure — we can only talk about how **likely** they are.  
 - Example: A company wants to predict whether a customer will buy a product.  
@@ -364,7 +364,7 @@ So probability is the **foundation** of:
 - Machine learning (models predict probabilities).  
 - Risk analysis and decision-making.  
 
-#### 2. Quick Intuition for Probability  
+### 2. Quick Intuition for Probability  
 
 **Probability** = likelihood of an event happening.
 `P = (Favorable Outcomes) / (Total Outcomes)`
