@@ -178,9 +178,7 @@ def describe_and_plot(df: pd.DataFrame) -> None:
     # Save and show (both)
     plt.savefig("scores_boxplot.png")
     print('Plot saved to "scores_boxplot.png"')
-    plt.show()   # opens a window if you’re running locally
     plt.close()
-
 ```
 
 When this task runs, it prints something like:
@@ -201,6 +199,8 @@ Here, pandas `.describe()` automatically gives us a mini summary for each group 
 - **min** and **max** are the lowest and highest scores.
 - **25%, 50%, 75%** are the quartiles - with 50% being the median.
 - From the output, we can see that **Class B has higher average scores (80 vs 68.2)**, and both groups are fairly consistent since the standard deviation is small.
+
+![scores_boxplot](Output_pipeline.png)
 
 #### 📌Function Reference: 
 
@@ -236,26 +236,41 @@ def run_ttest(df: pd.DataFrame) -> tuple[float, float]:
 - t-statistic = size of the difference relative to variation.
 - Null hypothesis (H0): both classes have the same average score.
 - p-value: probability we’d see a difference this large if H0 were true.
-- Small p (< 0.05) → difference is statistically significant.
+
+**T-test output**
+```python
+T-test result: t = -8.07, p = 0.0002
+```
+
+1. t = -8.07
+
+- This is the t-statistic. It measures how many standard errors the difference between the group means is away from zero.
+- Negative sign just means the mean of the first group (Class A) is less than the mean of the second group (Class B).
+- The magnitude (8.07) is large, which indicates a strong difference between the groups.
+
+2. p = 0.0002
+
+- This is the p-value, which tells you the probability of observing such a difference if the groups were actually the same (null hypothesis).
+- A very small p-value (< 0.05) means the difference is statistically significant.
+
 
 ### Step 5: Report Results (report_results)
 
 ```python
 @task
-def report_results(ttest_result: tuple[float, float], df: pd.DataFrame) -> None:
-    """
-    Turn numbers into a plain-English sentence students can read.
-    """
+def report_results(ttest_result, df):
     t_stat, p_val = ttest_result
     mean_a = df[df["Class"] == "A"]["Score"].mean()
     mean_b = df[df["Class"] == "B"]["Score"].mean()
-
     print(f"Class A mean: {mean_a:.1f}, Class B mean: {mean_b:.1f}")
+    
     if p_val < 0.05:
         print("Conclusion: The difference is statistically significant (p < 0.05).")
     else:
         print("Conclusion: No statistically significant difference (p ≥ 0.05).")
 ```
+Prints `Conclusion: The difference is statistically significant (p < 0.05)`
+
 📌 Function Reference:
 - .mean() → calculates average of values.
 - if p_val < 0.05: → 5% threshold is a common cutoff for significance.
@@ -279,8 +294,6 @@ if __name__ == "__main__":
 ```
 - The **@flow** decorator turns analysis_pipeline into a complete workflow.
 - When called, it executes all steps in order, passing data between tasks.
-
-![Output](Output_pipeline.png)
 
 **Key takeaways**
 
