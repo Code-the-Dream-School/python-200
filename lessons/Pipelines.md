@@ -2,7 +2,7 @@
 
 Imagine running your analysis once, then being asked to run it again tomorrow, next week, or on a larger dataset. Manually re-running each step—loading, cleaning, analyzing, and reporting—would be painful, error-prone, and time-consuming.
 
-**Pipelines solve this**. They give us reproducible, modular workflows where each step is defined and orchestrated. This becomes especially powerful in **cloud computing** and production data environments (This is a topic we'll explore in more detail in future lessons of Python 200).
+**Pipelines solve this**. They give us reproducible, modular workflows where each step is defined and orchestrated. This becomes especially powerful in **cloud computing** (This is a topic we'll explore in more detail in future lessons of Python 200).
 
 ### Learning objective: 
 In this lesson, you’ll learn:
@@ -86,12 +86,12 @@ if __name__ == "__main__":
 ## 3. Building Your First Prefect Pipeline
 Let's build a data analysis pipeline using Prefect step by step.
 
-0) Setup
+### Step 0: Setup
 ```python
 # First, install Prefect:
 pip install prefect pandas matplotlib scipy
 ```
-Step 1: Imports & Data Loader `(load_data)`:
+### Step 1: Imports & Data Loader `(load_data)`:
 
 Imports: We import necessary libraries: pandas for data manipulation, prefect for our pipeline magic, matplotlib.pyplot for plotting, scipy.stats for the t-test, and os for file path checks.
 
@@ -119,7 +119,10 @@ def load_data() -> pd.DataFrame:
 
 ```
 
-- load_data returns a DataFrame, which later tasks will receive as input.
+#### 📌Function Reference:
+
+- pd.DataFrame(data) → creates a table (DataFrame) from a dictionary.
+- **load_data** returns a DataFrame, which later tasks will receive as input.
 
 Note: This is just a shortcut to build repeated labels:
 ```python
@@ -127,7 +130,7 @@ Note: This is just a shortcut to build repeated labels:
 # → ["A","A","A","A","A","B","B","B","B","B"]
 ```
 
-Step 2: Clean the Data `(clean_data)`
+### Step 2: Clean the Data `(clean_data)`
 
 ```python
 @task
@@ -145,3 +148,131 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 ```
 Real data is messy. Converting to numeric and dropping NAs prevents errors later (plotting, stats). 
+
+#### 📌Function Reference:
+- df.copy() → makes a safe copy so we don’t overwrite the original.
+- pd.to_numeric(..., errors="coerce") → converts values to numbers (invalid → NaN).
+- df.dropna(...) → removes rows with missing values
+
+### Step 3: Describe & Plot (describe_and_plot)
+
+```python
+@task
+def describe_and_plot(df: pd.DataFrame) -> None:
+    """
+    - Print summary stats per class.
+    - Make a boxplot comparing Class A vs Class B scores.
+    - Save the plot AND show it.
+    """
+    # Summary stats
+    summary = df.groupby("Class")["Score"].describe()
+    print(summary)
+
+    # Plot
+    ax = df.boxplot(by="Class", column="Score")
+    plt.title("Exam Scores by Class")
+    plt.suptitle("")  # removes automatic 'Score by Class' super-title
+    plt.xlabel("Class")
+    plt.ylabel("Score")
+
+    # Save and show (both)
+    plt.savefig("scores_boxplot.png")
+    print('Plot saved to "scores_boxplot.png"')
+    plt.show()   # opens a window if you’re running locally
+    plt.close()
+
+```
+A **boxplot** shows median (line), quartiles (box), and potential outliers (points). A higher box/median means higher scores.
+
+#### 📌Function Reference: 
+
+- df.groupby("Class") → splits data into Class A and Class B. 
+- .describe() → gives stats: count, mean, std, min, max, quartiles. 
+- df.boxplot(by="Class", column="Score") → makes side-by-side boxplots.
+- plt.savefig("file.png") → saves plot as an image.
+- plt.show() → shows the plot window.
+
+### Step 4: Run a t-test (run_ttest)
+
+```python
+@task
+def run_ttest(df: pd.DataFrame) -> tuple[float, float]:
+    """
+    Independent samples t-test:
+      - Compares average Score between Class A and Class B.
+      - Returns (t_statistic, p_value).
+    """
+    a = df[df["Class"] == "A"]["Score"]
+    b = df[df["Class"] == "B"]["Score"]
+
+    # Welch’s t-test (robust when variances differ)
+    t_stat, p_val = ttest_ind(a, b, equal_var=False)
+
+    print(f"T-test result: t={t_stat:.2f}, p={p_val:.4f}")
+    return t_stat, p_val
+```
+#### 📌 Function Reference:
+
+- df[df["Class"] == "A"]["Score"] → filter rows where Class = A, get scores.
+- ttest_ind(a, b, equal_var=False) → compares mean of group A vs group B.
+- t-statistic = size of the difference relative to variation.
+- Null hypothesis (H0): both classes have the same average score.
+- p-value: probability we’d see a difference this large if H0 were true.
+- Small p (< 0.05) → difference is statistically significant.
+
+### Step 5: Report Results (report_results)
+
+```python
+@task
+def report_results(ttest_result: tuple[float, float], df: pd.DataFrame) -> None:
+    """
+    Turn numbers into a plain-English sentence students can read.
+    """
+    t_stat, p_val = ttest_result
+    mean_a = df[df["Class"] == "A"]["Score"].mean()
+    mean_b = df[df["Class"] == "B"]["Score"].mean()
+
+    print(f"Class A mean: {mean_a:.1f}, Class B mean: {mean_b:.1f}")
+    if p_val < 0.05:
+        print("Conclusion: The difference is statistically significant (p < 0.05).")
+    else:
+        print("Conclusion: No statistically significant difference (p ≥ 0.05).")
+```
+📌 Function Reference:
+- .mean() → calculates average of values.
+- if p_val < 0.05: → 5% threshold is a common cutoff for significance.
+
+### Step 6: Orchestrate Everything (@flow)
+
+```python
+@flow
+def analysis_pipeline():
+    """
+    The *recipe* that runs all steps in order.
+    """
+    df = load_data()
+    clean_df = clean_data(df)
+    describe_and_plot(clean_df)
+    result = run_ttest(clean_df)
+    report_results(result, clean_df)
+
+if __name__ == "__main__":
+    analysis_pipeline()
+```
+- The **@flow** decorator turns analysis_pipeline into a complete workflow.
+- When called, it executes all steps in order, passing data between tasks.
+
+**Key takeaways**
+
+- A task is one step; a flow runs steps in order.
+- Keep steps small and single-purpose (load → clean → describe/plot → test → report).
+- Save plots to files for reproducibility; use plt.show() to display.
+- Prefect adds orchestration, logging, and structure.
+
+## 4. Wrap-up and Summary
+In this lesson, you've learned how pipelines automate complex workflows, making your data analysis reproducible and scalable. Prefect simplifies orchestration with decorators and tasks, enabling modular, maintainable code. Building a pipeline from individual steps allows you to execute the entire analysis with a single command, reducing errors and saving time.
+
+For your upcoming assignment, you'll build your own data pipeline following this structure. You will define tasks for each analysis step and orchestrate them with a flow. Think about how to modularize your analysis and leverage Prefect to run it efficiently.
+
+**👏 Well done!**
+You just walked through your very first Prefect pipeline 🎉keep this momentum for your assignment. 
