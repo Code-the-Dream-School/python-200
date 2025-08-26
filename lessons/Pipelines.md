@@ -200,7 +200,7 @@ Here, pandas `.describe()` automatically gives us a mini summary for each group 
 - **25%, 50%, 75%** are the quartiles - with 50% being the median.
 - From the output, we can see that **Class B has higher average scores (80 vs 68.2)**, and both groups are fairly consistent since the standard deviation is small.
 
-![scores_boxplot](Output_pipeline.png)
+![scores_boxplot](resources/analysis/Output_pipeline.png)
 
 #### 📌Function Reference: 
 
