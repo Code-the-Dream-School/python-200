@@ -1,6 +1,6 @@
 # Pipelines with Prefect
 
-Imagine running your analysis once, then being asked to run it again tomorrow, next week, or on a larger dataset. Manually re-running each step—loading, cleaning, analyzing, and reporting—would be painful, error-prone, and time-consuming.
+Imagine running your analysis once, then being asked to run it again tomorrow, next week, or on a larger dataset. Manually re-running each step - loading, cleaning, analyzing, and reporting - would be painful, error-prone, and time-consuming.
 
 **Pipelines solve this**. They give us reproducible, modular workflows where each step is defined and orchestrated. This becomes especially powerful in **cloud computing** (This is a topic we'll explore in more detail in future lessons of Python 200).
 
@@ -10,7 +10,7 @@ In this lesson, you’ll learn:
 - Why pipelines matter for reproducibility and modularity.
 - How to use Prefect to build and orchestrate pipelines.
 - How to wrap multiple analysis steps into one end-to-end workflow.
-By the end, you'll be able to design a complete data analysis workflow that loads data, cleans it, explores it, performs statistical tests, and reports results—all with a single command.
+- By the end, you'll be able to design a complete data analysis workflow that loads data, cleans it, explores it, performs statistical tests, and reports results - all with a single command.
 
 ### Table of Contents
 1. Understanding Data Pipelines
@@ -21,6 +21,7 @@ By the end, you'll be able to design a complete data analysis workflow that load
 ## 1. Understanding Data Pipelines
 
 What is a **Data Pipeline**?
+
 A **data pipeline** is a series of connected data processing steps where the output of one step becomes the input of the next. Think of it like a factory assembly line for data-raw materials (data) enter at one end, go through various transformation stations, and emerge as a finished product (insights, reports, or processed datasets).
 
 ```python
@@ -29,7 +30,7 @@ Raw Data → Load → Clean → Analyze → Visualize → Report
 - Without pipelines → manual re-runs, messy scripts, hard to reproduce results.
 - With pipelines → clear modular steps, easy to run end-to-end, scalable to cloud systems.
 
-2. ## Prefect
+## 2. Prefect
 
 Now that we understand why pipelines are essential, let's look at a tool that helps us build them: **Prefect**.  
 
@@ -222,8 +223,8 @@ def run_ttest(df: pd.DataFrame) -> tuple[float, float]:
     """
     a = df[df["Class"] == "A"]["Score"]
     b = df[df["Class"] == "B"]["Score"]
-
-    # Welch’s t-test (robust when variances differ)
+    
+    #Welch’s t-test is more robust when groups have unequal variance.
     t_stat, p_val = ttest_ind(a, b, equal_var=False)
 
     print(f"T-test result: t={t_stat:.2f}, p={p_val:.4f}")
@@ -302,10 +303,10 @@ if __name__ == "__main__":
 - Save plots to files for reproducibility; use plt.show() to display.
 - Prefect adds orchestration, logging, and structure.
 
-## 4. Wrap-up and Summary
+## 4. Wrap-up
 In this lesson, you've learned how pipelines automate complex workflows, making your data analysis reproducible and scalable. Prefect simplifies orchestration with decorators and tasks, enabling modular, maintainable code. Building a pipeline from individual steps allows you to execute the entire analysis with a single command, reducing errors and saving time.
 
 For your upcoming assignment, you'll build your own data pipeline following this structure. You will define tasks for each analysis step and orchestrate them with a flow. Think about how to modularize your analysis and leverage Prefect to run it efficiently.
 
 **👏 Well done!**
-You just walked through your very first Prefect pipeline 🎉keep this momentum for your assignment. 
+You just walked through your very first Prefect pipeline 🎉Keep this momentum for your assignment. 
