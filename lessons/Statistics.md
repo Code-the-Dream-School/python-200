@@ -22,10 +22,10 @@ Descriptive statistics are methods used to summarize and describe datasets. Inst
 - How values are distributed
 
 Descriptive statistics is divided into **three main categories**: 
-1. **Measures of Central Tendency**  
+**1. Measures of Central Tendency**  
    → Describes the “center” or typical value of data. (Mean, Median, Mode)  
 
-2. **Measures of Variability (Spread)**  
+2. **. Measures of Variability (Spread)**  
    → Describes how much the data varies around the center. (Variance, Standard Deviation)  
 
 3. **Frequency Distribution (Shape of Data)**  
@@ -58,13 +58,13 @@ Mean: 30.0
 
 ```
 ### Median
-The median is the middle value when the data is sorted. 
-If the dataset has an odd number of values → take the middle one.
-If it has an even number of values → take the average of the two middle values. 
+- The median is the middle value when the data is sorted. 
+- If the dataset has an odd number of values → take the middle one.
+- If it has an even number of values → take the average of the two middle values. 
 
-![Median-odd illustration](Images_lesson_2&5_week1/Median-odd.png)
+![Median-odd illustration](resources/analysis/Median-odd.png)
 
-![Median-even illustration](Images_lesson_2&5_week1/Median-even.png)
+![Median-even illustration](resources/analysis/Median-even.png)
 
 **Example**:
 ```python
@@ -80,8 +80,8 @@ Median (even count): 25.0
 ### Mode
 The mode is the most frequently occurring value.
 - Useful for categorical data (e.g., favorite ice cream flavor).
-- Less useful for continuous numeric data (like heights), because exact repeats are rare.  
-![Mode illustration](Images_lesson_2&5_week1/mode.png)
+- Less useful for continuous numeric data (like heights), because exact repeats are rare. 
+![Mode Illustration](lessons/resources/analysis/mode.png) 
 
 👉 Note: NumPy does not have a direct `mode()` function.  
 That’s why here we use the built-in **`statistics`** library for simplicity.  
@@ -107,11 +107,11 @@ Variability measures tell us how spread out our data is. Two datasets can have t
 
 ### 2.1 Variance
 Variance measures the **average squared distance** of values from the mean. It gives us an idea of how much individual data points differ from the center.
-Why Variability Matters
-Low variability: Data points cluster tightly around the mean (consistent, predictable)
-High variability: Data points are spread out (inconsistent, unpredictable)
+- Why Variability Matters:
+- Low variability: Data points cluster tightly around the mean (consistent, predictable)
+- High variability: Data points are spread out (inconsistent, unpredictable)
 
-![Variance](variance.png)
+![Variance](lessons/resources/analysis/variance.png)
 
 In NumPy:
 
@@ -128,8 +128,8 @@ Variance: 20.0
 
 ### 2.2 Standard Deviation 
 The standard deviation is the square root of variance, expressed in the same units as the original data. It's more interpretable than variance.
-Small SD → stable, predictable.
-Large SD → highly variable.
+- Small SD → stable, predictable.
+- Large SD → highly variable.
 
 In NumPy:
 
@@ -221,7 +221,7 @@ But numbers alone don’t always show the **shape** of the data.
 
 - The most common distribution in statistics.  
 - Symmetrical around the mean.  
-- Mean ≈ Median ≈ Mode.  
+- Mean ≈ Median ≈ Mode.
 - Many natural and social processes follow it (e.g., human height, exam scores).  
 
 #### Syntax to Generate a normal distribution
@@ -258,7 +258,7 @@ Two common visualization tools are:
 
 ### 4.1 Histograms
 A histogram is a graphical representation of the distribution of numerical data. It uses bars to display the frequency of data points within specified ranges or intervals, often called bins. The height of each bar corresponds to the number of data points that fall within that specific range. 
-![Histogram](Images_lesson_2&5_week1/Histogram.png)
+![Histogram](resources/analysis/Histogram.png)
 
 #### 4.1.2 Pyplot
 Matplotlib is a low level graph plotting library in python that serves as a visualization utility. Most of the Matplotlib utilities lies under the pyplot submodule, and are usually imported under the plt alias:
@@ -290,7 +290,7 @@ plt.show()  #Displays the generated plot
 - plt.hist(data, bins=30) → creates histogram with 30 bins.
 - color and edgecolor → improve readability.
 
-![Output](Images_lesson_2&5_week1/Normal_histogram.png)
+![Output](resources/analysis/Normal_histogram.png)
 
 #### Example: Skewed Distribution
 
@@ -322,13 +322,12 @@ plt.xlabel("Value")
 plt.ylabel("Frequency")
 plt.show()
 ```
-
-![Output](Images_lesson_2&5_week1/skewed_histogram.png)
+![Output](resources/analysis/skewed_histogram.png)
 
 ### 4.2 Boxplots 
 A box plot, also known as a box-and-whisker plot, is a standardized way of displaying the distribution of data based on a **five-number summary**: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. It provides a visual representation of the center, spread, and skewness of a dataset, and can also highlight outliers. 
 
-![Boxplot](Images_lesson2_week1/boxplot.png)
+![Boxplot](resources/analysis/boxplot.png)
 
 #### Here's a breakdown of the key components of a box plot:
 - **Box**:
@@ -374,7 +373,7 @@ plt.ylabel("Value")
 plt.show()
 
 ```
-![Boxplot Comparison](Images_lesson_2&5_week1/Boxplot_comparsion.png)
+![Boxplot Comparison](resources/analysis/Boxplot_comparsion.png)
 
 ### 📊 Observations from the Plot: 
 - **Normal distribution**:  
@@ -589,8 +588,7 @@ axes[1].set_xticks([1,2,3,4,5,6])
 
 plt.show()
 ```
-
-![Output](<fair & biased die.png>)
+![Output](<resources/analysis/fair & biased die.png>)
 
 **Fair die:** All outcomes (1–6) have roughly equal frequency → a uniform distribution.
 **Biased die:** The number 6 dominates the histogram because it has a much higher probability (50%). 
