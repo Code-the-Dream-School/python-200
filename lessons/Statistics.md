@@ -6,7 +6,7 @@ Every dataset tells a story - but without the right tools, we can’t understand
 ## **Overview**
 This lesson introduces fundamental concepts in descriptive statistics, focusing on how to summarize and understand data through measures of central tendency, variability, and distribution shapes. 
 
-🎯 **Learning Goals**
+🎯 **Learning Goals**:
 
 By the end of this lesson, you’ll be able to:
 - Understand measures of **central tendency** (mean, median, mode).  
@@ -175,6 +175,35 @@ Median → more robust. Outliers don’t change the middle value much.
 Mode → unaffected (only cares about frequency).
 
 👉 Outliers matter because they can **distort statistics** and **mislead conclusions**.  
+
+## ✅ Check for Understanding
+
+Q1. Which measure of central tendency is most sensitive to outliers?
+A) Mean
+B) Median
+C) Mode
+D) All equally
+<details> <summary>Show Answer</summary>
+Answer: A) Mean
+</details>
+
+Q2. Why is standard deviation easier to interpret than variance?
+A) It is always larger
+B) It is expressed in the same units as the data
+C) It ignores outliers
+D) It is always smaller
+<details> <summary>Show Answer</summary>
+Answer: B) It is expressed in the same units as the data
+</details>
+
+Q3. Which measure is least affected by outliers?
+A) Mean
+B) Median
+C) Mode
+D) Variance
+<details> <summary>Show Answer</summary>
+Answer: B) Median
+</details>
 
 ## 3. Frequency Distribution
 So far, we’ve summarized data with numbers (mean, median, variance, std).  
@@ -352,11 +381,109 @@ plt.show()
   - Long whisker on the right (tail).  
   - Many dots beyond whiskers → outliers.
 
+## Topic: Computing Summary Statistics by Groups 
+So far, we’ve calculated summary statistics (mean, median, standard deviation, etc.) for entire datasets. But in real-world data analysis, we often want to compare **subgroups**.
+
+👉 Example: Suppose we have weekly work hours of employees, and we want to compare results by Department: HR and Department: IT. Instead of just computing the overall mean, we calculate it per group. This helps us answer questions like:
+- Do employees in IT work more hours on average than HR?
+- Which department shows more consistency in work hours?
+
+## 📌 Using `groupby()` in Pandas  
+
+In Python, the most common way to compute group-level statistics is using **`groupby()`** with aggregation functions like `.mean()`, `.median()`, `.std()`, etc.  
+
+```python
+import pandas as pd
+
+# Sample dataset
+data = {
+    "Department": ["HR", "HR", "HR", "IT", "IT", "IT"],
+    "Hours_Worked": [40, 42, 38, 45, 50, 48]
+}
+df = pd.DataFrame(data)
+
+# Compute mean hours per department
+group_means = df.groupby("Department")["Hours_Worked"].mean()
+print("Mean hours by department:\n", group_means)
+
+# Compute multiple statistics per group
+group_stats = df.groupby("Department")["Hours_Worked"].agg(["mean", "median", "std"])
+print("\nSummary stats by department:\n", group_stats)
+
+```
+**Explanation of Code**
+
+- groupby("Department") → groups the data based on the Department column.
+- ["Hours_Worked"].mean() → computes the mean of Hours_Worked within each group.
+- .agg(["mean", "median", "std"]) → computes multiple statistics (mean, median, standard deviation) at once.
+
+Output:
+
+```
+Mean hours by department:
+ Department
+HR    40.000000
+IT    47.666667
+Name: Hours_Worked, dtype: float64
+
+Summary stats by department:
+                  mean  median       std
+Department
+HR          40.000000    40.0  2.000000
+IT          47.666667    48.0  2.516611
+```
+**Conclusion:**
+- IT employees work more hours on average than HR.
+- HR has slightly lower standard deviation → work hours are more consistent.
+- IT shows higher spread → some employees work significantly more than others.
+
+Group-level statistics are critical for comparing teams, employee segments, experiment groups, or any situation where data naturally splits into subgroups.
+
+## ✅ Check for Understanding
+
+Q1. A right-skewed distribution typically has:
+A) Mean < Median
+B) Mean > Median
+C) Mean = Median
+D) No relationship
+<details> <summary>Show Answer</summary>
+Answer: B) Mean > Median
+</details>
+
+Q2. Unequal whisker lengths in a boxplot indicate:
+A) Symmetry
+B) Skewness in the data
+C) No variability
+D) Error in plotting
+<details> <summary>Show Answer</summary>
+Answer: B) Skewness in the data
+</details>
+
+Q3. Which visualization is better for comparing multiple groups’ spread and outliers?
+A) Histogram
+B) Line Chart
+C) Boxplot
+D) Pie Chart
+<details> <summary>Show Answer</summary>
+Answer: C) Boxplot
+</details>
+
+Q4. Why is groupby() useful in Pandas?
+A) To filter missing values
+B) To combine datasets
+C) To compute statistics for subgroups
+D) To visualize plots
+<details> <summary>Show Answer</summary>
+Answer: C) To compute statistics for subgroups
+</details>
+
+Now that we’ve seen descriptive stats, let’s connect them to probability, the foundation of inference. 
+
 ## Topic: Probability and Simulating Dice 🎲
 
 ### 1. Why Probability in Data Analysis?  
 
-When we work with data, we often don’t know outcomes for sure — we can only talk about how **likely** they are.  
+When we work with data, we often don’t know outcomes for sure - we can only talk about how **likely** they are.  
 - Example: A company wants to predict whether a customer will buy a product.  
 - They can’t know for sure, but they can estimate the **probability** based on past data.  
 
@@ -403,8 +530,6 @@ A Figure can contain multiple Axes objects, allowing for the creation of multi-p
 
 **`axes[i].set_xticks(list_of_ticks)`**  
    - `xticks()`:This function in Matplotlib allows you to control the x-axis ticks.
-   - Manually sets x-axis labels.  
-   - Useful for discrete outcomes like dice (1–6).
 
 4. **plt.subplots()**: The most common way to create a figure and one or more axes simultaneously.
 **`plt.subplots(nrows, ncols, figsize=(w,h))`**  
