@@ -179,28 +179,34 @@ Mode → unaffected (only cares about frequency).
 ## ✅ Check for Understanding
 
 Q1. Which measure of central tendency is most sensitive to outliers?
-A) Mean
-B) Median
-C) Mode
-D) All equally
+
+- A) Mean
+- B) Median
+- C) Mode
+- D) All equally
+
 <details> <summary>Show Answer</summary>
 Answer: A) Mean
 </details>
 
 Q2. Why is standard deviation easier to interpret than variance?
-A) It is always larger
-B) It is expressed in the same units as the data
-C) It ignores outliers
-D) It is always smaller
+
+- A) It is always larger
+- B) It is expressed in the same units as the data
+- C) It ignores outliers
+- D) It is always smaller
+
 <details> <summary>Show Answer</summary>
 Answer: B) It is expressed in the same units as the data
 </details>
 
 Q3. Which measure is least affected by outliers?
-A) Mean
-B) Median
-C) Mode
-D) Variance
+
+- A) Mean
+- B) Median
+- C) Mode
+- D) Variance
+
 <details> <summary>Show Answer</summary>
 Answer: B) Median
 </details>
@@ -220,8 +226,10 @@ But numbers alone don’t always show the **shape** of the data.
 
 #### Syntax to Generate a normal distribution
 
-```data = np.random.normal(loc=mean_value, scale=standard_deviation_value, size=number_of_samples)
+```python
+data = np.random.normal(loc=mean_value, scale=standard_deviation_value, size=number_of_samples)
 ```
+
 ### Skewed Distribution
 
 - Skewed Right (positive skew): Tail goes to the right. Mean > Median.
@@ -231,9 +239,9 @@ But numbers alone don’t always show the **shape** of the data.
 [Check out this YouTube video to understand the location of the mean, median, and mode in symmetric and skewed distributions.](https://www.youtube.com/watch?v=vcbMinm_1Q8)
 
 #### Key Takeaways from the video: 
-Normal data: Mean is a reliable summary.
-Skewed data: Median is more robust because it resists being pulled by extreme outliers.
-Understanding the shape helps decide which summary statistics and tests to use.
+- Normal data: Mean is a reliable summary.
+- Skewed data: Median is more robust because it resists being pulled by extreme outliers.
+- Understanding the shape helps decide which summary statistics and tests to use.
 
 📖 Example in Data Analysis
 Average salary (mean) may look high because of a few millionaires.
@@ -275,12 +283,12 @@ plt.show()  #Displays the generated plot
 ```
 
 **Explanation:** 
-np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
-loc = mean
-scale = standard deviation
-size = number of samples
-plt.hist(data, bins=30) → creates histogram with 30 bins.
-color and edgecolor → improve readability.
+- np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
+- loc = mean
+- scale = standard deviation
+- size = number of samples
+- plt.hist(data, bins=30) → creates histogram with 30 bins.
+- color and edgecolor → improve readability.
 
 ![Output](Images_lesson_2&5_week1/Normal_histogram.png)
 
@@ -323,32 +331,29 @@ A box plot, also known as a box-and-whisker plot, is a standardized way of displ
 ![Boxplot](Images_lesson2_week1/boxplot.png)
 
 #### Here's a breakdown of the key components of a box plot:
-**Box**:
+- **Box**:
 The box itself represents the interquartile range (IQR), which is the range between the first and third quartiles (Q1 and Q3). 
-**Median**:
+- **Median**:
 A line inside the box marks the median, which is the middle value of the dataset. 
-**Whiskers**:
+- **Whiskers**:
 Lines extending from the box, called whiskers, typically extend to the minimum and maximum values within a certain range (e.g., 1.5 times the IQR). 
-**Outliers**:
+- **Outliers**:
 Data points that fall outside the whiskers are considered outliers, potentially indicating unusual or extreme values. 
 
 #### How to interpret a box plot:
-**Center**:
+- **Center**:
 The median line within the box indicates the center of the data. 
-**Spread**:
+- **Spread**:
 The length of the box (IQR) and the whiskers indicates the spread or variability of the data. 
-**Skewness**:
+- **Skewness**:
 If the median line is not in the center of the box, or if the whiskers are of different lengths, it suggests that the data is skewed. 
 
 [Checkout this video to see how to interpret and analyze data from Boxplot](https://www.youtube.com/watch?v=KwqWuRvt7XQ&t=6s)
 
-The `matplotlib.pyplot` module of matplotlib library provides `boxplot()` function with the help of which we can create box plots.
 
 ### Boxplot Syntax in Python
 
-We use `plt.boxplot()` function from **Matplotlib**’s library
-
-`plt.boxplot(data, labels=["Group1"])`
+The `matplotlib.pyplot` module of matplotlib library provides `boxplot()` function with the help of which we can create box plots.
 
 ### Boxplot: Normal vs Skewed Together
 
@@ -442,37 +447,45 @@ Group-level statistics are critical for comparing teams, employee segments, expe
 ## ✅ Check for Understanding
 
 Q1. A right-skewed distribution typically has:
-A) Mean < Median
-B) Mean > Median
-C) Mean = Median
-D) No relationship
+
+- A) Mean < Median
+- B) Mean > Median
+- C) Mean = Median
+- D) No relationship
+
 <details> <summary>Show Answer</summary>
 Answer: B) Mean > Median
 </details>
 
 Q2. Unequal whisker lengths in a boxplot indicate:
-A) Symmetry
-B) Skewness in the data
-C) No variability
-D) Error in plotting
+
+- A) Symmetry
+- B) Skewness in the data
+- C) No variability
+- D) Error in plotting
+
 <details> <summary>Show Answer</summary>
 Answer: B) Skewness in the data
 </details>
 
 Q3. Which visualization is better for comparing multiple groups’ spread and outliers?
-A) Histogram
-B) Line Chart
-C) Boxplot
-D) Pie Chart
+
+- A) Histogram
+- B) Line Chart
+- C) Boxplot
+- D) Pie Chart
+
 <details> <summary>Show Answer</summary>
 Answer: C) Boxplot
 </details>
 
 Q4. Why is groupby() useful in Pandas?
-A) To filter missing values
-B) To combine datasets
-C) To compute statistics for subgroups
-D) To visualize plots
+
+- A) To filter missing values
+- B) To combine datasets
+- C) To compute statistics for subgroups
+- D) To visualize plots
+
 <details> <summary>Show Answer</summary>
 Answer: C) To compute statistics for subgroups
 </details>
@@ -593,7 +606,8 @@ You learned how to:
 - Use **variance and standard deviation** to measure spread.  
 - Recognize **normal vs skewed distributions**.  
 - Visualize data with **histograms and boxplots**.  
+- Compute summary statistics for 2 subgroups using **groupby()**.
 - Simulate **fair vs biased dice** to understand probability.  
 
 ## 🎉 Well Done!
-**🙌 You’ve done a fantastic job working through concepts**
+**🙌 You’ve done a fantastic job working through the concepts.**
