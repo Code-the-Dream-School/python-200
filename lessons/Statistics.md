@@ -11,9 +11,9 @@ This lesson introduces fundamental concepts in descriptive statistics, focusing 
 By the end of this lesson, you’ll be able to:
 - Understand measures of **central tendency** (mean, median, mode).  
 - Understand measures of **spread** (variance, standard deviation, IQR).  
-- Build intuition for **distributions** (normal vs skewed).  
+- Build intuition for **distributions & Probability**.  
 - Use visual tools like **histograms** and **boxplots**.  
-- Explore robustness of stats to **outliers**. 
+- Compute summary statistics by groups.  
 
 ## Descriptive Statistics 
 Descriptive statistics are methods used to summarize and describe datasets. Instead of looking at thousands of raw values, descriptive statistics condense the information into numbers and visuals so we can quickly understand:
@@ -21,18 +21,15 @@ Descriptive statistics are methods used to summarize and describe datasets. Inst
 - How spread out the data is
 - How values are distributed
 
-Descriptive statistics is divided into **three main categories**: 
+Descriptive statistics is divided into **two main categories**: 
 **1. Measures of Central Tendency**  
    → Describes the “center” or typical value of data. (Mean, Median, Mode)  
 
-2. **. Measures of Variability (Spread)**  
+**2. Measures of Variability (Spread)**  
    → Describes how much the data varies around the center. (Variance, Standard Deviation)  
 
-3. **Frequency Distribution (Shape of Data)**  
-   → Describes how values are distributed across the dataset. (Normal, Skewed, Uniform)  
-   → Often visualized with **histograms and boxplots**.  
 
-We’ll cover each category step by step with explanations, examples, code, and visualizations.  
+We’ll cover each category step by step with explanations, examples, and code.  
 
 1. ## Measures of Central Tendency
 In data analysis, we often need to describe the **"typical" value** of a dataset. Measures of central tendency summarize the dataset with one value. The three most common measures are the mean, median, and mode. 
@@ -81,7 +78,8 @@ Median (even count): 25.0
 The mode is the most frequently occurring value.
 - Useful for categorical data (e.g., favorite ice cream flavor).
 - Less useful for continuous numeric data (like heights), because exact repeats are rare. 
-![Mode Illustration](lessons/resources/analysis/mode.png) 
+
+![Mode](resources/analysis/mode.png)
 
 👉 Note: NumPy does not have a direct `mode()` function.  
 That’s why here we use the built-in **`statistics`** library for simplicity.  
@@ -111,7 +109,7 @@ Variance measures the **average squared distance** of values from the mean. It g
 - Low variability: Data points cluster tightly around the mean (consistent, predictable)
 - High variability: Data points are spread out (inconsistent, unpredictable)
 
-![Variance](lessons/resources/analysis/variance.png)
+![Variance](resources/analysis/variance.png)
 
 In NumPy:
 
@@ -124,7 +122,6 @@ Output:
 ```
 Variance: 20.0
 ```
-
 
 ### 2.2 Standard Deviation 
 The standard deviation is the square root of variance, expressed in the same units as the original data. It's more interpretable than variance.
@@ -211,41 +208,136 @@ Q3. Which measure is least affected by outliers?
 Answer: B) Median
 </details>
 
-## 3. Frequency Distribution
-So far, we’ve summarized data with numbers (mean, median, variance, std).  
-But numbers alone don’t always show the **shape** of the data.  
+## 3. Distributions and Probability
 
-👉 A **frequency distribution** shows how often each value or range of values occurs. This helps us understand whether data is **symmetrical (normal)** or **skewed (lopsided)**.
+So far, we've summarized data with numbers (mean, median, variance, std). But numbers alone don't always show the shape of the data. To truly understand our data, we need to explore distributions - both what we observe in our data and the underlying probability patterns that generate it. 
 
-### Normal Distribution (Bell Curve)
+### 3.1 The Connection: Frequency and Probability Distributions
 
-- The most common distribution in statistics.  
-- Symmetrical around the mean.  
+👉 Think of it this way:
+
+Frequency distribution = What we actually observe in our dataset.
+Probability distribution = The theoretical pattern that explains what we observe.
+
+When we collect data from the real world, we're essentially taking samples from underlying probability distributions. Understanding this connection helps us:
+
+- Identify patterns in our data.
+- Make predictions about future observations.
+- Choose appropriate statistical methods.
+- Detect when something unusual is happening.
+
+### 3.2 Normal Distribution: The Foundation
+The normal distribution (bell curve) is the most important probability distribution in statistics:
+
+- Perfectly symmetrical around the mean.
 - Mean ≈ Median ≈ Mode.
-- Many natural and social processes follow it (e.g., human height, exam scores).  
+- Many natural processes follow this pattern: human height, exam scores,   measurement errors. 
 
-#### Syntax to Generate a normal distribution
+It is also known as a Gaussian distribution and is a theoretical model where the mean, median, and mode are all equal. 
+
+**Generating Normal Data:** 
 
 ```python
-data = np.random.normal(loc=mean_value, scale=standard_deviation_value, size=number_of_samples)
+import numpy as np
+
+# This simulates what we'd observe if we collected data from a normal process
+data_normal = np.random.normal(loc=50, scale=5, size=1000)
+# loc = mean of the probability distribution
+# scale = standard deviation of the probability distribution  
+# size = how many samples we observe
+
+```
+### 3.3 Skewed Distributions: When Data Isn't Symmetric
+Many real-world processes follow skewed probability distributions:
+
+**Right-skewed (positive skew):**
+
+- Most values are small, few are very large
+- Mean > Median (pulled toward the tail)
+- Examples: Income, house prices, wait times
+
+**Left-skewed (negative skew):**
+
+- Most values are large, few are very small
+- Mean < Median (Tail goes to the left)
+- Examples: Test scores when most students do well
+
+**The Exponential Distribution**
+A classic right-skewed probability distribution is the exponential distribution, perfect for modeling:
+
+- Waiting times (bus arrivals, customer service calls).
+- Time between events.
+- Lifespans of products.
+
+```python
+# Sample from an exponential probability distribution
+data_skewed = np.random.exponential(scale=10, size=1000)
+print("Exponential sample mean:", np.mean(data_skewed))
+print("Exponential sample median:", np.median(data_skewed))
+# Notice: mean > median (characteristic of right skew)
+### Skewed Distribution
 ```
 
-### Skewed Distribution
+[Check out this YouTube video to understand the location of the mean, median, and mode in symmetric and skewed distributions.](https://www.youtube.com/watch?v=2x9ZdBLL-6I)
 
-- Skewed Right (positive skew): Tail goes to the right. Mean > Median.
-- Skewed Left (negative skew): Tail goes to the left. Mean < Median.
-- Common in income data, housing prices, wait times — where extreme values “stretch” one side.
-
-[Check out this YouTube video to understand the location of the mean, median, and mode in symmetric and skewed distributions.](https://www.youtube.com/watch?v=vcbMinm_1Q8)
-
-#### Key Takeaways from the video: 
+( #### Key Takeaways from the video: 
 - Normal data: Mean is a reliable summary.
 - Skewed data: Median is more robust because it resists being pulled by extreme outliers.
-- Understanding the shape helps decide which summary statistics and tests to use.
+- Understanding the shape helps decide which summary statistics and tests to use.)
 
-📖 Example in Data Analysis
-Average salary (mean) may look high because of a few millionaires.
-Median salary is usually more representative of what a “typical” person earns.
+### 3.4 Probability in Action: Coin Toss Simulation 
+
+Let's explore probability through coin tosses - a simple, intuitive example that demonstrates how probability distributions work in practice:
+
+**Fair vs Biased Coins**
+
+```python
+import numpy as np
+
+# Fair coin: Equal probability for heads and tails.
+# np.random.choice(elements, size, p=probabilities) 
+# lets us assign custom probabilities.
+def flip_fair_coin(n_flips):
+    return np.random.choice(['H', 'T'], size=n_flips, p=[0.5, 0.5])
+
+# Biased coin: Favors heads
+def flip_biased_coin(n_flips):
+    return np.random.choice(['H', 'T'], size=n_flips, p=[0.7, 0.3])
+
+# Simulate many flips
+n_flips = 1000
+fair_flips = flip_fair_coin(n_flips)
+biased_flips = flip_biased_coin(n_flips)
+
+# Count heads in each case
+fair_heads = np.sum(fair_flips == 'H')
+biased_heads = np.sum(biased_flips == 'H')
+
+print(f"Fair coin: {fair_heads}/{n_flips} heads ({fair_heads/n_flips:.3f})")
+print(f"Biased coin: {biased_heads}/{n_flips} heads ({biased_heads/n_flips:.3f})")
+```
+Expected Output:
+
+```markdown
+Fair coin: 507/1000 heads (0.507)
+Biased coin: 706/1000 heads (0.706)
+```
+
+This coin toss example illustrates a fundamental concept in data analysis: when we understand the underlying probability distribution, we can distinguish between normal variation and unusual patterns.
+
+**Case 1: 507 heads out of 1000 flips**
+
+- This is very close to what we'd expect from a fair coin (500 heads).
+- The small difference is easily explained by random variation.
+
+Conclusion: This looks like normal behavior for a fair process.
+
+**Case 2: 706 heads out of 1000 flips**
+
+- This is much higher than what we'd typically see from a fair coin.
+- Such a large deviation suggests the underlying process might be different.
+
+Conclusion: This pattern suggests we're not dealing with a fair coin.
 
 ## 4. Visualization: Histograms & Boxplots
 
@@ -258,6 +350,7 @@ Two common visualization tools are:
 
 ### 4.1 Histograms
 A histogram is a graphical representation of the distribution of numerical data. It uses bars to display the frequency of data points within specified ranges or intervals, often called bins. The height of each bar corresponds to the number of data points that fall within that specific range. 
+
 ![Histogram](resources/analysis/Histogram.png)
 
 #### 4.1.2 Pyplot
@@ -266,65 +359,49 @@ Matplotlib is a low level graph plotting library in python that serves as a visu
 
 In Matplotlib, we use the **hist()** function to create histograms.
 
-#### Example: Normal Distribution
+#### Example: Normal Distribution vs Exponential(right-skewed) distribution
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Generate 1000 data points from a normal distribution (mean=50, std=5)
+# Generate 1000 data points from different probability distributions
 data_normal = np.random.normal(loc=50, scale=5, size=1000)
+exponential_data = np.random.exponential(scale=10, size=1000)
 
+# Create side-by-side histograms using plt directly
+plt.figure(figsize=(10,4))  # Creates the overall window (10x4 inches)
+
+# First subplot
+plt.subplot(1, 2, 1)
 plt.hist(data_normal, bins=30, color="skyblue", edgecolor="black")
-plt.title("Normal Distribution (Histogram)") #sets title of the histogram.
+plt.title("Normal Distribution") #sets title of the histogram.
 plt.xlabel("Value")     # X-axis label
 plt.ylabel("Frequency") # Y-axis label
-plt.show()  #Displays the generated plot
+
+# Second subplot  
+plt.subplot(1, 2, 2)
+plt.hist(exponential_data, bins=30, color="salmon", edgecolor="black")
+plt.title("Exponential Distribution")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+
+plt.tight_layout()  # Auto-adjusts spacing between plots to prevent overlap
+plt.show()   #Displays the generated plot
 ```
 
 **Explanation:** 
 - np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
-- loc = mean
-- scale = standard deviation
-- size = number of samples
+- loc = mean, scale = standard deviation, size = number of samples.
+- plt.figure(figsize=(width, height)): Creates a new figure (the overall canvas for our plots)
+- plt.subplot(nrows, ncols, index) → Divides canvas into 1 row, 2 columns, select position 1. 
 - plt.hist(data, bins=30) → creates histogram with 30 bins.
 - color and edgecolor → improve readability.
 
-![Output](resources/analysis/Normal_histogram.png)
-
-#### Example: Skewed Distribution
-
-In real-world data, not everything follows a neat bell curve (normal distribution).  
-Some datasets are **skewed**, meaning most values are small but a few values are much larger.  
-
-💡 **Analogy (to build intuition):**  
-Think about **waiting times for a bus**:  
-- Most people wait just a few minutes.  
-- Occasionally, someone waits 20–30 minutes.  
-- Rarely, someone waits an hour.  
-
-This is exactly how a **exponential data** looks like:  
-- Many small values.  
-- A few very large values (outliers).  
-
-To simulate this kind of skewed data in Python, we use the **exponential distribution** with `np.random.exponential()`.
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Generate 1000 data points from a right-skewed distribution
-data_skewed = np.random.exponential(scale=10, size=1000)
-
-plt.hist(data_skewed, bins=30, color="salmon", edgecolor="black")
-plt.title("Right-Skewed Distribution (Histogram)")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-plt.show()
-```
-![Output](resources/analysis/skewed_histogram.png)
+![Output](<resources/analysis/Normal vs Exponential_histogram.png>)
 
 ### 4.2 Boxplots 
+
 A box plot, also known as a box-and-whisker plot, is a standardized way of displaying the distribution of data based on a **five-number summary**: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. It provides a visual representation of the center, spread, and skewness of a dataset, and can also highlight outliers. 
 
 ![Boxplot](resources/analysis/boxplot.png)
@@ -332,7 +409,7 @@ A box plot, also known as a box-and-whisker plot, is a standardized way of displ
 #### Here's a breakdown of the key components of a box plot:
 - **Box**:
 The box itself represents the interquartile range (IQR), which is the range between the first and third quartiles (Q1 and Q3). 
-- **Median**:
+- **Median**:alt text
 A line inside the box marks the median, which is the middle value of the dataset. 
 - **Whiskers**:
 Lines extending from the box, called whiskers, typically extend to the minimum and maximum values within a certain range (e.g., 1.5 times the IQR). 
@@ -353,6 +430,10 @@ If the median line is not in the center of the box, or if the whiskers are of di
 ### Boxplot Syntax in Python
 
 The `matplotlib.pyplot` module of matplotlib library provides `boxplot()` function with the help of which we can create box plots.
+
+```python
+plt.boxplot([data1, data2])
+```
 
 ### Boxplot: Normal vs Skewed Together
 
@@ -489,114 +570,6 @@ Q4. Why is groupby() useful in Pandas?
 Answer: C) To compute statistics for subgroups
 </details>
 
-Now that we’ve seen descriptive stats, let’s connect them to probability, the foundation of inference. 
-
-## Topic: Probability and Simulating Dice 🎲
-
-### 1. Why Probability in Data Analysis?  
-
-When we work with data, we often don’t know outcomes for sure - we can only talk about how **likely** they are.  
-- Example: A company wants to predict whether a customer will buy a product.  
-- They can’t know for sure, but they can estimate the **probability** based on past data.  
-
-So probability is the **foundation** of:
-- Statistical inference (drawing conclusions from samples).  
-- Machine learning (models predict probabilities).  
-- Risk analysis and decision-making.  
-
-### 2. Quick Intuition for Probability  
-
-**Probability** = likelihood of an event happening.
-`P = (Favorable Outcomes) / (Total Outcomes)`
-- Example: If you roll a fair die 🎲, each face (1–6) has an equal chance:  
-  - Probability of rolling any number = **1/6 ≈ 0.1667 (16.7%)**.  
-- Probabilities of all outcomes always add up to **1 (100%)**.  
-
-So:  
-- **Fair die** → All numbers equally likely.  
-- **Biased die** → Some numbers are more likely than others.
-
-### 3. Simulation with Python
-
-We’re simulating dice rolls to see probability in action. Before diving into the code, let’s understand the main Python functions we’ll use:
-
-#### 3.1 Key Functions
-
-1. **`np.random.randint(low, high, size)`**  
-   - Generates random integers between `low` (inclusive) and `high` (exclusive).  
-   - Example: `np.random.randint(1, 7, size=100)` → simulates 100 rolls of a fair six-sided die.
-
-2. **`np.random.choice(elements, size, p=probabilities)`**  
-   - Randomly selects elements from a list, with optional probabilities `p`.  
-   - Probabilities must sum to 1.  
-   - Example: `np.random.choice([1,2,3,4,5,6], size=100, p=[0.1,0.1,0.1,0.1,0.1,0.5])` → biased die favoring 6.
-
-3. **Axes**(plural of axis): `axes()` method in Matplotlib is used to create a new Axes instance (i.e., a plot area) within a figure.
-
-A Figure can contain multiple Axes objects, allowing for the creation of multi-panel plots or subplots within a single figure window.
-
-**`axes[i].hist(data, bins, rwidth)`**  
-   - Plots a histogram in a specific subplot (`axes[i]`).  
-   - `bins` specify the edges of the histogram bars.  
-   - `rwidth` controls the relative width of bars.
-
-**`axes[i].set_xticks(list_of_ticks)`**  
-   - `xticks()`:This function in Matplotlib allows you to control the x-axis ticks.
-
-4. **plt.subplots()**: The most common way to create a figure and one or more axes simultaneously.
-**`plt.subplots(nrows, ncols, figsize=(w,h))`**  
-   - Creates multiple subplots in one figure.  
-   - Returns `fig` (figure) and `axes` (array of plot spaces).  
-   - Example: `fig, axes = plt.subplots(1, 2, figsize=(10,4))` → 1 row, 2 columns for side-by-side histograms.
-
-#### Let’s simulate rolling dice to see probability in action.  
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Number of rolls
-n_rolls = 10000  
-
-# --- Fair Die ---
-# np.random.randint(low, high, size) generates random integers
-# Here: numbers between 1 and 6 (high is exclusive → so use 7)
-fair_rolls = np.random.randint(1, 7, size=n_rolls)
-
-# --- Biased Die ---
-# np.random.choice(elements, size, p=probabilities) 
-# lets us assign custom probabilities.
-# Probabilities must sum to 1.
-biased_rolls = np.random.choice(
-    [1, 2, 3, 4, 5, 6],
-    size=n_rolls,
-    p=[0.1, 0.1, 0.1, 0.1, 0.1, 0.5]  # 50% chance of rolling a 6
-)
-
-# --- Visualization ---
-fig, axes = plt.subplots(1, 2, figsize=(10,4))
-
-# Histogram for fair die
-axes[0].hist(fair_rolls, bins=np.arange(0.5, 7.5, 1), rwidth=0.8)
-axes[0].set_title("Fair Die (Uniform Distribution)")
-axes[0].set_xticks([1,2,3,4,5,6])
-
-# Histogram for biased die
-axes[1].hist(biased_rolls, bins=np.arange(0.5, 7.5, 1), rwidth=0.8, color="orange")
-axes[1].set_title("Biased Die (6 is favored)")
-axes[1].set_xticks([1,2,3,4,5,6])
-
-plt.show()
-```
-![Output](<resources/analysis/fair & biased die.png>)
-
-**Fair die:** All outcomes (1–6) have roughly equal frequency → a uniform distribution.
-**Biased die:** The number 6 dominates the histogram because it has a much higher probability (50%). 
-
-In this lesson, we go beyond plt.hist() basics because we want two separate plots, bars aligned with dice values, clear spacing, and accurate x-axis labels. These small adjustments make the visualization accurate and easy to compare.
-
-Simulating a fair vs biased die helps us see how bias changes distributions. Understanding probability helps you detect whether data is balanced or biased and interpret random simulations, experiments, or surveys.  
-
 In this lesson, we explored the foundations of **Descriptive Statistics and Distributions**, key building blocks of data analysis.  
 
 You learned how to:  
@@ -604,8 +577,9 @@ You learned how to:
 - Use **variance and standard deviation** to measure spread.  
 - Recognize **normal vs skewed distributions**.  
 - Visualize data with **histograms and boxplots**.  
-- Compute summary statistics for 2 subgroups using **groupby()**.
-- Simulate **fair vs biased dice** to understand probability.  
+- Compute summary statistics for 2 subgroups using *groupby()*.
+
+You’ve now seen how probability and sampling distributions help us understand what outcomes to expect. In the next step, we’ll use these ideas to test **hypotheses** – asking whether our data are consistent with a given assumption (e.g., a fair coin with p = 0.5). This sets the stage for statistical testing.
 
 ## 🎉 Well Done!
-**🙌 You’ve done a fantastic job working through the concepts.**
+**🙌 Great work getting through these foundational concepts!**
