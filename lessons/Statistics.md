@@ -22,6 +22,7 @@ Descriptive statistics are methods used to summarize and describe datasets. Inst
 - How values are distributed
 
 Descriptive statistics is divided into **two main categories**: 
+
 **1. Measures of Central Tendency**  
    → Describes the “center” or typical value of data. (Mean, Median, Mode)  
 
@@ -31,7 +32,7 @@ Descriptive statistics is divided into **two main categories**:
 
 We’ll cover each category step by step with explanations, examples, and code.  
 
-1. ## Measures of Central Tendency
+## 1. Measures of Central Tendency
 In data analysis, we often need to describe the **"typical" value** of a dataset. Measures of central tendency summarize the dataset with one value. The three most common measures are the mean, median, and mode. 
 Let's dive into each of them:
 
@@ -217,6 +218,7 @@ So far, we've summarized data with numbers (mean, median, variance, std). But nu
 👉 Think of it this way:
 
 Frequency distribution = What we actually observe in our dataset.
+
 Probability distribution = The theoretical pattern that explains what we observe.
 
 When we collect data from the real world, we're essentially taking samples from underlying probability distributions. Understanding this connection helps us:
@@ -355,9 +357,10 @@ A histogram is a graphical representation of the distribution of numerical data.
 
 #### 4.1.2 Pyplot
 Matplotlib is a low level graph plotting library in python that serves as a visualization utility. Most of the Matplotlib utilities lies under the pyplot submodule, and are usually imported under the plt alias:
+
 `import matplotlib.pyplot as plt`
 
-In Matplotlib, we use the **hist()** function to create histograms.
+In Matplotlib, we use the `hist()` function to create histograms.
 
 #### Example: Normal Distribution vs Exponential(right-skewed) distribution
 
@@ -570,6 +573,8 @@ Q4. Why is groupby() useful in Pandas?
 Answer: C) To compute statistics for subgroups
 </details>
 
+## Summary
+
 In this lesson, we explored the foundations of **Descriptive Statistics and Distributions**, key building blocks of data analysis.  
 
 You learned how to:  
@@ -579,7 +584,7 @@ You learned how to:
 - Visualize data with **histograms and boxplots**.  
 - Compute summary statistics for 2 subgroups using *groupby()*.
 
-You’ve now seen how probability and sampling distributions help us understand what outcomes to expect. In the next step, we’ll use these ideas to test **hypotheses** – asking whether our data are consistent with a given assumption (e.g., a fair coin with p = 0.5). This sets the stage for statistical testing.
+You’ve now seen how probability and sampling distributions help us understand what outcomes to expect. In the next topic, we’ll use these ideas to test **hypotheses** – asking whether our data are consistent with a given assumption (e.g., a fair coin with p = 0.5). This sets the stage for statistical testing.
 
 ## 🎉 Well Done!
 **🙌 Great work getting through these foundational concepts!**
