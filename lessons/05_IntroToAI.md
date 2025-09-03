@@ -12,11 +12,11 @@ Welcome to the Week 8 in Python 200, Introduction to Artificial Intelligence!
 # Table of Contents
 1. [Introduction to language processing](#1-introduction-to-language-processing)
 2. [OpenAI Chat Comletions API](#2-openai)
-3. [Abstract tooling](#3-one-code-many-models)
+3. [Abstraction layers](#3-abstraction-layers)
 4. [Prompt engineering](#4-prompt-engineering)
 5. [Chatbots](#5-chatbots)
 6. [Ethics, bias, and responsible AI](#6-ethic-bias-and-responsible-ai)
-7. [Wrap-up](#7wrap-up)
+7. [Wrap-up](#7-wrap-up)
 
 ## 1. Introduction to Language Processing
 Explain what LLMs are and how they differ from earlier NLP models, and why language models have become so much more powerful recently. Discuss how language is converted to vectors (tokenization). Give broad overview of AI landscape.
@@ -33,7 +33,7 @@ Intro and overview of openai api chat completions endpoint. Go over required par
 - Teach basics of chat completions api (necessary params, important params).
 - Moderatoins endpoint (this is cool free useful makes openai fairly unique).
 
-## 3. One Code, Many Models
+## 3. Abstraction layers
 Instead of getting locked into a single vendor or style, there are a few packages that provide an abstraction layer across LLM providers and local LLMs (you can run inference locally using Ollama). Here we'll discuss a few of these (langchain, liteLLM, any-llm). 
 
 ### Code ideas
