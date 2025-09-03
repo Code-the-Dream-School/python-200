@@ -10,22 +10,22 @@ Welcome to the Week 8 in Python 200, Introduction to Artificial Intelligence!
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](00_Welcome.md) lesson. 
 
 # Table of Contents
-1. [Background: Language Processing](#1-language-processing)
+1. [Introduction to language processing](#1-introduction-to-language-processing)
 2. [OpenAI Chat Comletions API](#2-openai)
-3. [Abstract tooling](#3-abstractions)
-4. [Prompt engineering](#4-prompt_engineering)
-5. [Chatbots](5-chatbots)
+3. [Abstract tooling](#3-one-code-many-models)
+4. [Prompt engineering](#4-prompt-engineering)
+5. [Chatbots](#5-chatbots)
 6. [Ethics, bias, and responsible AI](#6-ethic-bias-and-responsible-ai)
-7. [Wrap-up](#wrap-up)
+7. [Wrap-up](#7wrap-up)
 
-## 1. Background: Introduction to Natural Language Processing
+## 1. Introduction to Language Processing
 Explain what LLMs are and how they differ from earlier NLP models, and why language models have become so much more powerful recently. Discuss how language is converted to vectors (tokenization). Give broad overview of AI landscape.
 
 ### Code ideas
 - Tokenization
 - Visualize semantic similarity using PCA
   
-## 2. OpenAI Chat Completions Endpoint
+## 2. OpenAI 
 Intro and overview of openai api chat completions endpoint. Go over required params (messages/model), but also the important optional params (max_tokens, temperature, top_p etc). Mention responses endpoint (more friendly to tools/agents). Discuss and demonstrate use of moderations endpoint.
 
 ### Code ideas
