@@ -11,7 +11,7 @@ By the end of this lesson, you’ll be able to:
 - Build and orchestrate workflows using Prefect tasks and flows.
 - Make pipelines resilient and efficient with retries, caching, logging and scheduling.
 - Monitor and debug workflows in real time using the Orion dashboard.
-- Run a full data analysis workflow — load, clean, explore, analyze, and report — with a single command.
+- Run a full data analysis workflow - load, clean, explore, analyze, and report - with a single command.
 
 ### Table of Contents
 1. Understanding Data Pipelines
@@ -55,7 +55,7 @@ Here’s what Prefect gives you out of the box:
 
 - Logging → keeps all logs in one place, making debugging and tracking easier.
 
-- Scheduling → run your pipelines daily/weekly
+- Scheduling → run your pipelines daily/weekly.
 
 
 In other words, Prefect handles the complexities of production workflows so you can focus on your analysis logic.
@@ -241,15 +241,17 @@ This command launches the Orion server, which you can access via your web browse
 http://localhost:4200
 ```
 
+```
 Note:
 To launch the Prefect UI (version-dependent)
 - For many Prefect 2.x installs run: `prefect orion start`
 - For some later releases the equivalent command is: `prefect server start`
 - If unsure, run `prefect --help` (or check `pip show prefect` / your installed version) and follow the CLI shown by your version.
 
+```
 **Step 3:** Run your pipeline script
 
-Ensure your pipeline script uses the @flow decorator as shown earlier. When you execute the script, Prefect will register the run with Orion.
+Ensure your pipeline script uses the `@flow decorator` as shown earlier. When you execute the script, Prefect will register the run with Orion.
 
 **Step 4:** View the dashboard
 
@@ -258,7 +260,7 @@ Ensure your pipeline script uses the @flow decorator as shown earlier. When you 
 
 This is invaluable in production environments.
 
-**5.Logging**
+**5. Logging**
 
 - Prefect automatically captures and centralizes logs.
 - Instead of using only print, you can use `get_run_logger()` for structured logging.
@@ -279,6 +281,7 @@ Logs are captured and shown in Orion, aiding debugging at scale.
 Until now, we’ve run flows manually by calling them. But what if you want your analysis to run every morning at 9 AM, or every 5 minutes? Prefect makes this easy with *scheduling*.
 
 **Example: Interval Scheduling**
+
 Here’s the simplest way to schedule a flow to run every 5 minutes:
 
 ```python
@@ -314,7 +317,7 @@ interval=300  # 300 seconds = 5 minutes
 
 - **Cron**: run the flow at specific times/days using cron syntax (e.g., "0 9 * * *" → every day at 9 AM).
 
-Use `interval` for simple repetitive runs, `cron` for precise timing schedules.
+👉 Use `interval` for simple repetitive runs, `cron` for precise timing schedules.
 
 ---
 
@@ -492,13 +495,13 @@ def run_ttest(df: pd.DataFrame) -> tuple[float, float]:
 T-test result: t = -8.07, p = 0.0002
 ```
 
-1. t = -8.07
+**1. t = -8.07**
 
 - This is the t-statistic. It measures how many standard errors the difference between the group means is away from zero.
 - Negative sign just means the mean of the first group (Class A) is less than the mean of the second group (Class B).
 - The magnitude (8.07) is large, which indicates a strong difference between the groups.
 
-2. p = 0.0002
+**2. p = 0.0002**
 
 - This is the p-value, which tells you the probability of observing such a difference if the groups were actually the same (null hypothesis).
 - A very small p-value (< 0.05) means the difference is statistically significant.
@@ -542,12 +545,12 @@ def analysis_pipeline():
 if __name__ == "__main__":
     analysis_pipeline()
 ```
-- The **@flow** decorator turns analysis_pipeline into a complete workflow.
+- The **@flow** decorator turns `analysis_pipeline` into a complete workflow.
 - When called, it executes all steps in order, passing data between tasks.
 
 ### Step 7: Monitor Your Pipeline
 
-Now that your pipeline is running, you can use the Orion dashboard (which you learned how to launch earlier) to:
+Now that your pipeline is running, you can use the *Orion* dashboard (which you learned how to launch earlier) to:
 
 - View all pipeline runs and their task states.
 - Check logs for debugging and tracking.
