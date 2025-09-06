@@ -81,7 +81,7 @@ Here’s what Prefect adds on top of plain Python:
 At its core, Prefect uses two main concepts to define your pipeline:
 
 1. **`@task()` decorator**  
-    - Transforms a Python function into a Prefect task.
+    - Transforms a Python function into a Prefect **task**.
     - Prefect tracks its state (running, successful, failed), logs its output, and can retry on failure.
 
 2. **`@flow()` decorator**  
@@ -112,13 +112,14 @@ def output():
 if __name__ == "__main__":  
     output()
 ```
-- Each function decorated with @task becomes a distinct step in your workflow.
-- The @flow function orchestrates those steps.
-- Running output() executes the whole workflow. 
+- Each function decorated with `@task` becomes a distinct step in your workflow.
+- The `@flow` function orchestrates those steps.
+- Running `output()` executes the whole workflow. 
 
 ### 2.4 How Prefect enhances your workflows
 
 **1. Retries and Failure Handling**
+
 Suppose a network call fails intermittently. Prefect allows you to declare retries.
 
 Here's a very simple example showing retries in action with a flaky function using Prefect:
@@ -147,7 +148,7 @@ if __name__ == "__main__":
 
 - The task flaky_task has a 70% chance to fail each run. Prefect automatically retries it up to 3 times, waiting 2 seconds between attempts. If it eventually succeeds within 3 retries, the flow continues normally. If it still fails after 3 retries, the flow marks the task as failed.
 
-Sample Output (your console or Orion logs):
+**Sample Output (your console or Orion logs):**
 
 ```bash
 Trying to run task...
@@ -217,7 +218,7 @@ This runs all *process_item* tasks concurrently, dramatically speeding up proces
 
 **4. Monitoring and Visualization with Orion UI**
 
-Prefect provides a web-based UI (the Prefect Server UI, often called *Orion*), where you can:
+Prefect provides a web-based UI (**the Prefect Server UI**, often called ***Orion***), where you can:
 
 - Visualize your pipeline's execution flow
 - See task logs, states, retries
@@ -278,7 +279,7 @@ Logs are captured and shown in Orion, aiding debugging at scale.
 
 **6. ⏰ Scheduling Flows** 
 
-Until now, we’ve run flows manually by calling them. But what if you want your analysis to run every morning at 9 AM, or every 5 minutes? Prefect makes this easy with *scheduling*.
+Until now, we’ve run flows manually by calling them. But what if you want your analysis to run every morning at 9 AM, or every 5 minutes? Prefect makes this easy with ***scheduling***.
 
 **Example: Interval Scheduling**
 
@@ -305,7 +306,9 @@ if __name__ == "__main__":
  - *.serve()* turns the flow into a “running service.” 
  - Assign a name like "my-scheduled-flow" to identify this deployment in logs or the Orion dashboard.
 
-👉 When you schedule a flow with `.serve()`, Prefect automatically creates something called a deployment. It uses your flow’s name and the deployment name you gave inside *.serve()* to identify it. For example: `my-flow/my-scheduled-flow`. And prefect keeps the flow actively running and polling for scheduled executions.
+👉 When you schedule a flow with `.serve()`, Prefect automatically creates something called a deployment. It uses your flow’s name and the deployment name you gave inside `.serve()` to identify it. For example: `my-flow/my-scheduled-flow`. 
+
+And, Prefect keeps the flow actively running and polling for scheduled executions.
 
 #### Quick Note About Interval & Cron:
 
@@ -332,7 +335,7 @@ pip install prefect pandas matplotlib scipy
 
 ### Step 1: Imports & Data Loader `(load_data)` with logging
 
-Imports: We import necessary libraries: pandas for data manipulation, prefect for our pipeline magic, matplotlib.pyplot for plotting, scipy.stats for the t-test.
+We import necessary libraries: `pandas` for data manipulation, `prefect` for our pipeline magic, `matplotlib.pyplot` for plotting, `scipy.stats` for the t-test.
 
 We’re adding logging to the data loading step using **Prefect’s logger**, so the logs show up in the Orion UI with timestamps and levels. 
 
@@ -379,7 +382,7 @@ Note: This is just a shortcut to build repeated labels:
 ### Step 2: Clean the Data `(clean_data)` with Retries
  
 Sometimes data loading/cleaning fails (e.g., file not found, temporary glitch).
-By adding retries=3, Prefect will automatically retry the task if it errors.
+By adding `retries=3`, Prefect will automatically retry the task if it errors.
 
 ```python
 @task(retries=3, retry_delay_seconds=3)
@@ -550,7 +553,7 @@ if __name__ == "__main__":
 
 ### Step 7: Monitor Your Pipeline
 
-Now that your pipeline is running, you can use the *Orion* dashboard (which you learned how to launch earlier) to:
+Now that your pipeline is running, you can use the ***Orion*** dashboard (which you learned how to launch earlier) to:
 
 - View all pipeline runs and their task states.
 - Check logs for debugging and tracking.
