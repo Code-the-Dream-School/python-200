@@ -32,6 +32,7 @@ This will be their first hands-on introduction to Azure. The main focus is on ma
 -  Overview of portal it's their first time in the cloud! 🎉
 - Run and use Azure CLI (something simple exploring the file system): it's just bash but in the cloud. 
 - Write/run a simple python script from IDE (they can `runcode .` from CLI and start VS Code in cloud): again, it's effectively VS Code but in the cloud. 
+- Show how to set cost alerts
 - Explore cost estimator for significant job that they won't actually do but is costly (using some of the resources/services discussed in 1)
 
 ## Wrap-up 
