@@ -1,4 +1,5 @@
 # Introduction to Cloud Computing
+NOTE: this is vestige of older format for P200. We are changing over to new format: one file per topic. See [README.md](README.md).
 
 > ### Contributor Note 
 > This is a working template for Python 200, Week 8. Each section below needs to be expanded into a full lesson. Use the code ideas and goals as a starting point — feel free to add examples, exercises, and links to visualizations or datasets. 
@@ -19,9 +20,10 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
 Platform-agnostic oveview of the what-and-why of cloud computing. This is a big shift for the students, so we want to motivate why they should care about the cloud when they can just run code on their laptop. :smile: For the assignment, we'll have lots of questions about cloud concepts that are less hands-on than the other weeks of Python 100/200.
 
 Topics include (not limited to):
-- What are the main services (compute, storage, etc),
+- What are the main services 
+  - compute, storage, databases, networking, security and identity management, (maybe others?)
 - Who are the big providers in this space
-  - And some of the integrated services like snowflake, databricks and what do they do
+  - Mention the integrated services like snowflake, databricks and what do they do
 -  When you would use cloud vs on prem servers vs local workstations
 -  Other topics I'm sure I'm forgetting. 
 
