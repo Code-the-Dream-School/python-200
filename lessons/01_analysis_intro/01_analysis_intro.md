@@ -2,8 +2,10 @@
 
 
 # Introduction to Data Analysis
+NOTE: this is vestige of older format for P200. We are changing over to new format: one file per topic. See [README.md](README.md).
 
 > ### Contributor Note 
+
 > This is a working outline for Python 200, Week 1. Each section below needs to be expanded into a full lesson. Use the code ideas and goals as a starting point — feel free to add examples, exercises, and links to visualizations or datasets. 
 
 Welcome to the first lesson in Python 200, Introduction to Data analysis! 

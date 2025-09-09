@@ -40,12 +40,20 @@ The PR will go through review before being merged into `main`. Thank you for you
 
 ## Pull request guidelines
 - Please keep PRs focused and not too large (avoid bundling unrelated changes). 
+- Use `snake_case` for file and folder names
+  - Exception: capitalizing abbreviations (`AI`) is ok for folders if it helps readability
 - Do not commit sensitive data (such as API keys or passwords).
-- Please do not commit large data files.
 - Add a short summary of what you are changing in the PR description. 
 - If relevant, please mention related issues in the PR by mentioning the `#issue-number`. 
+- Each lesson directory contains a `resources` folder to place essential images, data (CSV/JSON files), etc. for the lesson. A few guidelines for resources: 
+  - Keep file sizes small (under 1MB); large datasets should live outside the repo to be downloaded in individual lessons.
+  - Use jpg for images to keep files small.
+  - Use descriptive filenames, e.g. `histogram_example.jpg` or `sales_data_sample.csv`.
+  - Reference resources with relative paths. For example:
 
----
+    ```markdown
+    ![Histogram Example](resources/histogram_example.jpg)
+
 
 Again, thank you for helping with Python 200! :heart:
 
