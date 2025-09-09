@@ -1,9 +1,10 @@
 # Introduction to AI
+NOTE: this is vestige of older format for P200. We are changing over to new format: one file per topic. See [README.md](README.md).
 
 > ### Contributor Note 
 > This is a working template for Python 200, Week 5. Each section below needs to be expanded into a full lesson. Use the code ideas and goals as a starting point — feel free to add examples, exercises, and links to visualizations or datasets. 
 
-Welcome to the Week 5 in Python 200, Introduction to Artificial Intelligence! 
+Welcome to Week 5 in Python 200, Introduction to Artificial Intelligence! 
 
 > To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
 
