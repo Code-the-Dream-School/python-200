@@ -11,7 +11,7 @@ Refresher from intro class.
 2. [Descriptive statistics and distributions](02_distributions.md)  
    Shapes, skew, and why they matter when analyzing data.  
 
-3. [Hypothesis testing](03_central_tendency.md)  
+3. [Hypothesis testing](03_hypothesis_testing.md)  
 Basics of hypothesis testing. What is a p value?
 
 4. [Correlation](04_correlation.md)  
