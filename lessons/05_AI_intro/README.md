@@ -1,6 +1,6 @@
 # Week 1: Introduction to AI
 
-Welcome to the Week 8 in Python 200, Introduction to Artificial Intelligence! 
+Welcome to the Week 5 in Python 200, Introduction to Artificial Intelligence! 
 
 > To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
 
