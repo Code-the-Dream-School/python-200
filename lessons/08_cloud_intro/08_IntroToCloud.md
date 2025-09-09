@@ -7,7 +7,7 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
 
 > To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](00_Welcome.md) lesson. 
+> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page. 
 
 # Table of Contents
 1. [Cloud overview](#1-cloud-overview)

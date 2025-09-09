@@ -2,8 +2,7 @@
 
 Brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating. 
 
-> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](../00_Welcome.md) lesson. 
-
+> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page. 
 
 ## Topics
 1. [Topic 1](01_topic1.md)  
