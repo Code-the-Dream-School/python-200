@@ -244,9 +244,9 @@ http://localhost:4200
 
 ```
 Note:
-To launch the Prefect UI (version-dependent)
-- For many Prefect 2.x installs run: `prefect orion start`
-- For some later releases the equivalent command is: `prefect server start`
+To launch the Prefect UI (version-dependent).
+- For many Prefect 2.x installs run: `prefect orion start`.
+- For some later releases the equivalent command is: `prefect server start`.
 - If unsure, run `prefect --help` (or check `pip show prefect` / your installed version) and follow the CLI shown by your version.
 
 ```
