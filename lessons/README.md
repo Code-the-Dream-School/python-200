@@ -1,4 +1,5 @@
-# Welcome to Python 200!
+# Welcome Page for Python 200 Lessons
+
 *placeholder*
 
 Hello Python 200!

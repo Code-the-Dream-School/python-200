@@ -1,6 +1,4 @@
 
-
-
 # Introduction to Data Analysis
 NOTE: this is vestige of older format for P200. We are changing over to new format: one file per topic. See [README.md](README.md).
 

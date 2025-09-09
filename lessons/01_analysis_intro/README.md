@@ -2,7 +2,7 @@
 
 This week introduces the foundations of analysis you’ll use throughout the course. We’ll review core concepts from Python 100, then explore basic ideas from probability and statistics, and end with producing reproducible analysis utilities using pipelines. 
 
-> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](../README.md) lesson. 
+> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page. 
 
 ## Topics
 1. [Python 100 Review](01_python100_review.md)  
