@@ -7,8 +7,8 @@ Welcome to the Week 5 in Python 200, Introduction to Artificial Intelligence!
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
 
 ## Topics
-1. [Introduction to language processing](01_intro_nlp.md)  
-Explain what LLMs are and how they differ from earlier NLP models, and why language models have become so much more powerful recently. Discuss how language is converted to vectors (tokenization). Give broad overview of AI landscape.
+1. [Introduction to natural language processing](01_intro_nlp_llms.md)  
+An introduction to the field of natural language processing (NLP), and large language models (LLMs). Demystifying current large language models: an explanation of how they work, how they are trained. A demonstration of how meaning is represented in LLMs, with visualization. 
 
 2. [OpenAI Chat Completions API](02_open_ai_api.md)  
 Intro and overview of openai api chat completions endpoint. Go over required params (messages/model), but also the important optional params (max_tokens, temperature, top_p etc). Mention responses endpoint (more friendly to tools/agents). Discuss and demonstrate use of moderations endpoint.
