@@ -14,7 +14,7 @@ An introduction to the field of natural language processing (NLP), and large lan
 Intro and overview of openai api chat completions endpoint. Go over required params (messages/model), but also the important optional params (max_tokens, temperature, top_p etc). Mention responses endpoint (more friendly to tools/agents). Discuss and demonstrate use of moderations endpoint.
 
 3. [Abstraction layers](03_abstractions.md)  
-Instead of getting locked into a single vendor or style, there are a few packages that provide an abstraction layer across LLM providers and local LLMs (you can run inference locally using Ollama). Here we'll discuss a few of these (langchain, liteLLM, any-llm). 
+Instead of getting locked into a single vendor or style, there are a few packages that provide an abstraction layer across LLM providers and local LLMs (you can run inference locally using Ollama). Here we'll discuss a few of these (langchain, liteLLM, any-llm), and show how to use liteLLM. 
 
 4. [Prompt engineering](04_prompt_engineering.md)  
 There are better and worse ways to get responses from a model, here we'll go over the fundamentals of *prompt engineering*. Zero shot, one shot, few-shot, and chain of thought prompting.

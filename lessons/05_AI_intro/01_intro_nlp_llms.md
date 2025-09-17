@@ -17,10 +17,9 @@ The goals of NLP span a wide spectrum, including:
 - *Text classification*, where content is sorted into predefined categories (e.g., spam)
 - *Machine translation*, which converts text from one language to another
 - *Sentiment analysis*, where the emotional tone of text as positive, negative, or neutral is determined. 
-- Search engines that retrieve and synthesize precise responses to user queries.
 - *Conversational AI*, which powers chatbots and virtual assistants that engage in fluid, multi-turn dialogues. 
 
-Ultimately, NLP's aims to make human-computer interaction as intuitive as human-to-human exchanges, so it can be used in fields as diverse as healthcare diagnostics, explaining complex legal documents, and personalized education. 
+Ultimately, NLP aims to make human-computer interaction as intuitive as human-to-human exchanges, so it can be used in fields as diverse as healthcare diagnostics, explaining complex legal documents, and personalized education. 
 
 ### NLP Methods
 The field of NLP has seen a transformation in methodology over the past 50 years. It has seen a progression from rigid, rule-based approaches to data-driven, adaptive techniques that leverage machine learning and neural networks. 
@@ -29,19 +28,51 @@ In its early days, NLP depended on rule-based systems and hand-crafted grammars 
 
 The shift to statistical methods in the late 20th century marked a shift in method, incorporating probabilities to model patterns in language. This paved the way for machine learning, where algorithms learn directly from examples. Today, the dominant paradigm is deep learning. As we saw last week, deep learning is a subset of machine learning that uses neural networks with multiple layers to automatically extract features from raw data. 
 
-At the forefront of this approach are large language models (LLMs), such as those powering tools like GPT, which are pre-trained on billions of internet-scale sources of text. This modern approach has dramatically advanced performance, though it still grapples with challenges like bias in training data and computational demands.
+At the forefront of this approach are large language models (LLMs), such as those powering tools like GPT, which are pre-trained on billions of internet-scale sources of text. Such modern models, which we will discuss next, have dramatically advanced performance, though they still grapple with challenges like bias in training data and computational demands.
 
 The release of ChatGPT (from OpenAI) on November 30, 2022, was a watershed moment in the history of NLP. It lead to a massive surge in public awareness and usage of LLMs. This easily accessible chatbot allowed millions to interact directly with an advanced LLM. Overnight, the app amassed over a million users, and almost instantly generated awareness of the power of AI. It also accelerated its adoption in industries like education, customer service, and content creation. 
 
 The newest wave of LLMs inspired a surge in research, and spawned ethical debates on issues like misinformation (LLM hallucinations), job displacement, and even concerns about [conscious AI](https://www.scientificamerican.com/article/google-engineer-claims-ai-chatbot-is-sentient-why-that-matters/). For an interesting discussion of the impact of ChatGPT on the field of NLP, see the [oral history in Quanta Magazine](https://www.quantamagazine.org/when-chatgpt-broke-an-entire-field-an-oral-history-20250430/). 
 
-Since 2022, LLMs and NLP have shifted from being mostly academic curiosities, to tools that attract billions in venture capital that are reshaping how millions of people learn and interact with computers. 
+Since 2022, LLMs have shifted from being mostly academic curiosities to tools that attract billions in revenue from major software companies, and they are reshaping how millions of people learn and interact with computers. 
 
-In the rest of this lesson, we will learn some of the technical basics of how LLMs like ChatGPT work, and try to demystify their operations. Ultimatley, they are just another machine learning model, and they are trained to predict the next token in a string of tokens.   
+In the rest of this lesson, we will learn some of the technical basics of how LLMs like ChatGPT work, and try to demystify their operations. Ultimateley, they are just another machine learning model, and they are trained to predict the next token in a string of tokens. Sort of like 
 
 
-# 2 General overview of gpt and LLM
-What is large
+## 2. Large language models (LLMs)
+### LLMs: large-scale autocomplete suggestions
+Modern LLMs are machine learning models that are trained to predict the next word in a sequence, given all the words that came before. Imagine starting a sentence, and the model is tasked with filling in the blank: "The cat sat on the ___." The model looks at the context and generates a probability distribution over possible words. It might estimate that "mat" has a 70% chance, "floor" 20%, "sofa" 5%, and so on. It then picks the most likely candidate (or sometimes samples from that distribution to keep things more varied). 
+
+This simple "predict the next word" trick turns out to be extremely powerful. By repeating it over and over, LLMs can generate entire paragraphs, answer questions, write code, or carry on conversations.
+
+There is an excellent discussion of this at 3blue1brown (the following will open a video at YouTube):
+
+[![Watch the video](https://img.youtube.com/vi/LPZh9BOjkQs/hqdefault.jpg)](https://www.youtube.com/watch?v=LPZh9BOjkQs)
+
+
+You have likely seen a similar mechanism on your phone when writing text and it suggests the next word using its *autocomplete* feature. Basically what LLMs do is autocompletion on a large scale. What makes LLMs *large* is the amount of data used to train them, and the size of the models. 
+
+LLMs are trained on enormous amounts of text: essentially summaries of human knowledge taken from the entire internet. Also, the models themselves have billions (sometimes even trillions) of parameters, which allow the model to capture much more subtle patterns in language. It's this large scale, as well as the underlying transformer architecture (which we will discuss below) that makes modern LLMs so powerful, so much more fluent and flexible, compared to your phone's autocomplete function. 
+
+### How LLMs Learn
+The training process itself for LLMs is also different from what we saw in the ML module, where humans provide labeled data as ground truth to help train the models. LLMs use what’s called *self-supervised learning* (or sometimes *autoregression*). 
+
+Instead of humans labeling data by hand, textual data, such as "The cat sat on the mat" comes pre-labeled -- the "correct next word" is baked into the text itself. Therefore, you can train LLMs on huge bodies of text without any manual annotation. This allows the model to scale up to billions or trillions of training examples, slowly learning grammar, facts, reasoning examples, and even stylistic patterns, simply by getting better and better at the next-word prediction game. 
+
+There is one wrinkle we should cover before moving on to more technical matters. There are really two different ways that LLms learn. First, by training on huge bodies of text in next-word-prediction task, we end up with *foundational* or *pretrained* models. These are general purpose models that embody information from extremely broad sources. However, they aren't very good as personal assistants, chatbots, etc. To get that, a second training step is needed, where these foundational models are *fine-tuned* on a labeled dataset that is tailored to a specific task or application (like back-and-forth chatting). 
+
+![pretrained vs fine-tuned llm](resources/pretrained_finetuned_llm.jpg)
+
+In other words, fine-tuning takes a base model and adjusts it for specific purposes, such as answering questions safely, following instructions, or writing in a particular style. There are different ways to do this: supervised fine-tuning or reinforcement learning with human feedback (RLHF). The result is that you can build specialized models on top of the same foundation -- one version might become a customer service chatbot, another a medical assistant, and another a coding helper. The distinction between the general base model and its fine-tuned variants is key to understanding why LLMs are so adaptable in practice.
+
+While in this course we will not go through building your own LLM, the excellent book [Build a Large Language Model from Scratch](https://www.manning.com/books/build-a-large-language-model-from-scratch) by Sebastian Raschka, walks you through this process using PyTorch if you are interested. The above picture is adapted from his book.
+
+In the next section we will dig into the details a bit more about how LLMS work: as we said, it isn't just that they are *large*, but their particular computational architecture, that makes them so powerful. 
+
+
+
+
+
 Pretrained models
 Tokenizing Embedding (we will cover this)
 Transformer and attention to create better embeddings
