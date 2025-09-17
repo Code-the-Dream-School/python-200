@@ -40,7 +40,7 @@ In the rest of this lesson, we will learn some of the technical basics of how LL
 
 
 ## 2. Large language models (LLMs)
-### LLMs: large-scale autocomplete suggestions
+### LLMs: autocomplete at scale
 Modern LLMs are machine learning models that are trained to predict the next word in a sequence, given all the words that came before. Imagine starting a sentence, and the model is tasked with filling in the blank: "The cat sat on the ___." The model looks at the context and generates a probability distribution over possible words. It might estimate that "mat" has a 70% chance, "floor" 20%, "sofa" 5%, and so on. It then picks the most likely candidate (or sometimes samples from that distribution to keep things more varied). 
 
 This simple "predict the next word" trick turns out to be extremely powerful. By repeating it over and over, LLMs can generate entire paragraphs, answer questions, write code, or carry on conversations.
@@ -52,18 +52,24 @@ There is an excellent discussion of this at 3blue1brown (the following will open
 
 You have likely seen a similar mechanism on your phone when writing text and it suggests the next word using its *autocomplete* feature. Basically what LLMs do is autocompletion on a large scale. What makes LLMs *large* is the amount of data used to train them, and the size of the models. 
 
-LLMs are trained on enormous amounts of text: essentially summaries of human knowledge taken from the entire internet. Also, the models themselves have billions (sometimes even trillions) of parameters, which allow the model to capture much more subtle patterns in language. It's this large scale, as well as the underlying transformer architecture (which we will discuss below) that makes modern LLMs so powerful, so much more fluent and flexible, compared to your phone's autocomplete function. 
+LLMs are trained on enormous collections of text, including books, Wikipedia, articles, and large parts of the internet. The models also contain billions (sometimes even trillions) of parameters, which allow the model to capture much more subtle patterns in language. It's this large scale, as well as the underlying transformer architecture (which we will discuss below) that makes modern LLMs so much more fluent and flexible than your phone's autocomplete feature. 
 
 ### How LLMs Learn
-The training process itself for LLMs is also different from what we saw in the ML module, where humans provide labeled data as ground truth to help train the models. LLMs use what’s called *self-supervised learning* (or sometimes *autoregression*). 
+The training process itself for LLMs is also different from what we saw in the ML module, where humans provide labeled data as ground truth to help train the models. Instead, LLMs use what’s called *self-supervised learning*. Because the "correct next word" is already present in every text sequence, the data effectively labels itself. 
 
-Instead of humans labeling data by hand, textual data, such as "The cat sat on the mat" comes pre-labeled -- the "correct next word" is baked into the text itself. Therefore, you can train LLMs on huge bodies of text without any manual annotation. This allows the model to scale up to billions or trillions of training examples, slowly learning grammar, facts, reasoning examples, and even stylistic patterns, simply by getting better and better at the next-word prediction game. 
+For example, in the phrase "The cat sat on the mat," the model can practice by hiding "mat" and predicting it from the context. This setup is also called *autoregression*, because the model predicts each word based on all the words before it.
 
-There is one wrinkle we should cover before moving on to more technical matters. There are really two different ways that LLms learn. First, by training on huge bodies of text in next-word-prediction task, we end up with *foundational* or *pretrained* models. These are general purpose models that embody information from extremely broad sources. However, they aren't very good as personal assistants, chatbots, etc. To get that, a second training step is needed, where these foundational models are *fine-tuned* on a labeled dataset that is tailored to a specific task or application (like back-and-forth chatting). 
+With this approach, you can train on billions or trillions of examples without manual annotation. Over time, the model learns grammar, facts, reasoning shortcuts, and stylistic patterns simply by getting better at predicting the next word.
+
+There is one wrinkle we should cover before moving on to more technical matters. There are really two different ways that LLMs learn. First, by training on huge bodies of text in the next-word-prediction task, we end up with *foundational* or *pretrained* models. These are general purpose models that embody information from extremely broad sources. However, they don't work well as personal assistants, chatbots, etc. To get good performance on such specialized tasks, a second training step is needed, where these foundational models are *fine-tuned* on a labeled dataset that is tailored to a specific task or application.
 
 ![pretrained vs fine-tuned llm](resources/pretrained_finetuned_llm.jpg)
 
-In other words, fine-tuning takes a base model and adjusts it for specific purposes, such as answering questions safely, following instructions, or writing in a particular style. There are different ways to do this: supervised fine-tuning or reinforcement learning with human feedback (RLHF). The result is that you can build specialized models on top of the same foundation -- one version might become a customer service chatbot, another a medical assistant, and another a coding helper. The distinction between the general base model and its fine-tuned variants is key to understanding why LLMs are so adaptable in practice.
+In other words, fine-tuning takes a base model and adjusts it for specific purposes, such as answering questions, following instructions, or writing in a particular style. 
+
+There are various ways to do this. For instance, with supervised fine-tuning (SFT) follows a more traditional ML approach where the model is given paired examples of inputs and desired outputs. With [reinforcement learning from human feedback](https://www.youtube.com/watch?v=T_X4XFwKX8k) (RLHF), the model adapts (using reinforcement learning procedures) to produce responses that are ranked more highly by human judges. 
+
+The result is that you can build specialized models on top of the same foundation -- one version might become a customer service chatbot, another a medical assistant, and another a coding helper. The distinction between the general base model and its fine-tuned variants is key to understanding why LLMs are so adaptable in practice.
 
 While in this course we will not go through building your own LLM, the excellent book [Build a Large Language Model from Scratch](https://www.manning.com/books/build-a-large-language-model-from-scratch) by Sebastian Raschka, walks you through this process using PyTorch if you are interested. The above picture is adapted from his book.
 
