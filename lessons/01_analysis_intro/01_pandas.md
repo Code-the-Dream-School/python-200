@@ -748,7 +748,8 @@ print(students_df.groupby("class_grade")["final_score"].mean())
 # This counts how many students are from each city.
 print(students_df.groupby("city")["id"].count())
 ```
-<img width="406" height="144" alt="Screenshot 2025-09-09 at 3 46 15 PM" src="https://github.com/user-attachments/assets/f58b548c-b062-4318-867c-74bf196d7e8a" />
+> 💡 Note: Please try this code in your own VS Code (or Jupyter) to see the actual results based on the dataset.
+
 
 Grouping & aggregation helps you summarize big datasets into meaningful insights without looking row by row.
 
@@ -898,3 +899,5 @@ Just read the error message carefully and search online. Errors are your best hi
 
 📺 [Learning Pandas for Data Analysis?](https://www.youtube.com/watch?v=DkjCaAMBGWM)  
 📺 [What is Pandas?](https://www.youtube.com/watch?v=dcqPhpY7tWk&t=70s)
+📺 [10 Minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html) — official quickstart guide from the pandas developers
+
