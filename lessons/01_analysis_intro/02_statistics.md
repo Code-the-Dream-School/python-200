@@ -1,4 +1,4 @@
-# Descriptive statistics and distributions
+# Descriptive statistics and Distributions
 
 ## **Learning Objective**: 
 Every dataset tells a story - but without the right tools, we can’t understand it. Descriptive statistics and distributions help us summarize, visualize, and see patterns at a glance.  
@@ -60,9 +60,9 @@ Mean: 30.0
 - If the dataset has an odd number of values → take the middle one.
 - If it has an even number of values → take the average of the two middle values. 
 
-![Median-odd illustration](resources/analysis/Median-odd.png)
+![Median-odd illustration](resources/Median-odd.png)
 
-![Median-even illustration](resources/analysis/Median-even.png)
+![Median-even illustration](resources/Median-even.png)
 
 **Example**:
 ```python
@@ -80,7 +80,7 @@ The mode is the most frequently occurring value.
 - Useful for categorical data (e.g., favorite ice cream flavor).
 - Less useful for continuous numeric data (like heights), because exact repeats are rare. 
 
-![Mode](resources/analysis/mode.png)
+![Mode](resources/mode.png)
 
 👉 Note: NumPy does not have a direct `mode()` function.  
 That’s why here we use the built-in **`statistics`** library for simplicity.  
@@ -96,6 +96,24 @@ Output:
 Mode: Vanilla
 
 ```
+#### What if there’s a tie?  
+If two or more values occur with the same highest frequency:  
+- Python’s `statistics.mode()` returns **the first value it encounters**.  
+- This means it won’t show *all* modes if multiple values are equally common.  
+
+To handle ties properly, you can use **`statistics.multimode()`**, which returns a list of all modes:  
+
+```python
+import statistics as stats
+
+flavors = ["Vanilla", "Chocolate", "Vanilla", "Chocolate"]
+print("Multimode:", stats.multimode(flavors))
+```
+Output:
+
+```bash 
+Multimode: ['Vanilla', 'Chocolate']
+```
 
 ## 2. Measures of Variability (Spread)
 Knowing the **center** of the data (mean/median/mode) is useful, but not enough. Two students may have the same average exam score, yet one is very consistent while the other’s scores fluctuate widely.
@@ -110,7 +128,7 @@ Variance measures the **average squared distance** of values from the mean. It g
 - Low variability: Data points cluster tightly around the mean (consistent, predictable)
 - High variability: Data points are spread out (inconsistent, unpredictable)
 
-![Variance](resources/analysis/variance.png)
+![Variance](resources/variance.png)
 
 In NumPy:
 
@@ -158,8 +176,9 @@ Student B - Mean: 79.0 Std Dev: 19.24
 ### 2.3 Outliers and Their Impact on Central Tendency and Spread
 
 #### What are Outliers?
-An **outlier** is also a data point that is drastically different from the other records in the dataset, with the differences being either too high or too low when compared to the rest of the observations. 
-  
+
+An **outlier** is also a data point that is drastically different from the other records in the dataset. These extreme values, which can be much larger or smaller than the rest, can distort statistical measures like the mean and variance.
+
 - Outliers can come from genuine rare events (e.g., a billionaire’s income).  
 - Or from errors (e.g., a typo when entering data).  
 
@@ -221,15 +240,56 @@ Frequency distribution = What we actually observe in our dataset.
 
 Probability distribution = The theoretical pattern that explains what we observe.
 
-When we collect data from the real world, we're essentially taking samples from underlying probability distributions. Understanding this connection helps us:
+As we will soon demonstrate with some examples, when we collect data from the real world, we're essentially taking samples from underlying probability distributions. Understanding this connection helps us:
 
 - Identify patterns in our data.
 - Make predictions about future observations.
 - Choose appropriate statistical methods.
 - Detect when something unusual is happening.
 
+### Probability Distribution Basics
+
+Before diving into specific types, here are a few properties that **all probability distributions share**:
+
+- **Probabilities are always between 0 and 1**  
+  Every possible outcome has a probability in this range.
+
+- **The total probability equals 1**  
+  If you add up the probabilities of *all possible outcomes*, they sum to exactly 1.
+
+### Discrete vs Continuous Distributions
+
+One of the most important distinctions in probability is whether a distribution is **discrete** or **continuous**.  
+
+#### 🔹 Discrete Distributions
+A distribution is *discrete* if it deals with outcomes that can be **counted individually**.  
+- Example: Rolling a six-sided die → possible outcomes are {1, 2, 3, 4, 5, 6}.  
+- Example: Flipping a coin → possible outcomes are {Heads, Tails}.  
+
+Key characteristics of discrete distributions:
+- There are a **finite or countable number of possible values**.  
+- Each outcome has a specific probability assigned to it.  
+- The probabilities of all outcomes add up to 1.  
+
+👉 Think of discrete distributions as dealing with **separate, distinct "chunks" of outcomes.**
+
+#### 🔹 Continuous Distributions
+A distribution is *continuous* if it deals with outcomes measured on a **continuous scale**.  
+- Example: A person’s height could be 165.2 cm, 165.25 cm, or 165.253 cm. There are infinitely many possibilities.  
+- Example: Measuring the time it takes to run 100 meters → it could be 12.03 seconds, 12.031 seconds, 12.0315 seconds, etc.  
+
+Key characteristics of continuous distributions:
+- Outcomes can take on **any value within a range** (potentially infinite).  
+- Instead of assigning probability to single values, we talk about **probability across intervals** (e.g., the probability that someone’s height is between 160 and 170 cm).  
+- The probabilities across the entire range also add up to 1.  
+
+👉 Think of continuous distributions as describing **smooth, unbroken ranges** of outcomes.
+
+If you'd like a short and clear **video explanation of probability distributions**, this one is a great resource:  
+[Introduction to Probability Distributions (YouTube)](https://www.youtube.com/watch?v=b9a27XN_6tg) 
+
 ### 3.2 Normal Distribution: The Foundation
-The normal distribution (bell curve) is the most important probability distribution in statistics:
+The normal distribution (bell curve) is the most well-known probability distribution in statistics, and may well be the most important:
 
 - Perfectly symmetrical around the mean.
 - Mean ≈ Median ≈ Mode.
@@ -249,6 +309,11 @@ data_normal = np.random.normal(loc=50, scale=5, size=1000)
 # size = how many samples we observe
 
 ```
+
+The figure below shows a normal distribution with mean, median, and mode aligned
+
+![Normal distribution](<resources/Normal distribution.png>)
+
 ### 3.3 Skewed Distributions: When Data Isn't Symmetric
 Many real-world processes follow skewed probability distributions:
 
@@ -258,11 +323,19 @@ Many real-world processes follow skewed probability distributions:
 - Mean > Median (pulled toward the tail)
 - Examples: Income, house prices, wait times
 
+The figure below shows a right-skewed distribution where the mean is pulled toward the tail and is greater than the median
+
+![Right skewed](<resources/Right skewed.png>)
+
 **Left-skewed (negative skew):**
 
 - Most values are large, few are very small
 - Mean < Median (Tail goes to the left)
 - Examples: Test scores when most students do well
+
+The figure below shows a left-skewed distribution where the mean is pulled toward the tail and is less than the median
+
+![left skewed](<resources/left skewed.png>)
 
 **The Exponential Distribution**
 A classic right-skewed probability distribution is the exponential distribution, perfect for modeling:
@@ -282,12 +355,72 @@ print("Exponential sample median:", np.median(data_skewed))
 
 [Check out this YouTube video to understand the location of the mean, median, and mode in symmetric and skewed distributions.](https://www.youtube.com/watch?v=2x9ZdBLL-6I)
 
-( #### Key Takeaways from the video: 
+#### Key Takeaways from the video: 
 - Normal data: Mean is a reliable summary.
 - Skewed data: Median is more robust because it resists being pulled by extreme outliers.
-- Understanding the shape helps decide which summary statistics and tests to use.)
+- Understanding the shape helps decide which summary statistics and tests to use.
 
-### 3.4 Probability in Action: Coin Toss Simulation 
+### 3.4 Visualizing Distributions with Histograms
+
+Now that we’ve explored **normal and skewed distributions**, let’s see how we can **visualize them using histograms**.
+
+A **histogram** is a graphical representation of the distribution of numerical data. It uses bars to display the **frequency of data points** within specified ranges, often called **bins**. The height of each bar corresponds to how many data points fall into that range.
+
+![Histogram](resources/Histogram.png)
+*This shows how a histogram visualizes the frequency of data points in bins.*
+
+#### Using Matplotlib to Create Histograms
+
+We can use the `matplotlib.pyplot` library to create histograms in Python. Pyplot provides plotting utilities and is usually imported as `plt`:
+
+```python
+import matplotlib.pyplot as plt
+```
+
+The main function for histograms is plt.hist(), which takes an array of data and optional parameters like the number of bins, color, and edge color.
+
+#### Example: Normal Distribution vs Exponential(right-skewed) distribution
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate 1000 data points from different probability distributions
+data_normal = np.random.normal(loc=50, scale=5, size=1000)
+exponential_data = np.random.exponential(scale=10, size=1000)
+
+# Create side-by-side histograms using plt directly
+plt.figure(figsize=(10,4))  # Creates the overall window (10x4 inches)
+
+# First subplot
+plt.subplot(1, 2, 1)
+plt.hist(data_normal, bins=30, color="skyblue", edgecolor="black")
+plt.title("Normal Distribution") #sets title of the histogram.
+plt.xlabel("Value")     # X-axis label
+plt.ylabel("Frequency") # Y-axis label
+
+# Second subplot  
+plt.subplot(1, 2, 2)
+plt.hist(exponential_data, bins=30, color="salmon", edgecolor="black")
+plt.title("Exponential Distribution")
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+
+plt.tight_layout()  # Auto-adjusts spacing between plots to prevent overlap
+plt.show()   #Displays the generated plot
+```
+
+**Explanation:** 
+- np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
+- loc = mean, scale = standard deviation, size = number of samples.
+- plt.figure(figsize=(width, height)): Creates a new figure (the overall canvas for our plots)
+- plt.subplot(nrows, ncols, index) → Divides canvas into 1 row, 2 columns, select position 1. 
+- plt.hist(data, bins=30) → creates histogram with 30 bins.
+- color and edgecolor → improve readability.
+
+![Normal vs Exponential_histogram](<resources/Normal vs Exponential_histogram.png>)
+
+### 3.5 Probability in Action: Coin Toss Simulation 
 
 Let's explore probability through coin tosses - a simple, intuitive example that demonstrates how probability distributions work in practice:
 
@@ -341,98 +474,41 @@ Conclusion: This looks like normal behavior for a fair process.
 
 Conclusion: This pattern suggests we're not dealing with a fair coin.
 
-## 4. Visualization: Histograms & Boxplots
+## 4. Visualization: Boxplots
+ 
+ We’ve seen how **histograms** show the shape of a distribution. Another useful tool for summarizing data is the **boxplot**, also called a **box-and-whisker plot**.
 
-Now that we understand **normal vs skewed distributions**, we can use visual tools to **see the shape and spread** of data.
+ A boxplot is based on the **five-number summary** of a dataset:
+- Minimum  
+- First quartile (Q1)  
+- Median (Q2)  
+- Third quartile (Q3)  
+- Maximum  
 
-Two common visualization tools are:
+It provides a compact visual of the **center, spread, skewness, and outliers**.
 
-1. **Histograms** – Show the frequency distribution of values.  
-2. **Boxplots (or Whisker Plots)** – Summarize spread, quartiles, and highlight outliers.
+![Boxplot](resources/boxplot.png)
 
-### 4.1 Histograms
-A histogram is a graphical representation of the distribution of numerical data. It uses bars to display the frequency of data points within specified ranges or intervals, often called bins. The height of each bar corresponds to the number of data points that fall within that specific range. 
+### Key Components of a Boxplot
 
-![Histogram](resources/analysis/Histogram.png)
+- **Box**: Represents the interquartile range (IQR = Q3 – Q1).  
+- **Median**: A line inside the box marks the median, which is the middle value of the dataset. 
+- **Whiskers**: Lines extending from the box, called whiskers, typically extend to the minimum and maximum values within a certain range (e.g., 1.5 times the IQR).
+- **Outliers**: Points beyond the whiskers, representing unusual or extreme values.  
 
-#### 4.1.2 Pyplot
-Matplotlib is a low level graph plotting library in python that serves as a visualization utility. Most of the Matplotlib utilities lies under the pyplot submodule, and are usually imported under the plt alias:
+### How to Interpret a Boxplot
+- **Center**: The median line inside the box shows the central tendency.  
+- **Spread**: The length of the box (IQR) and whiskers shows data variability.  
+- **Skewness**: If the median isn’t centered in the box, or whiskers differ in length, the data is skewed.  
 
-`import matplotlib.pyplot as plt`
-
-In Matplotlib, we use the `hist()` function to create histograms.
-
-#### Example: Normal Distribution vs Exponential(right-skewed) distribution
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Generate 1000 data points from different probability distributions
-data_normal = np.random.normal(loc=50, scale=5, size=1000)
-exponential_data = np.random.exponential(scale=10, size=1000)
-
-# Create side-by-side histograms using plt directly
-plt.figure(figsize=(10,4))  # Creates the overall window (10x4 inches)
-
-# First subplot
-plt.subplot(1, 2, 1)
-plt.hist(data_normal, bins=30, color="skyblue", edgecolor="black")
-plt.title("Normal Distribution") #sets title of the histogram.
-plt.xlabel("Value")     # X-axis label
-plt.ylabel("Frequency") # Y-axis label
-
-# Second subplot  
-plt.subplot(1, 2, 2)
-plt.hist(exponential_data, bins=30, color="salmon", edgecolor="black")
-plt.title("Exponential Distribution")
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-
-plt.tight_layout()  # Auto-adjusts spacing between plots to prevent overlap
-plt.show()   #Displays the generated plot
-```
-
-**Explanation:** 
-- np.random.normal(loc=50, scale=5, size=1000) → generates normal data.
-- loc = mean, scale = standard deviation, size = number of samples.
-- plt.figure(figsize=(width, height)): Creates a new figure (the overall canvas for our plots)
-- plt.subplot(nrows, ncols, index) → Divides canvas into 1 row, 2 columns, select position 1. 
-- plt.hist(data, bins=30) → creates histogram with 30 bins.
-- color and edgecolor → improve readability.
-
-![Output](<resources/analysis/Normal vs Exponential_histogram.png>)
-
-### 4.2 Boxplots 
-
-A box plot, also known as a box-and-whisker plot, is a standardized way of displaying the distribution of data based on a **five-number summary**: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. It provides a visual representation of the center, spread, and skewness of a dataset, and can also highlight outliers. 
-
-![Boxplot](resources/analysis/boxplot.png)
-
-#### Here's a breakdown of the key components of a box plot:
-- **Box**:
-The box itself represents the interquartile range (IQR), which is the range between the first and third quartiles (Q1 and Q3). 
-- **Median**:alt text
-A line inside the box marks the median, which is the middle value of the dataset. 
-- **Whiskers**:
-Lines extending from the box, called whiskers, typically extend to the minimum and maximum values within a certain range (e.g., 1.5 times the IQR). 
-- **Outliers**:
-Data points that fall outside the whiskers are considered outliers, potentially indicating unusual or extreme values. 
-
-#### How to interpret a box plot:
-- **Center**:
-The median line within the box indicates the center of the data. 
-- **Spread**:
-The length of the box (IQR) and the whiskers indicates the spread or variability of the data. 
-- **Skewness**:
-If the median line is not in the center of the box, or if the whiskers are of different lengths, it suggests that the data is skewed. 
+👉 Boxplots are especially useful when comparing multiple datasets side by side.
 
 [Checkout this video to see how to interpret and analyze data from Boxplot](https://www.youtube.com/watch?v=KwqWuRvt7XQ&t=6s)
 
 
 ### Boxplot Syntax in Python
 
-The `matplotlib.pyplot` module of matplotlib library provides `boxplot()` function with the help of which we can create box plots.
+The `matplotlib.pyplot` library provides the `boxplot()` function:
 
 ```python
 plt.boxplot([data1, data2])
@@ -457,7 +533,7 @@ plt.ylabel("Value")
 plt.show()
 
 ```
-![Boxplot Comparison](resources/analysis/Boxplot_comparsion.png)
+![Boxplot Comparison](resources/Boxplot_comparsion.png)
 
 ### 📊 Observations from the Plot: 
 - **Normal distribution**:  
