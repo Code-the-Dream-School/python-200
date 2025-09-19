@@ -106,7 +106,7 @@ print(new_scores)   # [55 65 75 85]
 
 ---
 
-# Topic 11 of Lesson 1: Array Creation, Indexing & Slicing
+# Topic 11 of Lesson 1: Array Creation, Indexing & Slicing, Array Properties
 
 We just learned that the NumPy array is like a super-efficient solution, where you can quickly store and work with numbers. Let’s see how to create arrays, access values, and pick slices (subsets).
 
@@ -211,6 +211,42 @@ Output:
 
 ---
 
+### Real-Life Example: Images as NumPy Arrays
+
+Many real-world datasets are actually stored as arrays.  
+For example, a **grayscale image** is just a 2D NumPy array:
+- Rows → image height (pixels top to bottom)  
+- Columns → image width (pixels left to right)  
+- Each value → pixel intensity (e.g., 0–255)
+
+If you have a **stack of images**, NumPy stores them as a 3D array with shape:
+
+---
+
+### Checking Array Properties
+
+When working with arrays, it’s important to quickly understand their structure.  
+NumPy provides simple attributes for this:
+
+- `.size` → total number of elements in the array  
+- `.ndim` → number of dimensions (1D, 2D, etc.)  
+- `.shape` → the size of each dimension (rows × columns, etc.)  
+- `.dtype` → the type of data stored in the array (e.g., int, float)  
+
+**Example:**  
+> 🔔 **Reminder:** Run this code in VS Code and check the output yourself. It’s the best way to learn!
+
+```python
+arr = np.array([[1, 2, 3],
+                [4, 5, 6]])
+
+print("Array:", arr)
+print("Size:", arr.size)       # 6 elements total
+print("Dimensions:", arr.ndim) # 2D array
+print("Shape:", arr.shape)     # (2 rows, 3 columns)
+print("Data type:", arr.dtype) # int64 (depends on system)
+
+
 ### Broadcasting in NumPy
 
 Broadcasting is NumPy’s smart way of handling math when arrays have different shapes. NumPy repeats the smaller array automatically so it matches the bigger one during operations.
@@ -240,12 +276,23 @@ It stretched the vector across both rows so the math works.
 
 ---
 
-# Topic 12 of Lesson 1: Basic Statistics with NumPy
+# Topic 12 of Lesson 1: Mathematical Operations & Basic Statistics with NumPy
 
-When you collect numbers (like exam scores, sales, or daily temperatures), you often want to summarize them.  
+NumPy isn’t just about storing numbers efficiently, it also gives you powerful mathematical tools to work with those numbers directly.
+
+For example:  
+```python
+arr = np.array([0, np.pi/2, np.pi])
+
+print("Sine:", np.sin(arr))    # [0. 1. 0.]
+print("Maximum:", np.max(arr)) # 3.1415...
+print("Square root:", np.sqrt([1, 4, 9])) # [1. 2. 3.]
+```
+
+Further more: When you collect numbers (like exam scores, sales, or daily temperatures), you often want to summarize them.  
 That’s where statistics come in.
 
-NumPy makes this super easy — no manual math, just one function call.
+NumPy makes this super easy, no manual math, just one function call.
 
 Think of it this way:  
 Imagine you’re a teacher with scores of 100 students.  
@@ -282,3 +329,17 @@ Standard Deviation: 17.93
 - Standard Deviation → How much scores differ from the average  
 
 📌 This is super useful in real life: businesses use it for sales trends, sports teams for performance consistency, and teachers for class analysis.
+
+
+```markdown
+👉 NumPy has many more statistical tools you can explore: [see full list here](https://numpy.org/doc/stable/reference/routines.statistics.html)
+
+📌 And then for statistics specifically, we’ll be going into much more detail in a later lesson this week and in later weeks. In the meantime, there are tons of resources available directly in NumPy: [see statistics resources here](https://numpy.org/doc/stable/reference/routines.statistics.html)
+
+---
+
+### Further Learning Resources
+
+- [NumPy for Absolute Beginners](https://numpy.org/doc/stable/user/absolute_beginners.html) — official quickstart guide from the NumPy developers  
+- [YouTube: NumPy Tutorial for Beginners](https://www.youtube.com/watch?v=lLRBYKwP8GQ) — video introduction to NumPy concepts and usage
+
