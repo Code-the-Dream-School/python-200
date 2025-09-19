@@ -435,7 +435,7 @@ students_df.sort_values("score", ascending=False)
 
 ---
 
-## Quiz: Selecting & Filtering Data 🎯
+## Check for Understanding: Selecting & Filtering Data 🎯
 
 **Q1. How do you select just the `name` column from `students_df`?**  
 <details>
@@ -583,37 +583,6 @@ print(students_df.duplicated().sum())
 **Remove duplicates:**  
 ```python
 students_df = students_df.drop_duplicates()
-```
-
----
-
-## 📝 Exercise: Clean a Small DataFrame
-
-**Goal:** Create a small DataFrame with missing values and duplicates, then:  
-1. Find the missing values (`.isnull()` and `.isnull().sum()`).  
-2. Count duplicates (`.duplicated().sum()`).  
-3. Fill missing numeric values with the median (`.median()`).  
-4. Remove duplicates (`.drop_duplicates()`).  
-5. Verify your work by re-running the checks.  
-
-**Starter Code:**  
-```python
-# import pandas
-import pandas as pd
-
-# Create a dataframe with duplicates and missing values
-data = {
-    "id":   [101, 102, 102, 103, 104, 105],
-    "age":  [25, 30, 30, None, 22, None],
-    "score":[88, 92, 92, 75, None, 85]
-}
-
-practice_df = pd.DataFrame(data)
-
-# See the created dataframe
-print(practice_df)
-
-# Write your code here
 ```
 
 ---
@@ -843,7 +812,7 @@ print(all_students)
 
 ---
 
-## Quiz Time 🎯
+## Check for Understanding 🎯
 
 **Q1. You have one list with student IDs and names, and another list with student IDs and exam scores. You want to bring the scores next to the names.**  
 Options: Should you use **merge** or **concat**?  
