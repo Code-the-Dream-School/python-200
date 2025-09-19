@@ -175,6 +175,104 @@ Use `plt.legend()`
 </details>
 
 
+---
+
+## More Matplotlib Features to Know
+
+The four basic plots (line, bar, scatter, histogram) are the foundations.  
+But you’ll often see and use a few additional features in practice. Here’s a quick taste:
+
+### 1. Object-Oriented Interface
+
+So far we’ve used the **pyplot** style (`plt.plot(...)`).  
+Matplotlib also has an **object-oriented** style, which is more flexible and what you’ll see in most real projects.  
+It separates the **Figure** (overall canvas) from the **Axes** (individual plots).
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+fig, ax = plt.subplots()  # Create a figure and axis
+ax.plot(x, y)
+ax.set_title("Sine Wave")
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+plt.show()
+
+
+
+### 2. Visualizing 2D Arrays with `imshow`
+
+NumPy arrays can represent images or grids of data.  
+You can visualize them directly with `imshow()` — very useful when working with image data later in the course.
+
+```python
+arr = np.random.rand(100, 100)
+
+plt.imshow(arr, cmap="viridis")
+plt.colorbar()  # Show color scale
+plt.title("Random 2D Array (like an image)")
+plt.show()
+
+### 3. Subplots
+
+Sometimes you want to show multiple plots side by side.  
+`subplots()` makes it easy to lay out multiple Axes in the same Figure.
+
+```python
+x = np.linspace(0, 10, 100)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+
+axes[0].plot(x, y1, color="blue")
+axes[0].set_title("Sine")
+
+axes[1].plot(x, y2, color="green")
+axes[1].set_title("Cosine")
+
+plt.show()
+
+
+### 4. Customizing Line Styles
+
+Matplotlib gives you fine control over **line style, color, markers, labels, and more**.  
+Here’s a slightly fancier plot that combines several options.
+
+```python
+x = np.arange(0, 100)
+y1 = np.sin(x / 10)
+y2 = np.cos(x / 10)
+
+plt.figure(figsize=(10, 6))
+plt.plot(x, y1, linewidth=1, color='r', linestyle='--', label="t1", zorder=3)
+plt.plot(x, y2, linewidth=0.5, color='b', marker='.', markersize=4, label="t2")
+plt.axis([0, 100, -1.8, 1.8])
+plt.xlabel("Location", fontsize=12)
+plt.ylabel("Height", fontsize=12)
+plt.title("Wave Height at Different Times", fontsize=16)
+plt.legend(loc='upper right')
+plt.show()
+
+---
+
+## Additional Resources 📚
+
+If you’d like to go further with Matplotlib, here are some excellent resources:
+
+- 🎥 [Corey Schafer’s YouTube Series on Matplotlib](https://www.youtube.com/watch?v=UO98lJQ3QGI&list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — great video walkthroughs.  
+- 📖 [DataCamp Matplotlib Tutorial](https://www.datacamp.com/tutorial/matplotlib-tutorial-python) — step-by-step written guide.  
+
+These will give you extra practice and deeper insights into data visualization.
+
+📌 Keep practicing, the more you play with data, the more confident you’ll get. You’re off to a great start!
+
+---
+
 ## Lesson 1 Wrap-Up
 
 🎉 Congrats! You’ve completed Lesson 1.  
@@ -184,6 +282,7 @@ You now know the **three pillars of data analysis**:
 - **NumPy** → fast math & calculations  
 - **Matplotlib** → turn numbers into visual stories  
 
-With just these, you can already clean data, analyze trends, and make charts. This is the foundation every data scientist uses daily.  
+With just these, you can already clean data, analyze trends, and make charts. This is the foundation every data scientist uses daily. 
 
-📌 Keep practicing — the more you play with data, the more confident you’ll get. You’re off to a great start!
+---
+
