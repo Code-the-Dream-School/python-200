@@ -104,6 +104,31 @@ plt.show()
 
 ## Calculating Correlation
 
+### The Math Behind Pearson Correlation (Optional) 🧮  
+
+If you’re curious about the math behind Pearson’s correlation coefficient, here’s the definition:  
+
+\[
+r = \frac{\text{cov}(X, Y)}{\sigma_X \, \sigma_Y}
+\]
+
+Where:  
+- **cov(X, Y)** = covariance between X and Y (how much they vary together)  
+- **σ_X, σ_Y** = standard deviations of X and Y (how much they vary individually)  
+
+👉 Intuitively:  
+- The numerator (covariance) measures how much two variables move together.  
+- The denominator (product of standard deviations) normalizes this, so we get a value between **-1 and +1**.  
+
+So:  
+- If X and Y always rise/fall together → **r = +1**.  
+- If X rises when Y falls → **r = -1**.  
+- If X and Y move independently → **r ≈ 0**.  
+
+📚 For more details, see the [Pearson correlation documentation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient).  
+
+---
+
 ### Using NumPy: `np.corrcoef()`
 
 ```python
@@ -150,6 +175,46 @@ print(df.corr())
 
 ---
 
+### Calculating Correlation with p-value (SciPy)
+
+So far we’ve just seen the **correlation coefficient (r)**.  
+But often, we also want to know: **is this correlation statistically significant, or could it be due to random chance?**  
+
+That’s where `scipy.stats.pearsonr()` comes in — it gives both the correlation and a **p-value**.
+
+```python
+from scipy.stats import pearsonr
+import numpy as np
+
+# Example 1: Small dataset
+study_hours = [1, 2, 3, 4, 5]
+exam_scores = [50, 55, 60, 65, 70]
+
+r, p = pearsonr(study_hours, exam_scores)
+print("Correlation:", r)
+print("p-value:", p)
+
+# Example 2: Larger dataset (100 samples, same trend + noise)
+np.random.seed(42)
+x = np.linspace(0, 10, 100)
+y = 2 * x + np.random.randn(100)
+
+r_large, p_large = pearsonr(x, y)
+print("\nCorrelation (large sample):", r_large)
+print("p-value (large sample):", p_large)
+
+
+# Outout(Simplified):
+
+```
+Correlation: 1.0
+p-value: 0.0
+
+Correlation (large sample): 0.99
+p-value (large sample): very close to 0
+```
+---
+
 ## Positive, Negative & No Correlation Examples
 
 ### Positive Correlation
@@ -193,6 +258,39 @@ Output shows correlation close to 0.
 
 ---
 
+## Seeing Correlation Strengths in Action
+
+Correlation values range between **-1 and +1**.  
+To build intuition, here’s what scatterplots look like with different correlation strengths (using 100 noisy data points for each case):
+
+> 🔔 **Reminder:** Try running this code yourself in VS Code and see how the plots look. Playing with the numbers is the best way to build intuition!
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+
+# Correlation values we want to demonstrate
+correlations = np.arange(-1.0, 1.1, 0.2)
+
+fig, axes = plt.subplots(3, 4, figsize=(15, 10))
+axes = axes.flatten()
+
+for i, r in enumerate(correlations):
+    # Create random data with desired correlation
+    x = np.random.randn(100)
+    y = r * x + np.sqrt(1 - r**2) * np.random.randn(100)
+    
+    axes[i].scatter(x, y, alpha=0.6)
+    axes[i].set_title(f"r = {r:.1f}")
+
+plt.tight_layout()
+plt.show()
+
+---
+
+
 ## Pitfalls of Correlation
 
 - **Correlation ≠ Causation**: Ice cream sales ≠ drowning.  
@@ -201,6 +299,32 @@ Output shows correlation close to 0.
 
 👉 Always visualize and think logically before trusting correlation numbers.
 
+---
+
+### Correlation Only Captures Linear Relationships 📉📈  
+
+Correlation is powerful, but it has limits:  
+- It only measures **linear** relationships.  
+- Two variables can have the *same correlation value* but completely different patterns.  
+
+A famous example is **Anscombe’s Quartet** — four datasets with identical correlation (~0.82), but very different scatterplots.  
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+from seaborn import load_dataset
+
+# Load Anscombe’s quartet (built into seaborn)
+df = sns.load_dataset("anscombe")
+
+# Plot the four datasets
+sns.lmplot(x="x", y="y", col="dataset", data=df, 
+           col_wrap=2, ci=None, palette="muted", 
+           scatter_kws={"s":50, "alpha":0.7}, 
+           line_kws={"color":"red"})
+plt.suptitle("Anscombe's Quartet: Same Correlation, Very Different Data", y=1.05)
+plt.show()
+```
 ---
 
 ## Quick Quiz 🎯
