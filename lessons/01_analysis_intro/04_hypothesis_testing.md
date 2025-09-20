@@ -3,6 +3,52 @@
 
 Let’s start a new chapter on Hypothesis testing. Evidence over intuition.
 
+---
+
+## Important Notes & Limitations ⚠️
+
+Before we move on, it’s important to highlight a few things about hypothesis testing:
+
+### 1. Assumptions of the t-test
+The common **t-test** relies on some assumptions:
+- Data should be **roughly normally distributed**.  
+- Observations should be **independent** from each other.  
+
+If these assumptions are violated, other tests (e.g., **non-parametric tests**) may be more appropriate.
+
+---
+
+### 2. One-Sided vs Two-Sided Tests
+- A **two-sided test** checks for **any difference** between two groups (values could be higher or lower).  
+- A **one-sided test** checks for a difference in **one direction only** (e.g., “Group A mean is greater than Group B mean”).  
+
+In practice, two-sided tests are more common unless you have a strong reason to test only one direction.
+
+---
+
+### 3. Just Scratching the Surface
+What we covered here is just the beginning.  
+There are many statistical tests for many measures, not just the mean:  
+- Median  
+- Standard deviation  
+- Correlation (we’ll dive deeper into this in a later lesson)  
+
+As you move forward, you’ll learn when and how to choose the right test depending on the type of data and research question.
+
+---
+
+📺 As wee begin with the lesson here are some interesting references & resource on Statistics which will help you with follow the lesson more effectively:  
+
+- 📺 [Introduction to Hypothesis Testing (YouTube)](https://www.youtube.com/watch?v=0oc49DyA3hU)  
+- 📖 [Null vs. Alternative Hypotheses — Scribbr](https://www.scribbr.com/statistics/null-and-alternative-hypotheses/)  
+- 📺 [Statistics Crash Course (YouTube)](https://www.youtube.com/watch?v=kyjlxsLW1Is)  
+- 📖 [Simplilearn: Hypothesis Testing in Statistics](https://www.simplilearn.com/tutorials/statistics-tutorial/hypothesis-testing-in-statistics)  
+
+---
+
+
+Let's learn Hypothesis Testing:
+
 Let’s think of it this way: In business, science, or product design, you can’t just rely on gut feelings:  
 - A manager might say, “Version B of our website feels better.”  
 - A teacher might say, “My new teaching method works better.”  
@@ -47,9 +93,6 @@ Why is this important?
 The null hypothesis gives us a baseline to test against.  
 Without it, we’d jump to conclusions every time we saw a small difference, even if it was just random noise.
 
-📺 Interesting Youtube video on Hypothesis Testing and The Null Hypothesis:  
-https://www.youtube.com/watch?v=0oc49DyA3hU
-
 ---
 
 ## Alternative Hypothesis (H₁): There is an Effect / Difference
@@ -69,9 +112,6 @@ We only accept this if the evidence is strong enough to reject H₀ (innocence).
 Why is this important?  
 The alternative hypothesis is what we’re actually hoping to prove with data.  
 It represents the claim, effect, or improvement we’re testing for.
-
-📖 More on H₀ vs H₁:  
-https://www.scribbr.com/statistics/null-and-alternative-hypotheses/
 
 ---
 
@@ -224,8 +264,30 @@ Statistical results are often written in technical terms like:
 But in real projects, you need to explain results so anyone can understand:  
 👉 “We are 95% confident that students using the new textbook (Class B) scored higher than those using the old textbook (Class A).”  
 
-The goal is to move from statistical jargon to clear, plain-English conclusions that make sense to your audience.
+---
 
-📺 Interesting tutorials on Statistics:  
-- Youtube: https://www.youtube.com/watch?v=kyjlxsLW1Is  
-- Simplilearn: https://www.simplilearn.com/tutorials/statistics-tutorial/hypothesis-testing-in-statistics  
+## A/B Testing in the Real World 🅰️/🅱️
+
+What we just learned about hypothesis testing is exactly what powers **A/B testing**, one of the most common industry practices.
+
+- **A/B testing** is when you compare two versions of something (e.g., a website button, an email subject line, a product feature) to see which one performs better.  
+- Version **A** is often the "control" (the current version).  
+- Version **B** is the "treatment" (the new variation).  
+- You then collect data and use hypothesis testing to check:  
+  - Is there a **real difference** in outcomes (e.g., clicks, purchases)?  
+  - Or could the difference be due to random chance?
+
+This is exactly the same statistical framework we’ve been learning:  
+- Null hypothesis: there’s **no difference** between A and B.  
+- Alternative hypothesis: there **is a difference**.  
+- Test statistic & p-value: help you decide if the difference is meaningful.
+
+👉 You’ve basically just learned the foundation of A/B testing — a tool you’ll see everywhere in data science and industry practice.
+
+---
+
+✅ Lastly, hypothesis testing is a core skill in data science.  
+From comparing test scores to running large-scale A/B experiments, it helps us move from **hunches** to **evidence-based decisions**.  
+We’ll keep building on this foundation in upcoming lessons.
+
+
