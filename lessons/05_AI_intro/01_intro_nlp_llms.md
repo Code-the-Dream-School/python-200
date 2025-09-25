@@ -92,38 +92,57 @@ There are three main steps that it is important to focus on when understanding h
 - token embedding
 - attention
 
-### Tokenization: From raw text to token ids
-Tokenization is the process of breaking chunks of text into smaller pieces that an LLM can handle. For example, the sentence “The cat sat on the mat.” might be split into tokens like ["The", " cat", " sat", " on", " the", " mat", "."]. These tokens are then mapped to unique integer IDs.
-
-Importantly, tokens are not always whole words. To keep the vocabulary manageable, many tokenizers break rare or complex words into smaller chunks. For example, "blueberries" might become ["blue", "berries"]. This makes it possible to represent any string of text, even if it never appeared in training.
-
-You can [play online]( https://platform.openai.com/tokenizer) with a popular tokenizer, *tiktoken*. You can explore how it breaks down text into parts and creates numerical ids for each token. 
-
+### Tokenization: From raw text to token IDs
 You can learn more about tokenization at the following resources:
 - [Super Data Science video](https://www.youtube.com/watch?v=ql-XNY_qZHc)
-- [Huggingface introduction]()
+- [Huggingface introduction](https://huggingface.co/learn/llm-course/en/chapter2/4)
 
-### Token embeddings: from meanings
-Once a sentence is carved into tokens, and the token IDs are created, there is no *meaning*. To enter the world of semantics, or meaning, a neural network known as an *embedding network* converts the token ids into *embedding vectors*. This is a crucial step in the conversion of symbolic, linguistic data into the numeric data that PyTorch and other deep learning frameworks can use in their next-word prediction tasks. 
+Tokenization is the process of breaking chunks of text into smaller pieces that are in the LLM's vocabulary. For example, the sentence "The cat sat on the mat." might be split into tokens like ["The", " cat", " sat", " on", " the", " mat", "."]. These tokens are then mapped to unique integer IDs.
 
-. The next step is to turn them into embeddings, which give them a place in semantic space.
+![LLM tokenization](resources/llm_tokenization.jpg)
+
+Importantly, tokens are not always whole words. To keep the vocabulary a manageable size, many tokenizers break rare or complex words into smaller chunks. For example, "blueberries" might become ["blue", "berries"]. This makes it possible to represent *any* string of text, even if it never appeared in training.
+
+You can [play online]( https://platform.openai.com/tokenizer) with a popular tokenizer, *tiktoken*. There, you can explore how tiktoken breaks down text into parts and creates numerical ids for each token. 
+
+[add practical exercise here]
+
+
+### Token embeddings: from IDs to semantics
+Once a tokenizer has converted text into integer IDs, but these don't "mean" anything -- the tokenizer has just created some arbitrary numbers to stand in for words or subwords. 
+
+![token embeddings](resources/embedding_layer_rashka.jpg)
+
+The magic starts to happen when the token IDs are passed through an *embedding layer*, which assigns each token a tensor, a numerical array of values. At first these token embeddings embeddings are assigned small random numbers. However, as training proceeds, semantically similar tokens drift closer together. So `brother` and `sister` end up near each other, while `car` and `bicycle` cluster elsewhere. Over time, this training process produces what we might call a semantic similarity space: a geometric landscape where semantically related tokens cluster together in a heirarchical way:
+
+![semantic space](resources/semantic_space.jpg)
+
+in the above pic it's only 3 elt arrray but in practice it's thousands. 
+also make point that this pic is 2d projion of the emedding, using something like PCA whic we saw with ML.
+
+Point out the issue with *apple* in the semantic space above....what are we to do?
+
+Embedding resources:
 https://medium.com/@saschametzger/what-are-tokens-vectors-and-embeddings-how-do-you-create-them-e2a3e698e037
+https://www.youtube.com/watch?v=wgfSDrqYMJ4
 
-but these need to be converted to MEANINGS.
-cat and feline should be closer together than dog, and these should all be closer together than car and bicycle, which should be together in semantic space close to vehicles. 
+What is an LLM:
+https://www.youtube.com/watch?v=5sLYAQS9sWQ
 
-Embeddings don't have to be just words, but lets pretend that for now. 
+
+### Attention: the breakthrough
+Embeddings don't have to be just tokens or words, but can be paragraphs, but lets pretend that for now. 
 
 Embeddings: https://www.youtube.com/watch?v=OxCpWwDCDFQ 
 How does transformer architecture solve this problem? (attention)
 
 Brief discussion of attention and how it helps solve this (attention is all you need), and how attention is wrapped into transformer. And how this improved on earlier conviction that you needed recurrent networks., 
 
-Potential links:
-https://huggingface.co/learn/llm-course/chapter1/4?fw=pt
-Statquest but it is often too mathematical
 Word embeddings: https://www.youtube.com/watch?v=wgfSDrqYMJ4
-Tokenizer play: https://platform.openai.com/tokenizer 
+
+
+Attention:
+https://www.youtube.com/watch?v=OxCpWwDCDFQ
 
 ## 4. From languge to meaning: tokenization and embedding
 
