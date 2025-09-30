@@ -86,6 +86,9 @@ In this section we will walk step-by-step through the following simplifed LLM ar
 
 ![LLM architectural](resources/llm_architecture.jpg)
 
+What is an LLM video: 
+https://www.youtube.com/watch?v=5sLYAQS9sWQ
+
 There are three main steps that it is important to focus on when understanding how LLMs get so good at predict the next word in a sequence:
 
 - tokenization
@@ -108,136 +111,41 @@ You can [play online]( https://platform.openai.com/tokenizer) with a popular tok
 [add practical exercise here]
 
 
-### Token embeddings: from IDs to semantics
-Once a tokenizer has converted text into integer IDs, but these don't "mean" anything -- the tokenizer has just created some arbitrary numbers to stand in for words or subwords. 
+### Token embeddings: From IDs to semantics
+Once a tokenizer has converted text into integer IDs, these don't "mean" anything -- the tokenizer has just created some arbitrary numbers to stand in for words or subwords. We start ascribing meanings when the token IDs are passed through an *embedding layer*, which assigns each token a tensor, a numerical array of values:
 
 ![token embeddings](resources/embedding_layer_rashka.jpg)
 
-The magic starts to happen when the token IDs are passed through an *embedding layer*, which assigns each token a tensor, a numerical array of values. At first these token embeddings embeddings are assigned small random numbers. However, as training proceeds, semantically similar tokens drift closer together. So `brother` and `sister` end up near each other, while `car` and `bicycle` cluster elsewhere. Over time, this training process produces what we might call a semantic similarity space: a geometric landscape where semantically related tokens cluster together in a heirarchical way:
+ In the image each token ID is mapped to a very small vector of numbers (three values). In reality the embedding layer typically maps each token to a tensor of thousands of numbers. 
+ 
+ At first these token embeddings are assigned random numbers. However, as training proceeds, semantically similar tokens will end up closer together. So the token embeddings for `brother` and `sister` end up near each other, while `car` and `bicycle` cluster elsewhere. Over time, this training process produces what we might call a semantic similarity space: a geometric landscape where semantically related tokens cluster together in a heirarchical way:
 
 ![semantic space](resources/semantic_space.jpg)
-
-in the above pic it's only 3 elt arrray but in practice it's thousands. 
-also make point that this pic is 2d projion of the emedding, using something like PCA whic we saw with ML.
-
-Point out the issue with *apple* in the semantic space above....what are we to do?
+Conceptual drawing of token embeddings arranged in semantic space. Words with related meanings cluster together. Note here the high-dimensional token embedding is projected to a low-dimensional space for visualization.
 
 Embedding resources:
 https://medium.com/@saschametzger/what-are-tokens-vectors-and-embeddings-how-do-you-create-them-e2a3e698e037
-https://www.youtube.com/watch?v=wgfSDrqYMJ4
 
-What is an LLM:
-https://www.youtube.com/watch?v=5sLYAQS9sWQ
+Slightly more technical intro to embedding: 
+https://www.youtube.com/watch?v=lPTcTh5sRug
 
-
-### Attention: the breakthrough
-Embeddings don't have to be just tokens or words, but can be paragraphs, but lets pretend that for now. 
-
-Embeddings: https://www.youtube.com/watch?v=OxCpWwDCDFQ 
-How does transformer architecture solve this problem? (attention)
-
-Brief discussion of attention and how it helps solve this (attention is all you need), and how attention is wrapped into transformer. And how this improved on earlier conviction that you needed recurrent networks., 
-
-Word embeddings: https://www.youtube.com/watch?v=wgfSDrqYMJ4
-
-
-Attention:
+### Attention: Context-aware embeddings
+For a nice overview of attention, see:
 https://www.youtube.com/watch?v=OxCpWwDCDFQ
 
-## 4. From languge to meaning: tokenization and embedding
+In the above static embedding space, each token has a single default neighborhood: apple lies near other fruits, car clusters with other vehicles, and queen sits close to king and sister. But language isn't static -- meanings shift with context. In a sentence about fruit salad, apple should clearly belong with oranges and grapefruits. In a sentence about smartphones, Apple should move toward phones and computers. Static token embeddings can't make this adjustment on their own. This is where *attention* comes in: it allows tokens to dynamically reshape their position based on surrounding words, pulling apple toward "fruit" or "phone" as needed. Attention is the mechanism that enriches the thin semantics of embeddings with contextual cues, helping to resolve ambiguities that emerge in natural language. 
 
-Blah blah blah 
+To see how attention works, imagine the sentence "An apple and an orange." Each token starts as a point in embedding space, but attention allows them to influence one another. Because "apple" and "orange" are semantically similar, attention gives them a high weight of mutual influence. As a result, the embedding for "orange" is nudged slightly toward "apple," and vice versa. Now consider "Apple released a new phone." Here, the word "Apple" receives more weight from "phone" and "released" than from unrelated words, so its embedding is shifted toward the electronics cluster. In both cases, attention acts like a similarity-based weighting system: words that are more relevant to each other exert a stronger pull, allowing their embeddings to adapt on the fly. This process turns a static semantic map into a context-sensitive representation of meaning.
 
-## 2. What Are Language Models (and LLMs)?
-Show the progression from early NLP to modern LLMs and why LLMs are different.
+This transformer-based attention mechanism was the magic sauce that supercharged progress in NLP. When combined with massive training data, large models, and the self-supervised task of predicting the next token, it enabled LLMs to generate remarkably human-like speech patterns.
 
-**Topics to cover:**
-
-- The shift to transformers and LLMs
-- What makes a model 'large'? (parameters, data, compute)
-- Rise of pretrained models (e.g., BERT, GPT)
-
-**External resources:**
-- [A Visual Intro to Language Models – Jay Alammar](https://jalammar.github.io/blog/)
-- [How GPT Works (YouTube) – Jay Alammar](https://www.youtube.com/watch?v=bAUM1tG4q6Q)
-- [What is a Language Model? (Medium)](https://medium.com/analytics-vidhya/what-is-a-language-model-7412c6c2da5e)
-
-## 3. Key Concepts Behind LLMs
- Explain the core ideas behind modern LLMs. Demystifying LLMs.
-
-**Topics to cover:**
-- Transformers and self-attention  
-  - Why attention beats RNNs for language
-  - Intuition: attending to relevant words
-- Embeddings: how language becomes math
-- Pretraining vs. fine-tuning  
-  - Pretraining on large corpora
-  - Fine-tuning options:  
-    - Full fine-tuning  
-    - Adapter layers  
-    - Prompt-/prefix-/LoRA-style tuning (brief overview)
-
-**External resources:**
-- [Transformers – A Friendly Introduction (YouTube)](https://www.youtube.com/watch?v=4Bdc55j80l8)
-- [The Illustrated Transformer – Jay Alammar](https://jalammar.github.io/illustrated-transformer/)
-- [Hugging Face: Pretraining vs. Fine-tuning](https://huggingface.co/transformers/training.html)
-- [OpenAI: Guide to Fine-tuning](https://platform.openai.com/docs/guides/fine-tuning)
-
-## 4. How Language Becomes Numbers: Tokenization
-Explain tokenization clearly, show real examples, and connect to embeddings.
-
-**Topics to cover:**
-- What is tokenization?  
-  - Text → tokens → numeric IDs → vectors  
-  - Example: “The cat sat.” → `['The', 'cat', 'sat', '.']`
-- WordPiece / Byte-Pair Encoding (BPE) basics
-- Why subwords help (e.g., “unhappiness” → “un”, “happi”, “ness”)
-
-**External resources:**
-- [Tokenization Explained (YouTube) – AssemblyAI](https://www.youtube.com/watch?v=oI4a5FVtxbY)
-- [Byte Pair Encoding for Beginners (Medium)](https://towardsdatascience.com/byte-pair-encoding-subword-tokenization-algorithm-77828a70bee0)
-
-**Code placeholder:**
-```python
-# Show raw tokens for a sentence using an OpenAI or Hugging Face tokenizer.
-# Example:
-# tokens = tokenizer("The cat sat on the mat.")
-# print(tokens)  # ['The', 'cat', 'sat', 'on', 'the', 'mat', '.']
-```
-
-## 5. Embeddings and SEmantic Relationships 
+## 4. Visualizing embeddings
 Show how similar meanings cluster in space using embeddings.
 
-**Topics to cover:**
-- Embedding space: high-dimensional vectors with semantic structure
-- Similar words cluster (e.g., king, queen, prince)
-- Project to 2D with PCA (or UMAP) for visualization
+-- insert material from notebook illustrating embedding -- 
 
-**Code placeholder:**
-```python
-# 1) Choose 10–20 words/phrases
-# 2) Get embeddings (e.g., OpenAI 'test-embedding-3-small')
-# 3) Reduce to 2D with PCA
-# 4) Plot with matplotlib and label points
-```
-
-**External resources:**
-- [OpenAI Docs – Embeddings](https://platform.openai.com/docs/guides/embeddings)
-- [Word Embeddings Visualization with PCA (YouTube)](https://www.youtube.com/watch?v=T6XKQ2ZGW8I)
-- [Visualizing Embeddings – Distill.pub](https://distill.pub/2016/misread-tsne/)
-
-## 6. Summary: Why This Matters
-
-**Key takeaways:**
+## 5. Summary: Why This Matters
 - Language models power many modern AI applications.
 - LLMs learn semantic structure by representing meaning in vector space.
-- Tokenization and embeddings explain what models “know.”
+- Tokenization and embeddings explain what models "know."
 - Connects to prior ML concepts (classification, clustering) by adding representation learning.
-
-## 7. Optional Further Exploration
-
-**Links:**
-- [Hugging Face Course – Chapter 1](https://huggingface.co/course/chapter1)
-- [OpenAI Cookbook – Embedding Visualization Notebook](https://github.com/openai/openai-cookbook/blob/main/examples/Embeddings_visualization.ipynb)
-- [Cohere Text Embedding Playground](https://txt.cohere.com/)
-
