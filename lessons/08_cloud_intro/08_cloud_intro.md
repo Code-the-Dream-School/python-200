@@ -19,16 +19,25 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
 ## 1. Cloud Overview
 
 + **What is “Cloud”?**
-  + Imagine a remote computer(s) where you can host API, run resource-intensive compute, and everything you want to run
-  + Major provider: Amazon Web Service, Google Cloud Platform, Microsoft Azure
+  + Imagine a remote computer(s) where you can run resource-intensive compute, handle millions or billions of API request, store petabytes of data, and everything else without the need to physically purchase and manage all the machines.  
+
+  + **Major provider: Amazon Web Service, Google Cloud Platform, Microsoft Azure**  
+  These service providers build data centers around the world and maintain the physical machines in their data centers so that you don't have to! Inside each of the data centers, the Cloud Service Providers (CSP) manage hundreds of thousands of harddrive, GPU, CPU. When you use AWS/Azure/GCP service, their program will start the right machines for you so you can run the code from your desktop.  
+
   + While many of them use different jargons, the services they provide are fairly consistent across the platforms. They usually include the following major services
-    + Storage (AWS S3, Azure Blob, GCP Bucket)
-    + Compute and Virtual Machine (AWS EC2, AWS EMR, Azure Virtual Machines, Azure HDInsight)
-    + Networking
+    + **Storage (AWS S3, Azure Blob, GCP Bucket)**  
+    These services allow you to store large volume of data without purchasing multiple hard drives. They are similar to google drive with more functionality. For example, you can set up automatic backup and file deletion rules, manage read/write access, and transform millions of file with code and graphic user interface.  
+    + **Compute and Virtual Machine** (AWS EC2, AWS EMR, Azure Virtual Machines, Azure HDInsight)  
+    What if my local computer start burning once I hit the run botton on my IDE? Maybe you need a larger computer or you should consider moving the job to the cloud. The major cloud service providers provide highly optimized machines to satisfy most if not all the computing resources you will ever need. Want to train a large language model? Go to Azure AI Studio or AWS Sagemaker. Want to host your website? Give Azure API Management and Azure App Service a try! With these cloud services, you can customize the machine you want without physically purchasing them, and you can also stop the machine once you finish your task.
+    + **Networking and Security**  
+    Cloud providers offer robust networking and security services to help you connect, protect, and monitor your resources. For example, you can create private networks (like AWS VPC, Azure Virtual Network, GCP VPC) to isolate your resources from the public internet, set up firewalls and security groups to control traffic, and use VPNs or ExpressRoute for secure connections between your on-premises environment and the cloud. Security services also include tools for monitoring threats, encrypting data at rest and in transit, and managing compliance requirements. With these features, you can ensure your applications and data are both accessible and secure, whether you are running a small website or a large enterprise system.
     + Identity and Access Management
+    If you need to use cloud extensively, chances are you are not the only person working on the project. In fact, many companies build their infrastructures so that multiple people, teams, or even entire organizations can collaborate securely. Identity and Access Management (IAM) services (like AWS IAM, Azure Active Directory, GCP IAM) allow you to control who can access which resources in your cloud environment. You can create users, groups, and roles, assign permissions based on the principle of least privilege, and enforce policies such as multi-factor authentication. IAM also helps you audit activity, manage API keys and service accounts, and integrate with your organization's existing identity systems. With proper IAM setup, you can ensure that only the right people and applications have access to sensitive data and critical services, reducing the risk of accidental or malicious actions.
     + Many other services (IOT, Code Editors etc)
-  + For every single thing you can run on your computer, you could probably find a matching service on the cloud. In addition, you could run the same service on the cloud in various ways depending on your need
-    + Example: You can set up a ETL pipeline with Azure Prefect and Azure Data Factory doing almost the same job, but cost, scalability could vary depending on your task.
+    Cloud providers offer a wide range of additional services beyond the basics. For example, Internet of Things (IoT) services (like AWS IoT Core, Azure IoT Hub, GCP IoT Core) let you connect, manage, and analyze data from millions of devices and sensors. Managed code editors and development environments (such as AWS Cloud9, Azure Cloud Shell, and even browser-based VS Code) allow you to write and run code directly in the cloud. There are also services for databases (relational and NoSQL), AI and machine learning (like Azure AI Studio, AWS SageMaker, GCP Vertex AI), serverless computing (AWS Lambda, Azure Functions), messaging and event streaming, DevOps pipelines, and much more. No matter what kind of application or workflow you want to build, there is likely a cloud service that can help you do it faster, more securely, and at scale.
+  + In this course, we will use Azure as the primary platform for hands-on activities. However, most of the logics and concepts in cloud computing work across all the platforms, so 
+    + [What is Azure?](https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-azure)
+      This is the Microsoft's official introduction about azure take a look at it to get a better sense of the platform you will be using.
   + [Azure Service Overview](https://azure.microsoft.com/en-us/products)
 
 ![Azure Services](resources/databricks_on_azure.webp)
@@ -52,6 +61,10 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
   + When should I stick to local server or workstation?
     + If your data is under policy control, such as healthcare related data or other highly confidential data, you might want to check if it is allowed to upload your data onto the cloud.
     + If your data can fit into a single machine, maybe you should stick with your local workstation. 
+
++ **Core Cloud Concepts**
+  + **Vertical and Horizontal Scability**
+  When your computer does not have enough resources to run your task, what do you do?
 
 
 + **Managed Data Platforms vs Cloud Service Providers**
@@ -95,4 +108,6 @@ This will be their first hands-on introduction to Azure. The main focus is on ma
 ## Wrap-up 
 Summarize the key takeaways from this lesson. Discuss connection to assignment (and give link to assignment). Preview next lesson, especially if it is connected to this one. 
 
++ Review each module of the Azure Training Module and complete the quizzes.
+  + [Introduction to Microsoft Azure: Describe Cloud Concept](https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/)
 
