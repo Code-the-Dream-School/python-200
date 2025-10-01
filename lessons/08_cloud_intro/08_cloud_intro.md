@@ -7,13 +7,15 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
 
 # Learning Objective
 + In this class, you will
+  + Learn the basic concepts in cloud computing
   + Know the big picture of cloud computing, including what/why/when to use cloud computing
   + Set up and start working on cloud computing with Azure
 
 # Table of Contents
 1. [Cloud overview](#1-cloud-overview)
-2. [Hands-on introduction to Azure](#2-a-hands-on-introduction-to-azure)
-3. [Wrap-up](#wrap-up)
+2. [Core Cloud Concepts](#2-core-cloud-concepts)
+3. [Hands-on introduction to Azure](#2-a-hands-on-introduction-to-azure)
+4. [Wrap-up](#wrap-up)
 
 
 ## 1. Cloud Overview
@@ -44,21 +46,21 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
   The following graph offers a side by side comparison of similar services across the cloud platforms. Don't panic if you think this is overwhelmingly complicated, we will walk you through the key services over the next few modules!
   ![Cloud Services Overview](resources/cloud_services_overview.png)
 
+## 2. Core Cloud Concepts
 
-+ **Core Cloud Concepts**
-  + **Vertical and Horizontal Scability**  
++ **Vertical and Horizontal Scability**  
   When your computer does not have enough resources to run your task, what do you do? Normally you have two options: get a better computer or distribute your job to multiple computers, and that is the essesn of vertical and horizontal scaling.
-    + **Vertical Scaling**  
-    Vertical scaling is essentially upgrade the machine that is running your code in the data center. When you try to assign a new service, you could select the machine with larger GPU (i.e. 16Gb vs 64Gb), more CPU cores (i.e. 2 cores vs 4 cores) depending on the need of your compute task. 
-    + **Horizontal Scaling**  
-    To handle millions or billions of API requests or train a large language model, chances are there one single machine is not enough, unless you have a supercomputer. This is when horizontal scaling becomes handy. Horizontal scaling allows you to spread your compute task into multiple machines so that instead of waiting your code execution forever, you can have two, three, or dozens of machines at the same time to speed up the work. Most of the cloud service providers also allow you to dynamically allocate the horizontal scaling dynamically, so you can spin up your machines only when you needed to save cost (if you used them wisely).
-  + **PaaS, IaaS, Saas**
-    + **PaaS: Platform as a Service**  
-      PaaS provides you with a platform to build, run, and manage applications without worrying about the underlying hardware or operating system. You get tools, libraries, and services to develop and deploy your code quickly. Example: Azure App Service, Google App Engine, or AWS Elastic Beanstalk. You just upload your code, and the platform takes care of the rest (like scaling, patching, and monitoring).
-    + **IaaS: Infrastructure as a Service**  
-      IaaS gives you access to basic computing resources like virtual machines, storage, and networks. You have full control over the operating system and the software you install, just like renting a computer in the cloud. Example: Azure Virtual Machines, AWS EC2, or Google Compute Engine. You are responsible for managing everything from the OS up, but you don't have to buy or maintain physical hardware.
-    + **SaaS: Software as a Service**  
-      SaaS delivers ready-to-use software applications over the internet. You just log in and start using the software—no installation or maintenance required. The provider manages everything behind the scenes. Examples: Microsoft 365, Google Workspace, Dropbox, or Zoom. SaaS is great for tools you want to use right away without worrying about setup or updates.
+  + **Vertical Scaling**  
+  Vertical scaling is essentially upgrade the machine that is running your code in the data center. When you try to assign a new service, you could select the machine with larger GPU (i.e. 16Gb vs 64Gb), more CPU cores (i.e. 2 cores vs 4 cores) depending on the need of your compute task. 
+  + **Horizontal Scaling**  
+  To handle millions or billions of API requests or train a large language model, chances are there one single machine is not enough, unless you have a supercomputer. This is when horizontal scaling becomes handy. Horizontal scaling allows you to spread your compute task into multiple machines so that instead of waiting your code execution forever, you can have two, three, or dozens of machines at the same time to speed up the work. Most of the cloud service providers also allow you to dynamically allocate the horizontal scaling dynamically, so you can spin up your machines only when you needed to save cost (if you used them wisely).
++ **PaaS, IaaS, Saas**
+  + **PaaS: Platform as a Service**  
+    PaaS provides you with a platform to build, run, and manage applications without worrying about the underlying hardware or operating system. You get tools, libraries, and services to develop and deploy your code quickly. Example: Azure App Service, Google App Engine, or AWS Elastic Beanstalk. You just upload your code, and the platform takes care of the rest (like scaling, patching, and monitoring).
+  + **IaaS: Infrastructure as a Service**  
+    IaaS gives you access to basic computing resources like virtual machines, storage, and networks. You have full control over the operating system and the software you install, just like renting a computer in the cloud. Example: Azure Virtual Machines, AWS EC2, or Google Compute Engine. You are responsible for managing everything from the OS up, but you don't have to buy or maintain physical hardware.
+  + **SaaS: Software as a Service**  
+    SaaS delivers ready-to-use software applications over the internet. You just log in and start using the software—no installation or maintenance required. The provider manages everything behind the scenes. Examples: Microsoft 365, Google Workspace, Dropbox, or Zoom. SaaS is great for tools you want to use right away without worrying about setup or updates.
 
 + **Why cloud?** 
   + My computing task does not fit into a single machine
