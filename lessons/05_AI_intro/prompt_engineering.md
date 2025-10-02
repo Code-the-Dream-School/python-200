@@ -135,27 +135,26 @@ Do not translate anything?
 
 ## Designing effecicient prompts: 
 
--Role
--Content
--Task
+* Role
+* Content
+* Task
+* Context
 
--Context
-
-```
+**Prompt**<br>
 Give me a suggestion for a main course for today's lunch
 
-res: 
+```
 Grilled chicken with roasted vegetables and quinoa.
 ```
-vs 
-```
+
+**Prompt**
 
 Context: I do 2 hours of sport a day. I am vegetarian, and I don't like green
 vegetables. I am conscientious about eating healthily.
 Task: Give me a suggestion for a main course for today's lunch.
 
 
-res: 
+```
 
 For today's lunch, you can try a Chickpea and Sweet Potato Curry served with
 Quinoa. This dish is packed with protein, fiber, and essential nutrients,
@@ -171,12 +170,13 @@ context; it suggests a healthy vegetarian dish that is full of protein.
 
 
 
-```
+
+**Prompt**
+
 delicious simple salad recipies
 
-
-res: 
-. Classic Greek Salad
+```
+Classic Greek Salad
 Ingredients:
 
 2 cups chopped cucumber
@@ -193,15 +193,16 @@ Dressing:
 Salt & pepper to taste
 Instructions:
 Toss all ingredients together. Drizzle with dressing and serve immediately.
+```
 
 
-```
-vs
-```
+
+**Prompt**
+
 "I'm a busy student on a tight budget looking for simple, low-calorie vegetable side dishes that are still full of flavor. I’d love recipes inspired by Mediterranean and Asian cuisines—the kinds of salads and veggie sides I’ve enjoyed in the past. Please keep ingredients affordable, prep time minimal, and no fancy equipment needed!" 
 
 
-res: 
+```
 1. Garlic Lemon Roasted Zucchini (10 mins prep, 20 mins cook)
 Why it’s great: Uses 1 cheap veggie, no fancy tools, under 100 kcal per serving.
 Ingredients (serves 2):
@@ -219,12 +220,91 @@ Roast 18–20 mins until tender and slightly golden.
 Drizzle with lemon juice before serving.
 Cost per serving: ~$0.60 | Calories: ~80
 
+```
 
+
+
+
+## Zero-Shot, One-Shot, Few Shot
+### Zero-Shot
+
+Zero-shot is a direct question to the llm (like ChatGPT). According to the learning prompt article, 
+>"No examples are provided, and the model must reply entirely on its pre-trained knowledge."
+
+It is the most direct form of prompting. An example would be. 
+#### Example
+**Prompt**
+
+Classify the sentiment of the following text as positive, negative, or neutral.<br>
+ Text: I think the vacation was okay.<br>
+ Sentiment:
+
+ ```
+ Neutral
+
+ ```
+**Prompt**
+
+
+"Translate 'Hello' into French."
+
+```
+Bonjour
 
 ```
 
-## Zero-Shot, One-Shot, Few Shot
-*
+### One-Shot
+
+One-shot prompting is a technique in **in-context learning (ICL)** where the model is given **a single example** before the actual task. This helps clarify the expected format, style, or logic—leading to better performance than zero-shot prompting.
+
+> 💡 According to the learning prompt article:  
+> *"One-shot prompting enhances zero-shot prompting by providing a single example before the new task, which helps clarify expectations and improves model performance."*
+
+#### Examples:
+**Prompt:**
+Classify the sentiment of the following text as positive, negative, or neutral.
+ Text: The product is terrible.
+ Sentiment: Negative
+Text: I think the vacation was okay. Sentiment:
+```
+Neutral
+```
+**Prompt**<br>
+"English: Good morning → French: Bonjour<br>
+English: Hello → French: ?"
+
+```
+Bonjour
+
+```
+
+### Few-Shot
+This is when multiple examples are fed into the llm.
+> "provides two or more examples, which helps the model recognize patterns and handle more complex tasks. With more examples, the model gains a better understanding of the task, leading to improved accuracy and consistency."
+
+#### Examples: 
+**Prompts:** <br>
+Classify the sentiment of the following text as positive, negative, or neutral.
+Text: The product is terrible. Sentiment: Negative
+Text: Super helpful, worth it Sentiment: Positive
+Text: It doesnt work! Sentiment:
+
+```
+Negative
+
+```
+
+**Prompts:**
+"English: Good morning → French: Bonjour
+English: Thank you → French: Merci
+English: Hello → French: ?"
+
+```
+Bonjour
+
+```
+
+
 
 
 
@@ -237,12 +317,94 @@ Cost per serving: ~$0.60 | Calories: ~80
 - Translate a language
 
 
+# Pop Quiz 🧪
+1. What is zero-shot prompting?<br>
+A) Giving the AI 3 examples before asking a question<br>
+B) Asking the AI a question without any examples<br>
+C) Using emojis to make the AI respond faster<br>
+D) Translating prompts into French first
+<details>
+<summary>Click to reveal the answer</summary>
+✅ Correct answer: B
+</details>
+
+2. Which of the following is a one-shot prompt?
+<br>A)
+```
+    Translate 'Hello' into French.
+```
+<br>B)
+```
+    English: Good morning → French: Bonjour  
+    English: Hello → French: ?
+
+```
+C)
+```
+    English: Good morning → French: Bonjour  
+    English: Thank you → French: Merci  
+    English: Hello → French: ?
+
+```
+
+D)
+
+```
+    Tell me how to say hello in French.
+```
+<details>
+<summary>Click to reveal the answer</summary>
+✅ Correct answer: B
+</details>
+
+3. Why is few-shot prompting often more accurate?<br>
+A)  It uses longer sentences<br>
+B)  It gives the AI multiple examples to recognize patterns<br>
+C)  It forces the AI to guess randomly<br>
+D)  It only works with math problems
+<details>
+<summary>Click to reveal the answer</summary>
+✅ Correct answer: B
+</details>
+
+4. Which prompt follows the Golden Rules best?<br>
+A) “Tell me about food.”<br>
+B) “List healthy lunch ideas.”<br>
+C) “I’m a vegetarian student who hates green veggies. Suggest a high-protein, cheap, 15-minute lunch recipe with no fancy tools.”<br>
+D) “Give me something to eat.”
+
+<details>
+<summary>Click to reveal the answer</summary>
+✅ Correct answer: C
+</details>
+
+5. Why should you use delimiters (like triple backticks ``` or INPUT/OUTPUT labels) in prompts?<br>
+A) To make the prompt look visually appealing<br>
+B) To test how well the AI handles confusing formatting<br>
+C) To clearly separate user instructions from data, reducing the risk of prompt injection and misinterpretation<br>
+D) To automatically convert the output into another language
+
+<details>
+<summary>Click to reveal the answer</summary>
+
+✅ Correct answer: C
+
+</details>
+
+
+6. True or False:
+>Asking the AI to ‘show its reasoning’ can improve accuracy on complex tasks like math or logic.
+
+A) True<br>
+B) False
+
+<details>
+<summary>Click to reveal the answer</summary>
+✅ Correct answer: A
+</details>
 
 ### FootNote 
 * https://learnprompting.org/docs/basics/few_shot
-
-# 
-
 
 
 
