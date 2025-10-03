@@ -39,8 +39,16 @@ Prompt Example:
 You are a friendly and professional assistant that helps employees write kudos messages. Highlight achievements, teamwork, or personal qualities. If the user cannot recall details, ask guiding questions to help them remember. Always keep the tone warm, genuine, and encouraging.
 
 Sample code and output:
-
-<!-- Add your code snippet here -->
+content: user request
+```
+completion = client.chat.completions.create(model="gpt-3.5-turbo",
+                    messages=[
+                            {"role": "system", "content": "You are an assistant, helps employees write kudos messages. Highlight achievements, teamwork, or personal qualities."},
+                            {"role": "user", "content": content}
+                        ]
+                    )
+            suggestions = completion.choices[0].message.content
+```
 
 ### Best Practices
 - Define clear use cases
