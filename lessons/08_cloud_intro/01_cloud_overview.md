@@ -40,10 +40,9 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
   + In this course, we will use Azure as the primary platform for hands-on activities. However, most of the logics and concepts in cloud computing work across all the platforms, so 
     + [What is Azure?](https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-azure)
       This is the Microsoft's official introduction about azure take a look at it to get a better sense of the platform you will be using.
-  + [Azure Service Overview](https://azure.microsoft.com/en-us/products)
 
   + Cloud Services Overview
-  The following graph offers a side by side comparison of similar services across the cloud platforms. Don't panic if you think this is overwhelmingly complicated, we will walk you through the key services over the next few modules!
+  The following graph offers a side by side comparison of similar services across the cloud platforms. Notice that each of the services in the same row are conceptually the same (just offered in different name by the provider). Don't panic if you think this is overwhelmingly complicated, we will walk you through the key services over the next few modules!
   ![Cloud Services Overview](resources/cloud_services_overview.png)
 
 ## 2. Core Cloud Concepts
@@ -105,7 +104,6 @@ Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
   + Managed Data Platforms
     + Major player: Snowflake, Databricks, Dataiku
     + Managed data platforms are built on top of the cloud service providers. They essentially architect all the cloud services you need on each of the platforms so that you can have way fewer configurations and can enjoy the same UI across different cloud providers. The following diagram summarize the architecture of Databricks on Azure, and the same architecture work for databricks on AWS and GCP.
-    ![managed data platform](resources/managed_platform_overview.png)
     + Managed data platforms specialize in data related tasks and provide simpler workflow and optimization for data engineering, data analysis, machine learning, and AI tasks, but usually do not offer as many services like cloud providers. For instance, you can't find internet of thing (IOT) services on Databricks or Snowflake.
     + In order to fully utilize managed data platforms, you need to have a valid cloud service provider account and set up payment as these service will charge directly onto your cloud provider.
       + For instance, your databricks on azure bill will be charged directly on your azure account.
