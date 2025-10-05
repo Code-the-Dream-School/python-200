@@ -102,6 +102,27 @@ plt.show()
 Output:
 <img width="459" height="358" alt="Screenshot 2025-09-09 at 3 03 06 PM" src="https://github.com/user-attachments/assets/b0e3937f-1872-44fd-b677-ff233cbb4342" />
 
+---
+
+### 5. Image Plot (Visualizing 2D Arrays with `imshow`)
+
+**Use case:** Viewing images or grids of data.
+
+NumPy arrays can represent images (like grayscale or RGB) or any 2D grid of values.  
+You can visualize them directly using `imshow()` — it’s like turning your array into an image.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Create a random 2D array (like a grayscale image)
+arr = np.random.rand(100, 100)
+
+plt.imshow(arr, cmap="viridis")
+plt.colorbar()  # Show color scale
+plt.title("Random 2D Array (like an image)")
+plt.show()
+```
 
 ---
 
@@ -124,7 +145,7 @@ Output:
 
 ---
 
-## Quiz: Data Visualization with Matplotlib 🎯
+## Check for understanding: Data Visualization with Matplotlib 🎯
 
 **Q1. Which Python library do we use for data visualization in this lesson?**  
 <details>
@@ -201,26 +222,23 @@ ax.set_title("Sine Wave")
 ax.set_xlabel("X-axis")
 ax.set_ylabel("Y-axis")
 plt.show()
+```
+---
 
 
-
-### 2. Visualizing 2D Arrays with `imshow`
-
-NumPy arrays can represent images or grids of data.  
-You can visualize them directly with `imshow()` — very useful when working with image data later in the course.
-
-```python
-arr = np.random.rand(100, 100)
-
-plt.imshow(arr, cmap="viridis")
-plt.colorbar()  # Show color scale
-plt.title("Random 2D Array (like an image)")
-plt.show()
-
-### 3. Subplots
+### 2. Subplots
 
 Sometimes you want to show multiple plots side by side.  
 `subplots()` makes it easy to lay out multiple Axes in the same Figure.
+
+**How subplot numbering works:**  
+- The arguments in `plt.subplots(num_rows, num_cols)` define the **layout** of your plots.  
+- For example:  
+  - `plt.subplots(1, 2)` → 1 row and 2 columns (plots appear side by side).  
+  - `plt.subplots(2, 2)` → 2 rows and 2 columns (4 total plots in a grid).  
+- The function returns:  
+  - a **Figure** object (`fig`) — the overall canvas  
+  - one or more **Axes** objects (`axes`) — where each plot lives
 
 ```python
 x = np.linspace(0, 10, 100)
@@ -236,9 +254,10 @@ axes[1].plot(x, y2, color="green")
 axes[1].set_title("Cosine")
 
 plt.show()
+```
+---
 
-
-### 4. Customizing Line Styles
+### 3. Customizing Line Styles
 
 Matplotlib gives you fine control over **line style, color, markers, labels, and more**.  
 Here’s a slightly fancier plot that combines several options.
@@ -257,6 +276,7 @@ plt.ylabel("Height", fontsize=12)
 plt.title("Wave Height at Different Times", fontsize=16)
 plt.legend(loc='upper right')
 plt.show()
+```
 
 ---
 
