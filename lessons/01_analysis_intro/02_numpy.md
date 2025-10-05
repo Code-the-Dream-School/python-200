@@ -221,6 +221,12 @@ For example, a **grayscale image** is just a 2D NumPy array:
 
 If you have a **stack of images**, NumPy stores them as a 3D array with shape:
 
+For example:  
+- A single grayscale image that’s 28×28 pixels → shape `(28, 28)`  
+- A dataset of 1,000 such images → shape `(1000, 28, 28)`
+
+If each image has color channels (like RGB), then it becomes a **4D array**:
+
 ---
 
 ### Checking Array Properties
