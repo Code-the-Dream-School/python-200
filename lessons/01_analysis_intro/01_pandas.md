@@ -10,7 +10,7 @@
 - Functions  
 - File types (.CSV, .Excel)
 
-> 💡 All the code examples in this section can (and should!) be run by you in VS Code.  
+> 💡 All the code examples and "check for understanding" in this section can (and should!) be run by you in VS Code.  
 > Try them out and see the output for yourself, it’s the best way to learn!
 
 
@@ -39,7 +39,15 @@ It’s used in data analytics, machine learning, finance, science, and pretty mu
 
 ---
 
-## Getting Started with Pandas
+## Getting Started with Pandas with some important resources
+📺 [Learning Pandas for Data Analysis?](https://www.youtube.com/watch?v=DkjCaAMBGWM)  
+📺 [What is Pandas?](https://www.youtube.com/watch?v=dcqPhpY7tWk&t=70s)
+📺 [10 Minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html) — official quickstart guide from the pandas developers
+
+## Pro-tip: 
+- You’ll definitely run into errors sometimes, that’s normal! Just read the error message on your screen carefully and search online. Errors are your best hints for fixing problems.
+
+---
 
 ### What is a DataFrame and a Series?
 
@@ -112,7 +120,6 @@ data = {
 df = pd.DataFrame(data)
 print(df)
 ```
-<!-- <img width="454" height="211" alt="Screenshot 2025-09-04 at 6 40 42 PM" src="https://github.com/user-attachments/assets/4757d3e1-81f4-4f03-b2bc-64738a8b9189" /> -->
 
 **From a List of Dictionaries:**  
 ```python
@@ -123,7 +130,6 @@ students = [
 df = pd.DataFrame(students)
 print(df)
 ```
-<!-- <img width="498" height="217" alt="Screenshot 2025-09-04 at 6 40 57 PM" src="https://github.com/user-attachments/assets/d2a626d4-f7c4-48d9-aa2b-c71cbc9412f8" /> -->
 
 **From a List of Lists (with column names):**  
 ```python
@@ -135,14 +141,12 @@ data = [
 df = pd.DataFrame(data, columns=["name", "age", "grade"])
 print(df)
 ```
-<!-- <img width="464" height="220" alt="Screenshot 2025-09-04 at 6 41 18 PM" src="https://github.com/user-attachments/assets/720e22bb-f2a5-4bbd-b76d-24ff728634ff" /> -->
 
 - Now, Read a Series (pick a column)
 ```python
 ages = df["age"]   # this is a Series
 print(ages)
 ```
-<!-- <img width="497" height="231" alt="Screenshot 2025-09-04 at 7 09 56 PM" src="https://github.com/user-attachments/assets/d1e0ba57-cb07-4f36-9fbc-7b6c808eee43" /> -->
 
 ---
 
@@ -154,7 +158,6 @@ numbers = [10, 20, 30, 40]
 num_series = pd.Series(numbers)
 print(num_series)
 ```
-<!-- <img width="298" height="209" alt="Screenshot 2025-09-04 at 6 41 29 PM" src="https://github.com/user-attachments/assets/2a063e18-7225-46aa-850b-e75c34a96bab" /> -->
 
 **From a list with custom labels:**  
 ```python
@@ -163,7 +166,6 @@ names = ["Alice", "Bob", "Carol"]
 my_series = pd.Series(data, index=names)
 print(my_series)
 ```
-<!-- <img width="286" height="207" alt="Screenshot 2025-09-04 at 6 41 48 PM" src="https://github.com/user-attachments/assets/0dd95702-65bb-4439-beb8-44e5d9cca183" /> -->
 
 **From a Dictionary:**  
 ```python
@@ -171,7 +173,6 @@ data = {"Alice": 85, "Bob": 90, "Carol": 95}
 my_dict_series = pd.Series(data)
 print(my_dict_series)
 ```
-<!-- <img width="282" height="226" alt="Screenshot 2025-09-04 at 6 42 02 PM" src="https://github.com/user-attachments/assets/e8771a74-4755-43f1-ae0c-3ec630c46ee0" /> -->
 
 ---
 
@@ -191,14 +192,12 @@ data = {
 df = pd.DataFrame(data)
 print(df)
 ```
-<!-- <img width="312" height="213" alt="Screenshot 2025-09-04 at 7 07 44 PM" src="https://github.com/user-attachments/assets/e0ecca13-57e7-45c7-9919-f9da6e56cf63" /> -->
 
 - Now, Read a Series (pick a column)
 ```python
 ages = df["age"]   # this is a Series
 print(ages)
 ```
-<!-- <img width="494" height="208" alt="Screenshot 2025-09-04 at 7 12 11 PM" src="https://github.com/user-attachments/assets/95fad01c-8d9b-46e9-8baa-2db4372b9b55" /> -->
 
 ---
 
@@ -220,7 +219,6 @@ print(s["Bob"])  # Output: 90
 s = pd.Series([10, None, 30])
 print(s)  # Handles missing values
 ```
-<!-- <img width="317" height="182" alt="Screenshot 2025-09-04 at 6 44 59 PM" src="https://github.com/user-attachments/assets/0e8fb902-6bdc-43bd-9b7f-ce9c46f1ee44" /> -->
 
 ---
 
@@ -331,32 +329,12 @@ age, grade, city, score
 1 student
 </details>
 
-
+---
 
 # Lesson 1 - Topic 2
 
 ## Selecting & Filtering Data
 
----
-
-### Selecting Columns
-
-Think of a column like a single list/Series inside the table.  
-Sometimes you don’t need the whole table, only a few columns.  
-
-For instance: In a dataset with student info, maybe you only care about **name** and **score** for a leaderboard.
-
-**Select one column:**  
-```python
-print(students_df["name"])  # This gives you a Series (just one column)
-```
-
-**Select multiple columns:**  
-```python
-print(students_df[["name", "age"]])  # This gives you a DataFrame (2 columns)
-```
-
----
 ### Selecting Data with `.loc[]` and `.iloc[]`
 
 Datasets can be huge, with millions of rows and many columns.  
@@ -370,11 +348,15 @@ Think of them like coordinates:
 
 ---
 
-#### `.loc[]` — label-based selection
+#### `.loc[]` — label-based selection  
 - Use when your dataset has **meaningful labels** (names, IDs, dates, etc.).  
 
-**Examples:**
+**Example:**
+
 ```python
+# Optional: set the index to 'name' for label-based selection
+students_df = students_df.set_index("name")
+
 # Row-only: get the row for Carol
 students_df.loc["Carol"]
 
@@ -383,12 +365,17 @@ students_df.loc["Carol", "score"]
 
 # Column-only: get the 'score' column for all students
 students_df.loc[:, "score"]
+```
 
+---
 
-#### `.iloc[]` — index-based selection  
+#### **`.iloc[]` — index-based selection**  
 - Think **i for index number**.  
 - Uses integer positions instead of labels.
 
+**Example:**
+
+```python
 # Row-only: get the 3rd row (Carol, if index is reset)
 students_df.iloc[2]
 
@@ -397,7 +384,9 @@ students_df.iloc[2, 1]
 
 # Column-only: get the 2nd column for all rows
 students_df.iloc[:, 1]
+```
 
+---
 
 ### Filtering Rows by Condition
 
@@ -413,7 +402,7 @@ This helps us find rows based on conditions.
 print(students_df[students_df["age"] > 30])
 ```
 
-**Example: Students with grade “A”**  
+** Example: Students with grade “A”**  
 ```python
 print(students_df[students_df["grade"] == "A"])
 ```
@@ -424,11 +413,11 @@ print(students_df[students_df["grade"] == "A"])
 
 We can sort rows by any column. Sorting helps you see patterns.  
 
-For example:  
+** Example:  
 - Sort students by **score** to see the top performers.  
 - Sort by **age** to see youngest/oldest.  
 
-**Example: Sort by score (descending):**  
+** Example Sort by score (descending):**  
 ```python
 students_df.sort_values("score", ascending=False)
 ```
@@ -570,7 +559,7 @@ print(students_df.dtypes)
 
 Sometimes the same record gets entered twice, which messes up results.  
 
-**Check for duplicates:**  
+**Example:**  
 ```python
 print(students_df.duplicated())
 ```
@@ -704,14 +693,14 @@ We usually combine it with an aggregation function (like mean, sum, count).
 
 Aggregation means applying a summary calculation to each group.
 
-**Example 1: Average score by grade**
+**1: Average score by grade**
 
 ```python
 # This will show the average score for each grade.
 print(students_df.groupby("class_grade")["final_score"].mean())
 ```
 
-**Example 2: Average score of students in each city**
+**2: Average score of students in each city**
 
 ```python
 # This counts how many students are from each city.
@@ -746,7 +735,7 @@ To do meaningful analysis, we need to bring them together.
 
 Think of `.merge()` as when you want to bring two different lists together based on a common identifier.
 
-> 🚀 **Reminder:** Open VS Code and try each example.  
+> 🚀 **Reminder:** Open VS Code and try each Example and Check for understanding section.  
 > Seeing the results yourself is the fastest way to learn.
 
 
@@ -847,7 +836,7 @@ After we’re done working with our data, whether it’s cleaning, exploring, or
 
 ---
 
-## Examples
+## Example
 
 Save to CSV:  
 ```python
@@ -861,12 +850,5 @@ students_df.to_excel("students_cleaned.xlsx", index=False)
 
 ---
 
-## Final Tip for Pandas
-
-You’ll definitely run into errors sometimes, that’s normal!  
-Just read the error message carefully and search online. Errors are your best hints for fixing problems.
-
-📺 [Learning Pandas for Data Analysis?](https://www.youtube.com/watch?v=DkjCaAMBGWM)  
-📺 [What is Pandas?](https://www.youtube.com/watch?v=dcqPhpY7tWk&t=70s)
-📺 [10 Minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html) — official quickstart guide from the pandas developers
+## With this we are wrapping up Pandas, do not forget to try-out all the examples in your VsCode and refer attached resources for better understanding.
 
