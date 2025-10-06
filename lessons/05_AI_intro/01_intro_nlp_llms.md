@@ -111,7 +111,7 @@ You can [play online]( https://platform.openai.com/tokenizer) with a popular tok
 [add practical exercise here]
 
 
-### Token embeddings: From IDs to semantics
+### Embeddings: From IDs to semantics
 Once a tokenizer has converted text into integer IDs, these don't "mean" anything -- the tokenizer has just created some arbitrary numbers to stand in for words or subwords. We start ascribing meanings when the token IDs are passed through an *embedding layer*, which assigns each token a tensor, a numerical array of values:
 
 ![token embeddings](resources/embedding_layer_rashka.jpg)
@@ -130,14 +130,47 @@ Slightly more technical intro to embedding:
 https://www.youtube.com/watch?v=lPTcTh5sRug
 
 ### Attention: Context-aware embeddings
-For a nice overview of attention, see:
-https://www.youtube.com/watch?v=OxCpWwDCDFQ
+ *Attention* was the final puzzle piece needed to make modern LLMs so powerful. It was introduced by a team of researchers at Google Brain in a groundbreaking paper called [Attention is all you need](https://arxiv.org/abs/1706.03762).
 
-In the above static embedding space, each token has a single default neighborhood: apple lies near other fruits, car clusters with other vehicles, and queen sits close to king and sister. But language isn't static -- meanings shift with context. In a sentence about fruit salad, apple should clearly belong with oranges and grapefruits. In a sentence about smartphones, Apple should move toward phones and computers. Static token embeddings can't make this adjustment on their own. This is where *attention* comes in: it allows tokens to dynamically reshape their position based on surrounding words, pulling apple toward "fruit" or "phone" as needed. Attention is the mechanism that enriches the thin semantics of embeddings with contextual cues, helping to resolve ambiguities that emerge in natural language. 
+In the above static embedding space, each token has a fixed default neighborhood: `apple` lies near other fruits, `car` clusters with other vehicles, and `queen` sits close to `king` and `sister`. But language isn't static -- meanings shift with context. In a sentence about fruit salad, `apple` should clearly belong with oranges and grapefruits. In a sentence about smartphones, `Apple` should move toward phones and computers. Static token embeddings can't make this adjustment on their own. This is where *attention* comes in: it allows tokens to dynamically reshape their position based on surrounding words, pulling apple toward "fruit" or "phone" as needed. Attention is the mechanism that enriches the thin semantics of embeddings with contextual cues, helping to resolve ambiguities that emerge in natural language. 
 
-To see how attention works, imagine the sentence "An apple and an orange." Each token starts as a point in embedding space, but attention allows them to influence one another. Because "apple" and "orange" are semantically similar, attention gives them a high weight of mutual influence. As a result, the embedding for "orange" is nudged slightly toward "apple," and vice versa. Now consider "Apple released a new phone." Here, the word "Apple" receives more weight from "phone" and "released" than from unrelated words, so its embedding is shifted toward the electronics cluster. In both cases, attention acts like a similarity-based weighting system: words that are more relevant to each other exert a stronger pull, allowing their embeddings to adapt on the fly. This process turns a static semantic map into a context-sensitive representation of meaning.
 
-This transformer-based attention mechanism was the magic sauce that supercharged progress in NLP. When combined with massive training data, large models, and the self-supervised task of predicting the next token, it enabled LLMs to generate remarkably human-like speech patterns.
+To get an quick intuitive understanding of attention, before reading on, please watch the following short video: 
+
+[![Watch the video](https://img.youtube.com/vi/0aG4cSfFvC0/hqdefault.jpg)](https://www.youtube.com/shorts/0aG4cSfFvC0)
+
+
+Each token starts as a point in embedding space, but attention allows them to influence one another. Because "apple" and "orange" are semantically similar, attention gives them a high weight of mutual influence. As a result, the embedding for "orange" is nudged slightly toward "apple," and vice versa. Now consider "Apple released a new phone." Here, the word "Apple" receives more weight from "phone" and "released" than from unrelated words, so its embedding is shifted toward the electronics cluster. 
+
+In general, attention acts as a *similarity-based weighting system*: words that are closer to each other exert a stronger pull. This process turns a static semantic map into a context-sensitive representation of meaning.
+
+![Attention mechanism](resources/attention_influence.jpg)
+
+We are leaving out the mathematical details here, because this is a conceptual overview. There are *many* in-depth treatments online, such as: 
+
+- [Video](https://www.youtube.com/watch?v=OxCpWwDCDFQ) 
+- [Web page](https://cohere.com/llmu/what-is-attention-in-language-models)
+  
+Attention mechanism was the magic sauce that supercharged progress in NLP. When combined with massive training data, large models, and the self-supervised task of predicting the next token, it enabled LLMs to generate remarkably human-like speech patterns.
+
+### Transformer: attention + MLP
+The transformer architecture is the thing that provides the "T" in GPT, which stands for "generative pretrained *transformer*. 
+
+Attention is your context engine. After tokenization and embeddings, each token "looks" at the others and borrows what it needs, with stronger weights from the most relevant neighbors. That gives every token a richer, context-aware vector. This enriched token is then fed through a neural network (a multilayered perceptron, or MLP), that processes the outputs of these enriched embeddings, boosting the ability to predict the next word in the sequence. 
+
+GPT models stack many of these these transformer blocks together (GPT3 has 96 transformer blocks), generating highly contextualized and refined representations of tokens. 
+
+We're skipping many details here: for instance, *multi-head attention* runs several attention patterns in parallel within a transformer block and then mixes them; there are many other details in the ML pipeline that are needed to make the pipeline robust. Our point is more conceptual. 
+
+### Predicting the next word: de-embedding
+Crucially, the heavy lifting already happened inside the transformer stack. But we still need to predict the next word in our word sequence! 
+
+After all those transformer blocks have done their job, we're left with a final vector for each token in the input. Imagine the last word in the sequence — its vector lives somewhere in a 3D space (or, in a real model, maybe 768 or 12288 dimensions, but let’s keep it 3D for now). 
+
+Now comes the final moment. We ask: given that 3D vector, which of the 50,000 possible tokens in the vocabulary should come next? This is a classic prediction problem. The token with the highest score wins. That’s the predicted next word. Everything builds up to this. One vector in, one token out.
+
+This is done by a very simple linear neural network (two layers) that is a translator from the model's embedding space to actual tokens. We can think of it as a "de-embedding". 
+
 
 ## 4. Visualizing embeddings
 Show how similar meanings cluster in space using embeddings.
