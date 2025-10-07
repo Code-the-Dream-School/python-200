@@ -1,7 +1,5 @@
 # Introduction: Large Language Models
-General overview aned introduction. GPT etc etc. 
-
-> Welcome to the first lesson in the AI module! In this lesson, we will look at how Large Language Models (LLMs) like ChatGPT work. First, we will explore field of natural language processing (NLP) more generally. Next, we will demystify how models such as GPT are built, explain key ideas like tokenization, embeddings, and self-attention, and connect these concepts back to the machine learning skills you’ve already learned. By the end, you’ll have a clearer sense of how modern AI models represent meaning, generate new text, and why this matters for the AI tools you will be learning about in later lessons.
+Welcome to the first lesson in the AI module! In this lesson, you’ll get a behind-the-scenes look at how Large Language Models (LLMs) like ChatGPT work. We’ll start with a quick tour of natural language processing (NLP)—the field that helps computers understand and generate human language. Then you’ll learn how models like GPT are built, connecting them to many of the machine learning concepts you learned in the previous module. By the end, you’ll have a solid, intuitive sense of how AI models represent meaning, and generate text.
 
 ## 1. Natural language processing (NLP)
 While we will provide a brief overview of NLP, we could easily spend an entire course on the topic. If you want to learn more about NLP, check out the following resources:
@@ -37,7 +35,6 @@ The newest wave of LLMs inspired a surge in research, and spawned ethical debate
 Since 2022, LLMs have shifted from being mostly academic curiosities to tools that attract billions in investment every year, and they are reshaping how people learn and interact with computers. 
 
 In the rest of this lesson, we will learn some of the technical basics of how LLMs like ChatGPT work, and try to demystify their operations. Ultimateley, they are just another machine learning model, and they are trained to predict the next token in a string of tokens. 
-
 
 ## 2. Large language models (LLMs)
 ### LLMs: autocomplete at scale
@@ -172,13 +169,141 @@ Now comes the final moment. We ask: given that 3D vector, which of the 50,000 po
 This is done by a very simple linear neural network (two layers) that is a translator from the model's embedding space to actual tokens. We can think of it as a "de-embedding". 
 
 
-## 4. Visualizing embeddings
-Show how similar meanings cluster in space using embeddings.
+## 4. Demo: Visualizing embeddings
+In the following demonstration we will visualizing text embeddings based on their similarity. 
 
--- insert material from notebook illustrating embedding -- 
+> Aside on handling API key (put in README.md)
 
-## 5. Summary: Why This Matters
-- Language models power many modern AI applications.
-- LLMs learn semantic structure by representing meaning in vector space.
-- Tokenization and embeddings explain what models "know."
-- Connects to prior ML concepts (classification, clustering) by adding representation learning.
+First, load API key. 
+
+```python
+from dotenv import load_dotenv
+
+if load_dotenv():
+    print("Successfully loaded api key")
+```
+
+Generate movie summary dictionary that we will use to detect semantic similaties.
+
+```python
+movie_summaries = [
+    # Marvel Superhero Movies
+    {
+        "title": "Iron Man (2008)",
+        "summary": "Billionaire genius Tony Stark builds a high-tech suit to escape captivity and becomes Iron Man, fighting global threats with his wit and advanced technology."
+    },
+    {
+        "title": "The Avengers (2012)",
+        "summary": "Earth’s mightiest heroes, including Iron Man, Captain America, Thor, and Hulk, unite to stop Loki and his alien army from conquering the planet."
+    },
+    {
+        "title": "Black Panther (2018)",
+        "summary": "T’Challa, king of Wakanda, embraces his role as Black Panther to protect his nation and the world from a powerful enemy threatening their vibranium resources."
+    },
+    {
+        "title": "Spider-Man: No Way Home (2021)",
+        "summary": "Peter Parker, unmasked as Spider-Man, teams up with alternate-universe heroes to battle villains from across the multiverse after a spell goes wrong."
+    },
+    {
+        "title": "Captain Marvel (2019)",
+        "summary": "Carol Danvers unlocks her cosmic powers as Captain Marvel, joining the fight against the Kree-Skrull war while uncovering her lost memories on Earth."
+    },
+    # Christmas-Themed Movies
+    {
+        "title": "Home Alone (1990)",
+        "summary": "Young Kevin is accidentally left behind during Christmas vacation and must defend his home from bumbling burglars with clever traps and holiday spirit."
+    },
+    {
+        "title": "Elf (2003)",
+        "summary": "Buddy, a human raised by elves, journeys to New York City to find his real father, spreading Christmas cheer in a world that’s lost its festive spark."
+    },
+    {
+        "title": "The Polar Express (2004)",
+        "summary": "A young boy boards a magical train to the North Pole, embarking on a heartwarming adventure that tests his belief in the magic of Christmas."
+    },
+    {
+        "title": "A Christmas Carol (2009)",
+        "summary": "Ebenezer Scrooge, a miserly old man, is visited by three ghosts on Christmas Eve, learning the value of kindness and the true meaning of the holiday."
+    },
+    {
+        "title": "Love Actually (2003)",
+        "summary": "Interwoven stories of love, loss, and connection unfold in London during the Christmas season, celebrating the messy beauty of human relationships."
+    },
+    # Romantic Comedies
+    {
+        "title": "When Harry Met Sally... (1989)",
+        "summary": "Harry and Sally’s evolving friendship over years sparks debates about love and friendship, culminating in a heartfelt realization during a New Year’s Eve confession."
+    },
+    {
+        "title": "The Proposal (2009)",
+        "summary": "A high-powered executive forces her assistant into a fake engagement to avoid deportation, leading to unexpected romance during a chaotic family weekend in Alaska."
+    },
+    {
+        "title": "Crazy Rich Asians (2018)",
+        "summary": "Rachel Chu accompanies her boyfriend to Singapore, facing his ultra-wealthy family’s disapproval in a whirlwind of opulence, tradition, and newfound love."
+    },
+    {
+        "title": "10 Things I Hate About You (1999)",
+        "summary": "A rebellious teen, Kat, is wooed by bad-boy Patrick in a modern Shakespearean tale of high school romance, deception, and heartfelt connection."
+    },
+    {
+        "title": "Notting Hill (1999)",
+        "summary": "A humble London bookseller falls for a famous American actress, navigating fame, cultural clashes, and personal insecurities to pursue an unlikely love story."
+    }
+]
+```
+
+### Generate embeddings 
+
+The `text-embedding-3-small` model converts text into numerical vectors and captures the "meaning" of the input text (in this case the movie reviews). Above, we discussed embedding vectors for single tokens, but OpenAI's model will do this for any length of text, such as our movie summaries. 
+
+```python
+client = OpenAI()
+
+embeddings = []
+for summary in movie_summaries:
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=summary
+    )
+    embeddings.append(response.data[0].embedding)
+embeddings = np.array(embeddings)
+print(embeddings.shape)
+```
+
+
+### Examine embeddings in 2d using PCA
+
+PCA reduces high-dimensional embeddings (1500-dimensions) to a lower-dimensional 2D for intuitive plots, making embeddings easy to visualize. It makes more clear the similarity relations among the embeddings, revealing the semantic structure between the summaries. 
+
+We discussed above just how important this kind of perspective is in the development of LLMs/self-attention etc!
+
+```python
+# Do PCA to project to lower-dimensional embedding space
+pca = PCA(n_components=2)
+embeddings_2d = pca.fit_transform(embeddings)
+
+# Visualize embeddings
+plt.figure(figsize=(8, 6))
+for i, summary in enumerate(movie_summaries):
+    title = movie_titles[i]
+    plt.scatter(embeddings_2d[i, 0], embeddings_2d[i, 1])
+    plt.text(embeddings_2d[i, 0] + 0.02, embeddings_2d[i, 1], title, size=8)
+plt.title("2D Visualization of Summary Embeddings")
+plt.xlabel("PCA Component 1")
+plt.ylabel("PCA Component 2")
+plt.show()
+```
+
+We will see in the assignment that you can feed any text you'd like into the embedding model, it is a lot of fun to probe the semantic map embodied in these models. 
+
+
+## 5. Key points
+Congrats we just covered the basics of natural language processing and modern LLM function! Some of the key points we covered:
+
+- Modern NLP helps computers understand and generate human language using data-driven deep learning rather than hand-crafted rules.
+- Large Language Models (LLMs) like GPT are trained with self-supervised learning to predict the next word in a sequence -- essentially, autocomplete at scale.
+- Tokenization, embeddings, and attention let models capture word meaning and context dynamically.
+- Transformers incorporate attention layers and neural networks to generate  context-aware text predictions.
+
+While in subsequent lessons we will use APIs that rely on models built with these architectures, it's important to understand what’s happening under the hood. Hopefully, knowing a little bit about how tokenization, embeddings, and attention works will help demystify LLMs and gives you intuition for why they can generate language so effectively (and sometimes make such strange errors, which we will discuss in Lesson N).
