@@ -1,6 +1,59 @@
 
 # Topic: NumPy - Lesson 1
 
+### Let's Begin by Understanding Uses of NumPy
+
+NumPy (short for **Numerical Python**) is one of the most powerful tools for working with numbers and arrays in Python.  
+It’s the foundation for almost every data science and machine learning library you’ll use — like **pandas**, **scikit-learn**, and **TensorFlow**.
+
+Here are some of the most important uses of NumPy:
+
+- **1️ Arithmetic operations** – Perform fast addition, subtraction, multiplication, or division on entire arrays without using loops.  
+- **2️ Statistical operations** – Quickly calculate mean, median, standard deviation, and more.  
+- **3️ Bitwise operations** – Work efficiently with binary data and logical comparisons.  
+- **4️ Copying and viewing arrays** – Duplicate or reference arrays safely without altering the original data.  
+- **5️ Stacking arrays** – Combine multiple arrays vertically or horizontally.  
+- **6️ Matrix operations** – Perform matrix multiplication, find determinants, and handle linear transformations.  
+- **7️ Linear algebra** – Solve equations, find eigenvalues, and more using built-in functions.  
+- **8️ Broadcasting** – Automatically apply operations across arrays of different sizes (a NumPy superpower!).  
+- **9️ Mathematical operations** – Use advanced math functions like sine, cosine, log, and exponential.  
+- ** Searching, sorting & counting** – Locate specific elements, sort datasets, or count occurrences efficiently.
+
+> **Pro tip:** NumPy is what makes pandas so fast, pandas is actually built on top of NumPy!
+
+![Uses of NumPy](./resources/02_numpy_1_uses.png)
+
+---
+
+### Understanding Types of NumPy Arrays
+
+NumPy arrays (known as **ndarrays**) can have one or more dimensions depending on how your data is structured.  
+Each added dimension allows you to represent more complex data — from simple lists to matrices and even multi-layered datasets.
+
+Here are the main types of NumPy arrays:
+
+- **1D Array (One-Dimensional)** – A simple list of numbers, like `[1, 2, 3]`.  
+  Think of it as a **row** of data — great for storing simple sequences.
+
+- **2D Array (Two-Dimensional)** – A table or **matrix** made up of rows and columns, like `[[1, 2, 3], [4, 5, 6]]`.  
+  Used for representing data grids, spreadsheets, or tabular data.
+
+- **3D Array (Three-Dimensional)** – A **collection of 2D arrays** stacked together, like pages in a book.  
+  Useful in advanced tasks like image processing or machine learning datasets.
+
+> **Note:** NumPy can handle even higher dimensions (4D, 5D, and beyond), but most everyday data analysis uses 1D–3D arrays.
+
+![Types of NumPy Arrays](./resources/02_numpy_2_numpy_arrays.png)
+
+---
+
+
+### Learning Resources before we begin with Numpy
+
+- [NumPy for Absolute Beginners](https://numpy.org/doc/stable/user/absolute_beginners.html) — official quickstart guide from the NumPy developers  
+- [YouTube: NumPy Tutorial for Beginners](https://www.youtube.com/watch?v=lLRBYKwP8GQ) — video introduction to NumPy concepts and usage
+
+
 ## Installing, Importing and Why NumPy Arrays over Python Lists?
 
 ### Installing and Importing NumPy
@@ -343,9 +396,4 @@ Standard Deviation: 17.93
 📌 And then for statistics specifically, we’ll be going into much more detail in a later lesson this week and in later weeks. In the meantime, there are tons of resources available directly in NumPy: [see statistics resources here](https://numpy.org/doc/stable/reference/routines.statistics.html)
 
 ---
-
-### Further Learning Resources
-
-- [NumPy for Absolute Beginners](https://numpy.org/doc/stable/user/absolute_beginners.html) — official quickstart guide from the NumPy developers  
-- [YouTube: NumPy Tutorial for Beginners](https://www.youtube.com/watch?v=lLRBYKwP8GQ) — video introduction to NumPy concepts and usage
 
