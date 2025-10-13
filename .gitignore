@@ -177,3 +177,5 @@ cython_debug/
 # VS Code settings
 .vscode/
 
+.DS_Store
+lessons/**/.DS_Store
