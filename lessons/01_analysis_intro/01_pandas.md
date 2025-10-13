@@ -57,8 +57,7 @@ You can think of a DataFrame as a two-dimensional table or a spreadsheet in Pyth
 - Each column has a name.  
 - Each row has an index number.  
 
-<img width="644" height="344" alt="Screenshot 2025-09-04 at 6 39 39 PM" src="https://github.com/user-attachments/assets/db1dc11e-9eb2-40cb-9eef-e4947925b372" />
-
+![DataFrame Example](./resources/01_pandas_1_dataframe.png)
 
 Rule of Thumb: a DataFrame has two axes, just like a table.  
 - **Rows** (top to bottom) = Axis 0  
@@ -72,9 +71,9 @@ You can think of a Series as just one column from a DataFrame.
 - Can store heterogeneous data types.  
 - A Series is like a fancy list that knows the name of each item.
 
-<img width="640" height="300" alt="Screenshot 2025-09-04 at 6 40 01 PM" src="https://github.com/user-attachments/assets/a8d01a5b-0cfa-43fc-a21e-dfad2f04b4ac" />
+![Series Example](./resources/01_pandas_2_series.png)
 
-<img width="640" height="300" alt="Screenshot 2025-09-04 at 6 40 17 PM" src="https://github.com/user-attachments/assets/b8b9a6e0-cca6-4e71-bb23-b91953cf6c99" />
+![DataFrame vs Series Comparison](./resources/01_pandas_3_dataframeVSseries.png)
 
 👉 More on Series: [GeeksforGeeks Pandas Series](https://www.geeksforgeeks.org/python/python-pandas-series/)  
 
@@ -234,7 +233,8 @@ When you load a dataset, you might want to get a quick look at it. Pandas provid
 Example with `students.csv`:Let’s Load the data using-import pandas as pd 
 - optional if you already have imported pandas {students_df = pd.read_csv("students.csv")}
 - Here’s what the dataset looks like:
-<img width="653" height="323" alt="Screenshot 2025-09-04 at 6 46 31 PM" src="https://github.com/user-attachments/assets/4f17a569-dfd4-4314-9a79-3b126d059b39" />
+
+![Students CSV Preview](./resources/01_pandas_4_studentsCSV.png)
 
 
 - .head(): Take a Peek
@@ -259,7 +259,8 @@ print(students_df.tail()) #prints last 5 rows
 print(students_df.info())
 ```
 - When you run df.info(), Pandas gives you a summary report of your DataFrame.
-<img width="475" height="348" alt="Screenshot 2025-09-04 at 7 18 57 PM" src="https://github.com/user-attachments/assets/03ea7d7c-a120-43b4-ba0d-c811c52e32e5" />
+
+![DataFrame Info Output](./resources/01_pandas_6_dinfo.png)
 
 - Understanding .info() Output
 - RangeIndex: The dataset has 6 rows (0 to 5).
@@ -273,7 +274,7 @@ print(students_df.info())
 - Let’s try: print(students_df.describe())
 
 **- Gives us:**
-<img width="380" height="205" alt="Screenshot 2025-09-04 at 7 19 28 PM" src="https://github.com/user-attachments/assets/81977e12-5865-48d5-ae2e-05887cf7fd43" />
+![Describe Output](./resources/01_pandas_5_describe.png)
 
 - What `.describe()` tells us:
   - count: how many values (notice 5, not 6, because of missing data)
