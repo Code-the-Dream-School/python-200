@@ -166,8 +166,6 @@ completion = client.chat.completions.create(
     store = True
 )
 
-#store parameter(bool value) - helps us store the chat completion output so that we can use it later as required.
-
 print(completion.choices[0].message)
 ```
 
@@ -245,53 +243,6 @@ print(f"Audio saved as {speech_file_path} with voice of {voice}")
 
 Audio(str(speech_file_path))
 ```
-
-# Moderations
-
-Moderations endpoint is used for identifying harmful content(text/image) and to take corrective measures with the users or filter content. 
-Model  -  omni-moderation-latest: This model supports more categorization options and multi-modal inputs.
-
-params of output response: 
-flagged(bool): it will help us identify if the content is harmful. true if harmful else false.
-categories(dict): this will have sub-categories with bool values to identify the content is in which category. eg: hate, hate/threatening, self-harm violence
- 
-
-
-```python
-# Example: moderation check for several test strings
-
-examples = [
-    "The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules",
-    "If we don’t act in 24 hours, all coastlines will be underwater.",
-]
-
-for text in examples:
-    resp = client.moderations.create(
-        model="omni-moderation-latest",
-        input=text
-    )
-    print("INPUT:", text)
-    print("MODERATION RESPONSE:")
-    print("flag", resp.results[0].flagged)
-    print("categories", resp.results[0].categories)
-    #print("category_applied_input_types", resp.results[0].category_applied_input_types)
-    print("---")
-
-```
-
-    INPUT: The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules
-    MODERATION RESPONSE:
-    flag True
-    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=True, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
-    category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
-    ---
-    INPUT: If we don’t act in 24 hours, all coastlines will be underwater.
-    MODERATION RESPONSE:
-    flag False
-    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=False, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
-    category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
-    ---
-    
 
 ## A little more about messages
 We said above that the messages parameter the chat completions endpoint is a *list of messages* is a dictionary with `role` and `content` keys. Before finishing this up, let's look at this in a little more detail. The `role` describes where the content is coming from: the `user` or the model (`assistant`). The `content` is the text being sent. There is a third special role, the `system`, which is typically sent first, that sets up the model's personality (e.g., tell it to act like a kindly grandmother talking to a bunch of young children). 
