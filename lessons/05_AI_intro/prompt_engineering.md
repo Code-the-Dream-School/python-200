@@ -8,6 +8,19 @@
 > This guide shows you how to ask better questions so you get better answers.  
 > ✅ No jargon • ✅ No fluff • ✅ Just practical tips you can use right now 😊
 
+If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s the minimal setup:
+
+```
+import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Loads your API key from a .env file
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+
+```
 ---
 
 ## 📝 The Golden Rules of Prompting
@@ -33,6 +46,8 @@ Go even further by specifying:
 > “Act as a pirate captain. Explain why dogs wag their tails to a crew of 5-year-olds in a silly, rhyming chant. Structure it as 3 verses with a chorus. Keep it under 1 minute if read aloud. My goal is to entertain at a birthday party.”
 
 ---
+
+
 
 ### 2. 🚧 Use Delimiters (Fences for Your Text)  
 Help the AI tell your *instructions* apart from your *data* by wrapping content in fences like `---`, ```` ``` ``, or `<tags>`.
@@ -62,6 +77,59 @@ You are a translation assistant. Only translate the text in <input> tags.
 Do not translate anything?
 </input>
 ```
+
+
+## The coding version. 
+```
+
+text = f"""
+You should express what you want a model to do by \ 
+providing instructions that are as clear and \ 
+specific as you can possibly make them. \ 
+This will guide the model towards the desired output, \ 
+and reduce the chances of receiving irrelevant \ 
+or incorrect responses. Don't confuse writing a \ 
+clear prompt with writing a short prompt. \ 
+In many cases, longer prompts provide more clarity \ 
+and context for the model, which can lead to \ 
+more detailed and relevant outputs.
+"""
+prompt = f"""
+Summarize the text delimited by triple backticks \ 
+into a single sentence.
+```{text}```
+"""
+response = get_completion(prompt)
+print(response)
+
+
+
+```
+
+```
+prompt_2 = f"""
+Your task is to perform the following actions: 
+1 - Summarize the following text delimited by 
+  <> with 1 sentence.
+2 - Translate the summary into French.
+3 - List each name in the French summary.
+4 - Output a json object that contains the 
+  following keys: french_summary, num_names.
+
+Use the following format:
+Text: <text to summarize>
+Summary: <summary>
+Translation: <summary translation>
+Names: <list of names in summary>
+Output JSON: <json with summary and num_names>
+
+Text: <{text}>
+"""
+response = get_completion(prompt_2)
+print("\nCompletion for prompt 2:")
+print(response)
+
+```
 ## 3. 📦 Request a Specific Output Format**
 Tell the AI how to give you the answer—especially if you’re using it in code or spreadsheets.
 
@@ -71,7 +139,42 @@ Generate 3 made-up book titles with authors and genres.
 Provide them in JSON with keys: book_id, title, author, genre. 
 
 This ensures clean, reusable output!
+```
+text_2 = f"""
+The sun is shining brightly today, and the birds are \
+singing. It's a beautiful day to go for a \ 
+walk in the park. The flowers are blooming, and the \ 
+trees are swaying gently in the breeze. People \ 
+are out and about, enjoying the lovely weather. \ 
+Some are having picnics, while others are playing \ 
+games or simply relaxing on the grass. It's a \ 
+perfect day to spend time outdoors and appreciate the \ 
+beauty of nature.
+"""
+prompt = f"""
+You will be provided with text delimited by triple quotes. 
+If it contains a sequence of instructions, \ 
+re-write those instructions in the following format:
 
+Step 1 - ...
+Step 2 - …
+…
+Step N - …
+
+If the text does not contain a sequence of instructions, \ 
+then simply write \"No steps provided.\"
+
+\"\"\"{text_2}\"\"\"
+"""
+response = get_completion(prompt)
+print("Completion for Text 2:")
+print(response)
+
+
+
+
+
+```
 ## 4. ❓ Ask the AI to Check Conditions First
 Give clear rules for when to act—and when not to.
 
@@ -90,6 +193,37 @@ text
 """
 Making a cup of tea is easy! First, boil water...
 """
+
+
+```
+
+prompt = f"""
+Determine if the student's solution is correct or not.
+
+Question:
+I'm building a solar power installation and I need \
+ help working out the financials. 
+- Land costs $100 / square foot
+- I can buy solar panels for $250 / square foot
+- I negotiated a contract for maintenance that will cost \ 
+me a flat $100k per year, and an additional $10 / square \
+foot
+What is the total cost for the first year of operations 
+as a function of the number of square feet.
+
+Student's Solution:
+Let x be the size of the installation in square feet.
+Costs:
+1. Land cost: 100x
+2. Solar panel cost: 250x
+3. Maintenance cost: 100,000 + 100x
+Total cost: 100x + 250x + 100,000 + 100x = 450x + 100,000
+"""
+response = get_completion(prompt)
+print(response)
+
+
+```
 👉 The AI now checks first, then responds appropriately.
 
 ## 5. ⏳ Give the Model Time to “Think”
@@ -104,6 +238,71 @@ For complex tasks, ask it to reason step-by-step.
 “Show your step-by-step reasoning to calculate 123 × 456, then give the final answer.” 
 
 This reduces errors and builds trust!
+```
+f"""
+Your task is to determine if the student's solution \
+is correct or not.
+To solve the problem do the following:
+- First, work out your own solution to the problem including the final total. 
+- Then compare your solution to the student's solution \ 
+and evaluate if the student's solution is correct or not. 
+Don't decide if the student's solution is correct until 
+you have done the problem yourself.
+
+Use the following format:
+Question:
+question here
+
+Student's solution:
+
+student's solution here
+
+Actual solution:
+
+steps to work out the solution and your solution here
+
+Is the student's solution the same as actual solution \
+just calculated:
+
+
+yes or no
+
+Student grade:
+
+correct or incorrect
+
+
+Question:
+
+I'm building a solar power installation and I need help \
+working out the financials. 
+- Land costs $100 / square foot
+- I can buy solar panels for $250 / square foot
+- I negotiated a contract for maintenance that will cost \
+me a flat $100k per year, and an additional $10 / square \
+foot
+What is the total cost for the first year of operations \
+as a function of the number of square feet.
+
+
+Student's solution:
+
+Let x be the size of the installation in square feet.
+Costs:
+1. Land cost: 100x
+2. Solar panel cost: 250x
+3. Maintenance cost: 100,000 + 100x
+Total cost: 100x + 250x + 100,000 + 100x = 450x + 100,000
+
+
+Actual solution:
+"""
+
+response = get_completion(prompt)
+print(response)
+
+
+```
 
 ## 6. 🧠 Ask the Model to Reason Through Its Own Solution
 Great for math, logic, or debugging.
@@ -306,7 +505,173 @@ Bonjour
 
 
 
+## Summarizing with the API
 
+```
+prompt = f"""
+Your task is to generate a short summary of a product \
+review from an ecommerce site to give feedback to the \
+pricing deparmtment, responsible for determining the \
+price of the product.  
+
+Summarize the review below, delimited by triple 
+backticks, in at most 30 words, and focusing on any aspects \
+that are relevant to the price and perceived value. 
+
+Review: ```{prod_review}```
+"""
+
+response = get_completion(prompt)
+print(response)
+
+
+
+```
+
+
+```
+
+
+
+review_1 = prod_review 
+
+# review for a standing lamp
+review_2 = """
+Needed a nice lamp for my bedroom, and this one \
+had additional storage and not too high of a price \
+point. Got it fast - arrived in 2 days. The string \
+to the lamp broke during the transit and the company \
+happily sent over a new one. Came within a few days \
+as well. It was easy to put together. Then I had a \
+missing part, so I contacted their support and they \
+very quickly got me the missing piece! Seems to me \
+to be a great company that cares about their customers \
+and products. 
+"""
+
+# review for an electric toothbrush
+review_3 = """
+My dental hygienist recommended an electric toothbrush, \
+which is why I got this. The battery life seems to be \
+pretty impressive so far. After initial charging and \
+leaving the charger plugged in for the first week to \
+condition the battery, I've unplugged the charger and \
+been using it for twice daily brushing for the last \
+3 weeks all on the same charge. But the toothbrush head \
+is too small. I’ve seen baby toothbrushes bigger than \
+this one. I wish the head was bigger with different \
+length bristles to get between teeth better because \
+this one doesn’t.  Overall if you can get this one \
+around the $50 mark, it's a good deal. The manufactuer's \
+replacements heads are pretty expensive, but you can \
+get generic ones that're more reasonably priced. This \
+toothbrush makes me feel like I've been to the dentist \
+every day. My teeth feel sparkly clean! 
+"""
+
+# review for a blender
+review_4 = """
+So, they still had the 17 piece system on seasonal \
+sale for around $49 in the month of November, about \
+half off, but for some reason (call it price gouging) \
+around the second week of December the prices all went \
+up to about anywhere from between $70-$89 for the same \
+system. And the 11 piece system went up around $10 or \
+so in price also from the earlier sale price of $29. \
+So it looks okay, but if you look at the base, the part \
+where the blade locks into place doesn’t look as good \
+as in previous editions from a few years ago, but I \
+plan to be very gentle with it (example, I crush \
+very hard items like beans, ice, rice, etc. in the \ 
+blender first then pulverize them in the serving size \
+I want in the blender then switch to the whipping \
+blade for a finer flour, and use the cross cutting blade \
+first when making smoothies, then use the flat blade \
+if I need them finer/less pulpy). Special tip when making \
+smoothies, finely cut and freeze the fruits and \
+vegetables (if using spinach-lightly stew soften the \ 
+spinach then freeze until ready for use-and if making \
+sorbet, use a small to medium sized food processor) \ 
+that you plan to use that way you can avoid adding so \
+much ice if at all-when making your smoothie. \
+After about a year, the motor was making a funny noise. \
+I called customer service but the warranty expired \
+already, so I had to buy another one. FYI: The overall \
+quality has gone done in these types of products, so \
+they are kind of counting on brand recognition and \
+consumer loyalty to maintain sales. Got it in about \
+two days.
+"""
+
+reviews = [review_1, review_2, review_3, review_4]
+
+for i in range(len(reviews)):
+    prompt = f"""
+    Your task is to generate a short summary of a product \ 
+    review from an ecommerce site. 
+
+    Summarize the review below, delimited by triple \
+    backticks in at most 20 words. 
+
+    Review: ```{reviews[i]}```
+    """
+
+    response = get_completion(prompt)
+    print(i, response, "\n")
+
+
+```
+## Inferring with API
+```
+
+prompt = f"""
+Identify the following items from the review text: 
+- Item purchased by reviewer
+- Company that made the item
+
+The review is delimited with triple backticks. \
+Format your response as a JSON object with \
+"Item" and "Brand" as the keys. 
+If the information isn't present, use "unknown" \
+as the value.
+Make your response as short as possible.
+  
+Review text: '''{lamp_review}'''
+"""
+response = get_completion(prompt)
+print(response)
+
+
+
+```
+
+
+```
+
+prompt = f"""
+Identify the following items from the review text: 
+- Sentiment (positive or negative)
+- Is the reviewer expressing anger? (true or false)
+- Item purchased by reviewer
+- Company that made the item
+
+The review is delimited with triple backticks. \
+Format your response as a JSON object with \
+"Sentiment", "Anger", "Item" and "Brand" as the keys.
+If the information isn't present, use "unknown" \
+as the value.
+Make your response as short as possible.
+Format the Anger value as a boolean.
+
+Review text: '''{lamp_review}'''
+"""
+response = get_completion(prompt)
+print(response)
+
+
+
+```
+## Transforming with the API
 
 ## Other tips
 - Ask for shorter sentenecs. 
@@ -628,4 +993,10 @@ Instruct model to reason out its own solution (for math for example)
 
 
 Iterative. Process 
+
+
+
+chain of thought, zero shot prompting, k shot promting, in-context, step-back, least to most
+
 -->
+
