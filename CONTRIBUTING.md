@@ -13,7 +13,7 @@ Firs, set things up so you have a local copy of the repo based on a fork of the 
     cd python-200
 
 3. Set the upstream remote     
-    git remote add upstream https://github.com/Code-the-Dream/python-200.git
+    git remote add upstream https://github.com/Code-the-Dream-School/python-200.git
 
 ### Work locally and make PRs
 Once you are set up with the repo, you can start your work by making a local feature branch (let's call it `week1_module2`). 
