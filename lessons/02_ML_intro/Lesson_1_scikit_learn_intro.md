@@ -16,7 +16,8 @@ Save model evaluation, pipelines, cross-validation, etc. for Week 2.
 
 ## Motivation — Why scikit-learn?
 
-![alt text](<Screenshot 2025-10-24 at 3.09.00 PM.png>)
+<img width="550" height="333" alt="Screenshot 2025-10-24 at 3 09 00 PM" src="https://github.com/user-attachments/assets/056d6b1a-4184-4bfd-9473-216739e4dfb7" />
+
 
 ⭐ Think: Netflix recommendations, Spotify mixes, fraud alerts.  
 These systems use machine learning to learn patterns from data.
@@ -27,7 +28,8 @@ In Python, the go-to toolkit for traditional (non-deep-learning) ML is **scikit-
 ✅ Free and open-source  
 ✅ Consistent APIs across many algorithms  
 
-![alt text](<Screenshot 2025-10-24 at 3.09.06 PM.png>)
+<img width="529" height="262" alt="Screenshot 2025-10-24 at 3 09 06 PM" src="https://github.com/user-attachments/assets/fde97815-318b-4912-8ab5-78f50434c7f2" />
+
 
 Before deep learning, learn these foundations — most projects build on them.
 
