@@ -1,17 +1,19 @@
-# Hello OpenAI
+# OpenAI Chat Completions API
 
-This is a standalone intro to the OpenAI API to help get people started working with OpenAI's ChatGPT models. 
+This lesson serves as a gentle introdution to OpenAI's chat completion API and can be used as a foundation to understand the chat completions APIs from other similar models (like Google's Gemini, Anthropic's Claude etc.). If you dig into the online docs, you will see that there is a newer *responses* API from OpenAI that is geared toward building agents, but the completions API is important to learn about as other companies mimic it, and it is sort of the gold standard. 
 
-You will need an OpenAI API key. Running the code in this notebook will cost less than a penny. 
+> **NOTE:** Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI`, `dotenv`, and `jupyterlab`.
 
-To invoke the completions API, we use `client.chat.completions.create(...)`. We'll step through this below, but for now note that a  *completion* refers to the output the model generates in response to your input. In the context of the *chat* API, that output is always text: the model is continuing or trying to *complete* the chat or conversation. 
+## What is a completion?
 
-If you dig into the online docs, you will see that there is a newer *responses* API from OpenAI that is geared toward building agents, but the completions API is important to learn about as other companies mimic it, and it is sort of the gold standard. 
+A *completion* refers to the output the model generates in response to your input. In the context of the *chat* API, that output is always text: the model is continuing or trying to *complete* the chat or conversation. It is useful to note that current chatbots used by Amazon, Microsoft, IBM, etc. now work with multimodal inputs (any combinations of text,  images and audio). Although there are a few models (GPT-4o for example) claimed to be *truly multimodal* (i.e. they can handle video inputs along with text, images and audio), there is still considerable work going on in this direction.
 
-To run this, you will need to create a virtual environment with the following packages installed: `OpenAI`, `dotenv`, and `jupyterlab`. Also, as discussed in the next section, I recommend creating a `.env` file with your openai api key (this is discussed in the next section). Be sure to put `.env` in `.gitignore`!
+## Preliminary Steps
 
-## Handling your API Key
-There are a couple of main ways to securely handle API keys. One, you can set it as an environment variable, and the OpenAI client (instatiated with `client = OpenAI()`) will see it. A second convention is to store it in a local `.env` file in the same directory as the project (so in this case, in the same directory as this notebook).
+To start working with OpenAI's Chat Completions API, we'll begin by setting up our jupyter notebook and connecting to OpenAI's API using the provided API key. The following sections will guide you through the process of connecting to ChatGPT.
+
+### Handling your API Key
+There are a couple of main ways to securely handle API keys. One, you can set it as an environment variable, and the OpenAI client (instatiated with `client = OpenAI()`) will see it. This is generally not recommended, since others will be able to see this key when you publish your code. A second convention is to store it in a local `.env` file in the same directory as the project (so in this case, in the same directory as this notebook). I recommend using this approach!
 
 The content of the `.env` file would be:
 
@@ -31,9 +33,9 @@ if load_dotenv():
     Successfully loaded api key
     
 
+To check if your Python variable path is set to the right path, you can use the *executable* function.
 
 ```python
-#To check if your Python variable path is set to the right path
 import sys
 print(sys.executable)
 ```
@@ -41,7 +43,7 @@ print(sys.executable)
     C:\Users\macha\OneDrive - Cal State Fullerton\Documents\Practice\Concepts\python-200\venv\Scripts\python.exe
     
 
-## Connecting to ChatGPT
+### Connecting to ChatGPT
 The standard way to connect to the Open AI API is to create a `client`, which is an instance of the `OpenAI` class. The `client` is an object that stores your API key and connects you to the OpenAI API server so you don't have to write raw HTTP requests yourself.
 
 
@@ -57,18 +59,22 @@ Create the client to interface with their server:
 client = OpenAI()
 ```
 
-To generate chat responses, we use the `chat.completions.create()` method. This has only two required arguments:
+If you've followed the instructions in the previous section, the client should load successfully.
+
+## "Chatting" with the API
+
+To generate chat responses (i.e. *completions*), we use the `chat.completions.create()` method. You can find out more about it [here](https://platform.openai.com/docs/api-reference/chat/create). This has only two required arguments:
 
 `model` and `messages`
 
 - **`model`** :  the string name of the model you want to use (`"gpt-4"`, `"gpt-3.5-turbo"`).
-- **`messages`** : a list of messages:  each message is a dictionary with `role` and `content` keys. 
+- **`messages`** : a list of messages:  each message is a dictionary with `role` and `content` keys. We will explore this argument in detail in the next section.
 
 There are lots of other optional parameters but let's not focus on those now. 
 
 Let's look at an example.
 
-Note that we'll use `gpt-3.5-turbo`, as it is really cost-efficient. 
+Note that we'll use `gpt-3.5-turbo`, as it is really cost-efficient. Let's create a message and see it's response
 
 
 ```python
@@ -77,16 +83,8 @@ response = client.chat.completions.create(model="gpt-3.5-turbo",
                                                       "content": "Hello World"}],
                                           n=1,
                                           temperature=1.3)
-```
-
-Let's see it's response
-
-
-```python
 print(response.choices[0].message.content)
 ```
-
-Congratulations, you've successfully build your first interface with a ChatGPT model!!!
 
 Let's look at what just happened. What is this `response`?
 
@@ -98,7 +96,7 @@ Unpacking the attributes a little bit:
 - **`.usage`** : object that tells you about token usage (`prompt_tokens`, `completion_tokens`, `total_tokens`). This can be useful for monitoring costs.   
 - **`.model`** : the name of the model that generated the response (e.g. `gpt-3.5-turbo`)
 
-Feel free to play with these attributes.
+Feel free to play with these attributes. 
 
 
 ```python
@@ -111,17 +109,17 @@ response.model
 ```
 
 ### Other parameters for `completions.create()`
-There are a few other important parameters for the completions API you might want to play with.
+There are a few other important parameters for the completions API you might want to play with. You can learn more from the documentation [here](https://platform.openai.com/docs/api-reference/chat/create). Feel free to play with the optional arguments and analyse their effect on the output message. 
 - `temperature`: controls randomness. Lower (0 is min) is more deterministic. `0` means pick the most likely token. 0.7 is a standard default. 1.0 and great adds a great deal of randomness in selection. If you want deterministic outputs, set it to 0. 
 - `top_p`: enables *nucleus sampling* — the model restricts the set of tokens to the smallest set whose probabilities is `p`, so it limits the model outputs. Instead of using all tokens, the model samples only from the smallest group of tokens whose probabilities sum to p.
 - `n`: sets number of responses returned in `.choices`. It defaults to 1. If you have temperature set to 0, you are wasting tokens.
 - `max_tokens`: limits the lenght of the response. This can be a useful way to keep costs under control. You can also just *tell* the model to keep the response under 50 words in your prompt. 
 
+Congratulations, you've successfully built your first interface with a ChatGPT model!!!
 
+### Check for Understanding
 
 ```python
-Quick Question? 
-
 A language model is trying to pick the next word after “I ate a”.
 The possible next words and their probabilities are:
 
@@ -152,40 +150,56 @@ D.
 Setting A and B both randomly choose among all four options.
 ```
 
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong> A. Both A and B will always choose apple. <br>
+In setting A, temperature is 0.0 so top_p doesn't matter, the output will always be the word with the highest probability (i.e. apple).
+In setting B, temperature is 1.0 so we're allowing for randomness in the output, top_p is 0.6 so the output is restricted to a random choice amongst the smallest set of tokens with probabilities totalling to 0.6. Here, the smallest set that satisfies this condition is {apple}, so the output is always going to be apple.
+</details>
+
+## Providing more context to the API
+
+So far, we've looked at simple text inputs to the API. Let's look at providing additional context and information to the Completions API to enable it to provide more informed outputs.
+
+Recall that a message is a dictionary with `role` and `content` keys. The `role` describes where the content is coming from: the `user` or the model (`assistant`). The `content` is the text being sent. There is a third special role, the `system`, which is typically sent first, that sets up the model's personality (e.g., tell it to act like a kindly grandmother talking to a bunch of young children).
+
+In practice, once the `system` role is set, the roles tend to switch between `user` (query from person) and `assistant` (answer from the model). 
+
+Let's look at an example where we want to give kudos to an employee who did a great job at their current project. First, we will give information about the employee to the model and then ask for suggestions on what to say about his/her work.
 
 ```python
-#Let's play around more with the completions API. 
-# We want to give kudos to an employee who did a great job at their current project. 
-#First, we will give information about the employee to the model and then ask for suggestions on what to say about his/her work.
 completion = client.chat.completions.create(
   model="gpt-3.5-turbo",
   messages=[
     {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Hello! We have an employee Alex who recently joined our team. She worked on reaserch and also development part on the newest feature of analyzing data through pdf files. She develiedred product and having created 12% impact. She got fast in adapting the MCP and delievered the product on time."}
+    {"role": "user", "content": "Hello! We have an employee Alex who recently joined our team. She worked on research and development on the newest feature of analyzing data through pdf files. She delivered the product and has created 12% impact. She got fast in adapting the MCP and delivered the product on time."}
   ],
     store = True
 )
 
-#store parameter(bool value) - helps us store the chat completion output so that we can use it later as required.
-
 print(completion.choices[0].message)
 ```
+Here, we provide an additional message in the system role, instructing the API to act as a helpful assistant. The responses from the API will now be as an assistant. Note that you can provide multiple messages as context for the API completion. As you will learn in a later lesson, chatbots provide all previous messages in a conversation as context to generate appropriate responses. Interestingly, in the later versions of the API you can add names to different messages with the same role, so you can provide a complete conversation as context as well. Check out [this](https://community.openai.com/t/role-management-in-the-chat-completions-api/929112) forum post.
 
-    ChatCompletionMessage(content="Hello! It sounds like Alex is a valuable addition to your team. It's great to hear that she has been successful in both the research and development aspects of the project, especially in creating a feature for analyzing data through PDF files. Delivering a product with a 12% impact is impressive, and her ability to adapt quickly to new tools like MCP is commendable. It seems like Alex is proactive and efficient in her work, which is beneficial for the team's productivity and success. If you need any more assistance or advice regarding Alex or any other team member, feel free to ask!", refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=None)
-    
+The store parameter is a boolean value that helps us store the chat completion output so that we can use it later as required. We will later used this stored  completion to continue the conversation. The stored completions can also be viewed on your OpenAI platform dashboard.
 
+Let's see what the response look like.
+
+```python
+    ChatCompletionMessage(content="Hello! It sounds like Alex is a valuable addition to your team. It's great to hear that she has been successful in both the research and development aspects of the project, especially in creating a feature for analyzing data through PDF files. Delivering a product with a 12% impact is impressive, and her ability to adapt quickly to new tools like MCP is commendable. It seems like Alex is proactive and efficient in her work, which is beneficial for the team's productivity and success. If you need any more assistance or advice regarding Alex or any other team member, feel free to ask!", refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=None) 
+```
+As you can see, the response looks like an assistant assessing and welcome the new team member Alex. Let's use the stored completion to continue the chat. 
 
 ```python
 completions = client.chat.completions.list()
-#print(completions)
 if completions.first_id: 
-    print("First_ID",completions.first_id)
+    print("First_ID:",completions.first_id)
     first_id = completions.first_id
 else:
     print("No data")
 if first_id: 
     first_completion = client.chat.completions.retrieve(completion_id=first_id)
-    print("Data", first_completion.choices[0].message.content)
+    print("Data:", first_completion.choices[0].message.content)
     employee_info = first_completion.choices[0].message.content
 kudos_message = client.chat.completions.create(
   model="gpt-3.5-turbo",
@@ -196,32 +210,134 @@ kudos_message = client.chat.completions.create(
   ],
     store = True
 )
-print("Kudos",kudos_message.choices[0].message.content)
+print("Kudos:",kudos_message.choices[0].message.content)
+```
+Once you've stored the previous API response, it will be available using the `chat.completions.list()` function. You can learn more about it [here](https://platform.openai.com/docs/api-reference/chat/object).
 
-    
+Let's look at the outputs.
+```python
+    First_ID: chatcmpl-CPnj8rO3x2TNXfihsXXaVlHwZemcf
+    Data: Alex, your commitment to excellence and passion for innovation really came through on the new feature. You took it from concept to a polished release—grounded in thoughtful research, careful testing, and crisp cross-team collaboration—and the results show it. Your work is advancing our roadmap, elevating the user experience, and energizing the team. Congratulations on a job brilliantly done, and thank you for the dedication you bring every day. Keep up the fantastic work!
+    Kudos: Alex, your dedication and commitment to excellence truly shone through in your work on the new feature. Your innovative approach, attention to detail, and collaborative spirit were instrumental in bringing this project to life. Your tireless efforts have not only enhanced our roadmap but have also elevated the overall user experience and inspired the entire team. Your passion and hard work do not go unnoticed, and we truly appreciate the value you bring each day. Congratulations on a job well done, Alex. Your contributions make a real difference, and we are grateful for your outstanding work. Keep up the fantastic work!
+```
+As you can see, the previously provided context of the system message and its first response has been used to provide the Kudos message. 
+
+Sending a list of messages is important because the chat completions endpoint *has no memory of previous conversations*, so if you want it to have context, *you have to send it*.
+
+Here is an example:
+
+```python
+current_model = "gpt-3.5-turbo"
+messages = [{"role": "system",
+             "content": "You are a helpful teacher. You explain things at a level that a beginning Python programmer can understand."},
+            {"role": "user",
+             "content": "Are there any other measures of complexity besides time complexity for an algorithm?"},
+            {"role": "assistant",
+             "content": "Yes there are other measures, such as space complexity."},
+            {"role": "user",
+             "content": "What is that?"}]
+response = client.chat.completions.create(model=current_model, 
+                                          messages=messages)
+print(response.choices[0].message.content)
 ```
 
-    First_ID chatcmpl-CPnj8rO3x2TNXfihsXXaVlHwZemcf
-    Data Alex, your commitment to excellence and passion for innovation really came through on the new feature. You took it from concept to a polished release—grounded in thoughtful research, careful testing, and crisp cross-team collaboration—and the results show it. Your work is advancing our roadmap, elevating the user experience, and energizing the team. Congratulations on a job brilliantly done, and thank you for the dedication you bring every day. Keep up the fantastic work!
-    Kudos Alex, your dedication and commitment to excellence truly shone through in your work on the new feature. Your innovative approach, attention to detail, and collaborative spirit were instrumental in bringing this project to life. Your tireless efforts have not only enhanced our roadmap but have also elevated the overall user experience and inspired the entire team. Your passion and hard work do not go unnoticed, and we truly appreciate the value you bring each day. Congratulations on a job well done, Alex. Your contributions make a real difference, and we are grateful for your outstanding work. Keep up the fantastic work!
-    
+We will look at how chatbots append the previous messages continuously into the current input to add context in a subsequent module.
 
-# Generate audio
+## Using built-in moderation and guardrails
 
+The moderations endpoint is used for identifying harmful content(text/image) and to take corrective measures with the users or filter content. OpenAI has instituted a [moderation policy](https://platform.openai.com/docs/guides/moderation) and enforces it using [omni-moderation](https://platform.openai.com/docs/models/omni-moderation-latest) which supports more categorization options and multi-modal inputs.
+
+The moderations endpoint will flag if there are words that fall in any of the following categories:
+- hate — content that expresses hate toward a protected group
+- hate/threatening — hateful content that also includes threats of violence *
+- harassment — insulting, bullying, or harassing content
+- harassment/threatening — harassing content that also includes threats of violence *
+- self-harm — discussion of self-injury or suicide
+- self-harm/intent — indicates intent to self-harm *
+- self-harm/instructions — provides instructions or methods for self-harm *
+- sexual — sexually explicit content
+- sexual/minors — sexual content involving children/minors *
+- violence — violent content, including descriptions of harming others
+- violence/graphic — graphic or gory descriptions of violence *
+
+*Asterisk* means automatic block, the openai chat completions models themselves (gpt5) will not answer, even if you the developer want it to. The others allow some flexibility and judgment on your part (note that we have seen news cases where users can be clever and figure out ways around these blocks, but the idea is that you should not provide answers if you are building a tool). 
+
+Note you can check the moderation bits, for free, using the `moderations` endpoint which takes in `model` and `input` (text):. The model is not one of the standard models, but `omni-moderation-latest`: 
+
+
+```python
+mod_response1 = client.moderations.create(model="omni-moderation-latest",
+                                     input="I want to kill my neighbor.")
+mod_response2 = client.moderations.create(model="omni-moderation-latest",
+                                     input="I want to water my neighbor's plant.")
+ ```
+
+ You can check to see if they were flagged generally with: 
+
+     print(mod_response1.results[0].flagged, mod_response2.results[0].flagged)  # True/False
+
+To see things in more detail about the flagged message:
+
+    pprint(mod_response1.results[0].categories.model_dump())
+
+In much more detail (with the scores):
+
+    pprint(mod_response1.results[0].model_dump())
+
+The output response has the following parameters: 
+ - flagged(bool): it will help us identify if the content is harmful. true if harmful else false.
+ - categories(dict): this will have sub-categories with bool values to identify the content is in which category. eg: hate, hate/threatening, self-harm violence
+
+You should see that the first message will be flagged while the second is not.
+
+<!-- Let's look at an example.
+
+```python
+examples = [
+    "The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules",
+    "If we don’t act in 24 hours, all coastlines will be underwater.",
+]
+
+for text in examples:
+    resp = client.moderations.create(
+        model="omni-moderation-latest",
+        input=text
+    )
+    print("INPUT:", text)
+    print("MODERATION RESPONSE:")
+    print("flag", resp.results[0].flagged)
+    print("categories", resp.results[0].categories)
+    #print("category_applied_input_types", resp.results[0].category_applied_input_types)
+    print("---")
+```
+Here, we simply iterate over the example messages and pass them through the moderations endpoint to check whether they are flagged. 
+```python
+    INPUT: The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules
+    MODERATION RESPONSE:
+    flag True
+    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=True, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
+    #category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
+    ---
+    INPUT: If we don’t act in 24 hours, all coastlines will be underwater.
+    MODERATION RESPONSE:
+    flag False
+    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=False, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
+    #category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
+    --- 
+```
+As expected, the first messaged is flagged as violent content and the second is not flagged at all. The `category_applied_input_types` argument becomes relevant in the case of multimodal inputs (text, images etc.) We won't go over that here, but you're free to learn more on your own! -->
+
+## Generate audio
+Interestingly, the OpenAI API is not just built for generating written text. You can generate audio completions as well!
+
+Just for fun, try running the following, and then click on the play button in the output (you might need to install some additional libraries).
+
+If you know a language other than English, try it out. It can speak many different languages. 
 
 ```python
 from pathlib import Path
 from IPython.display import Audio
-```
 
-The OpenAI API is not just built for generating written text. 
-
-Just for fun, try running the following, and then click on the play button below (you might need to install some additional libraries).
-
-If you know a language other than English, try it out. It can speak many different languages. 
-
-
-```python
 voice = "alloy"  #shimmer is higher pitch, onyx lower pitch
 
 speech_file_path = Path("speech.mp3")
@@ -246,95 +362,18 @@ print(f"Audio saved as {speech_file_path} with voice of {voice}")
 Audio(str(speech_file_path))
 ```
 
-# Moderations
+## A Quick Introduction to Abstractions
 
-Moderations endpoint is used for identifying harmful content(text/image) and to take corrective measures with the users or filter content. 
-Model  -  omni-moderation-latest: This model supports more categorization options and multi-modal inputs.
+So far, we've been looking only at the OpenAI completions API. However, there are many such APIs in the market (such as Anthropic's Claude, Google Gemini). Many of these APIs generally follow the OpenAI completions protocol and syntax. However, you would need to account for the differences in syntax when communicating between different APIs. Fortunately, there are packages that provide an abstraction layer between these different APIs so you only need to worry about the input prompt. Examples of this are [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). 
 
-params of output response: 
-flagged(bool): it will help us identify if the content is harmful. true if harmful else false.
-categories(dict): this will have sub-categories with bool values to identify the content is in which category. eg: hate, hate/threatening, self-harm violence
- 
-
-
-```python
-# Example: moderation check for several test strings
-
-examples = [
-    "The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules",
-    "If we don’t act in 24 hours, all coastlines will be underwater.",
-]
-
-for text in examples:
-    resp = client.moderations.create(
-        model="omni-moderation-latest",
-        input=text
-    )
-    print("INPUT:", text)
-    print("MODERATION RESPONSE:")
-    print("flag", resp.results[0].flagged)
-    print("categories", resp.results[0].categories)
-    #print("category_applied_input_types", resp.results[0].category_applied_input_types)
-    print("---")
-
-```
-
-    INPUT: The kid got raged in school from his seniors and they also attacked him was beaten up for not following their rules
-    MODERATION RESPONSE:
-    flag True
-    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=True, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
-    category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
-    ---
-    INPUT: If we don’t act in 24 hours, all coastlines will be underwater.
-    MODERATION RESPONSE:
-    flag False
-    categories Categories(harassment=False, harassment_threatening=False, hate=False, hate_threatening=False, illicit=False, illicit_violent=False, self_harm=False, self_harm_instructions=False, self_harm_intent=False, sexual=False, sexual_minors=False, violence=False, violence_graphic=False, harassment/threatening=False, hate/threatening=False, illicit/violent=False, self-harm/intent=False, self-harm/instructions=False, self-harm=False, sexual/minors=False, violence/graphic=False)
-    category_applied_input_types CategoryAppliedInputTypes(harassment=['text'], harassment_threatening=['text'], hate=['text'], hate_threatening=['text'], illicit=['text'], illicit_violent=['text'], self_harm=['text'], self_harm_instructions=['text'], self_harm_intent=['text'], sexual=['text'], sexual_minors=['text'], violence=['text'], violence_graphic=['text'], harassment/threatening=['text'], hate/threatening=['text'], illicit/violent=['text'], self-harm/intent=['text'], self-harm/instructions=['text'], self-harm=['text'], sexual/minors=['text'], violence/graphic=['text'])
-    ---
-    
-
-## A little more about messages
-We said above that the messages parameter the chat completions endpoint is a *list of messages* is a dictionary with `role` and `content` keys. Before finishing this up, let's look at this in a little more detail. The `role` describes where the content is coming from: the `user` or the model (`assistant`). The `content` is the text being sent. There is a third special role, the `system`, which is typically sent first, that sets up the model's personality (e.g., tell it to act like a kindly grandmother talking to a bunch of young children). 
-
-In practice, once the `system` role is set, the roles tend to switch between `user` (query from person) and `assistant` (answer from the model). 
-
-Sending a list of messages is important because the chat completions endpoint *has no memory of previous conversations*, so if you want it to have context, *you have to send it*.
-
-Here is an example:
-
-
-```python
-messages = [{"role": "system",
-             "content": "You are a helpful teacher. You explain things at a level that a beginning Python programmer can understand."},
-            {"role": "user",
-             "content": "Are there any other measures of complexity besides time complexity for an algorithm?"},
-            {"role": "assistant",
-             "content": "Yes there are other measures, such as space complexity."},
-            {"role": "user",
-             "content": "What is that?"}]
-```
-
-
-```python
-current_model = "gpt-3.5-turbo"
-```
-
-
-```python
-response = client.chat.completions.create(model=current_model,
-                                          messages=messages)
-```
-
-
-```python
-print(response.choices[0].message.content)
-```
+<!--
+LLM Arena - https://lmarena.ai/leaderboard
+Mozilla AI's [Any-Agent](https://github.com/mozilla-ai/any-agent).You can read more about the abstraction framework and its usage [here](https://blog.mozilla.ai/introducing-any-agent-an-abstraction-layer-between-your-code-and-the-many-agentic-frameworks/). -->
 
 ## Explore on your own!
-Congrats you know the basics of the completions API! There really isn't that much more to it. From here you could build a simple chatbot with a personality, build in memory of previous conversations, and build a simple application. 
+Congratulations! You've learned the basics of the completions API! There really isn't that much more to it. From here you could build a simple chatbot with a personality, build in memory of previous conversations, and build a simple application. 
 
-I'd encourage you to explore more below. See what it can do. Explore in different languages to see where it suceeds, fails, etc. 
-
+I'd encourage you to explore more below. See what it can do. Explore in different languages to see where it suceeds, fails, etc. Feel free to expand the list of messages with assistant/user interactions.
 
 ```python
 messages = [{"role": "system",
@@ -342,21 +381,7 @@ messages = [{"role": "system",
             {"role": "user",
              "content": "<add your own> create your own content here"}]
 
-# Feel free to expand the list of messages with assistant/user interactions
-```
-
-
-```python
 response = client.chat.completions.create(model=current_model,
                                           messages=messages)
-```
-
-
-```python
 print(response.choices[0].message.content)
-```
-
-
-```python
-
 ```
