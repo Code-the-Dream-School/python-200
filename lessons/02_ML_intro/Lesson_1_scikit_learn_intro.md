@@ -247,24 +247,24 @@ plt.show()
 
 ## Key Takeaways – Lesson 1.5
 
-1️⃣ The scikit-learn workflow is simple: **Create → Fit → Predict.**  
+1️- The scikit-learn workflow is simple: **Create → Fit → Predict.**  
    You practiced it with both classification and clustering.  
 
-2️⃣ **Classification example (Iris):**  
+2️- **Classification example (Iris):**  
    - Used LogisticRegression to predict flower species.  
    - Learned from labeled data → *supervised learning.*  
 
-3️⃣ **Clustering example (K-Means):**  
+3️- **Clustering example (K-Means):**  
    - Grouped unlabeled points into segments.  
    - Found patterns without knowing answers → *unsupervised learning.*  
 
-4️⃣ **Same API across tasks:**  
+4️- **Same API across tasks:**  
    Whether it’s regression, classification, or clustering, the process (fit, then predict) stays consistent.  
 
-5️⃣ **Visualization helps you see what the model learned.**  
+5️- **Visualization helps you see what the model learned.**  
    Simple scatter or pair plots make patterns and clusters easy to understand.
 
 ---
 
-✅ **Bottom line:**  
+ **Bottom line:**  
 You now know how to take raw data, fit a model, make predictions, and visualize results — the essential first step in any machine-learning workflow.
