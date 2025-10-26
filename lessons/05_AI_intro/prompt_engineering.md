@@ -1,5 +1,5 @@
 
-# 🌟 Prompt Engineering: The Art of Talking to AI
+# Prompt Engineering: The Art of Talking to AI
 
 ## Introduction
 
@@ -8,55 +8,87 @@
 > Think of it as giving clear directions to a brilliant but literal-minded assistant.
 
 ### Why This Guide?
-✨ Learn to write better prompts  
-✨ Get more accurate and useful responses  
-✨ Save time and reduce frustration  
-✨ Make AI work better for you
+Learn to write better prompts  
+Get more accurate and useful responses  
+Save time and reduce frustration  
+Make AI work better for you
 
 ---
 
-If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s the minimal setup:
+If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s a minimal, ready-to-use setup including a helper function used throughout this lesson:
 
-```
-import openai
+```python
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Loads your API key from a .env file
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load OPENAI_API_KEY from a .env file or environment
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise EnvironmentError(
+        "Missing OPENAI_API_KEY. Create a .env file with OPENAI_API_KEY=..."
+    )
 
+# Prefer the modern OpenAI client (openai>=1.0). Fallback to legacy if unavailable.
+try:
+    from openai import OpenAI
 
+    client = OpenAI()
 
+    def get_completion(prompt: str, model: str = "gpt-4o-mini", temperature: float = 0) -> str:
+        """Send a single-turn prompt and return the text content."""
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temperature,  # 0 = deterministic, higher = more creative
+        )
+        return response.choices[0].message.content
+except ImportError:
+    # Legacy fallback for older openai packages
+    import openai
+
+    openai.api_key = api_key
+
+    def get_completion(prompt: str, model: str = "gpt-3.5-turbo", temperature: float = 0) -> str:
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temperature,
+        )
+        return response.choices[0].message["content"]
 ```
 ---
 
-## 📝 The Golden Rules of Prompting
+## The Golden Rules of Prompting
 
-### 1. 🎯 Be Clear & Specific  
+### 1. Be Clear & Specific  
 Vague prompts = vague answers. Help the AI help you!
 
-❌ **Don’t say:**  
+
+Don't say:  
 > “Tell me about dogs.”
 
-✅ **Do say:**  
+
+Do say:  
 > “List 3 fun facts about golden retrievers for kids.”
 
 Go even further by specifying:
-- **Audience**: _“Explain like I’m 5”_
-- **Role**: _“Explain like you’re my second-grade teacher”_ or _“…like a veterinarian”_
-- **Length**: _“in no more than 10 words per fact”_
+- **Audience**: _"6th-grade students"_
+- **Role**: _"Middle-school science teacher"_
+- **Length**: _"4 steps, 8–10 words each"_
 
-💡 **Quick Template (Copy/Paste!):**  
+
+Tip: Quick Template (Copy/Paste!):  
 > “Act as **[ROLE]**. Explain **[TOPIC]** to **[AUDIENCE]** in **[TONE/STYLE]**. Structure it as **[FORMAT]**. Keep it under **[LENGTH/CONSTRAINT]**. My goal is to **[USE CASE]**.”
 
 **Example:**  
-> “Act as a pirate captain. Explain why dogs wag their tails to a crew of 5-year-olds in a silly, rhyming chant. Structure it as 3 verses with a chorus. Keep it under 1 minute if read aloud. My goal is to entertain at a birthday party.”
+> "Act as a middle-school science teacher. Explain photosynthesis to 6th-grade students in a friendly, simple tone. Structure the answer as 4 numbered steps, 8–10 words each. Keep jargon minimal and avoid chemical equations."
 
 ---
 
 
 
-### 2. 🚧 Use Delimiters for Clear Boundaries
+### 2. Use Delimiters for Clear Boundaries
 
 Delimiters are special markers that help separate different parts of your prompt. They help the AI understand which parts are instructions and which parts are content to process.
 
@@ -74,13 +106,11 @@ The cat sat on the windowsill, watching birds...
 
 **Example 2: Structured Extraction**
 ```
-You are a customer support assistant. Extract: name, issue_type, urgency (low/medium/high). 
+You are a customer support assistant. Extract: name, issue_type, urgency (low/medium/high). Respond only in valid JSON with keys: name, issue_type, urgency.
 
 <user_message>
-Hi, this is Maria Chen. I’ve been locked out of my account for 2 hours and can’t access my payroll info. It’s urgent!
+Hello, this is Jordan Lee. I was charged twice for my last order and my rent is due tomorrow—can you fix this today?
 </user_message>
-
-Respond only in valid JSON. No other text. 
 ```
 
 Example 3: Safe Translation (Avoid Prompt Injection)
@@ -92,9 +122,36 @@ Do not translate anything?
 </input>
 ```
 
+## The coding version
 
-## The coding version. 
+Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
+
+
+First you would need to setup this: 
+```python
+import openai
+import os
+
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv())
+
+openai.api_key  = os.getenv('OPENAI_API_KEY')
+
+
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0, # this is the degree of randomness of the model's output
+    )
+    return response.choices[0].message["content"]
+
 ```
+
+Now try it: summarize a block of text into a single sentence using get_completion.
+
+```python
 
 text = f"""
 You should express what you want a model to do by \ 
@@ -119,8 +176,8 @@ print(response)
 
 
 ```
-
-```
+Next example: a multi-step prompt that summarizes delimited text, translates to French, extracts names, and returns a compact JSON object with strict keys.
+```python
 prompt_2 = f"""
 Your task is to perform the following actions: 
 1 - Summarize the following text delimited by 
@@ -144,7 +201,7 @@ print("\nCompletion for prompt 2:")
 print(response)
 
 ```
-## 3. 📦 Request a Specific Output Format
+## 3. Request a Specific Output Format
 Tell the AI how to give you the answer—especially if you’re using it in code or spreadsheets.
 
 ✅ Do this:
@@ -155,7 +212,9 @@ Provide them in JSON with keys: book_id, title, author, genre.
 
 This ensures clean, reusable output!
 ## The coding version
-```
+
+Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
+```python
 text_2 = f"""
 The sun is shining brightly today, and the birds are \
 singing. It's a beautiful day to go for a \ 
@@ -191,7 +250,7 @@ print(response)
 
 
 ```
-## 4. ❓ Ask the AI to Check Conditions First
+## 4. Ask the AI to Check Conditions First
 Give clear rules for when to act—and when not to.
 
 You will be given text in triple quotes.
@@ -211,10 +270,9 @@ Making a cup of tea is easy! First, boil water...
 """
 
 ## The coding version
-```
 
-
-
+Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
+```python 
 prompt = f"""
 Determine if the student's solution is correct or not.
 
@@ -244,20 +302,22 @@ print(response)
 ```
 👉 The AI now checks first, then responds appropriately.
 
-## 5. ⏳ Give the Model Time to “Think”
+## 5. Give the Model Time to “Think”
 For complex tasks, ask it to reason step-by-step.
 
-❌ Instead of:
+Instead of:
 
 “What’s 123 × 456?” 
 
-✅ Try:
+Try:
 
 “Show your step-by-step reasoning to calculate 123 × 456, then give the final answer.” 
 
 This reduces errors and builds trust!
 ## The coding version
-```
+
+Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
+```python
 f"""
 Your task is to determine if the student's solution \
 is correct or not.
@@ -323,7 +383,7 @@ print(response)
 
 ```
 
-## 6. 🧠 Ask the Model to Reason Through Its Own Solution
+## 6. Ask the Model to Reason Through Its Own Solution
 Great for math, logic, or debugging.
 
 “A shirt costs $20 after a 20% discount. What was the original price?
@@ -331,7 +391,7 @@ First, explain your reasoning. Then give the answer.”
 
 The AI is more accurate when it “shows its work”!
 
-💡 Final Tip: Iterate!
+Tip: Iterate!
 Your first prompt doesn’t have to be perfect.
 If the answer isn’t quite right, tweak and try again—that’s how you learn what works!
 
@@ -370,7 +430,7 @@ Why this is safer: the top-level system/prompt instruction explicitly limits wha
 
 
 
-## Designing effecicient prompts: 
+## Designing efficient prompts
 
 * Role
 * Content
@@ -410,7 +470,7 @@ context; it suggests a healthy vegetarian dish that is full of protein.
 
 **Prompt**
 
-delicious simple salad recipies
+Delicious simple salad recipies
 
 ```
 Classic Greek Salad
@@ -494,8 +554,8 @@ Bonjour
 
 One-shot prompting is a technique in **in-context learning (ICL)** where the model is given **a single example** before the actual task. This helps clarify the expected format, style, or logic—leading to better performance than zero-shot prompting.
 
-> 💡 According to the learning prompt article:  
-> *"One-shot prompting enhances zero-shot prompting by providing a single example before the new task, which helps clarify expectations and improves model performance."*
+Note: According to the learning prompt article:  
+*"One-shot prompting enhances zero-shot prompting by providing a single example before the new task, which helps clarify expectations and improves model performance."*
 
 #### Examples:
 **Prompt:**
@@ -600,8 +660,8 @@ is too small. I’ve seen baby toothbrushes bigger than \
 this one. I wish the head was bigger with different \
 length bristles to get between teeth better because \
 this one doesn’t.  Overall if you can get this one \
-around the $50 mark, it's a good deal. The manufactuer's \
-replacements heads are pretty expensive, but you can \
+    around the $50 mark, it's a good deal. The manufacturer's \
+    replacement heads are pretty expensive, but you can \
 get generic ones that're more reasonably priced. This \
 toothbrush makes me feel like I've been to the dentist \
 every day. My teeth feel sparkly clean! 
@@ -635,8 +695,8 @@ much ice if at all-when making your smoothie. \
 After about a year, the motor was making a funny noise. \
 I called customer service but the warranty expired \
 already, so I had to buy another one. FYI: The overall \
-quality has gone done in these types of products, so \
-they are kind of counting on brand recognition and \
+    quality has gone down in these types of products, so \
+    they may be counting on brand recognition and \
 consumer loyalty to maintain sales. Got it in about \
 two days.
 """
@@ -724,11 +784,13 @@ print(response)
 
 
 ```
-data_json = { "resturant employees" :[ 
-    {"name":"Shyam", "email":"shyamjaiswal@gmail.com"},
-    {"name":"Bob", "email":"bob32@gmail.com"},
-    {"name":"Jai", "email":"jai87@gmail.com"}
-]}
+data_json = {
+    "restaurant_employees": [
+        {"name": "Shyam", "email": "shyamjaiswal@gmail.com"},
+        {"name": "Bob", "email": "bob32@gmail.com"},
+        {"name": "Jai", "email": "jai87@gmail.com"}
+    ]
+}
 
 prompt = f"""
 Translate the following python dictionary from JSON to an HTML \
@@ -739,7 +801,7 @@ print(response)
 
 
 ```
-### Spelling and Grammer
+### Spelling and Grammar
 
 ```
 
@@ -814,7 +876,7 @@ much ice if at all-when making your smoothie. \
 After about a year, the motor was making a funny noise. \
 I called customer service but the warranty expired \
 already, so I had to buy another one. FYI: The overall \
-quality has gone done in these types of products, so \
+quality has gone down in these types of products, so \
 they are kind of counting on brand recognition and \
 consumer loyalty to maintain sales. Got it in about \
 two days.
@@ -823,14 +885,14 @@ two days.
 
 ```
 
-### Changing Temparature
+### Changing Temperature
 
-Changing the temparature of the API can determine the difference in answer that the API could give. 
+Changing the temperature of the API affects how random or creative responses are: lower → more deterministic, higher → more creative.
 
 
 
 ## Other tips
-- Ask for shorter sentenecs. 
+- Ask for shorter sentences.
 - Summarizing
 - extract information
 - Inferring 
@@ -838,7 +900,7 @@ Changing the temparature of the API can determine the difference in answer that 
 - Translate a language
 
 
-# Pop Quiz 🧪
+# Pop Quiz
 1. What is zero-shot prompting?<br>
 A) Giving the AI 3 examples before asking a question<br>
 B) Asking the AI a question without any examples<br>
@@ -995,43 +1057,38 @@ Ask → See result → Adjust words → Ask again → Boom, better answer!
 🔍 Inferring
 “Read between the lines.”
 
-✅ “What’s the customer really upset about in this email?”
 
-🖼️ [Visual: Detective hat 🕵️‍♀️ with a thought bubble] 
+Example: “What’s the customer really upset about in this email?”
 
-🔄 Transforming
+
+Transforming
 Change the style or format.
 
-✅ “Turn this formal email into a friendly text message.”
+Example: “Turn this formal email into a friendly text message.”
 
-🖼️ [Visual: Magic wand ✨ transforming one document into another] 
 
-➕ Expanding
+Expanding
 “Tell me more!”
 
-✅ “Add 3 examples to this explanation about photosynthesis.”
+Example: “Add 3 examples to this explanation about photosynthesis.”
 
-🖼️ [Visual: Balloon 🎈 inflating with “+MORE” written on it] 
 
-💬 Chatbot Mode
+Chatbot Mode
 Help AI stay in character during conversations.
 
-✅ “You’re a pirate. Answer like one. Arrr!”
+Example: “You’re a pirate. Answer like one. Arrr!”
 
-🖼️ [Visual: Pirate hat 🏴‍☠️ + speech bubble with “Arrr!”] 
 
-🎉 Conclusion
-You’re now an AI Whisperer! 🐉
+Conclusion
+You’re now an AI Whisperer!
 Remember:
-✨ Be clear.
-✨ Use structure.
-✨ Show examples.
-✨ Let it think.
-✨ And don’t be afraid to try again.
+Be clear.
+Use structure.
+Show examples.
+Let it think.
+And don’t be afraid to try again.
 
 The better you ask — the better it answers. Go forth and prompt like a pro!
-
-🖼️ [Visual: Confetti 🎊 + trophy 🏆 + smiling AI robot 🤖]  -->
 
 
 
@@ -1078,80 +1135,9 @@ Summarize this:
 ---
 The cat sat on the windowsill, watching birds...
 ---
-🖼️ [Visual: A fence icon 🚧 around sample text] 
-
-2. 
-You are a customer support assistant. Extract the following fields from the user's message: name, issue_type, and urgency (low/medium/high).
-
-User message:
-<user_message>
-Hi, this is Maria Chen. I’ve been locked out of my account for 2 hours and can’t access my payroll info. It’s urgent!
-</user_message>
-
-Respond only in valid JSON format. Do not include any other text.
-
-
-
-
-3. 
-
-Ask the AI to format the response in a certain format for example. JSON. 
-Generate a list of thre made-up book titles along with their authors and genres. 
-Provide them in JSON format with the following keys: 
-book_id, title, author, genre. 
-
-
-4
-Ask if the conditions are satisfied
-
-text_1 = f"""
-Making a cup of tea is easy! First, you need to get some \ 
-water boiling. While that's happening, \ 
-grab a cup and put a tea bag in it. Once the water is \ 
 hot enough, just pour it over the tea bag. \ 
 Let it sit for a bit so the tea can steep. After a \ 
 few minutes, take out the tea bag. If you \ 
 like, you can add some sugar or milk to taste. \ 
 And that's it! You've got yourself a delicious \ 
 cup of tea to enjoy.
-"""
-prompt = f"""
-You will be provided with text delimited by triple quotes. 
-If it contains a sequence of instructions, \ 
-re-write those instructions in the following format:
-
-Step 1 - ...
-Step 2 - …
-…
-Step N - …
-
-If the text does not contain a sequence of instructions, \ 
-then simply write \"No steps provided.\"
-
-\"\"\"{text_1}\"\"\"
-"""
-response = get_completion(prompt)
-print("Completion for Text 1:")
-print(response)
-
-
-4.....
-Give the model time to think
-
-
-
-
-5.... 
-Instruct model to reason out its own solution (for math for example)
-
-
-
-
-
-Iterative. Process 
-
-
-
-chain of thought, zero shot prompting, k shot promting, in-context, step-back, least to most
-
--->
