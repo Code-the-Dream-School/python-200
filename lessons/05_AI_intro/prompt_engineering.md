@@ -200,7 +200,20 @@ print("\nCompletion for prompt 2:")
 print(response)
 
 ```
-## 3. Request a Specific Output Format
+A short example: Detect the language of a text and return a compact JSON result.
+
+```python
+prompt = f"""
+Identify the language and ISO 639-1 code of the text below.
+Respond as JSON with keys: language, iso639_1.
+Text: ```Bonjour, comment puis-je vous aider aujourd'hui ?```
+"""
+response = get_completion(prompt)
+print(response)
+
+
+```
+Another transformation: JSON → HTML
 Tell the AI how to give you the answer—especially if you’re using it in code or spreadsheets.
 
 ✅ Do this:
@@ -614,19 +627,17 @@ Tone: urgent
 
 
 ## Summarizing with the API
+APIs can also summarize text. Try it yourself—tweak the prompt and see how the summary changes.
 
-```
+```python
 prompt = f"""
-Your task is to generate a short summary of a product \
-review from an ecommerce site to give feedback to the \
-pricing deparmtment, responsible for determining the \
-price of the product.  
+Write a concise, plain-English summary of a customer product review for an internal marketing brief.
+- Goal: capture overall sentiment plus the strongest pro and con
+- Length: 25–35 words, one sentence
+- Focus: hints about perceived value or price sensitivity if present
 
-Summarize the review below, delimited by triple 
-backticks, in at most 30 words, and focusing on any aspects \
-that are relevant to the price and perceived value. 
-
-Review: ```{prod_review}```
+Review (delimited by triple backticks):
+```{prod_review}```
 """
 
 response = get_completion(prompt)
@@ -635,91 +646,37 @@ print(response)
 
 
 ```
+Next: summarize multiple reviews
+```python 
+review_1 = prod_review
 
-
-```
-
-
-
-review_1 = prod_review 
-
-# review for a standing lamp
+# App Store review for a task manager app
 review_2 = """
-Needed a nice lamp for my bedroom, and this one \
-had additional storage and not too high of a price \
-point. Got it fast - arrived in 2 days. The string \
-to the lamp broke during the transit and the company \
-happily sent over a new one. Came within a few days \
-as well. It was easy to put together. Then I had a \
-missing part, so I contacted their support and they \
-very quickly got me the missing piece! Seems to me \
-to be a great company that cares about their customers \
-and products. 
+Switched from my paper planner to this app and it’s been great for daily checklists.
+Sync works across my phone and laptop, but calendar integration sometimes lags a few minutes.
+Overall a big productivity boost.
 """
 
-# review for an electric toothbrush
+# App Store review for a weather app
 review_3 = """
-My dental hygienist recommended an electric toothbrush, \
-which is why I got this. The battery life seems to be \
-pretty impressive so far. After initial charging and \
-leaving the charger plugged in for the first week to \
-condition the battery, I've unplugged the charger and \
-been using it for twice daily brushing for the last \
-3 weeks all on the same charge. But the toothbrush head \
-is too small. I’ve seen baby toothbrushes bigger than \
-this one. I wish the head was bigger with different \
-length bristles to get between teeth better because \
-this one doesn’t.  Overall if you can get this one \
-    around the $50 mark, it's a good deal. The manufacturer's \
-    replacement heads are pretty expensive, but you can \
-get generic ones that're more reasonably priced. This \
-toothbrush makes me feel like I've been to the dentist \
-every day. My teeth feel sparkly clean! 
+The new radar layer is super helpful during storms and loads quickly.
+However, notifications fire too often for minor changes, which gets annoying.
+I’d like more granular alert settings.
 """
 
-# review for a blender
+# App Store review for a language learning app
 review_4 = """
-So, they still had the 17 piece system on seasonal \
-sale for around $49 in the month of November, about \
-half off, but for some reason (call it price gouging) \
-around the second week of December the prices all went \
-up to about anywhere from between $70-$89 for the same \
-system. And the 11 piece system went up around $10 or \
-so in price also from the earlier sale price of $29. \
-So it looks okay, but if you look at the base, the part \
-where the blade locks into place doesn’t look as good \
-as in previous editions from a few years ago, but I \
-plan to be very gentle with it (example, I crush \
-very hard items like beans, ice, rice, etc. in the \ 
-blender first then pulverize them in the serving size \
-I want in the blender then switch to the whipping \
-blade for a finer flour, and use the cross cutting blade \
-first when making smoothies, then use the flat blade \
-if I need them finer/less pulpy). Special tip when making \
-smoothies, finely cut and freeze the fruits and \
-vegetables (if using spinach-lightly stew soften the \ 
-spinach then freeze until ready for use-and if making \
-sorbet, use a small to medium sized food processor) \ 
-that you plan to use that way you can avoid adding so \
-much ice if at all-when making your smoothie. \
-After about a year, the motor was making a funny noise. \
-I called customer service but the warranty expired \
-already, so I had to buy another one. FYI: The overall \
-    quality has gone down in these types of products, so \
-    they may be counting on brand recognition and \
-consumer loyalty to maintain sales. Got it in about \
-two days.
+I’m retaining vocabulary better with the spaced-repetition drills and short daily lessons.
+Audio quality is clear, but some speaking exercises don’t recognize my accent.
+Still, I’m practicing more consistently than before.
 """
 
 reviews = [review_1, review_2, review_3, review_4]
 
 for i in range(len(reviews)):
     prompt = f"""
-    Your task is to generate a short summary of a product \ 
-    review from an ecommerce site. 
-
-    Summarize the review below, delimited by triple \
-    backticks in at most 20 words. 
+    Write a single-sentence summary (25–35 words) of the app review below.
+    Include overall sentiment (positive/neutral/negative) and one key reason.
 
     Review: ```{reviews[i]}```
     """
@@ -729,8 +686,17 @@ for i in range(len(reviews)):
 
 
 ```
-## Inferring with API
-```
+## Inferring with the API
+
+The API can infer structured information from text, like entities, sentiment, and intent.
+
+```python
+
+app_review = """
+I tried the FocusFox task app for a week; the daily goals and streaks kept me on track.
+Sync is reliable, but calendar linking occasionally duplicates events.
+Overall, it’s worth the Pro price for me.
+"""
 
 prompt = f"""
 Identify the following items from the review text: 
@@ -744,7 +710,7 @@ If the information isn't present, use "unknown" \
 as the value.
 Make your response as short as possible.
   
-Review text: '''{lamp_review}'''
+Review text: '''{app_review}'''
 """
 response = get_completion(prompt)
 print(response)
@@ -752,26 +718,24 @@ print(response)
 
 
 ```
+Next, extend the inference to include sentiment, anger, item, and brand, returning a compact JSON object.
 
-
-```
+```python
 
 prompt = f"""
-Identify the following items from the review text: 
-- Sentiment (positive or negative)
-- Is the reviewer expressing anger? (true or false)
-- Item purchased by reviewer
-- Company that made the item
+From the review below, extract these fields:
+- sentiment: positive or negative
+- anger: true or false
+- item: the product being reviewed
+- brand: the company that makes it
 
-The review is delimited with triple backticks. \
-Format your response as a JSON object with \
-"Sentiment", "Anger", "Item" and "Brand" as the keys.
-If the information isn't present, use "unknown" \
-as the value.
-Make your response as short as possible.
-Format the Anger value as a boolean.
+The review is enclosed in triple backticks.
+Respond with a minimal JSON object using exactly these keys:
+"sentiment", "anger", "item", "brand".
+If a field isn’t stated, set its value to "unknown".
+Ensure the anger value is a boolean (true/false).
 
-Review text: '''{lamp_review}'''
+Review: ```{app_review}```
 """
 response = get_completion(prompt)
 print(response)
@@ -780,31 +744,35 @@ print(response)
 
 ```
 ## Transforming with the API
-
-```
+You can also transform text with the API—for example, translate between languages or change the form of a data. 
+```python
 prompt = f"""
-Translate the following English text to Spanish: \ 
-```Hi, I would like to order a blender```
+Translate the following English text to Spanish:
+```Please confirm my appointment for tomorrow at 3 PM.```
 """
 response = get_completion(prompt)
 print(response)
 
 
 ```
+Another transformation: JSON → HTML
 
-
-```
+```python
 data_json = {
-    "restaurant_employees": [
-        {"name": "Shyam", "email": "shyamjaiswal@gmail.com"},
-        {"name": "Bob", "email": "bob32@gmail.com"},
-        {"name": "Jai", "email": "jai87@gmail.com"}
+    "employees": [
+        {"name": "Alex Rivera", "email": "alex.rivera@example.com"},
+        {"name": "Dana Kim", "email": "dana.kim@example.com"},
+        {"name": "Taylor Singh", "email": "taylor.singh@example.com"}
     ]
 }
 
 prompt = f"""
-Translate the following python dictionary from JSON to an HTML \
-table with column headers and title: {data_json}
+Convert the JSON below into an HTML table with a caption and column headers.
+- Caption: Company Employees
+- Columns: Name, Email
+
+JSON:
+```{data_json}```
 """
 response = get_completion(prompt)
 print(response)
@@ -812,42 +780,32 @@ print(response)
 
 ```
 ### Spelling and Grammar
+Another useful transformation is correcting spelling and grammar.
 
-```
+```python
 
 text = [ 
-  "The girl with the black and white puppies have a ball.",  # The girl has a ball.
-  "Yolanda has her notebook.", # ok
-  "Its going to be a long day. Does the car need it’s oil changed?",  # Homonyms
-  "Their goes my freedom. There going to bring they’re suitcases.",  # Homonyms
-  "Your going to need you’re notebook.",  # Homonyms
-  "That medicine effects my ability to sleep. Have you heard of the butterfly affect?", # Homonyms
-  "This phrase is to cherck chatGPT for speling abilitty"  # spelling
+    "The basket of ripe tomatoes are on the table.",  # Subject-verb agreement
+    "Marcus finished his homework.",  # ok
+    "Its going to rain; it's best to bring an umbrella.",  # Homonyms (its/it's)
+    "Their bringing there suitcases, but they're already full.",  # Homonyms (their/there/they're)
+    "Your going to love you're new job.",  # Homonyms (your/you're)
+    "The weather will effect our plans, but the biggest affect is traffic.",  # Homonyms (effect/affect)
+    "This sentense cheks ChatGPT's speling abilitey"  # spelling
 ]
 for t in text:
-    prompt = f"""Proofread and correct the following text
-    and rewrite the corrected version. If you don't find
-    and errors, just say "No errors found". Don't use 
-    any punctuation around the text:
-    ```{t}```"""
+    prompt = f"""
+    Proofread the sentence below and fix spelling and grammar.
+    Return only the corrected sentence. If it's already correct, respond with: No errors found.
+    Do not wrap the output in quotation marks.
+    ```{t}```
+    """
     response = get_completion(prompt)
     print(response)
 
 
 ```
 
-```
-
-prompt = f"""
-proofread and correct this review. Make it more compelling. 
-Ensure it follows APA style guide and targets an advanced reader. 
-Output in markdown format.
-Text: ```{text}```
-"""
-response = get_completion(prompt)
-display(Markdown(response))
-
-```
 
 
 ## Expanding
