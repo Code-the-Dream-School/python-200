@@ -170,6 +170,9 @@ We are skipping *many* of the details here. For instance, *multi-head attention*
 
 The output of the transformer is then used to predict the next word. This process is applied iteratively, until full passages like you get with ChatGPT or other interfaces emerge. 
 
+For a quick overview of all this, [check out this video](https://www.youtube.com/watch?v=5sLYAQS9sWQ).
+
+
 ## 4. Demo: Visualizing embeddings
 In the following demonstration we will visualize text embeddings based on their semantic similarity. 
 
