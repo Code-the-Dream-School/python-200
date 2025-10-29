@@ -29,7 +29,7 @@ if not api_key:
         "Missing OPENAI_API_KEY. Create a .env file with OPENAI_API_KEY=..."
     )
 
-# Prefer the modern OpenAI client (openai>=1.0). Fallback to legacy if unavailable.
+
 try:
     from openai import OpenAI
 
@@ -44,7 +44,6 @@ try:
         )
         return response.choices[0].message.content
 except ImportError:
-    # Legacy fallback for older openai packages
     import openai
 
     openai.api_key = api_key
@@ -650,21 +649,18 @@ Next: summarize multiple reviews
 ```python 
 review_1 = prod_review
 
-# App Store review for a task manager app
 review_2 = """
 Switched from my paper planner to this app and it’s been great for daily checklists.
 Sync works across my phone and laptop, but calendar integration sometimes lags a few minutes.
 Overall a big productivity boost.
 """
 
-# App Store review for a weather app
 review_3 = """
 The new radar layer is super helpful during storms and loads quickly.
 However, notifications fire too often for minor changes, which gets annoying.
 I’d like more granular alert settings.
 """
 
-# App Store review for a language learning app
 review_4 = """
 I’m retaining vocabulary better with the spaced-repetition drills and short daily lessons.
 Audio quality is clear, but some speaking exercises don’t recognize my accent.
@@ -816,7 +812,6 @@ Use the API to generate customer replies from review text and detected sentiment
 
 sentiment = "negative"
 
-# review for a drip coffee maker
 review = f"""
 I bought the 12-cup BrewPro coffee maker during a spring sale \
 for $59, and a few weeks later the list price jumped to $89. \
@@ -837,7 +832,6 @@ It arrived quickly, but I wouldn’t repurchase at full price.
 """
 
 
-# Create a customer support reply using the sentiment and review above
 prompt = f"""
 You are a customer support agent. Draft a reply email to the customer based on the review below and the detected sentiment: {sentiment}.
 
