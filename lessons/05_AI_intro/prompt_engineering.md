@@ -809,46 +809,54 @@ for t in text:
 
 
 ## Expanding
+Use the API to generate customer replies from review text and detected sentiment.
 
 ### Automated Reply
-```
-# given the sentiment from the lesson on "inferring",
-# and the original customer message, customize the email
+```python
+
 sentiment = "negative"
 
-# review for a blender
+# review for a drip coffee maker
 review = f"""
-So, they still had the 17 piece system on seasonal \
-sale for around $49 in the month of November, about \
-half off, but for some reason (call it price gouging) \
-around the second week of December the prices all went \
-up to about anywhere from between $70-$89 for the same \
-system. And the 11 piece system went up around $10 or \
-so in price also from the earlier sale price of $29. \
-So it looks okay, but if you look at the base, the part \
-where the blade locks into place doesn’t look as good \
-as in previous editions from a few years ago, but I \
-plan to be very gentle with it (example, I crush \
-very hard items like beans, ice, rice, etc. in the \ 
-blender first then pulverize them in the serving size \
-I want in the blender then switch to the whipping \
-blade for a finer flour, and use the cross cutting blade \
-first when making smoothies, then use the flat blade \
-if I need them finer/less pulpy). Special tip when making \
-smoothies, finely cut and freeze the fruits and \
-vegetables (if using spinach-lightly stew soften the \ 
-spinach then freeze until ready for use-and if making \
-sorbet, use a small to medium sized food processor) \ 
-that you plan to use that way you can avoid adding so \
-much ice if at all-when making your smoothie. \
-After about a year, the motor was making a funny noise. \
-I called customer service but the warranty expired \
-already, so I had to buy another one. FYI: The overall \
-quality has gone down in these types of products, so \
-they are kind of counting on brand recognition and \
-consumer loyalty to maintain sales. Got it in about \
-two days.
+I bought the 12-cup BrewPro coffee maker during a spring sale \
+for $59, and a few weeks later the list price jumped to $89. \
+Shipping was fast (three days), and setup was straightforward. \
+The first week was great, but by month three the warming plate \
+started peeling and the auto-shutoff became unreliable. \
+Brew strength is decent if you use a medium‑coarse grind, \
+but the reusable filter lets fines through unless you double \
+up with a paper cone. Tip: run a vinegar cycle every other \
+week or it starts to clog. The carafe lid hinge feels flimsy \
+compared with an older model I owned, and replacement parts \
+are “temporarily unavailable,” according to support. I called \
+about a buzzing sound from the pump; customer service was polite \
+but said the warranty had expired by ten days—no repair, no \
+discount. It feels like build quality slipped this year and the \
+brand name is doing more work than the hardware. \
+It arrived quickly, but I wouldn’t repurchase at full price.
 """
+
+
+# Create a customer support reply using the sentiment and review above
+prompt = f"""
+You are a customer support agent. Draft a reply email to the customer based on the review below and the detected sentiment: {sentiment}.
+
+Requirements:
+- If sentiment is negative: apologize, acknowledge the issue, propose 1–2 concrete next steps, and invite a reply.
+- If sentiment is positive: thank them and highlight one benefit they mentioned.
+- Ask exactly one clarifying question if it helps resolution.
+- Tone: empathetic, professional, concise.
+- Output format:
+Subject: <short subject>
+Body:
+<3–5 short sentences>
+
+Review:
+```{review}```
+"""
+
+response = get_completion(prompt)
+print(response)
 
 
 ```
