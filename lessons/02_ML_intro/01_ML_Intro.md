@@ -35,13 +35,12 @@ But before diving deep, let’s pause and ask - **why does ML matter to you as a
 Because Machine Learning isn’t just for scientists - it’s for anyone who wants to make smarter systems.  
 Whether you’re building a chatbot, predicting housing prices, or automating tasks, ML gives your code the power to **think, predict, and improve**.
 
----
+Watch:
+To get an overview of what Machine Learning is and how it works, watch this short and engaging video: https://www.youtube.com/watch?v=QghjaS0WQQU
 
-📺 **Watch this first:**  
-[What is Machine Learning? (YouTube Video)](https://www.youtube.com/watch?v=R9OHn5ZF4Uo)  
-This short animated video will give you a simple, visual sense of what “learning from data” means.
+If you prefer reading, check out this great introductory article by IBM:
+https://www.ibm.com/think/topics/machine-learning  
 
----
 
 💭 **Check for Understanding**
 
@@ -76,11 +75,11 @@ Deep Learning powers many of today’s advanced AI systems - from voice assistan
 
 **Watch this to understand Deep Learning in action:** https://www.youtube.com/watch?v=6M5VXKLf4D4
 
-Now that you’ve seen how Deep Learning works under the hood, let’s take a step back and see how it fits into the bigger picture.
+Now that you’ve seen how Deep Learning works under the hood, let’s step back and look at the bigger picture, how it fits within the broader world of Artificial Intelligence.
 
-To visualize this relationship, imagine three concentric circles: Artificial Intelligence as the outermost circle, Machine Learning inside it, and Deep Learning at the center.
+The diagram below shows how **Machine Learning** sits inside AI, and how Deep Learning is a specialized branch within Machine Learning.
 
-📘 **Visual Reference**: https://miro.medium.com/v2/resize:fit:1100/format:webp/0*IWANMRSPfUJMNrai.png
+![AI-ML-DL Diagram](resources/AI_ML_DL.png)
 
 **If you want to understand this concept easily with a short video, check out:** [AI vs Machine Learning vs Deep Learning](https://www.youtube.com/watch?v=qYNweeDHiyU)
 
@@ -128,8 +127,7 @@ Each type has its own purpose, learning process, and use cases. The main categor
 
 1. **Supervised Learning**
 2. **Unsupervised Learning**
-3. **Semi-Supervised Learning**
-4. **Reinforcement Learning**
+3. **Reinforcement Learning**
 
 🎥 **Want a quick visual overview before we dive deeper?**  
 Check out this short video: https://www.youtube.com/watch?v=ZNrwlu7cvsI
@@ -246,9 +244,9 @@ That’s unsupervised learning.
 
 ### Subtypes of Unsupervised Learning
 
-**2.1 Clustering**
+**2.1 Clustering** 
 
-Clustering is one of the most popular techniques in unsupervised learning. It involves grouping similar data points together based on shared characteristics.
+Clustering is one of the most popular techniques in unsupervised learning. It involves grouping similar data points together based on shared characteristics. 
 
 *Example: Customer segmentation.*
 
@@ -261,32 +259,9 @@ It’s useful when dealing with high-dimensional datasets that are hard to visua
 
 *Example: Image recognition.*
 
-An algorithm can use dimensionality reduction to focus on the most important features of an image, like shapes and colors, and ignore irrelevant details to process it faster. 
+An algorithm can use **dimensionality reduction** to focus on the most important features of an image, like shapes and colors, and ignore irrelevant details to process it faster. 
 
-**3. Semi-Supervised Learning**
-
-Semi-Supervised Learning is a hybrid approach between supervised and unsupervised learning.
-It’s used when we have a small amount of labeled data and a large amount of unlabeled data.
-
-This is common in real-world scenarios because labeling data can be expensive and time-consuming.
-
-*Example:*
-
-Suppose you have 1,000 medical images, but only 100 are labeled with the correct diagnosis.
-Semi-supervised learning allows the model to learn patterns from both labeled and unlabeled data to improve accuracy.
-
-**Use Cases:**
-
-- Speech recognition
-
-- Web content classification
-
-- Medical diagnosis
-
-Why it matters:
-This approach helps build powerful models even when labeled data is limited. A huge advantage in industries where manual labeling is costly.
-
-**4. Reinforcement Learning**
+**3. Reinforcement Learning**
 
 Reinforcement Learning (RL) is a distinct paradigm of Machine Learning where an agent learns by interacting with an environment rather than from a fixed dataset. The agent takes actions, observes the outcomes, and receives feedback in the form of rewards or penalties. Over time, it learns to make better decisions to maximize a cumulative reward - much like how humans learn through trial and error from rewards and consequences.
 
