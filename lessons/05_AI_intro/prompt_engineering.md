@@ -17,6 +17,7 @@ Make AI work better for you
 
 If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s a minimal, ready-to-use setup including a helper function used throughout this lesson:
 
+
 ```python
 import os
 from dotenv import load_dotenv
@@ -35,6 +36,7 @@ try:
 
     client = OpenAI()
 
+#This function is adpated from ... are adapted the website ... 
     def get_completion(prompt: str, model: str = "gpt-4o-mini", temperature: float = 0) -> str:
         """Send a single-turn prompt and return the text content."""
         response = client.chat.completions.create(
@@ -48,17 +50,11 @@ except ImportError:
 
     openai.api_key = api_key
 
-    def get_completion(prompt: str, model: str = "gpt-3.5-turbo", temperature: float = 0) -> str:
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature,
-        )
-        return response.choices[0].message["content"]
 ```
 ---
 
 ## The Golden Rules of Prompting
+** this is inspired by promompt engineering. 
 
 ### 1. Be Clear & Specific  
 Vague prompts = vague answers. Help the AI help you!
