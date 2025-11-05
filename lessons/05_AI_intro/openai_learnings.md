@@ -4,7 +4,7 @@ In the previous lesson, we learned about the basic theory of LLMs. Now we'll see
 
 Here are some additional resources you can check out on chat completions: [Medium blog](https://medium.com/the-ai-archives/getting-started-with-openais-chat-completions-api-in-2024-462aae00bf0a), [Youtube video](https://www.youtube.com/watch?v=zTa97AOi61w)
 
-> **NOTE:** Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI`, `dotenv`, and `jupyterlab`.
+> **NOTE:** To get the most out of this lesson, it is recommended that you run the examples yourself. Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI` and `dotenv`.
 
 ## What is a completion?
 
@@ -12,10 +12,10 @@ A *completion* refers to the output the model generates in response to your inpu
 
 ## Preliminary Steps
 
-To start working with OpenAI's Chat Completions API, we'll begin by setting up our jupyter notebook and connecting to OpenAI's API using the provided API key. The following sections will guide you through the process of connecting to ChatGPT.
+The following sections will guide you through the process of connecting to ChatGPT using your API key.
 
 ### Handling your API Key
-There are a couple of main ways to securely handle API keys. One, you can set it as an environment variable, and the OpenAI client (instatiated with `client = OpenAI()`) will see it. This is generally not recommended, since others will be able to see this key when you publish your code. A second convention is to store it in a local `.env` file in the same directory as the project (so in this case, in the same directory as this notebook). I recommend using this approach!
+There are a couple of main ways to securely handle API keys. One, you can set it as an environment variable, and the OpenAI client (instatiated with `client = OpenAI()`) will see it. A second convention is to store it in a local `.env` file in the same directory as the project (so in this case, in the same directory as this notebook). I recommend using this approach!
 
 The content of the `.env` file would be:
 
@@ -120,11 +120,11 @@ There are a few other important parameters for the completions API you might wan
 
 Congratulations, you've successfully built your first interface with a ChatGPT model!!!
 
-One thing you will notice is that we have been providing only single sentence inputs to the API. The key reason for this is that the API is *stateless*. Meaning, it does not retain context from the previous messages. You can look at the additional resources provided at the beginning of this lesson to see one way in which this is addressed. However, generally you will need to provide all previous messages to the API for it to have context. We will see how this is done in chatbots on the next lesson.
+Our initial exmaple was literally a "hello world" built to demonstrate how the API works. We will take a much deeper look at how to design effective prompts in the prompt engineering lesson. This lesson focuses on giving an overview of the chat completions API. Also one feature of the API that is important to understand is that unlike web interfaces like ChatGPT, the API does not remember previous conversations - it has no memory i.e. it is *stateless*. If you want the model to recall previous messages, you need to build that memory yourself by wrapping prior messages in each request. We will go into this in more detail in the chatbot lesson.
 
 ### Check for Understanding
 
-```python
+```
 A language model is trying to pick the next word after “I ate a”.
 The possible next words and their probabilities are:
 
@@ -394,7 +394,7 @@ messages = [{"role": "system",
              "content": "Yes there are other measures, such as space complexity."},
             {"role": "user",
              "content": "What is that?"}]
-response = client.chat.completions.create(model=gpt-4o-mini, 
+response = client.chat.completions.create(model='gpt-4o-mini', 
                                           messages=messages)
 print(response.choices[0].message.content)
 ```
