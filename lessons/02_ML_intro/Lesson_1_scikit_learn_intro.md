@@ -200,7 +200,8 @@ In the next lessons, we’ll build on this foundation and explore:
 Until then, if you’d like more practice, try these free beginner resources:
 
 - [Data School’s Intro to Machine Learning with scikit-learn](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)  
-- Search YouTube for “scikit-learn beginner tutorials” — they’re great for visual learners!  
+- [https://www.youtube.com/watch?v=SW0YGA9d8y8]
+- [https://www.youtube.com/watch?v=SIEaLBXr0rk]
 
 ---
 
@@ -404,8 +405,8 @@ Experimentation is how you get comfortable with machine learning — small tweak
 
 If you’d like to keep exploring:
 
-- [Data School: Introduction to Machine Learning with scikit-learn](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)  
-- YouTube: “K-Means Clustering Explained Visually” — lots of great short tutorials out there!  
+- [https://scikit-learn.org/stable/modules/clustering.html]
+- [https://www.youtube.com/watch?v=CaRcRk2c8bM]
 
 ---
 
