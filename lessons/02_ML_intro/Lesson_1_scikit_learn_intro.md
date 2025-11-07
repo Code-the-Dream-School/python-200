@@ -34,7 +34,7 @@ Before moving on to deep-learning frameworks like TensorFlow or PyTorch, it’s 
 
 ---
 
-## 🎯 What you’ll learn today
+##  What you’ll learn today
 
 By the end of this lesson, you’ll be able to:
 
@@ -44,7 +44,7 @@ By the end of this lesson, you’ll be able to:
 
 ---
 
-## 🔍 A quick tour of scikit-learn
+##  A quick tour of scikit-learn
 
 `scikit-learn` is built on top of **NumPy**, **SciPy**, and **Matplotlib**, and gives you tools for nearly every classical ML task.
 
@@ -86,7 +86,7 @@ You can think of them working together like this:
 
 ---
 
-## ⚙️ Installation and setup
+##  Installation and setup
 
 Install scikit-learn from the command line:
 
@@ -105,7 +105,7 @@ from sklearn.cluster import KMeans
 
 ---
 
-## 📈 First steps — seeing the API in action
+## First steps — seeing the API in action
 
 Let’s warm up with a tiny example.  
 Imagine you own a bakery and want to predict cupcake sales based on the temperature outside.  
@@ -134,7 +134,7 @@ This pattern — `create → fit → predict` — will come up again and again i
 
 ---
 
-## ☕ Demo — K-Means clustering (unsupervised learning)
+## Demo — K-Means clustering (unsupervised learning)
 
 Now let’s look at an example where the model finds patterns *without* being told the answers.  
 This is called **unsupervised learning**.
@@ -171,7 +171,7 @@ plt.show()
 <img width="656" height="478" alt="Screenshot 2025-11-06 at 9 18 30 PM" src="https://github.com/user-attachments/assets/a107db74-8ea1-49da-a8d2-7e1c0afe1953" />
 
 
-🖼️ **What you’ll see:** three colorful clusters.  
+ **What you’ll see:** three colorful clusters.  
 Each color represents one of the groups the algorithm discovered.  
 K-Means figured out which points are close together and assigned them the same label — without you ever telling it what the groups should be!  
 
@@ -200,7 +200,7 @@ In the next lessons, we’ll build on this foundation and explore:
 Until then, if you’d like more practice, try these free beginner resources:
 
 - [Data School’s Intro to Machine Learning with scikit-learn](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)  
-- 🎥 Search YouTube for “scikit-learn beginner tutorials” — they’re great for visual learners!  
+- Search YouTube for “scikit-learn beginner tutorials” — they’re great for visual learners!  
 
 ---
 
@@ -356,8 +356,13 @@ plt.xlabel("Feature 1 – Spending Score")
 plt.ylabel("Feature 2 – Visit Frequency")
 plt.show()
 ```
+<img width="807" height="212" alt="Screenshot 2025-11-07 at 12 34 49 AM" src="https://github.com/user-attachments/assets/24fae1df-e092-4a19-b861-dc23308705c1" />
 
-🎨 Each color represents a different cluster that K-Means discovered.  
+<img width="1209" height="532" alt="Screenshot 2025-11-07 at 12 35 15 AM" src="https://github.com/user-attachments/assets/b78f53de-a236-4792-a6a0-489eee1c8141" />
+
+<img width="710" height="479" alt="Screenshot 2025-11-07 at 12 35 31 AM" src="https://github.com/user-attachments/assets/9758e62a-35be-4160-88bd-17f85d28cb2c" />
+
+Each color represents a different cluster that K-Means discovered.  
 The model grouped similar data points together automatically — no labels needed.
 
 That’s the magic of **unsupervised learning**!
