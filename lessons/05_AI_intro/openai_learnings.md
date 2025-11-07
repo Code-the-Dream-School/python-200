@@ -124,15 +124,17 @@ Our initial exmaple was literally a "hello world" built to demonstrate how the A
 
 ### Check for Understanding
 
-```
+#### Question 1
+
 A language model is trying to pick the next word after “I ate a”.
 The possible next words and their probabilities are:
 
-Word	Probability
-apple	0.6
-banana	0.25
-cherry	0.1
-donut	0.05
+| Word | Probability |
+| --- | ------------ |
+| apple | 0.6 |
+| banana | 0.25 |
+| cherry | 0.1 |
+| donut | 0.05 |
 
 Now consider two different parameter settings:
 
@@ -142,18 +144,12 @@ Setting B: temperature = 1.0, top_p = 0.6
 
 Which outcome is most likely?
 
-A.
-Both A and B will always choose apple, because it is the most/only likely option.
+Choices:
+- A. Both A and B will always choose apple, because it is the most/only likely option.
+- B. Setting A will always choose apple, while Setting B will randomly choose between apple and banana, since together they make up the top 60% of probability.
+- C. Setting A will randomly choose between all four words, while Setting B will always choose apple.
+- D. Setting A and B both randomly choose among all four options.
 
-B.
-Setting A will always choose apple, while Setting B will randomly choose between apple and banana, since together they make up the top 60% of probability.
-
-C.
-Setting A will randomly choose between all four words, while Setting B will always choose apple.
-
-D.
-Setting A and B both randomly choose among all four options.
-```
 
 <details>
 <summary> View Answer </summary>
@@ -164,7 +160,7 @@ In setting B, temperature is 1.0 so we're allowing for randomness in the output,
 
 ## Using built-in moderation and guardrails
 
-The moderations endpoint is used for identifying harmful content(text/image) and to take corrective measures with the users or filter content. OpenAI has instituted a [moderation policy](https://platform.openai.com/docs/guides/moderation) and enforces it using [omni-moderation](https://platform.openai.com/docs/models/omni-moderation-latest) which supports more categorization options and multi-modal inputs.
+The moderations endpoint is used for identifying harmful content(text/image) and to take corrective measures with the users or filter content. It is a really cool *free* service that you can incorporate in your back-end to moderate the responses from your chatbots. OpenAI has instituted a [moderation policy](https://platform.openai.com/docs/guides/moderation) and enforces it using [omni-moderation](https://platform.openai.com/docs/models/omni-moderation-latest) which supports more categorization options and multi-modal inputs.
 
 The moderations endpoint will flag if the message falls in any of the following categories:
 - hate — content that expresses hate toward a protected group
@@ -292,7 +288,7 @@ Audio(str(speech_file_path))
 
 ## A Quick Introduction to Abstractions
 
-So far, we've been looking only at the OpenAI completions API. However, there are many such APIs in the market (such as Anthropic's Claude, Google Gemini). Many of these APIs generally follow the OpenAI completions protocol and syntax. However, you would need to account for the differences in syntax when communicating between different APIs. Fortunately, there are packages that provide an abstraction layer between these different APIs so you only need to worry about the input prompt. Examples of this are [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). 
+So far, we've been looking only at the OpenAI completions API. However, there are many such APIs in the market (such as Anthropic's Claude, Google Gemini). Many of these APIs generally follow the OpenAI completions protocol and syntax. However, you would need to account for the differences in syntax when communicating between different APIs. Fortunately, there are packages that provide an abstraction layer between these different APIs so you only need to worry about the input prompt. Examples of this are [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). Of these, any-llm is the most popular and commonly used abstraction tool in industry.
 
 <!--
 LLM Arena - https://lmarena.ai/leaderboard
@@ -301,7 +297,7 @@ Mozilla AI's [Any-Agent](https://github.com/mozilla-ai/any-agent).You can read m
 ## Explore on your own!
 Congratulations! You've learned the basics of the completions API! There really isn't that much more to it. From here you could build a simple chatbot with a personality, build in memory of previous conversations, and build a simple application. 
 
-I'd encourage you to explore more below. See what it can do. Explore in different languages to see where it suceeds, fails, etc. Feel free to expand the list of messages with assistant/user interactions.
+I'd encourage you to explore more below. See what it can do. Explore in different languages to see where it suceeds, fails, etc. Feel free to expand the list of messages with assistant/user interactions. You will be given the opportunity for a more hands-on experience in the assignments.
 
 ```python
 messages = [{"role": "system",
