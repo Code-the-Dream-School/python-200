@@ -16,6 +16,12 @@ We will illustrate this with a simple chatbot example. As before, it is highly r
 ## A minimal chatbot 
 Let's demonstrate this idea by building a simple `SalesBot`. It's a friendly, competent shoe-store assistant that asks questions to learn about the customer's shoe size, preferences, and needs.
 
+Note that you will need your API Key to establish a connection with the API. As mentioned in the previous lessons you can either add the key as a variable in your script or store it in a local `.env` file in the same directory.
+
+The content of the `.env` file would be:
+
+    OPENAI_API_KEY=<api key here>
+
 We'll start by specifying a `system` message that defines the Salesbot's personality. Then, we'll enter a while loop in which the user and the assistant take turns exchanging messages. Each time the user types something, we'll add their message to a list called messages (with the `user` role), and the model's responses will be appended with the `assistant` role. 
 
 To ensure that we don't go overboard with token usage, we will limit completion tokens to 300 to make our model succinct and save money, and the back and forth to 10 turns just as a guardrail:
