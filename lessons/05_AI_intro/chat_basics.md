@@ -5,7 +5,9 @@ As we've seen previously, every API call is _stateless_: the model only sees wha
 
 To remedy this, and create a flowing conversation that keeps track of context, you can instead create a chatbot, which has memory built in so the model can respond in context. This can be as simple as a list of previous messages accumulating inside of a while loop. 
 
-Here's some additional resources on chatbots: [Youtube video](https://www.youtube.com/watch?v=1P5Yccy1rRk), [IBM blogpost on chatbots](https://www.ibm.com/think/topics/chatbots). For those interested, [here](https://www.sciencedirect.com/science/article/pii/S2666827020300062) is a paper explaining the history, classification, and applications of chatbots.
+Here's some additional resources on chatbots: [Youtube video](https://www.youtube.com/watch?v=1P5Yccy1rRk), [AWS blogpost on chatbots](https://aws.amazon.com/blogs/smb/the-rise-of-chatbots-revolutionizing-customer-engagement/). 
+
+<!-- For those interested, [here](https://www.sciencedirect.com/science/article/pii/S2666827020300062) is a paper explaining the history, classification, and applications of chatbots. -->
 
 <!-- Paper on the history, technology, and applications of chatbots - [Adamopoulou, Eleni, and Lefteris Moussiades. "Chatbots: History, technology, and applications." Machine Learning with applications 2 (2020): 100006.](https://www.sciencedirect.com/science/article/pii/S2666827020300062) -->
 
@@ -76,12 +78,13 @@ Each loop through this code expands the messages list, allowing the chatbot to s
 In a real web-based chatbot, such core logic would be wrapped in quite a bit more structure. For instance, a production chatbot would include guardrails to prevent prompt injection (so users can't trick the bot into revealing system instructions or do something malicious). It would also include a more fancy user interface. However, those features wouldn't change the core chatbot architecture. 
 
 ### Check for Understanding
-```
-You are an employee in the HR department of GreatAI, an AI service company's. Alex is an employee in the company's operations department. You would like to use the OpenaI API to evaluate her performance for appraisal purposes. The company's evaluation policy for appriasal states that only percentage of projects delivered, number of projects participated in, and value improvement to the company are considered. The following are two approaches to pass Alex's work highlights to the API before asking it to evaluate her performance. Which of the two approaches would you expect to give you the most accurate evaluation based on the company's policy?
-```
 
+#### Question 1
+
+You are an employee in the HR department of GreatAI, an AI service company's. Alex is an employee in the company's operations department. You would like to use the OpenaI API to evaluate her performance for appraisal purposes. The company's evaluation policy for appriasal states that only percentage of projects delivered, number of projects participated in, and value improvement to the company are considered. The following are two approaches to pass Alex's work highlights to the API before asking it to evaluate her performance. Which of the two approaches would you expect to give you the most accurate evaluation based on the company's policy?
+
+Approach 1:
 ```python
-# Approach 1:
 messages = [{"role": "system", "content": "You are a helpful HR assistant for an AI service company, proficient in evaluating exmployees' performance for appraisal. You will consider percentage of projects delivered, number of projects participated in, and value improvement provided to the company in your calculations."},
     {"role": "user", "content": "Hello! We have an employee Alex who recently joined our team. She worked on research and development on the newest feature of analyzing data through pdf files. She delivered the product and has created 12% impact. She was quick in adapting the MCP and delivered the product on time."},
     {"role": "assistant", "content": "Hello! It sounds like Alex is a valuable addition to your team. It's great to hear that she has been successful in both the research and development aspects of the project, especially in creating a feature for analyzing data through PDF files. Delivering a product with a 12% impact is impressive, and her ability to adapt quickly to new tools like MCP is commendable. It seems like Alex is proactive and efficient in her work, which is beneficial for the team's productivity and success. If you need any more assistance or advice regarding Alex or any other team member, feel free to ask!"}.
@@ -89,7 +92,11 @@ messages = [{"role": "system", "content": "You are a helpful HR assistant for an
 response = client.chat.completions.create(model='gpt-4o-mini', 
                                           messages=messages)
 
-# Approach 2:
+print(response.choices[0].message.content)
+```
+
+Approach 2:
+```python
 personality_message = [{"role": "user", "content": "You are a helpful HR assistant for an AI company, proficient in evaluating exmployees' performance for appraisal. You will consider percentage of projects delivered, number of projects participated in, and value improvement provided to the company in your calculations."}]
 personality_response = client.chat.completions.create(model='gpt-4o-mini', 
                                           messages=personality_message)
@@ -98,14 +105,15 @@ evaluation_message = [{"role": "user",
              "content": "Hello! We have an employee Alex who recently joined our team. She worked on research and development on the newest feature of analyzing data through pdf files. She delivered the product and has created 12% impact. She was quick in adapting the MCP and delivered the product on time. Evaluate Alex's performance for appraisal."}]
 evaluation_response = client.chat.completions.create(model='gpt-4o-mini', 
                                           messages=evaluation_message)
+
 print(evaluation_response.choices[0].message.content)
 ```
 
-```
-A: Approach 1, because the API has context about the company's appraisal evalaution policy
-B: Approach 2, because the evaluation message contains the information about the employee along with the request to evalaute.
-C: Approach 1, because the API can draw from the appraisal policy's of different AI service companies.
-```
+Choices:
+- A) Approach 1, because the API has context about the company's appraisal evalaution policy
+- B) Approach 2, because the evaluation message contains the information about the employee along with the request to evalaute.
+- C) Approach 1, because the API can draw from the appraisal policy's of different AI service companies.
+
 
 <details>
 <summary> View Answer </summary>
