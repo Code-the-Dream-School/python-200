@@ -554,12 +554,12 @@ Tone: casual
 Text: "URGENT: Server down. Need immediate assistance!"
 Tone: urgent
 ```
-To learn more about this, 
+Further resources, 
 https://medium.com/@mike_onslow/ai-simplified-exploring-the-basics-of-zero-shot-one-shot-and-few-shot-learning-d46248b5072a
 
 https://learnprompting.org/docs/basics/few_shot
 
-<!-- Embedded YouTube video: if the renderer supports HTML, this will show the player. Otherwise the fallback link below will open the video on YouTube. -->
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/YMs-BbNKs0o" title="Intro to Prompting" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 [Watch this video on YouTube](https://www.youtube.com/watch?v=YMs-BbNKs0o)
