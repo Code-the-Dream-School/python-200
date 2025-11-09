@@ -18,7 +18,6 @@ Make AI work better for you
 
 ---
 
-* Articles and videos. 
 
 If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s a minimal, ready-to-use setup including a helper function used throughout this lesson:
 
@@ -57,6 +56,24 @@ except ImportError:
     openai.api_key = api_key
 
 ```
+## Changing Temperature
+
+Changing the temperature of the API affects how random or creative responses are: lower → more deterministic, higher → more creative.
+
+Quick tip: use temperature=0 for deterministic outputs when testing or validating, and raise it (e.g., 0.7) when you want more creative responses.
+
+Example (use the helper with an explicit temperature):
+
+```python
+# Call the helper with temperature set to 0 for deterministic results
+prompt = """
+Write a single-sentence summary of the text below.
+"""
+response = get_completion(prompt, model="gpt-3.5-turbo", temperature=0)
+print(response)
+```
+
+---
 ---
 
 ## The Golden Rules of Prompting
@@ -224,7 +241,7 @@ print(response)
 Another transformation: JSON → HTML
 Tell the AI how to give you the answer—especially if you’re using it in code or spreadsheets.
 
-✅ Do this:
+Do this:
 ```
 Generate 3 made-up book titles with authors and genres.
 Provide them in JSON with keys: book_id, title, author, genre.
@@ -303,7 +320,7 @@ print(response)
 
 
 ```
-👉 The AI now checks first, then responds appropriately.
+The AI now checks first, then responds appropriately.
 
 ## 4. Give the Model Time to “Think”
 For complex or multi-step problems, explicitly ask the model to show its chain of thought — i.e., reason step-by-step — before giving the final result. When the model outlines intermediate steps you can inspect them for mistakes, which reduces silent errors and makes automated checks easier.
@@ -566,34 +583,8 @@ https://learnprompting.org/docs/basics/few_shot
 
 
 
-## Changing Temperature
+*** End Patch
 
-Changing the temperature of the API affects how random or creative responses are: lower → more deterministic, higher → more creative.
-
-Back to the setting up of the API. In order to change the temperature, you would need to change the value of temparature
-```python 
-def get_completion(prompt, model="gpt-3.5-turbo",temperature=0):
-    messages = [{"role": "user", "content": prompt}]
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=temperature, 
-    )
-    return response.choices[0].message["content"]
-
-
-MOve this up to chat completion. 
-```
-
-
-Nice finish. Outro. Summary. 
-## Other tips
-- Ask for shorter sentences.
-- Summarizing
-- extract information
-- Inferring 
-- Like the sentiment
-- Translate a language
 
 
 # Check for Understanding
@@ -603,8 +594,8 @@ B) Asking the AI a question without any examples<br>
 C) Using emojis to make the AI respond faster<br>
 D) Translating prompts into French first
 <details>
-<summary>Click to reveal the answer</summary>
-✅ Correct answer: B
+</summary>
+Correct answer: B
 </details>
 
 2. Which of the following is a one-shot prompt?
@@ -632,8 +623,8 @@ D)
     Tell me how to say hello in French.
 ```
 <details>
-<summary>Click to reveal the answer</summary>
-✅ Correct answer: B
+</summary>
+Correct answer: B
 </details>
 
 3. Why is few-shot prompting often more accurate?<br>
@@ -642,8 +633,8 @@ B)  It gives the AI multiple examples to recognize patterns<br>
 C)  It forces the AI to guess randomly<br>
 D)  It only works with math problems
 <details>
-<summary>Click to reveal the answer</summary>
-✅ Correct answer: B
+</summary>
+Correct answer: B
 </details>
 
 4. Which prompt follows the Golden Rules best?<br>
@@ -653,8 +644,8 @@ C) “I’m a vegetarian student who hates green veggies. Suggest a high-protein
 D) “Give me something to eat.”
 
 <details>
-<summary>Click to reveal the answer</summary>
-✅ Correct answer: C
+</summary>
+Correct answer: C
 </details>
 
 5. Why should you use delimiters (like triple backticks ``` or INPUT/OUTPUT labels) in prompts?<br>
@@ -664,9 +655,9 @@ C) To clearly separate user instructions from data, reducing the risk of prompt 
 D) To automatically convert the output into another language
 
 <details>
-<summary>Click to reveal the answer</summary>
 
-✅ Correct answer: C
+</summary>
+Correct answer: C
 
 </details>
 
@@ -678,8 +669,8 @@ A) True<br>
 B) False
 
 <details>
-<summary>Click to reveal the answer</summary>
-✅ Correct answer: A
+</summary>
+Correct answer: A
 </details>
 
 ## Summary
@@ -699,6 +690,14 @@ Keep iterating on prompts: small wording changes often improve accuracy signific
 
 
 ### Resources
-https://learnprompting.org/docs/basics/few_shot
-https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
+
+- Learn Prompting — Basics of few-shot prompting. A concise guide to zero/one/few-shot patterns and practical examples. (~10–15 min)
+    - https://learnprompting.org/docs/basics/few_shot
+
+- DeepLearning.AI — ChatGPT Prompt Engineering for Developers. A hands-on course page with exercises and demos. (course overview, ~1–2 hr)
+    - https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
+
+- Google Cloud — What is prompt engineering? A short overview describing common patterns and real-world use cases. (~5–10 min)
+    - https://cloud.google.com/discover/what-is-prompt-engineering
+
 
