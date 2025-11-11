@@ -1,0 +1,4 @@
+# Naive Keyword-based RAG
+In the previous lesson, we saw the different types of retrieval augmentated generation (RAG) used to augment the chatbot's response to improve it's accuracy. In this lesson, we'll go over the basic keyword-based RAG framework. Please note that this approach is too simple and is not used in industry, but it is useful to see the response augmentation process here. We will build on this approach in the next lesson with the more complex semantic search-based RAG approach.
+
+[Basic RAG databricks article](https://docs.databricks.com/aws/en/generative-ai/retrieval-augmented-generation), [OpenAI RAG article](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts), [RAG vs Fine Tuning vs Prompt Engineering](https://www.youtube.com/watch?v=zYGDpG-pTho),
