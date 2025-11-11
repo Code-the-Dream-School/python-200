@@ -34,6 +34,20 @@ We can always discuss with our proeffors, seniors, mentors about the tools and p
 2. Privacy, security
 Be careful what data are you sharing with the tool. Many times the tools save the data in their memory after chats/prompts. Keeping that data and may later be used else where it shouldnt be discloing the personal data. For eg. we should not be sharing our soical security number.
 
+### Generative AI Tools Limitations
+While AI has numerous benefits, it's essential to consider the potential fallbacks. Some pressing concerns when building AI applications include:
+    1. AI tools may genreate wrong information or hallucinate(inaccurate information). THere might be an instant that AI refered to a link cited or directed to that source but when verified it may not be having those details. 
+    2. AI tools may overgeneralize or provide information which is inapprociate. 
+
+### Understanding Generative AI Outputs:
+We should understand its a tool and not real source for considerting it true what information it shares. As, the tool is built from predictions. We should verify the information given by the AI tool. 
+We should consider few aspects before considering the output of generative AI tool. 
+- Bias: When datasets exclude some community information or practices then the model may may misrepresent and we should consider models output in context to what perspectice is it and if its not reproducing harmful social association in outputs. 
+
+- Accuracy: Tools may hallucinate meaning producing inaccurate information. This is impossible to eliminate totally and it also diffcult to identify this wrong information. Also, when we havent provided any background details or information for a topic then it lacks in real context creating generalized summary with lack of depth.
+
+- Transparency: AI tools are like balck box problem, even developers have no idea how the data is processed or retrived to generate response. Tools have system prompts embedded in each inout which end users do not see. 
+
 ### Resources
 https://www.unesco.org/en/artificial-intelligence/recommendation-ethics
 
