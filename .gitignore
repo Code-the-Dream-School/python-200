@@ -177,13 +177,5 @@ cython_debug/
 # VS Code settings
 .vscode/
 
-<<<<<<< HEAD
 .DS_Store
 lessons/**/.DS_Store
-=======
-
-# macOS
-.DS_Store
-*/.DS_Store
-**/.DS_Store
->>>>>>> d4006d6 (Remove tracked .DS_Store; add hypothesis testing images to resources)
