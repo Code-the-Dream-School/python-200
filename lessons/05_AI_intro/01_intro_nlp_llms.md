@@ -61,24 +61,24 @@ For example, in the phrase "The cat sat on the mat," the model can practice by h
 
 With this approach, you can train on billions or trillions of examples without having to manually annotate ground-truth data. 
 
-There is one wrinkle we should cover regarding how LLMs learn before moving on to more technical matters. There are really *two* different learning modes for LLMs. First, by training on huge bodies of text in the next-word-prediction task, we end up with *foundational*, *pretrained*, or *base* models. These are general purpose models that embody information from extremely broad sources. 
+There are really *two* different learning modes for LLMs. First, by training on huge bodies of text in the next-word-prediction task, we end up with what are often called *foundational*, *pretrained*, or *base* models. These are general purpose models that embody information from extremely broad sources. 
 
-However, just foundational models don't work well in special-purpose jobs like personal assistants, chatbots, etc. A *second* second training step fine-tunes these models on smaller, labeled datasets for specific applications.
+However, these foundational models don't work well in special-purpose jobs like personal assistants, chatbots, etc. A *second* second training step fine-tunes these models on smaller, labeled datasets for specific applications.
 
 <p align="center">
   <img src="resources/pretrained_finetuned_llm.jpg" alt="two types of training" width="600"><br>
   <b>Types of LLM training</b>
 </p>
 
-In other words, fine-tuning takes a foundational model and adjusts it for specific purposes, such as answering questions, following instructions, or writing in a particular style. There are various ways to do this. One, supervised fine-tuning (SFT) follows a more traditional ML approach where the model is given paired examples of inputs and desired outputs. 
+In other words, fine-tuning takes a foundational model and adjusts it for specific purposes, such as answering questions, following instructions, or writing in a particular style. There are various ways to do this. One, *supervised fine-tuning* (SFT) follows a more traditional ML approach where the model is given paired examples of inputs and desired output text snippets. 
 
-Another is [reinforcement learning from human feedback](https://www.youtube.com/watch?v=T_X4XFwKX8k) (RLHF). With RLHF the model adapts (using reinforcement learning procedures) to produce responses that are ranked more highly by human judges.
+Another extremely powerful fine-tuning method is [reinforcement learning from human feedback](https://www.youtube.com/watch?v=T_X4XFwKX8k) (RLHF). With RLHF the model adapts (using reinforcement learning procedures) to produce responses that are ranked more highly by human judges.
 
-If you have ever been using ChatGPT and it has asked you to rank two responses, this is OpenAI collected data for future cycles of RLHF.
+If you have ever been using ChatGPT and it has asked you to rank two responses, this is OpenAI collecting data for future rounds of RLHF.
 
 The result with fine-tuning is the production of specialized models built on top of the same foundation. While in this course we will not go through the process of building your own LLM, the excellent book [Build a Large Language Model from Scratch](https://www.manning.com/books/build-a-large-language-model-from-scratch) by Sebastian Raschka, walks you through this in detailk using PyTorch if you are interested. The above picture is adapted from his book.
 
-In the next section we will dig into the details about how LLMS actually work: as we said, it isn't just that they are *large*, but their *architecture*, that makes them so powerful. 
+In the next section we will dig into the details about how LLMS actually work. As we said, it isn't just that they are *large*, but their *architecture*, that makes them so powerful. 
 
 ## 3. LLM architecture
 In this section we will walk step-by-step through the following simplifed LLM architecture diagram:
@@ -96,14 +96,14 @@ You can learn more about tokenization at the following resources:
 - [Super Data Science video](https://www.youtube.com/watch?v=ql-XNY_qZHc)
 - [Huggingface introduction](https://huggingface.co/learn/llm-course/en/chapter2/4)
 
-Tokenization is the process of breaking chunks of text into smaller pieces that are in the LLM's vocabulary. For example, the sentence "The cat sat on the mat." might be split into tokens like ["The", " cat", " sat", " on", " the", " mat", "."]. These tokens are then mapped to unique integer IDs.
+Tokenization is the process of breaking chunks of text into smaller pieces of text that the LLM works with. The LLM's full body of tokens is called its *vocabulary*. For example, the sentence "The cat sat on the mat." might be split into tokens like ["The", " cat", " sat", " on", " the", " mat", "."]. These tokens are then mapped to unique integer IDs.
 
 <p align="center">
   <img src="resources/llm_tokenization.jpg" alt="tokenization" width="350"><br>
   <b>Tokenization example</b>
 </p>
 
-Importantly, tokens are not always whole words. To keep the vocabulary a manageable size, many tokenizers break rare or complex words into smaller chunks. For example, "blueberries" might become ["blue", "berries"]. This makes it possible to represent *any* string of text, even if it never appeared in training.
+Importantly, tokens are not typically whole English words. To keep the vocabulary a manageable size, many tokenizers break rare or long words into smaller chunks. For example, "blueberries" might become ["blue", "berries"]. This makes it possible to represent *any* string of text, even if it never appeared in training.
 
 You can [play online]( https://platform.openai.com/tokenizer) with a popular tokenizer, *tiktoken*. There, you can explore how tiktoken breaks down text into parts and creates numerical ids for each token. 
 
@@ -112,40 +112,38 @@ Embedding resources:
 - [Excellent Medium article](https://medium.com/@saschametzger/what-are-tokens-vectors-and-embeddings-how-do-you-create-them-e2a3e698e037)
 - [YouTube video](https://www.youtube.com/watch?v=lPTcTh5sRug)
 
-Once a tokenizer has converted text into integer IDs, these don't "mean" anything to the model -- they are just arbitrary integers. Deep learning models can't reason about words or integers directly; they operate in the continuous, numerical language of vectors and tensors. The *embedding layer* performs that translation step. It maps each token ID to a vector -- an array of real numbers that lives in a high-dimensional vector space.
+Once a tokenizer has converted text into integer IDs, these don't "mean" anything to the model -- they are just arbitrary integers. Deep learning models can't operate directly on words or integers. As we saw in the ML module, they operate in the continuous, numerical language of vectors and tensors. The *embedding layer* performs that translation step. It maps each token ID to a tensor or vector -- an array of real numbers that lives in a high-dimensional vector space.
 
- In the following image each token ID is mapped to a very small vector of numbers (three values). In reality the embedding layer typically maps each token to a tensor of thousands of numbers. 
+ In the following image each token ID is mapped to a small vector of numbers (three values). In reality the embedding layer typically maps each token to a tensor of thousands of numbers. 
 
 <p align="center">
   <img src="resources/embedding_layer_rashka.jpg" alt="Emedding layer" width="500"><br>
   <b>Token embedding example</b>
 </p>
 
-At first these vectors are random. But as training proceeds, tokens that appear in similar contexts end up with similar vectors. The embedding for "brother" moves closer to "sister," while "car" and "bicycle" cluster elsewhere. Over time, this produces a semantic similarity space -- a geometric landscape where related meanings are near each other and unrelated ones are far apart.
+At first these vectors are random. But as training proceeds, the token embeddings that appear in similar contexts end up closer together in the embedding space. The embedding for "brother" moves closer to "sister," while "car" and "bicycle" cluster elsewhere. Over time, this produces a semantic similarity space -- a geometric landscape where related meanings are near each other and unrelated ones are far apart:
 
 <p align="center">
   <img src="resources/semantic_space.jpg" alt="Semantic space" width="400"><br>
   <b>Embedding space semantics</b>
 </p>
 
-Words with related meanings cluster together. Note in this diagram the high-dimensional token embedding is projected to a low-dimensional space for visualization purposes.
+Words with related meanings cluster together. In this diagram the high-dimensional token embedding is projected to a low-dimensional space for visualization purposes.
 
-Below, we'll explore a practical demo of visualizing embedding spaces. Embeddings aren’t limited to individual tokens -- many tools can create embeddings for whole sentences, paragraphs, or entire documents. This is important because in later lessons we'll use these embeddings to *retrieve* information based on meaning rather than exact keywords. Searching by semantic similarity allows models to find conceptually related text even when the same words aren't used.
+Below, we'll explore a practical demo visualizing embedding spaces.Embeddings aren't limited to individual tokens -- there are tools to create embeddings for whole sentences, paragraphs, or entire documents. This is important because it provides a powerful search technique: searching by based on semantic similarity rather than exact keywords. Searching by semantic similarity allows models to find conceptually related text even when the exact same words aren't used. We will revisit this concept next week.
 
-We are leaving out some details of how LLM embeddings work, in particular [positional embeddings](https://www.ibm.com/think/topics/positional-encoding), which encode the position of tokens in a sequence. 
+> We are leaving out some details of how LLM embeddings work. In particular, in language, the position of a word in a sentence is extremely important for determining its meaning. In modern LLMs, there are also [positional embeddings](https://www.ibm.com/think/topics/positional-encoding), which encode the position of tokens in a sequence. We are leaving this step out for now. 
 
 ### Attention: Context-aware embeddings
- *Attention* was the final puzzle piece needed to make modern LLMs so powerful. It was introduced by a team of researchers at Google Brain in a groundbreaking paper called [Attention is all you need](https://arxiv.org/abs/1706.03762).
+ *Attention* was the final puzzle piece needed to make modern LLMs so powerful. It was introduced by a team of researchers at Google Brain in a groundbreaking paper called [Attention is all you need](https://arxiv.org/abs/1706.03762) in 2017.
 
-In the above static embedding space, each token has a fixed default neighborhood: `apple` lies near other fruits, `car` clusters with other vehicles, and `queen` sits close to `king` and `sister`. But language isn't static -- meanings shift with context. In a sentence about fruit salad, `apple` clearly belongs with oranges and grapefruits. In a sentence about smartphones, `Apple` should move toward phones and computers. Static token embeddings can't make this adjustment on their own. 
+In the above static embedding space, each token has a fixed default neighborhood: `apple` lies near other fruits, and `car` clusters with other vehicles. But language isn't static -- meanings shift with context. In a sentence about fruit salad, `apple` clearly belongs with oranges and grapefruits. In a sentence about smartphones, `Apple` should move toward phones and computers. Static token embeddings can't make this adjustment on their own. 
 
-Attention fixes this by letting tokens dynamically adjust their relationships based on surrounding words. Each token looks at others in the sequence and assigns them weights according to relevance. Related tokens—like "apple" and "orange"—pull strongly on one another, while unrelated ones have little influence. This similarity-based weighting system turns a static semantic map into a context-sensitive representation of meaning, allowing the model to interpret words in context.
-
-To get an quick intuitive understanding of attention, before reading on, please watch the following short video: 
+Attention fixes this by letting tokens dynamically adjust their meaning based on context. To get an quick intuitive understanding of attention, before reading on, please watch the following short video: 
 
 [![Watch the video](https://img.youtube.com/vi/0aG4cSfFvC0/hqdefault.jpg)](https://www.youtube.com/shorts/0aG4cSfFvC0)
 
-In summary, attention acts as a *similarity-based weighting system*: words that are closer to each other exert a stronger pull. This process turns a static semantic map into a context-sensitive representation of meaning.
+As that video explains, attention acts as a *similarity-based weighting system*: words that are closer to each other in the original embedding space exert a stronger pull (so in a sentence about phones, Apple will end up closer to the technology sector of the semantic map). This process turns a static semantic map into a context-sensitive semantic space.
 
 <p align="center">
   <img src="resources/attention_influence.jpg" alt="Attention mechanism" width="500"><br>
@@ -159,19 +157,28 @@ We are leaving out the mathematical details here, because this is a conceptual o
   
 Attention was the final ingredient that supercharged progress in NLP. When combined with massive training data and large models, it enabled LLMs to generate remarkably human-like speech patterns.
 
-### Transformer: Bringing everything together
-The transformer block combines the above attention mechanism with a feedforward neural network to improves the the model's ability to predict the next word. By the end, the model holds a richly contextual representation of everything it has read so far, which it uses to predict the next token.
+### Transformer blocks: bringing things together
+The transformer architecture (where the GPT get's it's "T" from) combines attention into a mechanism for predicting the next word. 
 
-In practice, transformers stack many of these transformer blocks on top of each other. GPT-3, for example, stacks together 96 transformer blocks. The result is a model that understands not just local relationships between *words*, but broader, sentence-level and paragraph-level context.
+As we saw, the attention mechanism produces a a richer, context-aware vector. This enriched token is then fed through a neural network (a multilayered perceptron, or MLP), that processes the outputs of these context-aware embeddings, producing a final set of *enriched embeddings* that can are optimized for predicting the next word in the sequence:
 
-[to do create figure for transformer]
+<p align="center">
+  <img src="resources/transformer_block_reduced.jpg" alt="Transformer block" width="700"><br>
+  <b>Transformer block</b>
+</p>
 
-We are skipping *many* of the details here. For instance, *multi-head attention* runs several of these blocks in parallel. For now, the key idea is that transformers combine attention (context gathering) and neural networks (pattern extraction) in a deep, repeated structure that enables fluent language generation.
+GPT models stack *many* of these these transformer blocks together (GPT3 has 96 transformer blocks), generating highly contextualized and refined representations of tokens. 
 
-The output of the transformer is then used to predict the next word. This process is applied iteratively, until full passages like you get with ChatGPT or other interfaces emerge. 
+> We are skipping *many* of the details here. For instance, *multi-head attention* runs several of these blocks in parallel. For now, the key idea is that transformers combine attention (context gathering) and neural networks (pattern extraction) in a deep, repeated structure that enables remarkable predictive power.
+
+### The last step: Predicting the next word
+The transformer’s job is done. Its final layer outputs an enriched embedding for the last token--one that encodes the entire context of the sequence. Now the model just needs to predict what comes next.
+
+This prediction step is actually very simple: this single vector is fed through a small neural network that maps it to a score for every token in the vocabulary--say, 50,000 scores total.The token with the highest score is chosen as the next word.
+
+That’s the entire final step: one context-rich vector in, one predicted token out. Repeat this autoregressively--word by word--and full passages like you get with ChatGPT and other interfaces will emerge!
 
 For a quick overview of all this, [check out this video](https://www.youtube.com/watch?v=5sLYAQS9sWQ).
-
 
 ## 4. Demo: Visualizing embeddings
 In the following demonstration we will visualize text embeddings based on their semantic similarity. 
