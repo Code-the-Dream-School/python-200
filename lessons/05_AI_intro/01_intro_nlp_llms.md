@@ -178,26 +178,33 @@ This prediction step is actually very simple: this single vector is fed through 
 
 That’s the entire final step: one context-rich vector in, one predicted token out. Repeat this autoregressively--word by word--and full passages like you get with ChatGPT and other interfaces will emerge!
 
-For a quick overview of all this, [check out this video](https://www.youtube.com/watch?v=5sLYAQS9sWQ).
+For a quick overview of LLM function, [check out this video](https://www.youtube.com/watch?v=5sLYAQS9sWQ).
 
 ## 4. Demo: Visualizing embeddings
-In the following demonstration we will visualize text embeddings based on their semantic similarity. 
+In the following demonstration we will visualize text embeddings based on their semantic similarity. Instead of similareity of single words like `apple` and `phone`, we will look at similarities among entire *sentences*.  
 
-> Aside on handling API key 
-
-First, load API key. 
+First, let's import the packages required for this demo:
 
 ```python
+import numpy as np
+import matplotlib.pyplot as plt
+from openai import OpenAI
 from dotenv import load_dotenv
+from sklearn.decomposition import PCA
+```
+We first need to load our OpenAI API key so you can use the embedding model that is part of their suite of models. We will discuss this more in the lesson on chat completions 
 
+> TODO: handle this discussion better -- put in README for this week and discuss handling of api keys, where to put it, that it will recursively seach parent dsirectories up to root). Please be sure not to share your API key!
+
+```python
 if load_dotenv():
     print("Successfully loaded api key")
 ```
 
-Generate movie summary dictionary that we will use to detect semantic similaties.
+Next, we will generate a movie summary dictionary that we will use to detect semantic similarities.
 
 ```python
-movie_summaries = [
+movies = [
     # Marvel Superhero Movies
     {
         "title": "Iron Man (2008)",
@@ -263,27 +270,32 @@ movie_summaries = [
     }
 ]
 ```
+Let's use the above to create a list of titles and summaries:
+
+```python
+movie_titles = [m["title"] for m in movies]
+movie_summaries = [m["summary"] for m in movies]
+```
 
 ### Generate embeddings 
 
-The `text-embedding-3-small` model converts text into numerical vectors and captures the "meaning" of the input text (in this case the movie reviews). Above, we discussed embedding vectors for single tokens, but OpenAI's model will do this for any length of text, such as our movie summaries. 
+The `text-embedding-3-small` model converts text into embedding vectors that, as discussed above, capture the "meaning" of the input text (in this case the movie reviews). Above, we discussed embedding vectors for single tokens, but OpenAI's model will do this for any length of text, such as our movie summaries. We will discuss the OpenAI API in much more detail in the next lesson, here we are just *using* it to demonstrate the power of embedding models. 
 
 ```python
 client = OpenAI()
+response = client.embeddings.create(
+    model="text-embedding-3-small",
+    input=movie_summaries
+)
 
-embeddings = []
-for summary in movie_summaries:
-    response = client.embeddings.create(model="text-embedding-3-small",
-                                        input=summary)
-    embeddings.append(response.data[0].embedding)
-embeddings = np.array(embeddings)
+embeddings = np.array([item.embedding for item in response.data])
 print(embeddings.shape)
 ```
+In this case, each summary is projected to vector that's a little more than 1500-dimensions. 
 
-### Examine embeddings in 2d using PCA
-PCA reduces high-dimensional embeddings (1500-dimensions) to a lower-dimensional 2D for intuitive plots, making embeddings easy to visualize. It makes more clear the similarity relations among the embeddings, revealing the semantic structure between the summaries. 
+### Visualize embeddings
+It is impossible to visualize a 1500-dimension vector space directly, so we will use our old stand-by from Week 2, PCA, to project the 1500-dimension embedding to a 2D space to create more intuitive plots. It makes more clear the similarity relations among the embeddings, revealing the semantic structure between the summaries. 
 
-We discussed above just how important this kind of perspective is in the development of LLMs/self-attention etc!
 
 ```python
 # Do PCA to project to lower-dimensional embedding space
@@ -302,13 +314,15 @@ plt.ylabel("PCA Component 2")
 plt.show()
 ```
 
+This mapping shows that similar movies tend to cluster together in the embedding space. E.g., Christmas movies in one region of the space, romcons in another (note Love Actually is a Christmas Romcom). Feel free to drop new summaries in to see where they fall in this movie map.
+
+You can now experiment with any text you like. Embedding models allow us to search and compare text based on *meaning*, not literal keywords. This is the foundation for semantic search, and retrieval-augmented generation (RAG) systems, which we will explore next week. 
 
 ## 5. Key points
-Congrats we just covered the basics of natural language processing and modern LLM function! Some of the key points we covered:
+Congrats you have just covered the basics of natural language processing and modern LLM function! Some of the key points we covered:
 
-- Modern NLP helps computers understand and generate human language using data-driven deep learning rather than hand-crafted rules.
-- Large Language Models (LLMs) like GPT are trained with self-supervised learning to predict the next word in a sequence -- essentially, autocomplete at scale.
-- Tokenization, embeddings, and attention let models capture word meaning and context dynamically.
+- Modern NLP helps computers process and generate human language using data-driven deep learning rather than hand-crafted rules.
+- LLMs like GPT are trained with self-supervised learning (autoregression) to predict the next word in a sequence -- essentially, autocomplete at scale.
 - Transformers incorporate attention layers and neural networks to generate  context-aware text predictions.
 
-While in subsequent lessons we will use APIs that rely on models built with these architectures, it is important to understand what is happening under the hood. Hopefully, knowing a little bit about how tokenization, embeddings, and attention works will help demystify LLMs and gives you intuition for why they can generate language so effectively (and sometimes make such strange errors, which we will discuss shortly).
+While in subsequent lessons we will use APIs that rely on models built with LLM architectures, it is helpful to understand what is happening on the back end. Hopefully, knowing a little bit about how tokenization, embeddings, and attention works will help demystify LLMs and gives you intuition for why they can generate language so effectively (and sometimes make such strange errors and "hallucinations", which we will discuss more next week).
