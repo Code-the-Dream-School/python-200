@@ -25,7 +25,7 @@ As a way around this, to fully render the md:
 Now you will see the fully rendered lesson as it will appear in the repo if it is merged! This is a great chance to spot broken images or formatting mishaps, which could be useful to mention in the review.
 
 ## First-time reviewer checklist
-- [ ] Read through the lesson as if you were a beginner: is it clear and friendly, and resist the lure of bullet-point lists?  
+- [ ] Read through the lesson as if you were a beginner: is the lesson clear with a friendly tone?  
 - [ ] Does it include links to helpful external resources, including video and text?   
 - [ ] Confirm all images are under 1 MB, in jpg or png format, and placed in `resources/`.    
 - [ ] Confirm any datasets or extra files also live in the lesson's `resources/` folder.    
