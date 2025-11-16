@@ -11,10 +11,10 @@
 
 
 ### Why This Guide?
-Learn to write better prompts  
-Get more accurate and useful responses  
-Save time and reduce frustration  
-Make AI work better for you
+* Learn to write better prompts  
+* Get more accurate and useful responses  
+* Save time and reduce frustration  
+* Make AI work better for you
 
 ---
 
@@ -582,8 +582,6 @@ https://learnprompting.org/docs/basics/few_shot
 [Watch this video on YouTube](https://www.youtube.com/watch?v=YMs-BbNKs0o)
 
 
-
-*** End Patch
 
 
 
