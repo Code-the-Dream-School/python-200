@@ -5,12 +5,12 @@ Let’s start a new chapter on Hypothesis testing. Evidence over intuition.
 
 ---
 
-📺 As we begin with the lesson here are some interesting references & resource on Statistics which will help you with follow the lesson more effectively:  
+As we begin with the lesson here are some interesting references & resource on Statistics which will help you with follow the lesson more effectively:  
 
-- 📺 [Introduction to Hypothesis Testing (YouTube)](https://www.youtube.com/watch?v=0oc49DyA3hU)  
-- 📖 [Null vs. Alternative Hypotheses — Scribbr](https://www.scribbr.com/statistics/null-and-alternative-hypotheses/)  
-- 📺 [Statistics Crash Course (YouTube)](https://www.youtube.com/watch?v=kyjlxsLW1Is)  
-- 📖 [Simplilearn: Hypothesis Testing in Statistics](https://www.simplilearn.com/tutorials/statistics-tutorial/hypothesis-testing-in-statistics)  
+-  [Introduction to Hypothesis Testing (YouTube)](https://www.youtube.com/watch?v=0oc49DyA3hU)  
+-  [Null vs. Alternative Hypotheses — Scribbr](https://www.scribbr.com/statistics/null-and-alternative-hypotheses/)  
+-  [Statistics Crash Course (YouTube)](https://www.youtube.com/watch?v=kyjlxsLW1Is)  
+-  [Simplilearn: Hypothesis Testing in Statistics](https://www.simplilearn.com/tutorials/statistics-tutorial/hypothesis-testing-in-statistics)  
 
 ---
 
@@ -36,10 +36,10 @@ A structured way to test an assumption using data.
 **Outcome reminder:**  
 At the end of a hypothesis test, we don’t prove something 100%, we just decide if we have enough evidence to support one side.
 
-⚠️ Hypothesis testing ≠ absolute truth.  
+Hypothesis testing ≠ absolute truth.  
 Lastly, hypothesis testing doesn’t give us certainty, it helps us decide if there’s enough evidence to support a claim, or if the difference we see could just be random chance.
 
-![Hypothesis Testing Visualization](../resources/04_hypothesis_testing_1.png)
+![Hypothesis Testing Visualization](resources/04_hypothesis_testing_1.png)
 
 **What this figure shows:**
 
@@ -178,7 +178,7 @@ p-value: 6.3969825252044474e-06
 The difference is significant: the new textbook likely improved scores.
 ```
 
-📌 Note: This kind of experiment is often called **A/B testing** in business.
+**Note:** This kind of experiment is often called **A/B testing** in business.
 
 ---
 
@@ -225,7 +225,7 @@ plt.ylabel("Number of Students")
 plt.legend()
 plt.show()
 ```
-![Hypothesis Testing Visualization](../resources/04_hypothesis_testing_2.png)
+![Hypothesis Testing Visualization](resources/04_hypothesis_testing_2.png)
 **Explanation:**  
 - Step 1 (t-test): Calculated t-statistic & p-value.  
 - Step 2 (plot): Drew histograms & marked averages.  
@@ -243,7 +243,7 @@ But in real projects, you need to explain results so anyone can understand:
 
 ---
 
-## A/B Testing in the Real World 🅰️/🅱️
+## A/B Testing in the Real World 
 
 What we just learned about hypothesis testing is exactly what powers **A/B testing**, one of the most common industry practices.
 
@@ -259,11 +259,11 @@ This is exactly the same statistical framework we’ve been learning:
 - Alternative hypothesis: there **is a difference**.  
 - Test statistic & p-value: help you decide if the difference is meaningful.
 
-👉 You’ve basically just learned the foundation of A/B testing — a tool you’ll see everywhere in data science and industry practice.
+ You’ve basically just learned the foundation of A/B testing — a tool you’ll see everywhere in data science and industry practice.
 
 ---
 
-## Important Notes & Limitations ⚠️
+## Important Notes & Limitations 
 
 ### 1. Assumptions of the t-test
 The common **t-test** relies on some assumptions:
@@ -293,7 +293,7 @@ As you move forward with Python 200, you’ll learn when and how to choose the r
 
 ---
 
-✅ Lastly, hypothesis testing is a core skill in data science.  
+Lastly, hypothesis testing is a core skill in data science.  
 From comparing test scores to running large-scale A/B experiments, it helps us move from **hunches** to **evidence-based decisions**.  
 We’ll keep building on this foundation in upcoming lessons.
 
