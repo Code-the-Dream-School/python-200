@@ -173,9 +173,16 @@ Classification is a supervised learning task that categorizes data into discrete
 How it works:
 The model learns from examples with known categories, then predicts which class a new observation belongs to.
 
+Before we look at specific examples, it helps to understand that classification problems generally fall into two main types:
+
+1. Binary Classification
+2. Multi-Class Classification
+
+With these categories in place, we’re now ready to look at each one more closely.
+
 **1.2.1 Binary Classification**
 
-Binary Classification is all about making a yes/no decision — the model chooses between two possible outcomes.
+Binary Classification is all about making a yes/no decision - the model chooses between two possible outcomes.
 
 A great real-world example is *customer churn prediction*.
 
