@@ -346,18 +346,50 @@ This gives a visual summary of how each model performs on both datasets.
 
 ---
 
+## Findings
+
+Absolutely — here’s a clean and student-friendly **Final Takeaways** section you can paste right after the evaluation visuals: 👇
+
+---
+
+## Final Takeaways
+
+Here’s what we learned by testing different models on the Iris and Digits datasets:
+
+### Decision Trees
+
+* Very easy to understand — you can read every split like a flowchart
+* Work great on **simple** datasets like Iris
+* But tend to **overfit** — memorize instead of generalize
+
+### Random Forests
+
+* Combine many trees → group decision (voting)
+* Much **better generalization**, especially on harder tasks like Digits
+* Higher accuracy + fewer mistakes across classes
+* Still gives some interpretability (feature importance)
+
+---
+
+### 🔑 Big Picture Lessons
+
+| Concept            | What we learned                                                        |
+| ------------------ | ---------------------------------------------------------------------- |
+| Interpretability   | Trees are easy to explain to humans                                    |
+| Overfitting        | Trees fit noise on complex data                                        |
+| Ensemble learning  | “Many weak learners = one strong learner”                              |
+| Evaluation matters | Accuracy alone doesn’t tell the whole story — confusion matrices help! |
+
+> If your goal is reliability in the real world: **Random Forests are a safer choice than a single Decision Tree.**
+
+---
+
 ## Key takeaways
 
 * **Decision Trees** are highly interpretable and mimic human decision-making
 * They tend to **overfit** if we let them grow unchecked
 * **Random Forests** combine many trees to reduce variance and improve accuracy
-* Evaluation should include:
-
-  * Accuracy
-  * Classification reports
-  * Confusion matrices
-* Random Forests often shine on more complex, higher-dimensional data like **Digits**
-
+  
 ---
 
 ## Explore More
@@ -380,7 +412,6 @@ This gives a visual summary of how each model performs on both datasets.
 
 In upcoming lessons, we will:
 
-* Tune hyperparameters such as `max_depth`, `min_samples_split`, and `n_estimators`
 * Use **cross-validation** to better estimate model performance
 * Explore confusion matrices in more depth and discuss error trade-offs
 
