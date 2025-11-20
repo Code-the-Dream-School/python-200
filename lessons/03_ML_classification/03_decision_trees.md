@@ -342,30 +342,7 @@ plt.show()
 
 **Image Credits:Google Colab**
 
-
 This gives a visual summary of how each model performs on both datasets.
-
----
-
-## Feature Importance (Random Forest)
-
-Random Forests can also tell us which features matter most.
-
-```python
-rf_clf.fit(X_train_i, y_train_i)
-feat_df = pd.DataFrame({
-    "feature": X_iris.columns,
-    "importance": rf_clf.feature_importances_
-}).sort_values(by="importance", ascending=False)
-
-plt.figure(figsize=(8, 5))
-sns.barplot(data=feat_df, x="importance", y="feature")
-plt.title("Feature Importance — Random Forest (Iris)")
-plt.tight_layout()
-plt.show()
-```
-
-In the Iris dataset, petal length and petal width are usually the most important features.
 
 ---
 
