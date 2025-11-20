@@ -6,7 +6,7 @@
 
 <img width="550" height="333" alt="Screenshot 2025-10-24 at 3 09 00 PM" src="https://github.com/user-attachments/assets/056d6b1a-4184-4bfd-9473-216739e4dfb7" />
 
-# Image credit: scikit-learn.org documentation
+**Image credit: scikit-learn.org documentation***
 
 Think about all the “smart” systems you use every day — Netflix recommending what to watch next, Spotify building a playlist that just *gets* you, or your bank flagging a suspicious transaction.  
 All of these rely on **machine learning** — computers learning patterns from data so they can make predictions or decisions automatically.
