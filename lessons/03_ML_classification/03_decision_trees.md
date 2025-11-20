@@ -292,6 +292,10 @@ plot_confusions(DecisionTreeClassifier(random_state=42), "Decision Tree")
 plot_confusions(RandomForestClassifier(n_estimators=100, random_state=42), "Random Forest")
 ```
 
+<img width="1168" height="440" alt="Screenshot 2025-11-20 at 3 31 40 PM" src="https://github.com/user-attachments/assets/8b9c3a8c-bb6c-4c7b-a717-3523fde7fa72" />
+
+**Image Credits:Google Colab**
+
 ---
 
 ## Accuracy Comparison (KNN vs Tree vs Forest)
