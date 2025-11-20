@@ -1,4 +1,3 @@
-````md
 # Lesson 3  
 ### CTD Python 200  
 **Decision Trees and Ensemble Learning (Random Forests)**
@@ -331,5 +330,3 @@ In upcoming lessons, we will:
 * Use **cross-validation** to better estimate model performance
 * Explore confusion matrices in more depth and discuss error trade-offs
 
-```
-```
