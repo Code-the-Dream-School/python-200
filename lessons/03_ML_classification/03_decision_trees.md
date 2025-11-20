@@ -134,6 +134,14 @@ plt.title("Iris Decision Tree")
 plt.show()
 ```
 
+<img width="519" height="295" alt="Screenshot 2025-11-20 at 2 12 56 PM" src="https://github.com/user-attachments/assets/d36c31a0-dcfa-4b68-a56d-8b1eb0faa104" />
+
+<img width="1415" height="966" alt="awe" src="https://github.com/user-attachments/assets/a3faa07d-73ae-488d-ac82-99b6040e6baf" />
+
+
+**Image credit: Google Colab**
+
+
 Decision Trees measure uncertainty in each split using **Gini Impurity**:
 low impurity = more confident prediction.
 
