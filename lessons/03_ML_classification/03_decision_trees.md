@@ -6,38 +6,67 @@
 
 Imagine being asked to identify a flower. You might think:
 
-> “If the petals are tiny, it’s probably a setosa.  
+> “If the petals are tiny, it’s probably setosa.  
 > If not, check petal width… big petals? Probably virginica.”
 
-That thought process — breaking a decision into simple **yes/no** questions — is exactly what a **Decision Tree** does.
+That thought process — breaking a decision into a sequence of **yes/no questions** — is exactly how a **Decision Tree** works.
+
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/3cd4e0d6-8da7-4dc3-b05b-f1379fae0f4c" />
+
+**Image credit: [scikit-learn.org documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
 
 Deep learning models are often described as “black boxes.”  
-Decision Trees are the opposite: **transparent and interpretable.**  
-You can literally trace any prediction step-by-step.
+Decision Trees are the opposite: **transparent and interpretable**.  
+You can literally trace any prediction step-by-step by following the tree branches.
 
-But there’s a catch:  
-A single tree can become *too* confident in the training data.  
-It memorizes noise → **overfitting** → looks great in training, worse in real life.
+However, a single decision tree can become too confident in the training data.  
+This leads to overfitting: excellent performance on seen examples, weaker performance on new ones.
 
-Random Forests fix this.  
-But first, let’s build (and visualize!) a single tree.
+Random Forests solve this problem by combining many trees.
 
----
+
+## How Decision Trees Work?
+1. Start with the Root Node: It begins with a main question at the root node which is derived from the dataset’s features.
+
+2. Ask Yes/No Questions: From the root, the tree asks a series of yes/no questions to split the data into subsets based on specific attributes.
+
+3. Branching Based on Answers: Each question leads to different branches:
+
+If the answer is yes, the tree follows one path.
+If the answer is no, the tree follows another path.
+4. Continue Splitting: This branching continues through further decisions helps in reducing the data down step-by-step.
+
+5. Reach the Leaf Node: The process ends when there are no more useful questions to ask leading to the leaf node where the final decision or prediction is made.
+
+Let’s look at a simple example to understand how it works. Imagine we need to decide whether to drink coffee based on the time of day and how tired we feel. The tree first checks the time:
+
+1. In the morning: It asks “Tired?”
+
+If yes, the tree suggests drinking coffee.
+If no, it says no coffee is needed.
+2. In the afternoon: It asks again “Tired?”
+
+If yes, it suggests drinking coffee.
+If no, no coffee is needed.
+
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/646615fd-2ced-489c-8aa6-790df6802540" />
+
+**Image credit: [scikit-learn.org documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
+
 
 ## What you’ll learn today
 
 By the end of this lesson, you will:
 
-- Train a **Decision Tree Classifier** and understand its structure  
-- Interpret decisions directly from the tree visualization  
-- Learn why trees tend to **overfit**  
-- Use a **Random Forest** (an ensemble of trees) to improve performance  
-- Evaluate with **accuracy + classification report** (from KNN lesson)  
-- Compare performance on **Iris and Digits datasets**
+- Train and interpret a **Decision Tree Classifier**
+- Visualize how splitting decisions are made
+- Understand **Gini Impurity** as a measure of node “mixedness”
+- Learn why individual trees can **overfit**
+- Use a **Random Forest** to improve stability and accuracy
+- Compare both models with evaluation metrics from the KNN lesson
+- Test both **Iris** (simple) and **Digits** (more complex) datasets
 
----
-
-## Step 1 — Setup
+## Setup
 
 ```python
 from sklearn.datasets import load_iris, load_digits
@@ -73,12 +102,10 @@ X_train_d, X_test_d, y_train_d, y_test_d = split(X_digits, y_digits)
 
 We now have two datasets:
 
-| Dataset    | Type            | Classes | Why use it?              |
-| ---------- | --------------- | ------- | ------------------------ |
-| **Iris**   | Tabular numeric | 3       | Simple + visualizable    |
-| **Digits** | Image-like grid | 10      | More realistic challenge |
-
----
+| Dataset    | Type            | Classes | Why use it?                         |
+| ---------- | --------------- | ------- | ----------------------------------- |
+| **Iris**   | Tabular numeric | 3       | Simple, easy to visualize decisions |
+| **Digits** | Image-like grid | 10      | More realistic, harder to classify  |
 
 ## Part A — Decision Tree Classifier
 
@@ -93,62 +120,39 @@ print("Decision Tree Accuracy (Iris):", accuracy_score(y_test_i, preds_tree))
 print(classification_report(y_test_i, preds_tree))
 ```
 
-### Visualize the decision-making
+### Visualizing decisions
 
 ```python
 plt.figure(figsize=(16, 10))
-plot_tree(tree_clf, filled=True,
-          feature_names=iris.feature_names,
+plot_tree(tree_clf, filled=True, 
+          feature_names=iris.feature_names, 
           class_names=iris.target_names)
 plt.title("Iris Decision Tree")
 plt.show()
 ```
 
-Look how the model makes decisions:
+Decision Trees measure uncertainty in each split using **Gini Impurity**:
+low impurity = more confident prediction.
 
-> “Is petal width ≤ 0.8?
-> → Yes → Setosa.”
-
-Each **split** reduces uncertainty in the data.
-Technically, trees measure uncertainty using **Gini Impurity** —
-but you can think of it as: *“How mixed is this node?”*
-Pure nodes = confident predictions.
-
----
+They continue splitting until the data is as “pure” as possible.
 
 ## The Overfitting Problem
 
-Decision trees love **deep**, very specific rules.
-
-Example:
-“If petal width = 1.75 and sepal width > 3.2 and…”
-…that rule might only apply to *one* weird training sample.
-
-Accuracy in training: 🚀
-Accuracy on new data: 😬
-
-Let’s test the same tree on **Digits** — a harder task:
+Trees can become overly specific to the training data:
 
 ```python
 preds_digits_tree = tree_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Decision Tree Accuracy (Digits):", accuracy_score(y_test_d, preds_digits_tree))
 ```
 
-You’ll likely see poorer generalization — proof of **overfitting**.
+Notice that accuracy generally drops on the more complex Digits dataset — a sign of overfitting.
 
----
+## Part B — Random Forest (Ensemble Method)
 
-## Part B — Enter the Random Forest 🌲🌲🌲
+A **Random Forest** builds many trees on slightly different samples of the training data.
+Each tree votes, and the most common answer wins.
 
-> A forest is a group of trees that never all overfit in the same way.
-
-How it works (intuition only — no rocket science):
-
-1. It samples slightly different training subsets
-2. Builds a tree for each subset
-3. They **vote** on predictions
-
-This reduces **variance**, producing robust results.
+This reduces overfitting because the trees do not make the same mistakes.
 
 ```python
 rf_clf = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -159,31 +163,27 @@ print("Random Forest Accuracy (Iris):", accuracy_score(y_test_i, preds_rf))
 print(classification_report(y_test_i, preds_rf))
 ```
 
-Now compare on Digits:
+Test on Digits as well:
 
 ```python
 preds_rf_digits = rf_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Random Forest Accuracy (Digits):", accuracy_score(y_test_d, preds_rf_digits))
 ```
 
-You should see **noticeable improvement** — especially for digits.
+You should see significantly improved generalization.
 
----
+## Model comparison
 
-## Comparing performance
+| Model         | Interpretability            | Overfitting Risk | Iris Accuracy | Digits Accuracy |
+| ------------- | --------------------------- | ---------------- | ------------- | --------------- |
+| Decision Tree | Very high                   | High             | Good          | Moderate        |
+| Random Forest | More difficult to interpret | Much lower       | Very good     | Strong          |
 
-| Model                | Interpretability         | Overfitting Risk | Iris Accuracy | Digits Accuracy |
-| -------------------- | ------------------------ | ---------------- | ------------- | --------------- |
-| Single Decision Tree | ⭐⭐⭐⭐⭐ (human readable)   | High             | Good          | Weaker          |
-| Random Forest        | ⭐⭐ (harder to visualize) | Much lower       | Great         | Much better     |
+Interpretability decreases slightly, but robustness increases substantially.
 
-We’ve gained reliability — at the small cost of transparency.
+## Feature importance (Random Forest)
 
----
-
-## Understanding which features matter
-
-Random Forests can show what features they rely on:
+Which features matter most?
 
 ```python
 feat_df = pd.DataFrame({
@@ -195,47 +195,38 @@ plt.title("Iris Feature Importance")
 plt.show()
 ```
 
-This is a powerful middle ground:
-**better performance + partial explainability.**
-
----
+This provides insight into which measurements are driving decisions.
 
 ## Key ideas to take with you
 
-* **Decision Trees** mimic human reasoning but **overfit** easily
-* **Gini Impurity** measures how “mixed” a node is
-* **Random Forest = many trees voting**
-  → more stable, less overfitting
-* Same metrics from KNN lesson help us compare fairly
-* On complex data (Digits), forests shine even more
-
----
+* **Decision Trees** are interpretable and mimic human decision-making
+* They tend to **overfit** without constraints
+* **Random Forests** combine many trees to reduce variance and improve accuracy
+* Same evaluation tools from the KNN lesson let us compare fairly
+* Forests shine on complex, higher-dimensional data like Digits
 
 ## Explore More
 
-Optional but recommended for intuition:
+Optional resources for deeper intuition:
 
 * Decision Trees
   [https://www.ibm.com/think/topics/decision-trees](https://www.ibm.com/think/topics/decision-trees)
   [https://www.youtube.com/watch?v=JcI5E2Ng6r4](https://www.youtube.com/watch?v=JcI5E2Ng6r4)
   [https://www.youtube.com/watch?v=u4IxOk2ijSs](https://www.youtube.com/watch?v=u4IxOk2ijSs)
   [https://www.youtube.com/watch?v=zs6yHVtxyv8](https://www.youtube.com/watch?v=zs6yHVtxyv8)
+
 * Random Forests
   [https://www.youtube.com/watch?v=gkXX4h3qYm4](https://www.youtube.com/watch?v=gkXX4h3qYm4)
-* scikit-learn demo
+
+* scikit-learn example
   [https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html](https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html)
 
+## Next steps
+
+In the next lesson, we’ll build on this foundation and explore:
+
+* Controlling model complexity (`max_depth`, `min_samples_split`)
+* Reducing overfitting with **cross-validation**
+* Confusion matrices and evaluation tradeoffs
 ---
 
-## Next up
-
-Preventing overfitting with **hyperparameter tuning**:
-
-* `max_depth`
-* `min_samples_split`
-* cross-validation
-* confusion matrices
-
-```
-
----
