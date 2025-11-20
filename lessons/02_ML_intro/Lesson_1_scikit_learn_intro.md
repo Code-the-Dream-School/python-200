@@ -162,6 +162,7 @@ plt.show()
 
 <img width="656" height="478" alt="Screenshot 2025-11-06 at 9 18 30 PM" src="https://github.com/user-attachments/assets/a107db74-8ea1-49da-a8d2-7e1c0afe1953" />
 
+**Image credit: Google Colab**
 
  **What you’ll see:** three colorful clusters.  
 Each color represents one of the groups the algorithm discovered.  
@@ -355,6 +356,8 @@ plt.show()
 
 <img width="710" height="479" alt="Screenshot 2025-11-07 at 12 35 31 AM" src="https://github.com/user-attachments/assets/9758e62a-35be-4160-88bd-17f85d28cb2c" />
 
+**Image credit: Google Colab**
+
 Each color represents a different cluster that K-Means discovered.  
 The model grouped similar data points together automatically — no labels needed.
 
@@ -397,8 +400,8 @@ Experimentation is how you get comfortable with machine learning — small tweak
 
 If you’d like to keep exploring:
 
-- [https://scikit-learn.org/stable/modules/clustering.html]
-- [https://www.youtube.com/watch?v=CaRcRk2c8bM]
+- https://scikit-learn.org/stable/modules/clustering.html
+- https://www.youtube.com/watch?v=CaRcRk2c8bM
 
 ---
 
