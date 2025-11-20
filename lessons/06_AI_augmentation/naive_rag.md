@@ -162,7 +162,7 @@ def ask_llm(query, context):
 
 ```
 
-Congratulations!! Now you have a chatbot that can generate responses to user queries with additional context from an external database! You have created your own RAG enabled chatbot!
+Congratulations!! Now you have a chatbot that can generate responses to user queries with additional context from an external database! You have created your own RAG enabled chatbot! Feel free to explore with different prompts and test the responses with and without the retrieved context to understand and appreciate the utility of RAG. 
 
 ## Food for thought - Evaluating the efficacy of your chatbot
 
