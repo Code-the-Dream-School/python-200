@@ -1,3 +1,5 @@
+````md
+# Lesson 3  
 ### CTD Python 200  
 **Decision Trees and Ensemble Learning (Random Forests)**
 
@@ -27,24 +29,27 @@ Random Forests solve this problem by combining many trees.
 
 ## How Decision Trees Work
 
-1. Start with a root node using one feature to split data
-2. Ask a “yes/no” question that reduces label mixing
-3. Continue splitting until no more useful splits exist
-4. Reach a leaf node → make a prediction
+1. Start with a root node using one feature to split data  
+2. Ask a “yes/no” question that reduces label mixing  
+3. Continue splitting until no more useful splits exist  
+4. Reach a leaf node → make a prediction  
 
 <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/646615fd-2ced-489c-8aa6-790df6802540" />
 
 **Image credit: [decision-tree-geeks documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
 
+---
 
 ## What you’ll learn today
 
-- Train and interpret a **Decision Tree Classifier**
-- Measure node uncertainty using **Gini Impurity**
-- Why trees tend to **overfit**
-- Use a **Random Forest** to improve accuracy
-- Evaluate all models using metrics from KNN lesson
-- Compare performance on **Iris** and **Digits**
+By the end of this lesson, you will be able to:
+
+- Train and interpret a **Decision Tree Classifier**  
+- Measure node uncertainty using **Gini Impurity**  
+- Explain why trees tend to **overfit**  
+- Use a **Random Forest** to improve accuracy and robustness  
+- Evaluate models using the metrics from the KNN lesson  
+- Compare performance on the **Iris** and **Digits** datasets  
 
 ---
 
@@ -100,11 +105,18 @@ X_train_i, X_test_i, y_train_i, y_test_i = split(X_iris, y_iris)
 X_train_d, X_test_d, y_train_d, y_test_d = split(X_digits, y_digits)
 ```
 
+We now have two datasets:
+
+| Dataset | Type            | Classes | Why use it?                         |
+| ------- | --------------- | ------- | ----------------------------------- |
+| Iris    | Tabular numeric | 3       | Simple, easy to visualize decisions |
+| Digits  | Image-like grid | 10      | More realistic, harder to classify  |
+
 ---
 
 ## Part A — Decision Tree Classifier
 
-### Train the tree
+### Train the tree (Iris)
 
 ```python
 tree_clf = DecisionTreeClassifier(random_state=42)
@@ -119,34 +131,42 @@ print(classification_report(y_test_i, preds_tree))
 
 ```python
 plt.figure(figsize=(18, 12))
-plot_tree(tree_clf, filled=True,
-          feature_names=iris.feature_names,
-          class_names=iris.target_names,
-          rounded=True, fontsize=9)
+plot_tree(
+    tree_clf,
+    filled=True,
+    feature_names=iris.feature_names,
+    class_names=iris.target_names,
+    rounded=True,
+    fontsize=9
+)
 plt.title("Decision Tree - Iris Dataset")
 plt.show()
 ```
 
-<img width="1415" height="966" alt="awe" src="https://github.com/user-attachments/assets/a3faa07d-73ae-488d-ac82-99b6040e6baf" />
-
-**Decision Trees measure impurity** → less mixed = more confident.
+Decision Trees measure **impurity** at each node:
+less mixed = more confident prediction.
 
 ---
 
 ## The Overfitting Problem
+
+A tree can become too specialized to the training data.
 
 ```python
 preds_digits_tree = tree_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Decision Tree Accuracy (Digits):", accuracy_score(y_test_d, preds_digits_tree))
 ```
 
-Decision Tree performance typically drops on complex datasets like Digits.
+On the more complex **Digits** dataset, accuracy typically drops — a sign of overfitting and poorer generalization.
 
 ---
 
 ## Part B — Random Forest (Ensemble Method)
 
-Random Forest = Many trees voting → **reduced overfitting**
+A **Random Forest** builds many trees on slightly different samples of the training data.
+Each tree votes, and the most common answer wins.
+
+Random Forest = many trees voting → reduced overfitting.
 
 <img width="712" height="376" alt="Screenshot 2025-11-20 at 2 08 19 PM" src="https://github.com/user-attachments/assets/7311ca18-2d66-48b1-8d11-4b073b09a975" />
 
@@ -159,16 +179,20 @@ print("Random Forest Accuracy (Iris):", accuracy_score(y_test_i, preds_rf))
 print(classification_report(y_test_i, preds_rf))
 ```
 
-Test on Digits:
+Test on Digits as well:
 
 ```python
 preds_rf_digits = rf_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Random Forest Accuracy (Digits):", accuracy_score(y_test_d, preds_rf_digits))
 ```
 
+You should see improved generalization compared to a single tree, especially on Digits.
+
 ---
 
 ## Confusion Matrices (Iris + Digits)
+
+Confusion matrices help you see **which classes** are being confused with which.
 
 ```python
 def plot_confusions(model, model_name):
@@ -202,6 +226,12 @@ plot_confusions(RandomForestClassifier(n_estimators=100, random_state=42), "Rand
 
 ## Accuracy Comparison (KNN vs Tree vs Forest)
 
+Now we compare three models side by side:
+
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+* Random Forest
+
 ```python
 models = [
     ("KNN", KNeighborsClassifier(n_neighbors=5)),
@@ -224,17 +254,23 @@ fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
 
 sns.barplot(data=df_iris, x="model", y="accuracy", ax=axes[0])
 axes[0].set_title("Accuracy Comparison - Iris")
+axes[0].set_ylim(0, 1.05)
 
 sns.barplot(data=df_digits, x="model", y="accuracy", ax=axes[1])
 axes[1].set_title("Accuracy Comparison - Digits")
+axes[1].set_ylim(0, 1.05)
 
 plt.tight_layout()
 plt.show()
 ```
 
+This gives a visual summary of how each model performs on both datasets.
+
 ---
 
 ## Feature Importance (Random Forest)
+
+Random Forests can also tell us which features matter most.
 
 ```python
 rf_clf.fit(X_train_i, y_train_i)
@@ -250,20 +286,21 @@ plt.tight_layout()
 plt.show()
 ```
 
-Petal length & width are most informative in Iris.
+In the Iris dataset, petal length and petal width are usually the most important features.
 
 ---
 
 ## Key takeaways
 
-* **Decision Trees** are interpretable but can **overfit**
-* **Random Forests** combine many trees → **better generalization**
-* Model evaluation should include:
+* **Decision Trees** are highly interpretable and mimic human decision-making
+* They tend to **overfit** if we let them grow unchecked
+* **Random Forests** combine many trees to reduce variance and improve accuracy
+* Evaluation should include:
 
   * Accuracy
   * Classification reports
   * Confusion matrices
-* Random Forest especially improves performance on complex data like Digits
+* Random Forests often shine on more complex, higher-dimensional data like **Digits**
 
 ---
 
@@ -271,15 +308,28 @@ Petal length & width are most informative in Iris.
 
 Optional resources:
 
-* [https://www.ibm.com/think/topics/decision-trees](https://www.ibm.com/think/topics/decision-trees)
-* [https://www.youtube.com/watch?v=JcI5E2Ng6r4](https://www.youtube.com/watch?v=JcI5E2Ng6r4)
-* [https://www.youtube.com/watch?v=gkXX4h3qYm4](https://www.youtube.com/watch?v=gkXX4h3qYm4)
-* [https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html](https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html)
+* Decision Trees
+
+  * [https://www.ibm.com/think/topics/decision-trees](https://www.ibm.com/think/topics/decision-trees)
+  * [https://www.youtube.com/watch?v=JcI5E2Ng6r4](https://www.youtube.com/watch?v=JcI5E2Ng6r4)
+
+* Random Forests
+
+  * [https://www.youtube.com/watch?v=gkXX4h3qYm4](https://www.youtube.com/watch?v=gkXX4h3qYm4)
+
+* scikit-learn demo
+
+  * [https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html](https://scikit-learn.org/stable/auto_examples/tree/plot_iris_dtc.html)
 
 ---
 
 ## Next steps
 
-* Hyperparameter tuning (`max_depth`, `min_samples_split`, `n_estimators`)
-* Preventing overfitting with **cross-validation**
-* Confusion matrices: error trade-offs
+In upcoming lessons, we will:
+
+* Tune hyperparameters such as `max_depth`, `min_samples_split`, and `n_estimators`
+* Use **cross-validation** to better estimate model performance
+* Explore confusion matrices in more depth and discuss error trade-offs
+
+```
+```
