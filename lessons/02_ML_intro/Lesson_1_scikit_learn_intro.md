@@ -192,8 +192,8 @@ In the next lessons, we’ll build on this foundation and explore:
 Until then, if you’d like more practice, try these free beginner resources:
 
 - [Data School’s Intro to Machine Learning with scikit-learn](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)  
-- (https://www.youtube.com/watch?v=SW0YGA9d8y8)
-- (https://www.youtube.com/watch?v=SIEaLBXr0rk)
+- https://www.youtube.com/watch?v=SW0YGA9d8y8
+- https://www.youtube.com/watch?v=SIEaLBXr0rk
 
 ---
 
