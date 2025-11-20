@@ -241,12 +241,20 @@ print("Random Forest Accuracy (Iris):", accuracy_score(y_test_i, preds_rf))
 print(classification_report(y_test_i, preds_rf))
 ```
 
+<img width="579" height="243" alt="Screenshot 2025-11-20 at 2 55 11 PM" src="https://github.com/user-attachments/assets/b31a884d-0d08-413d-a1e9-c5e5341467b6" />
+
+**Image Credits:Google Colab**
+
 Test on Digits as well:
 
 ```python
 preds_rf_digits = rf_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Random Forest Accuracy (Digits):", accuracy_score(y_test_d, preds_rf_digits))
 ```
+
+<img width="579" height="363" alt="Screenshot 2025-11-20 at 2 56 06 PM" src="https://github.com/user-attachments/assets/1afffd97-c649-473c-bb3e-0a7f8c76580c" />
+
+**Image Credits:Google Colab**
 
 You should see improved generalization compared to a single tree, especially on Digits.
 
