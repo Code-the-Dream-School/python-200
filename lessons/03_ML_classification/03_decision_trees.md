@@ -345,13 +345,6 @@ plt.show()
 This gives a visual summary of how each model performs on both datasets.
 
 ---
-
-## Findings
-
-Absolutely — here’s a clean and student-friendly **Final Takeaways** section you can paste right after the evaluation visuals: 👇
-
----
-
 ## Final Takeaways
 
 Here’s what we learned by testing different models on the Iris and Digits datasets:
@@ -368,8 +361,6 @@ Here’s what we learned by testing different models on the Iris and Digits data
 * Much **better generalization**, especially on harder tasks like Digits
 * Higher accuracy + fewer mistakes across classes
 * Still gives some interpretability (feature importance)
-
----
 
 ### 🔑 Big Picture Lessons
 
