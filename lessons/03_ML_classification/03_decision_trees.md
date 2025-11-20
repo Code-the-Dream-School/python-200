@@ -155,6 +155,17 @@ Notice that accuracy generally drops on the more complex Digits dataset — a si
 A **Random Forest** builds many trees on slightly different samples of the training data.
 Each tree votes, and the most common answer wins.
 
+### How Random Forest Classification Works
+
+Imagine you have a complex problem to solve, and you gather a group of experts from different fields to provide their input. Each expert provides their opinion based on their expertise and experience. Then, the experts would vote to arrive at a final decision.
+
+In a random forest classification, multiple decision trees are created using different random subsets of the data and features. Each decision tree is like an expert, providing its opinion on how to classify the data. Predictions are made by calculating the prediction for each decision tree and then taking the most popular result. (For regression, predictions use an averaging technique instead.)
+
+<img width="712" height="376" alt="Screenshot 2025-11-20 at 2 08 19 PM" src="https://github.com/user-attachments/assets/7311ca18-2d66-48b1-8d11-4b073b09a975" />
+
+**Image credit: [random-forest-data-camp documentation](https://www.datacamp.com/tutorial/random-forests-classifier-python)**
+
+
 This reduces overfitting because the trees do not make the same mistakes.
 
 ```python
