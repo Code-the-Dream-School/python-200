@@ -152,6 +152,8 @@ print(classification_report(y_test_i, preds_tree))
 
 **Image Credit: Google Colab**
 
+---
+
 ### Visualizing decisions
 
 ```python
