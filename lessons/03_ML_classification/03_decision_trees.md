@@ -168,12 +168,12 @@ plt.title("Decision Tree - Iris Dataset")
 plt.show()
 ```
 
+<img width="1698" height="1157" alt="Visualize" src="https://github.com/user-attachments/assets/e83a4922-2cdd-4fa4-97f2-d8dccb64acb6" />
 
 **Image Credit: Google Colab**
 
-
-Decision Trees measure **impurity** at each node:
-less mixed = more confident prediction.
+Decision Trees measure impurity at each split.
+Lower impurity = clearer separation between classes → more confident prediction.
 
 ---
 
@@ -188,6 +188,27 @@ This introduces the idea of overfitting: doing great on training data but worse 
 preds_digits_tree = tree_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Decision Tree Accuracy (Digits):", accuracy_score(y_test_d, preds_digits_tree))
 ```
+
+Result- Decision Tree Accuracy (Digits): 0.825
+
+### What do we learn from this result?
+
+When we trained the Decision Tree on the simple Iris dataset, it performed very well — almost perfect accuracy.
+
+But when we tried the **same model** on the more complex Digits dataset, accuracy dropped to around **82–83%**.
+This shows that:
+
+* The tree **memorized** many tiny details in the training data
+* But those details **did not apply** to the new digit images
+* So the model **struggles** when the task is harder and more varied
+
+This behavior is called **overfitting**:
+
+> The model is smart on training data…
+> but not very smart on new data.
+
+In real machine learning work, we want models that **generalize**, not just memorize —
+and this is exactly why we introduce **Random Forests** next.
 
 On the more complex **Digits** dataset, accuracy typically drops — a sign of overfitting and poorer generalization.
 
