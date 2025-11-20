@@ -34,6 +34,9 @@ Random Forests solve this problem by combining many trees.
 
 <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/646615fd-2ced-489c-8aa6-790df6802540" />
 
+**Image credit: [decision-tree-geeks documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
+
+
 ---
 
 ## What you’ll learn today
