@@ -362,8 +362,6 @@ Here’s what we learned by testing different models on the Iris and Digits data
 * Higher accuracy + fewer mistakes across classes
 * Still gives some interpretability (feature importance)
 
-### 🔑 Big Picture Lessons
-
 | Concept            | What we learned                                                        |
 | ------------------ | ---------------------------------------------------------------------- |
 | Interpretability   | Trees are easy to explain to humans                                    |
