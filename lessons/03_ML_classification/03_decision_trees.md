@@ -26,14 +26,16 @@ Random Forests solve this problem by combining many trees.
 
 
 ## How Decision Trees Work?
+
 1. Start with the Root Node: It begins with a main question at the root node which is derived from the dataset’s features.
 
 2. Ask Yes/No Questions: From the root, the tree asks a series of yes/no questions to split the data into subsets based on specific attributes.
 
 3. Branching Based on Answers: Each question leads to different branches:
 
-If the answer is yes, the tree follows one path.
-If the answer is no, the tree follows another path.
+    If the answer is yes, the tree follows one path.
+    If the answer is no, the tree follows another path.
+
 4. Continue Splitting: This branching continues through further decisions helps in reducing the data down step-by-step.
 
 5. Reach the Leaf Node: The process ends when there are no more useful questions to ask leading to the leaf node where the final decision or prediction is made.
@@ -42,12 +44,13 @@ Let’s look at a simple example to understand how it works. Imagine we need to 
 
 1. In the morning: It asks “Tired?”
 
-If yes, the tree suggests drinking coffee.
-If no, it says no coffee is needed.
+    If yes, the tree suggests drinking coffee.
+    If no, it says no coffee is needed.
+
 2. In the afternoon: It asks again “Tired?”
 
-If yes, it suggests drinking coffee.
-If no, no coffee is needed.
+    If yes, it suggests drinking coffee.
+    If no, no coffee is needed.
 
 <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/646615fd-2ced-489c-8aa6-790df6802540" />
 
