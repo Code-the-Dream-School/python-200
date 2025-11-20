@@ -81,6 +81,16 @@ plt.rcParams["figure.dpi"] = 120
 
 ## Load datasets
 
+The Iris dataset is a small table of 150 flowers.
+For each flower, we have 4 numbers: sepal length, sepal width, petal length, and petal width (all in cm).
+Each row is labeled as one of 3 species: setosa, versicolor, or virginica.
+It’s simple, clean, and perfect for learning classification.
+
+The Digits dataset is like tiny black-and-white pictures of handwritten numbers.
+Each digit image is 8×8 pixels, flattened into 64 numbers that say how dark each pixel is.
+The label tells us which digit (0–9) the image represents.
+It’s more complex than Iris and closer to a “real” machine learning problem.
+
 ```python
 iris = load_iris(as_frame=True)
 X_iris, y_iris = iris.data, iris.target
@@ -95,6 +105,10 @@ print("Digits shape:", X_digits.shape)
 ---
 
 ## Split data
+
+Here we split each dataset into a training set and a test set.
+The model sees the training data and learns from it, but never sees the test data during training.
+Later, we use the test set to check how well the model generalizes to new, unseen examples.
 
 ```python
 def split(X, y):
@@ -126,6 +140,11 @@ print("Decision Tree Accuracy (Iris):", accuracy_score(y_test_i, preds_tree))
 print(classification_report(y_test_i, preds_tree))
 ```
 
+In this section, we train a single decision tree on the Iris data.
+We then use it to make predictions on the test set and measure how often it’s correct.
+This gives us a first baseline: how good is one tree by itself?
+
+
 ### Visualizing decisions
 
 ```python
@@ -150,6 +169,9 @@ less mixed = more confident prediction.
 ## The Overfitting Problem
 
 A tree can become too specialized to the training data.
+Now we test the same tree on the more complex Digits dataset.
+We’ll see that accuracy is worse, because the tree tends to memorize specific patterns from the training set.
+This introduces the idea of overfitting: doing great on training data but worse on new data.
 
 ```python
 preds_digits_tree = tree_clf.fit(X_train_d, y_train_d).predict(X_test_d)
@@ -304,9 +326,6 @@ In the Iris dataset, petal length and petal width are usually the most important
 ---
 
 ## Explore More
-
-Optional resources:
-
 * Decision Trees
 
   * [https://www.ibm.com/think/topics/decision-trees](https://www.ibm.com/think/topics/decision-trees)
