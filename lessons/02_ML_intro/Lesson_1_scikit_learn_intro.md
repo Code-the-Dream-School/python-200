@@ -6,7 +6,7 @@
 
 <img width="550" height="333" alt="Screenshot 2025-10-24 at 3 09 00 PM" src="https://github.com/user-attachments/assets/056d6b1a-4184-4bfd-9473-216739e4dfb7" />
 
-**Image credit: scikit-learn.org documentation***
+**Image credit: scikit-learn.org documentation**
 
 Think about all the “smart” systems you use every day — Netflix recommending what to watch next, Spotify building a playlist that just *gets* you, or your bank flagging a suspicious transaction.  
 All of these rely on **machine learning** — computers learning patterns from data so they can make predictions or decisions automatically.
@@ -20,6 +20,7 @@ It’s the go-to toolkit for what we call **classical ML** — the kind that wor
 
 <img width="529" height="262" alt="Screenshot 2025-10-24 at 3 09 06 PM" src="https://github.com/user-attachments/assets/fde97815-318b-4912-8ab5-78f50434c7f2" />
 
+**Image credit: [scikit-learn.org documentation](https://www.geeksforgeeks.org/machine-learning)**
 Before moving on to deep-learning frameworks like TensorFlow or PyTorch, it’s important to understand how things work in scikit-learn — because nearly every modern ML project builds on these same ideas.
 
 ---
