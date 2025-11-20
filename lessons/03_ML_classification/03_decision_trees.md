@@ -338,6 +338,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+<img width="1238" height="459" alt="Screenshot 2025-11-20 at 3 33 31 PM" src="https://github.com/user-attachments/assets/dc39fc73-c02a-4dfd-8cfd-75fc05771068" />
+
+**Image Credits:Google Colab**
+
+
 This gives a visual summary of how each model performs on both datasets.
 
 ---
