@@ -135,6 +135,10 @@ We now have two datasets:
 
 ### Train the tree (Iris)
 
+In this section, we train a single decision tree on the Iris data.
+We then use it to make predictions on the test set and measure how often it’s correct.
+This gives us a first baseline: how good is one tree by itself?
+
 ```python
 tree_clf = DecisionTreeClassifier(random_state=42)
 tree_clf.fit(X_train_i, y_train_i)
@@ -147,11 +151,6 @@ print(classification_report(y_test_i, preds_tree))
 <img width="537" height="243" alt="Screenshot 2025-11-20 at 2 41 28 PM" src="https://github.com/user-attachments/assets/5da09bd0-2b4e-4f01-b15b-72a581b48d9d" />
 
 **Image Credit: Google Colab**
-
-In this section, we train a single decision tree on the Iris data.
-We then use it to make predictions on the test set and measure how often it’s correct.
-This gives us a first baseline: how good is one tree by itself?
-
 
 ### Visualizing decisions
 
