@@ -54,6 +54,10 @@ By the end of this lesson, you will be able to:
 
 ## Setup
 
+This part is your roadmap for the lesson.
+We tell you which models you’ll use (Decision Tree and Random Forest) and which datasets you’ll work with.
+You’ll also see how to measure performance and compare models fairly using the same metrics.
+
 ```python
 !pip install seaborn -q
 
