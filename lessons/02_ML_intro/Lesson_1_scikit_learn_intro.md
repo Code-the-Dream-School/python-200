@@ -1,100 +1,74 @@
-# Lesson 1
+# Lesson 1  
 ### CTD Python 200  
 **Introduction to scikit-learn and the Machine Learning Ecosystem**
 
----
+## Why learn scikit-learn?
 
-## Contributor Note
-Focus this lesson on three things only:
-- Why scikit-learn matters for non-deep-learning ML  
-- The core API: create → fit → predict  
-- A tiny K-Means clustering demo  
+<img width="550" height="333" alt="Scikit-learn overview diagram" src="https://github.com/user-attachments/assets/056d6b1a-4184-4bfd-9473-216739e4dfb7" />
 
-Save model evaluation, pipelines, cross-validation, etc. for Week 2.
+*Image credit: scikit-learn.org documentation*
 
----
+Think about the “smart” systems you use every day — Netflix recommending your next show, Spotify building a playlist that just fits, or your bank detecting fraud.
 
-## 🌟 Why learn scikit-learn?
+All rely on **machine learning** — detecting patterns in data to predict or automate decisions.
 
-<img width="550" height="333" alt="Screenshot 2025-10-24 at 3 09 00 PM" src="https://github.com/user-attachments/assets/056d6b1a-4184-4bfd-9473-216739e4dfb7" />
+And in Python, the most popular toolkit for this is **scikit-learn** (`sklearn`).
 
-Think about all the “smart” systems you use every day — Netflix recommending what to watch next, Spotify building a playlist that just *gets* you, or your bank flagging a suspicious transaction.  
-All of these rely on **machine learning** — computers learning patterns from data so they can make predictions or decisions automatically.
+- Free and open source  
+- Reliable and well-documented  
+- Best-in-class for **classical, structured-data ML**  
 
-When you start doing machine learning in Python, the first tool most professionals reach for is **scikit-learn** (often imported as `sklearn`).  
-It’s the go-to toolkit for what we call **classical ML** — the kind that works beautifully on tables, CSVs, and structured data.
+<img width="529" height="262" alt="scikit-learn workflow diagram" src="https://github.com/user-attachments/assets/fde97815-318b-4912-8ab5-78f50434c7f2" />
 
-✅ Free and open source  
-✅ Beautifully designed and consistent  
-✅ One of the best-maintained projects in the Python data ecosystem  
+Before exploring deep learning tools like TensorFlow or PyTorch, it's important to start here — because scikit-learn teaches the foundations used everywhere else.
 
-<img width="529" height="262" alt="Screenshot 2025-10-24 at 3 09 06 PM" src="https://github.com/user-attachments/assets/fde97815-318b-4912-8ab5-78f50434c7f2" />
-
-Before moving on to deep-learning frameworks like TensorFlow or PyTorch, it’s important to understand how things work in scikit-learn — because nearly every modern ML project builds on these same ideas.
-
----
-
-##  What you’ll learn today
+## What you’ll learn today
 
 By the end of this lesson, you’ll be able to:
 
-1. Explain why scikit-learn is such a core part of the ML toolkit.  
-2. Recognize the **core API pattern** every scikit-learn model follows: `create → fit → predict`.  
-3. Try a quick demo of **K-Means clustering**, an unsupervised algorithm that finds patterns without being told what’s right or wrong.
+1. Explain why scikit-learn matters in ML  
+2. Recognize the core API: **Create → Fit → Predict**  
+3. Try a quick demo of **K-Means clustering**, an unsupervised ML technique  
 
----
+## A quick tour of scikit-learn
 
-##  A quick tour of scikit-learn
+`scikit-learn` sits on top of NumPy, SciPy, and Matplotlib and supports:
 
-`scikit-learn` is built on top of **NumPy**, **SciPy**, and **Matplotlib**, and gives you tools for nearly every classical ML task.
+- **Supervised learning** — predict known labels  
+- **Unsupervised learning** — find hidden structure  
+- Tools for data preprocessing, evaluation, and workflows  
 
-- **Supervised learning** — predicting labels from examples  
-  *(e.g., spam vs not-spam, house-price prediction)*
-- **Unsupervised learning** — finding structure without labels  
-  *(e.g., clustering similar customers, reducing data dimensions)*
-- **Utilities** — preprocessing data, splitting into train/test sets, evaluating models, and building pipelines that keep your workflow tidy
-
-And here’s the best part: every model, from a simple linear regression to a fancy random forest, uses the same rhythm.
+And nearly every model follows the same pattern:
 
 ```python
-model = ModelClass()      # 1. Create
-model.fit(X_data, y_data) # 2. Learn from data
-y_predictions = model.predict(X_test) # 3. Predict on new inputs
-```
+model = ModelClass()                 # 1. Create
+model.fit(X_data, y_data)            # 2. Learn
+y_predictions = model.predict(X_test) # 3. Predict
+````
 
-That **create → fit → predict** pattern is what makes scikit-learn so pleasant to use — once you learn it, you can apply it to almost any algorithm.
+That consistency makes it fast to try new ideas.
 
-If you’d like to explore the official documentation (highly recommended!), visit:  
-👉 [https://scikit-learn.org/stable/](https://scikit-learn.org/stable/)
+Documentation:
+[https://scikit-learn.org/stable/](https://scikit-learn.org/stable/)
 
----
+## The ecosystem in context
 
-## The scikit-learn ecosystem in context
+| Library            | Role                  |
+| ------------------ | --------------------- |
+| NumPy              | Fast math + arrays    |
+| Pandas             | Data loading + tables |
+| Matplotlib/Seaborn | Visualization         |
+| scikit-learn       | Machine learning      |
 
-Machine learning in Python usually means using several libraries together.  
-Here’s the “cast of characters” you’ll see in nearly every project:
+> Pandas prepares → scikit-learn learns → Matplotlib shows the results
 
-| Library | What it does |
-|:--|:--|
-| **NumPy** | Handles numbers, arrays, and fast math |
-| **Pandas** | Loads and manipulates tables or CSV files |
-| **Matplotlib / Seaborn** | Visualizes your results |
-| **scikit-learn** | Learns from the data |
-
-You can think of them working together like this:  
-> **Pandas** gets the data ready → **scikit-learn** learns from it → **Matplotlib** shows the results.
-
----
-
-##  Installation and setup
-
-Install scikit-learn from the command line:
+## Installation and setup
 
 ```bash
 pip install scikit-learn
 ```
 
-And import it (plus a few essentials):
+Imports we’ll use today:
 
 ```python
 import numpy as np
@@ -103,13 +77,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.cluster import KMeans
 ```
 
----
+## First steps — the core API in action
 
-## First steps — seeing the API in action
-
-Let’s warm up with a tiny example.  
-Imagine you own a bakery and want to predict cupcake sales based on the temperature outside.  
-We’ll use **Linear Regression** for that.
+We’ll predict cupcake sales based on temperature with **Linear Regression**.
+(*We’ll go deeper into Linear Regression in the next lesson.*)
 
 ```python
 from sklearn.linear_model import LinearRegression
@@ -119,29 +90,24 @@ import numpy as np
 X = np.array([[15],[18],[21],[24],[27]])
 y = np.array([150,200,240,310,400])
 
-model = LinearRegression()   # 1️ create
-model.fit(X, y)              # 2️ fit (learn)
-print(model.predict([[30]])) # 3️ predict
+model = LinearRegression()   # Create
+model.fit(X, y)              # Fit (learn)
+print(model.predict([[30]])) # Predict
 ```
 
-**Output:**
+**Output**
+
 ```
 [460.5]
 ```
 
-So on a 30 °C day, our model predicts we’ll sell about 460 cupcakes!  
-This pattern — `create → fit → predict` — will come up again and again in your ML journey.
-
----
+Predicting the future — not bad for one line of math!
 
 ## Demo — K-Means clustering (unsupervised learning)
 
-Now let’s look at an example where the model finds patterns *without* being told the answers.  
-This is called **unsupervised learning**.
+Unsupervised learning = finding structure without labels.
 
-Imagine you run a coffee-shop chain. You’ve collected data on how often customers visit and how much they spend, and you want to find natural customer groups — maybe “regulars,” “occasional visitors,” and “rare guests.”  
-
-We’ll use **K-Means clustering** to discover those groups automatically.
+Example: Grouping customers by spending + visit frequency.
 
 ```python
 from sklearn.cluster import KMeans
@@ -151,16 +117,10 @@ import matplotlib.pyplot as plt
 # Create synthetic data with 3 clear clusters
 X, _ = make_blobs(n_samples=150, centers=3, cluster_std=0.6, random_state=42)
 
-# 1. Create the model
-kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans = KMeans(n_clusters=3, random_state=42)  # Create
+kmeans.fit(X)                                   # Fit
+labels = kmeans.predict(X)                      # Predict
 
-# 2. Fit to the data (find cluster centers)
-kmeans.fit(X)
-
-# 3. Predict cluster labels
-labels = kmeans.predict(X)
-
-# 4. Plot the results
 plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', s=60)
 plt.title("Customer Segments Found by K-Means")
 plt.xlabel("Feature 1 – Spending Score")
@@ -168,75 +128,77 @@ plt.ylabel("Feature 2 – Visit Frequency")
 plt.show()
 ```
 
-<img width="656" height="478" alt="Screenshot 2025-11-06 at 9 18 30 PM" src="https://github.com/user-attachments/assets/a107db74-8ea1-49da-a8d2-7e1c0afe1953" />
+<img width="656" height="478" alt="K-Means clustering output" src="https://github.com/user-attachments/assets/a107db74-8ea1-49da-a8d2-7e1c0afe1953" />
 
-
- **What you’ll see:** three colorful clusters.  
-Each color represents one of the groups the algorithm discovered.  
-K-Means figured out which points are close together and assigned them the same label — without you ever telling it what the groups should be!  
-
-This is a great way to explore data when you don’t yet know what patterns might exist.
-
----
+K-Means groups nearby points into clusters — no instructions needed.
+It’s a powerful way to explore unknown datasets.
 
 ## Key takeaways
 
-- **scikit-learn** is the foundation of most “everyday” ML projects in Python.  
-- Its consistent **create → fit → predict** API makes it easy to experiment with different algorithms.  
-- **Supervised learning** uses labeled data (e.g., predicting house prices).  
-- **Unsupervised learning** finds structure in unlabeled data (e.g., clustering customers).  
-- **K-Means** is one example of unsupervised ML — it can automatically reveal groups in your dataset.  
+* scikit-learn powers most *everyday* ML in Python
+* Its **Create → Fit → Predict** API works across all models
+* Two major ML branches:
+
+  * **Supervised** = predict labels
+  * **Unsupervised** = discover structure
+* K-Means is a simple yet useful unsupervised algorithm
+
+## Next steps
+
+Upcoming lessons will cover:
+
+* Evaluating model performance
+* Train/Test splits
+* Pipelines for clean workflows
+* A deeper look at **Linear Regression**
+
+Until then, recommended beginner-friendly resources:
+
+* [https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)
+* [https://www.youtube.com/watch?v=SW0YGA9d8y8](https://www.youtube.com/watch?v=SW0YGA9d8y8)
+* [https://www.youtube.com/watch?v=SIEaLBXr0rk](https://www.youtube.com/watch?v=SIEaLBXr0rk)
+
+```
 
 ---
 
-##  Next steps
+Awesome — here is the **cleaned + streamlined** version of **Lesson 1.5** that aligns with the formatting of Lesson 1:
 
-In the next lessons, we’ll build on this foundation and explore:
-
-- How to evaluate model performance  
-- How to split data into training and testing sets  
-- How to use **Pipelines** to combine preprocessing and modeling  
-
-Until then, if you’d like more practice, try these free beginner resources:
-
-- [Data School’s Intro to Machine Learning with scikit-learn](https://courses.dataschool.io/introduction-to-machine-learning-with-scikit-learn/)  
-- [https://www.youtube.com/watch?v=SW0YGA9d8y8]
-- [https://www.youtube.com/watch?v=SIEaLBXr0rk]
+* Removed excess emojis & horizontal rules
+* Removed repeated screenshots of identical plots
+* Trimmed exploratory suggestions to fit CTD style
+* Kept focus on **Core API: Create → Fit → Predict**
+* Aligned tone + structure to Lesson 1
+* Added a short recap + preview of what’s next
 
 ---
 
 # Lesson 1.5  
 ### CTD Python 200  
-**Hands-On Lab: The Core API (Fit → Predict) + Tiny Clustering**
+**Hands-On Lab: The Core Fit → Predict Workflow + Tiny Clustering**
 
----
+## What you’ll do
 
-## What You’ll Do
+In this short lab, you’ll take your **first hands-on step** into machine learning with scikit-learn.
 
-In this short hands-on lab, you’ll take your **first steps with real data** in scikit-learn.
-
-We’ll keep things light — no heavy math, no deep model evaluation yet.  
-You’ll simply practice the **core workflow** you just learned:
+You’ll practice the key API pattern used in nearly every ML workflow:
 
 > **Create → Fit → Predict**
 
-We’ll do two mini projects:
-1. A quick **classification** task with the famous *Iris dataset*, and  
-2. A short **clustering** example with K-Means — just like in the demo.
+We’ll complete two mini projects:
 
----
+1. **Classification** using the classic *Iris* dataset  
+2. **Clustering** using K-Means  
 
-## Step 1 — Set up your environment
+## Step 1 — Setup
 
-You can follow along in **Jupyter Notebook** or **Google Colab**.
-
-If you don’t have the packages installed yet, run this first:
+Use Jupyter Notebook or Google Colab.
 
 ```bash
 pip install scikit-learn pandas matplotlib seaborn
-```
+````
 
-Then import what we’ll need:
+Imports:
 
 ```python
 import pandas as pd
@@ -254,11 +216,7 @@ from sklearn.cluster import KMeans
 
 ## Part A — Iris Classification (Supervised Learning)
 
-Let’s start with one of the most classic machine learning datasets:  
-the **Iris flower dataset**.
-
-It contains measurements of three flower species — *setosa*, *versicolor*, and *virginica*.  
-We’ll train a model that learns to recognize the species from their measurements.
+We’ll teach a model to classify flowers based on their measurements.
 
 ### Load the dataset
 
@@ -268,27 +226,16 @@ df = iris.frame
 df.head()
 ```
 
-You’ll see columns like `sepal length`, `sepal width`, `petal length`, and `petal width`, along with a `target` column that encodes which species it is (0, 1, or 2).
-
----
-
-### Visualize the data
-
-Let’s take a peek at how these features relate.
+### Visualize the features
 
 ```python
 sns.pairplot(df, hue='target', diag_kind='hist')
 plt.show()
 ```
 
-👀 You’ll notice that some flowers clearly separate based on *petal length* and *width*.  
-That’s the kind of pattern our model will learn.
+You can see that the species separate well in certain feature combinations — great for training a model.
 
----
-
-### Split the data
-
-We’ll split the data into training and testing sets so we can simulate how well the model performs on unseen examples.
+### Split into training and testing data
 
 ```python
 X = df.drop('target', axis=1)
@@ -297,42 +244,31 @@ y = df['target']
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
-
-print("Training samples:", X_train.shape[0])
-print("Testing samples:", X_test.shape[0])
 ```
 
----
-
-### Train and predict
-
-Now the fun part — training our first model!
+### Train + predict
 
 ```python
-clf = LogisticRegression(max_iter=200)  # create
-clf.fit(X_train, y_train)               # fit
-preds = clf.predict(X_test)             # predict
+clf = LogisticRegression(max_iter=200)
+clf.fit(X_train, y_train) 
+preds = clf.predict(X_test)
 ```
 
-Let’s see what it predicted:
+Look at a sample:
 
 ```python
 pd.DataFrame({'actual': y_test.values, 'predicted': preds}).head()
 ```
 
-You’ll see the actual vs predicted species for a few test examples.  
-Pretty cool — our model has just learned to recognize flowers!
+Congrats — you just trained your first supervised ML model!
 
 ---
 
 ## Part B — Mini K-Means Clustering (Unsupervised Learning)
 
-Now let’s revisit **unsupervised learning**, where the model isn’t told any labels.  
-We’ll use K-Means to find natural groups in some simple, generated data.
+No labels here — the model will discover structure on its own.
 
-### Create synthetic data
-
-We’ll use `make_blobs()` to create three clear clusters of fake customer data.
+### Generate some synthetic data
 
 ```python
 from sklearn.datasets import make_blobs
@@ -348,76 +284,60 @@ kmeans.fit(X)
 labels = kmeans.predict(X)
 ```
 
-### Plot the clusters
+### Visualize results
 
 ```python
 plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', s=60)
-plt.title("K-Means: 3 Customer Segments")
+plt.title("K-Means: 3 Discovered Clusters")
 plt.xlabel("Feature 1 – Spending Score")
 plt.ylabel("Feature 2 – Visit Frequency")
 plt.show()
 ```
-<img width="807" height="212" alt="Screenshot 2025-11-07 at 12 34 49 AM" src="https://github.com/user-attachments/assets/24fae1df-e092-4a19-b861-dc23308705c1" />
 
-<img width="1209" height="532" alt="Screenshot 2025-11-07 at 12 35 15 AM" src="https://github.com/user-attachments/assets/b78f53de-a236-4792-a6a0-489eee1c8141" />
-
-<img width="710" height="479" alt="Screenshot 2025-11-07 at 12 35 31 AM" src="https://github.com/user-attachments/assets/9758e62a-35be-4160-88bd-17f85d28cb2c" />
-
-Each color represents a different cluster that K-Means discovered.  
-The model grouped similar data points together automatically — no labels needed.
-
-That’s the magic of **unsupervised learning**!
+K-Means grouped similar customers — without ever being told what groups should exist.
 
 ---
 
-## Key Takeaways
+## Key takeaways
 
-- The scikit-learn workflow is simple: **Create → Fit → Predict**  
-- You just practiced it with two kinds of tasks:
-  - **Classification (supervised)** — using known labels (Iris dataset)  
-  - **Clustering (unsupervised)** — discovering hidden structure (K-Means)
-- The same API works for almost every model in scikit-learn.  
-- Visualization helps you *see* what your model learned.  
+* You practiced the **Create → Fit → Predict** workflow
+* You built:
+
+  * A **classification** model (with labels)
+  * A **clustering** model (without labels)
+* Visualization helps reveal what your model learned
+
+These steps are exactly what data scientists do every day.
 
 ---
 
-## Try it yourself!
+## Try on your own
 
-Here are some simple ways to explore further:
+A few ways to explore further:
 
-- Change the test size in the Iris example (e.g., `test_size=0.3`).  
-- Try a different model:
+* Change the train/test split (e.g., `test_size=0.3`)
+
+* Try a different supervised model:
 
   ```python
   from sklearn.tree import DecisionTreeClassifier
   clf = DecisionTreeClassifier()
   ```
 
-  Then re-run the same `fit()` and `predict()` steps.
+* Try a different number of clusters:
 
-- Adjust the number of clusters in K-Means (`n_clusters=4`) to see what happens.
+  ```python
+  kmeans = KMeans(n_clusters=4)
+  ```
 
-Experimentation is how you get comfortable with machine learning — small tweaks can teach you a lot.
-
----
-
-## Where to Learn More
-
-If you’d like to keep exploring:
-
-- [https://scikit-learn.org/stable/modules/clustering.html]
-- [https://www.youtube.com/watch?v=CaRcRk2c8bM]
+Small experiments = big learning.
 
 ---
 
-## Bottom Line
+## Moving forward
 
-You’ve just taken your first hands-on step into machine learning with scikit-learn!  
-You now know how to:
+Next lesson:
+**Evaluating models + Train/Test splits + Intro to Pipelines**
 
-- Load and explore data  
-- Train a simple model  
-- Make predictions  
-- Visualize your results  
-
-These are the exact same steps data scientists use every day — and you’ve already done them. 🎉  
+```
+---
