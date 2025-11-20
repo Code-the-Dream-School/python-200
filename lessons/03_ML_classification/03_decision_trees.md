@@ -37,8 +37,6 @@ Random Forests solve this problem by combining many trees.
 **Image credit: [decision-tree-geeks documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
 
 
----
-
 ## What you’ll learn today
 
 - Train and interpret a **Decision Tree Classifier**
