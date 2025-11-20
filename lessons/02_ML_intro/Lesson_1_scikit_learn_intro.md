@@ -14,9 +14,9 @@ All of these rely on **machine learning** — computers learning patterns from d
 When you start doing machine learning in Python, the first tool most professionals reach for is **scikit-learn** (often imported as `sklearn`).  
 It’s the go-to toolkit for what we call **classical ML** — the kind that works beautifully on tables, CSVs, and structured data.
 
-## Free and open source  
-## Beautifully designed and consistent  
-## One of the best-maintained projects in the Python data ecosystem  
+1- Free and open source  
+2- Beautifully designed and consistent  
+3- One of the best-maintained projects in the Python data ecosystem  
 
 <img width="529" height="262" alt="Screenshot 2025-10-24 at 3 09 06 PM" src="https://github.com/user-attachments/assets/fde97815-318b-4912-8ab5-78f50434c7f2" />
 
