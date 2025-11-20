@@ -13,7 +13,7 @@ That thought process — breaking a decision into a sequence of **yes/no questio
 
 <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/3cd4e0d6-8da7-4dc3-b05b-f1379fae0f4c" />
 
-**Image credit: [scikit-learn.org documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
+**Image credit: [decision-tree-geeks documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
 
 Deep learning models are often described as “black boxes.”  
 Decision Trees are the opposite: **transparent and interpretable**.  
@@ -54,7 +54,7 @@ Let’s look at a simple example to understand how it works. Imagine we need to 
 
 <img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/646615fd-2ced-489c-8aa6-790df6802540" />
 
-**Image credit: [scikit-learn.org documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
+**Image credit: [decision-tree-geeks documentation](https://www.geeksforgeeks.org/machine-learning/decision-tree/)**
 
 
 ## What you’ll learn today
