@@ -241,7 +241,7 @@ print("Random Forest Accuracy (Iris):", accuracy_score(y_test_i, preds_rf))
 print(classification_report(y_test_i, preds_rf))
 ```
 
-<img width="579" height="243" alt="Screenshot 2025-11-20 at 2 55 11 PM" src="https://github.com/user-attachments/assets/b31a884d-0d08-413d-a1e9-c5e5341467b6" />
+<img width="537" height="242" alt="Screenshot 2025-11-20 at 3 27 38 PM" src="https://github.com/user-attachments/assets/484072b2-ae60-4930-bd27-1daa66147194" />
 
 **Image Credits:Google Colab**
 
@@ -252,7 +252,7 @@ preds_rf_digits = rf_clf.fit(X_train_d, y_train_d).predict(X_test_d)
 print("Random Forest Accuracy (Digits):", accuracy_score(y_test_d, preds_rf_digits))
 ```
 
-<img width="579" height="363" alt="Screenshot 2025-11-20 at 2 56 06 PM" src="https://github.com/user-attachments/assets/1afffd97-c649-473c-bb3e-0a7f8c76580c" />
+<img width="530" height="362" alt="Screenshot 2025-11-20 at 3 28 53 PM" src="https://github.com/user-attachments/assets/743efffe-ab2e-48b9-b4e8-e2abe82c9be4" />
 
 **Image Credits:Google Colab**
 
