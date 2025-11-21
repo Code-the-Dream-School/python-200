@@ -36,7 +36,7 @@ this process is called **training and evaluation**.
 
 ### Let’s understand what is training and evaluation (testing) in ML
 
-![week_2](resources/image_1.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/1_week2_train_and_test.png)
 
 **Training** is the process where a machine learning model learns patterns and relationships from the data we give it.
 
@@ -78,7 +78,7 @@ We measure the model’s performance using evaluation metrics, such as:
 
 ### Training and Test Sets-Why We Split the Data
 
-![week_2](resources/image_2.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/2_week2_data_split.png)
 
 When we train a model, we want to know how well it can make predictions on **new data**, not just the data it has already seen.
 
@@ -149,7 +149,7 @@ A regression model is used when we want to predict a number, a value that can go
 In all these cases, the answer is a **number**, not a label. That’s why we use regression.
 
 ---
-![week_2](resources/image_3.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/3_week2_regression_model.png)
 
 ### Let’s understand with a House Prices example:
 
@@ -189,7 +189,7 @@ Instead of writing math from scratch, we use scikit-learn to handle the heavy li
 
 ### Connecting to Our Housing Example
 
-![week_2](resources/image_4.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/4_week2_reallifevsML_example.png)
 
 
 Think about predicting house prices.
@@ -240,7 +240,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 When we build a regression model (such as predicting house prices), we need a way to measure how well the model is performing. We compare the model’s predicted prices with the actual prices from the dataset.
 
-![week_2](resources/image_4.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/5_week2_evaluation_metrics.png)
 
 ---
 
@@ -281,7 +281,7 @@ When we train a machine learning model, our goal is for it to learn real pattern
 However, sometimes the model learns too little or too much.  
 This leads to **underfitting** or **overfitting**.
 
-![week_2](resources/image_5.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/6_week2_overfitting_and_underfitting.png)
 
 ### Underfitting
 
@@ -334,7 +334,7 @@ Now we can move into the actual training step:
 
 **Creating the model → Fitting → Predicting → Evaluating**
 
-![week_2](resources/image_6.png)
+![week2_train_evaluate_regression_model_using scikit_learn](resources/7_week2_next_steps.png)
 
 ---
 
