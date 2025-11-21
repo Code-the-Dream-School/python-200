@@ -36,7 +36,7 @@ this process is called **training and evaluation**.
 
 ### Let’s understand what is training and evaluation (testing) in ML
 
-<img src="resources/2_week2_data_split.png" alt="week2_train_evaluate_regression_model_using scikit_learn" width="500">
+<img src="resources/2_week2_data_split.png" alt="week2_train_evaluate_regression_model_using scikit_learn" width="250">
 
 **Training** is the process where a machine learning model learns patterns and relationships from the data we give it.
 
