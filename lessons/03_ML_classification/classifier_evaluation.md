@@ -1,4 +1,4 @@
-# Understanding Classification Metrics Through a covid Test  
+# Understanding Classification Metrics 
 Before we begin to work with real classifers, we should discuss how we will *evaluate* their performace -- how good is a classifer? For this we will use a real-world classification machine: a Covid test.
 
 ![Covid test output: image from shutterstock](covid_test.jpg)
@@ -7,7 +7,10 @@ A covid test is a **real-life classifier**. It takes an input (a biologial sampl
 
 While covid tests are not implementing ML algorithms, we will use these real-life classifiers to understand different metrics to evaluate classifier performance. Then, when we use scikit-learn to build ML models, we will evaluate them using *these exact same metrics*.
 
-## From test results to confusion matrices
+If you prefer a video explanation, this short 10-minute walkthrough does a good job explaining the confusion matrix, precision, recall, and F1 score using simple examples. It matches the concepts we introduce in this lesson and reinforces them visually:
+[Evaluating a classifier](https://www.youtube.com/watch?v=-ORE0pp9QNk)
+
+## From test results to the confusion matrix
 To evaluate a classifier, we need to have a ground-truth. Let's imagine 100 patients come to a clinic with signs of illness and that we know that 
 
 - 30 patients actually have Covid  
@@ -106,8 +109,8 @@ $$
     F1 = 2\frac{\text{precision} \cdot  \text{recall}}{\text{precision}+\text{recall}}
 $$
 
-# 8. If This Were an ML Model
-Later in this lesson when we build models like KNN, we will evaluate them using the **same metrics**:
+## Metrics in scikit-learn
+Later in this lesson when we build algorithms, we will evaluate them using the *same metrics*:
 
 - confusion matrix  
 - precision  
@@ -135,7 +138,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.metrics import classification_report
 ```
 
-## Confusion matrix 
+### Confusion matrix 
 From the actual and predicted outputs (y values) we can determine the pattern of correct/incorrect predictions from the Covid tests, and produce a confusion matrix:
 
 ```python
@@ -160,7 +163,7 @@ plt.title("COVID Test Confusion Matrix")
 plt.show()
 ```
 
-## Metrics
+### Metrics
 Given the ground truth data, and predictions, we can also calculate the four metrics using scikit-learn functions we imported.
 
 ```python
@@ -187,7 +190,7 @@ This creates a natural question: How do we summarize the classifier’s performa
 
 In other words, in multi-class classification, you end up with *multiple* precision/recall/F1 scores, so you need to average them to get a single summary score.
 
-### Back to Covid
+### Back to Covid: The classification report
 Technically, even our Covid test has two classes (`covid +` and `covid -`). To simplify, we only focused on `covid +`. However,  `covid -` is also important: we could ask of everyone who is covid negative, how likely is the test to correctly identify them? This would be a *recall* measure for the `covid -` category (which could be calculated by looking along the bottom row of our confusion matrix). 
 
 In general, to get a full summary of a classifier, for each category, and a average score across all categories, scikit-learn produces what is known as a `classification_report`. For our example:
@@ -217,7 +220,7 @@ Below that, scikit-learn lists the aggregatre metrics:
 
 Those bottom rows are exactly the multi-class averages we just discussed. These aggregated rows are not particularly interesting for a simple two-class COVID test, since our focus was mainly on detecting COVID cases. But once you work with more realistic multi-class problems—like digits, animals, or clothing categories—these averages become essential for understanding overall classifier performance.
 
-## Which measure to use?  Yes
+### Which measure to use?  Yes
 At this point, you might be wondering which metric is "best" or which one you should rely on. The answer is: all of them. Each metric highlights a different aspect of the classifier's behavior, and none of them tell the whole story by themselves.
 
 - Accuracy gives you a quick sense of overall correctness, but it can hide important problems.
@@ -229,16 +232,14 @@ The goal is not to pick a favorite metric. The goal is to use these measures tog
 
 And sometimes the most helpful tool is the simplest one: the confusion matrix. It lays out every type of outcome in a single table -- true positives, false positives, false negatives, and true negatives -- so you can literally see where your classifier is succeeding and where it is failing. When in doubt, start with the confusion matrix, and let precision, recall, F1, and accuracy help you interpret what you see.
 
+## Key Takeaways
+We used a Covid test as our example because it is a simple, real-life classifier and makes the same types of mistakes all classifiers can make. The confusion matrix is the foundation of all classifier evaluation, and all metrics can be derived from it:
 
-
-# Key Takeaways
-
-- A Covid test is a simple, real-life classifier.  
-- It produces the same types of mistakes all classifiers can make.  
-- The confusion matrix is the foundation of all classifier evaluation.  
 - Accuracy alone is not enough.  
 - Precision measures false positives (false alarms like the boy who cries wolf).  
 - Recall measures misses (false negatives).  
-- Machine learning models use *these exact same metrics*.
+- F1 is a combination of precision and recall. 
 
-Scikit-learn returns these same metrics, both for individual categories, and in aggretate, combined across categories. 
+Scikit-learn returns these same metrics, both for individual categories, and averaged across categories. 
+
+We have been through a lot of discussion of how to evaluate classifiers. Hopefully you feel like you can go forward and determine if a classifier is "good" or not using the above metrics.
