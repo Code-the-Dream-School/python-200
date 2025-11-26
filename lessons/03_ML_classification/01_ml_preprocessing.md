@@ -296,7 +296,7 @@ A helpful way to understand PCA is to return to the image example. A raw image m
 
 PCA directly exploits this correlation-based redundancy. It looks for features that vary together and combines them into a single *new feature* that captures their shared variation. These new features are called *principal components*. One nice feature is that principal components are ordered: the first principal component captures the single strongest pattern of variation in the entire dataset. For example, imagine a video of a room where the overall illumination level changes. That widespread, correlated fluctuation across millions of pixels is exactly the kind of pattern PCA will automatically detect. The entire background trend will be extracted as the first principal component, replacing millions of redundant pixel-by-pixel changes with a single number. It will basically represent the "light level" in the room.
 
-![PCA Room](jellyfish_room_pca.jpg)
+![PCA Room](resources/jellyfish_room_pca.jpg)
 
 Now imagine that on the desk there is a small jellyfish toy with a built-in light that cycles between deep violet and almost-black. But the group of pixels that represent the jellyfish all brighten and darken together in their own violet rhythm, independently of the room's background illumination. This creates a localized cluster of highly correlated pixel changes that are not explained by the global brightness pattern. Because this fluctuation is coherent within that region and independent from the background illumination, PCA will naturally identify this jellyfish pixel cluster as the *second* principal component.
 
