@@ -1,7 +1,7 @@
 # Understanding Classification Metrics 
 Before we begin to work with real classifers, we should discuss how we will *evaluate* their performace -- how good is a classifer? For this we will use a real-world classification machine: a Covid test.
 
-![Covid test output: image from shutterstock](covid_test.jpg)
+![Covid test output: image from shutterstock](resources/covid_test.jpg)
 
 A covid test is a **real-life classifier**. It takes an input (a biologial sample), processes it internally via a chemical reaction, and outputs a prediction: 'positive' or 'negative'. Also, like any classifier from ML, it sometimes gets things right and sometimes gets things wrong. This makes it an instructive way to learn about how to evaluate errors in ML. 
 
@@ -29,7 +29,7 @@ These are the true labels. Let's also say that they are all given a rapid Covid 
 
 To clearly see how Covid test performed, we can organize the results in a small table called a **confusion matrix**. The rows represent the actual condition (Covid or not), and the columns represent the tests prediction (positive or negative). This gives us a clean way to see all four possibilities in one place: correct positives, correct negatives, false positives, and false negatives.
 
-![Confusion matrix](confusion_matrix/confusion_matrix.jpg)
+![Confusion matrix](resources/confusion_matrix.jpg)
 
 It is called a confusion matrix because while the numbers along the main diagonal represent correct predictions, the numbers off the diagonal show how "confused" the classifier is, revealing the pattern of errors. 
 
