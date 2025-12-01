@@ -3,11 +3,11 @@
 ## Learning Objective
 AI is everywhere - from predicting what you’ll watch next to diagnosing diseases. But at the heart of it all lies Machine Learning (ML), the engine that helps systems learn from data. Before we dive deep into algorithms, it’s important to see where ML fits in the bigger picture and why it matters in today’s world.
 
-This lesson places Machine Learning in the larger landscape of Artificial Intelligence, helping you understand what ML really is, where it’s used, and the different ways machines can learn from data. You’ll explore how ML allows computers to find patterns, make decisions, and improve with experience - all without being explicitly programmed for every rule.
+Before we dive into coding with scikit-learn or building real models, this lesson serves as a big-picture, conceptual overview of where ML fits in the broader world of AI. Think of it as a low-resolution map of the field, an orientation to the landscape before we begin the hands-on work that comes next.
 
 ## Learning Goals
 
-By the end of this lesson, you’ll be able to:
+The goal here is to help you:
 
 - Understand how *Machine Learning* fits within Artificial Intelligence.  
 - Explain why Machine Learning matters and where it’s applied.  
@@ -45,7 +45,7 @@ D. A programming language used to build software.
 
 Before we define Machine Learning precisely, let’s zoom out and understand where it fits within the broader world of **Artificial Intelligence**.
 
-You’ve probably heard the terms **Artificial Intelligence (AI)**, **Machine Learning (ML)**, and **Deep Learning (DL)** used interchangeably - but they actually represent different layers of the same concept.
+You’ve probably heard the terms **Artificial Intelligence (AI)**, **Machine Learning (ML)**, and **Deep Learning (DL)** used interchangeably - but they actually represent different levels in a hierarchy of concepts: DL is a subset of ML, and ML is a subset of AI.
 
 <p style="text-align:center;">
   <img src="resources/AI_ML_DL.png" alt="AI, Machine Learning, Deep Learning, and ChatGPT relationship diagram" width="350" />
@@ -224,40 +224,40 @@ Notice how regression gives a *specific number*, while classification assigns a 
 
 **2. Unsupervised Learning**
 
-Unsupervised learning is a machine learning technique that uses algorithms to analyze and cluster unlabeled datasets. 
-In Unsupervised Learning, the data does not include any labels - there are no “right answers.” Instead, the model’s task is to discover hidden patterns, structures, or relationships in the data on its own.
+Unsupervised learning is a machine learning technique where the data has no ground-truth labels. There are no right or wrong answers for the model to learn from. Instead, the goal is for the algorithm to discover patterns, structures, or groups on its own.
 
-**How it works:**
+**How it works:** The algorithm receives raw data and must organize it based on similarities and differences. This makes unsupervised learning especially useful for data exploration and finding hidden structure in a dataset.
 
-The algorithm is given raw, unlabeled data and must infer its own rules for organizing the information based on similarities, differences, and patterns. It is most useful for tasks involving data exploration and analysis. 
+Two of the most common types of unsupervised learning are *Clustering* and *Dimensionality Reduction*.
 
-It’s like exploring a new city without a map. The model figures out how different areas (data points) connect or group together.
+## 2.1 Clustering
 
-💡 *Real-World Analogy*
+Clustering means grouping together data points that are similar to one another.
 
-Imagine walking into a party where you know no one.
-You naturally start observing people - noticing that some are talking about sports, others about technology, and some about art.
+Think about walking into a party where you do not know anyone. You start noticing that:
 
-Without anyone telling you, you’ve grouped people into clusters based on behavior and interests.
-That’s unsupervised learning.
+- one group is talking about sports
+- another group is talking about tech
+- another is talking about art
 
-### Subtypes of Unsupervised Learning
+No one labeled these groups for you. You naturally discovered the groups by noticing patterns. That is what clustering algorithms do. In machine learning, we do the same thing: we group similar data points together so we can understand the structure of the dataset. We will see a practical example of a clustering algorithm (using scikit-learn) in the next lesson.
 
-**2.1 Clustering** 
+## 2.2 Dimensionality Reduction
 
-Clustering is one of the most popular techniques in unsupervised learning. It involves grouping similar data points together based on shared characteristics. 
+Sometimes a dataset has so many columns (features) that it becomes difficult to visualize, slow to process, or hard to reason about. Dimensionality reduction simplifies the dataset by reducing the number of features while preserving the important structure.
 
-*Example: Customer segmentation.*
+Imagine you have an extremely high-resolution photo with millions of pixels(features). You can compress the image and still recognize the main shapes and colors. Even though the final image has fewer pixels, the essential information remains.
 
-A retailer can use clustering to group customers based on their purchasing behavior and demographics, enabling more targeted marketing strategies.
+That’s the idea behind dimensionality reduction:
+we reduce the number of features while keeping the core patterns.
 
-**2.2 Dimensionality Reduction**
+This helps us:
 
-This subtype focuses on simplifying data by reducing the number of features (dimensions) while keeping important information. It’s useful when dealing with high-dimensional datasets that are hard to visualize or process.
+- visualize high-dimensional data
+- speed up models
+- uncover structure hidden across many dimensions 
 
-*Example: Music Preferences*
-
-Imagine analyzing thousands of songs, each with features like tempo, pitch, loudness, energy, and rhythm complexity. **Dimensionality reduction** simplifies this data into just a few main components like “mood” or “energy level.” This helps Spotify cluster songs and create mood-based playlists.
+We will explore one popular technique, PCA (Principal Component Analysis), later in the course. 
 
 **3. Reinforcement Learning**
 
