@@ -1,7 +1,7 @@
 # ML: Introduction to Data Preprocessing and Feature Engineering
-Machine learning algorithms expect data in a clean, numeric, consistent format, but as we have seen in Python 100, real datasets rarely arrive that way. Preprocessing makes features easier for models to learn from and is required for most `scikit-learn` workflows.
+Machine learning algorithms expect data in a clean numerical format, but real datasets often do not arrive that way. *Preprocessing* data for machine learning makes features easier for models to learn from, and is required for most `scikit-learn` workflows. This assumes the data has already been cleaned up using techniques used in Python 100 (for instance, missing data has been handled). 
 
-This lesson will be a review of many concepts from Python 100, which are secretly very important for Machine Learning. We will cover:
+We will cover:
 
 - Numeric vs categorical features
 - Feature scaling (standardization, normalization)
@@ -9,34 +9,34 @@ This lesson will be a review of many concepts from Python 100, which are secretl
 - Creating new features (feature engineering)
 - Dimensionality reduction and Principal component analysis
 
-This lesson prepares you for next week’s classifiers (KNN, logistic regression, decision trees).
+Some of the material will be review of what you learned in Python 100, but specifically geared toward optimizing data for consumption by classifiers. 
 
-## 1. Numeric vs Categorical Features
+## 1. Numerical vs Categorical Features
 
-[Video on numeric vs categorical (and more!)](https://www.youtube.com/watch?v=rodnzzR4dLo)
+[Video on numeric vs categorical data](https://www.youtube.com/watch?v=rodnzzR4dLo)
 
-Before we can train a classifier, we need to understand the kind of data we are giving it. Machine learning models only know how to work with _numbers_, so every feature in our dataset eventually has to be represented numerically. Different types of features require different kinds of preprocessing, which is why this distinction matters right at the start.
+Before we can train a classifier, we need to understand the kind of data we are giving it. Machine learning models only know how to work with _numbers_, so every feature in our dataset eventually has to be represented numerically. 
 
-**Numeric features** are things that are already numbers: age, height, temperature, income. They are typically represented as floats or ints in Python. Models generally work well with these, but many algorithms still need the numbers to be put on a similar scale before training. We will cover scaling next.
+**Numerical features** are things that are *already* numbers: age, height, temperature, income. They are typically represented as floats or ints in Python. Models generally work well with these, but many algorithms still need the numbers to be put on a similar scale before training. We will cover scaling next.
 
-**Categorical features** describe types or labels instead of quantities. They are often represented as `strings` in Python: city name, animal species, shirt size. These values mean something to _us_, but such raw text is not useful to a machine learning model. We will need to convert these categories into a numerical format that a classifier can learn from. That is where things like one-hot encoding come in (which we will cover below). Even large language models do not work with strings: as we will see in future weeks when we cover AI, linguistic inputs must be converted to numerical arrays before large language models can get traction with them. 
+**Categorical features** describe types or labels instead of quantities. They are often represented as `strings` in Python: city name, animal species, shirt size. These values mean something to *us*, but such raw text is not useful to a machine learning model. We need to convert these categories into a numerical format that a classifier can learn from. That is where things like one-hot encoding come in (which we will cover below). 
 
-> Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories, and one-hot encoding works perfectly for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. For these, the ordering matters but the spacing does not: medium is not "twice" small. In practice, ordinal features often need extra thought. Sometimes an integer mapping is fine; sometimes one-hot encoding is still safer. There is no universal answer for how to answer ordinal categories. 
+Even large language models (LLMs) do not work with strings: as we will see in future weeks when we cover LLMs, linguistic inputs must be converted to numerical arrays before large language models can get traction with them. 
 
-## 2. Scaling Numerical Features
+## 2. Scaling Numeric Features
 
 [Video overview of feature scaling](https://www.youtube.com/watch?v=dHSWjZ_quaU)
 
-When we have data in numerical form, we might think we are all set to feed it to a machine learning algorithm. However, this is not always true. Even though numeric features are already numbers, we still have to think about how they behave in a machine learning model. Many algorithms do not just look at the numberical features themselves, but at how large they are relative to each other. If one feature uses much bigger units than another, the model may unintentionally focus on the bigger one and ignore the smaller one.
+When we have data in numerical form, we might think we are all set to feed it directly to a machine learning algorithm. However, this is not always true. Even though numeric features are already numbers, we still have to think about how they behave in a machine learning model. Many algorithms do not just look at the numerical features themselves, but at how large they are *relative to each other*. If one feature uses much bigger units than another, the model may unintentionally focus on the bigger one and ignore the smaller one.
 
 For example, imagine a dataset with two numeric features:
 
-- age (18 to 70)
-- income (25,000 to 180,000)
+- age (with range 18 to 70)
+- income (with range 15,000 to 350,000)
 
-Both features matter, but income is measured in much larger units. Many ML algorithms will treat the income differences as more important than the age differences simply because the numbers are bigger. The model is not being clever here, it is just reacting to scale.
+Both features matter, but income numbers vary on a much larger scale. Many ML algorithms will be sensitive to this, especially those that depend on distance calculations, will end up weighting income more heavily than age, just because of this difference in scale.  
 
-Scaling helps put numeric features on a similar footing so that models can consider them more fairly.
+Scaling helps put numeric features on a similar footing so that models can consider them more fairly. There are two main scaling methods, normalization and standardization.
 
 ## Normalization (Min-Max Scaling)
 Normalization, aka min-max scaling, rescales each feature so that it falls into the range [0, 1]. This helps ensure that no feature overwhelms another just because it uses larger numbers.
@@ -77,7 +77,7 @@ Some models are much less sensitive to scale:
 
 - Decision trees and random forests
 
-Even numeric features require thoughtful preparation. Scaling helps many models learn fairly from all features instead of being overwhelmed by a few large numbers.
+Even numeric features require thoughtful preparation. Scaling helps many models learn fairly from all features instead of just listening to the biggest numbers.
 
 ### Standardization example 
 To make this concrete, let us look at the distributions of two numeric features:
@@ -122,7 +122,7 @@ axes[1].set_ylabel("Income (standardized)")
 plt.tight_layout()
 plt.show()
 ```
-On the first two plots, you can see that age and income are on completely different numeric scales. On the bottom plot, after standardization, both features live in the same z-score space and can be compared directly.
+On the first two plots, you can see that age and income are on completely different numeric scales. On the bottom plot, after standardization, both features live in the same z-score space and can be directly compared.
 
 A z-score tells you how many standard deviations a value is above or below the mean of that feature:
 
@@ -130,13 +130,13 @@ A z-score tells you how many standard deviations a value is above or below the m
 - z = 1 means "one standard deviation above average"
 - z = -2 means "two standard deviations below average"
 
-So a negative age or income after standardization does not mean a negative age or negative dollars. It simply means that value is below the average for that feature.
+So a negative age or income after standardization does not mean a negative age or negative dollars. It just means that value is below the average for that feature.
 
 ## 3. One-Hot Encoding for Categorical Features
 
 [Video about one-hot encoding](https://www.youtube.com/watch?v=G2iVj7WKDFk)
 
-Categorical features (like "dog", "cat", "bird") must be converted into numbers before a machine learning model can use them. But we cannot simply assign numbers like:
+Categorical features (like "dog", "cat", "bird") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
 
 ```
 'dog' -> 1
@@ -144,15 +144,14 @@ Categorical features (like "dog", "cat", "bird") must be converted into numbers 
 'bird' -> 3
 ```
 
-If we did this, the model would think that "cat" is somehow bigger than "dog", or that the distance between categories carries meaning. That is not true. These numbers would create a false ordering that does not exist in the real categories.
+If we did this, the model would think that "cat" is bigger than "dog", or that the distance between categories carries meaning. That is not true. These numbers would create a false ordering that does not exist in the real categories.
 
 To avoid this, we use one-hot encoding. One-hot encoding represents each category as an array where:
 
-- all elements are 0
-- except for one element, which is 1
+- all elements are 0 except for one element, which is 1
 - the position of the 1 corresponds to the category
 
-So the categories become:
+So the categories from above would become:
 
 ```
 dog  -> [1, 0, 0]
@@ -162,45 +161,45 @@ bird -> [0, 0, 1]
 
 Each category is now represented cleanly, without implying any ordering or distance between them. This is exactly what we want for most categorical features in classification.
 
+> Side note: Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories: one-hot encoding works great for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. Even though there is an order to them, we typically map them using one-hot encoding, especially if the goal is to use them as targets for a classifier.   
+
 ### One-hot encoding in scikit-learn
 
-Because this step is so common, scikit-learn has a built-in one-hot encoder.
+Because one-hot encoding is so important, it a built-in class in scikit-learn: 
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
 
-encoder = OneHotEncoder()
+encoder = OneHotEncoder(sparse=False)
 
-X = [["dog"], ["cat"], ["bird"], ["dog"]]
-X_encoded = encoder.fit_transform(X)
+y = [["dog"], ["cat"], ["bird"], ["dog"]]
+y_encoded = encoder.fit_transform(y)
 
-print("one-hot encoded features:")
-print(X_encoded.toarray())
+print("one-hot encoded categories:")
+print(y_encoded)
 ```
 
 Output:
 
 ```
-one-hot encoded features:
+one-hot encoded categories:
 [[1. 0. 0.]
  [0. 1. 0.]
  [0. 0. 1.]
  [1. 0. 0.]]
 ```
 
-Note: You may see the output as a sparse matrix. Calling `.toarray()` converts it into a plain NumPy array so you can print or inspect it easily.
-
 We will see more practical examples of one-hot encoding in future lessons. 
 
 ## 4. Creating New Features (Feature Engineering)
 
-[Video overview of feature engineering](feature engineering vid)
+[Video overview of feature engineering](https://www.youtube.com/watch?v=4w-S6Hi1mA4)
 
-Sometimes the data we start with is not the data that will help a model learn best. A big part of machine learning is noticing when you can create new data, or new features, that capture something useful about the data. This is called *feature engineering*, and it can make a massive difference in how well a classifier performs.
+Sometimes the data we start with is not the data that will help a model learn best. A big part of machine learning is noticing when you can create new data, or new features, that capture something useful about the data. This is called *feature engineering*, and it can make a big difference in how well a classifier performs.
 
-You have already learned about this idea in Python 100 in the context of your lessons about Pandas dataframes (you created new columns from existing columns). Here we revisit the idea with an ML mindset: Can we create features that make patterns easier for the model to learn?
+You have already learned about this idea in Python 100 when learning about Pandas (you created new columns from existing columns). Here we revisit the idea with an ML mindset: Can we create features that make patterns easier for the model to learn?
 
-To make this concrete, let’s create a tiny dataframe with ten fictional people:
+To make this concrete, let’s create a synthetic dataframe with ten fictional people:
 
 ```python
 import pandas as pd
@@ -215,7 +214,7 @@ df = pd.DataFrame({
     ])
 })
 
-df
+df.head()
 ```
 This gives us:
 ```
@@ -240,27 +239,42 @@ A classifier may learn more easily from BMI than from raw height and weight (for
 
 ### Extracting parts of a feature
 
-If you have a datetime column, you can often pull out the pieces that matter for prediction:
+If you have a datetime column (as we do above), you can often pull out the pieces that matter for prediction:
 
 ```python
 df["weekday"] = df["date"].dt.weekday  
 df["birth_year"] = df["birthdate"].dt.year
 ```
 
-A model might not care about the full timestamp, but it might care about whether something happened on a weekday or weekend. This might matter for costs of healthcare, for instance.
+A model might not care about the full timestamp, but it might care about whether something happened on a weekday or weekend. This might matter when predicting costs of healthcare, for instance.
 
 ### Binning continuous values
 
-Sometimes a numeric feature is easier for a model to understand if we convert it into categories. For example, instead of raw ages, we can group them into age *groups*:
+Sometimes a numeric feature is more predictive for a classification task if we convert it into categories. For example, instead of raw ages, we can group them into age *groups*:
 
 ```python
 current_year = 2025
 df["age"] = current_year - df["birth_year"]
 
 df["age_group"] = pd.cut(df["age"], bins=[0, 20, 30, 40, 60], labels=["young","20s","30s","40+"])
-df[["name","age","age_group"]]
+df[["name","age","age_group"]].head()
 ```
-This can help when the exact number is less important than the general range.
+This can help when the exact number is less important than the general range. Individual ages may be noisy, but age groups might capture broader patterns more effectively.
+
+Before actually feeding such newly created categorical features to an ML model, you would need to one-hot encode them as described above. Let's look at how that would work for the `age_group` feature:
+
+```python
+age_groups = df[["age_group"]]        # must be 2D for scikit-learn
+encoded = encoder.fit_transform(age_groups)
+
+encoded_df = pd.DataFrame(
+    encoded,
+    columns=encoder.get_feature_names_out(["age_group"])
+)
+
+encoded_df.head()
+```
+This would give you a one-hot encoded version of the age groups that you could feed to a model, or attach to the original dataframe.
 
 ### Boolean features
 
@@ -268,37 +282,39 @@ A simple yes/no feature can sometimes capture a pattern that the raw values obsc
 
 ```python
 df["is_senior"] = (df["age"] > 65).astype(int)
-df[["name","age","is_senior"]]
+df[["name","age","is_senior"]].head()
 ```
 
 Even though age is already numeric, the idea of "senior" might be more directly meaningful for a model (for instance if you are thinking about pricing for restaurants).
 
 ### Final thoughts on feature engineering
-There are no strict rules for feature engineering. It is a creative part of machine learning where your intuitions and understanding of the data matters a great deal. Good features often come from visualizing your data, looking for patterns, and thinking about the real-world meaning behind each column. Domain-specific knowledge helps a lot here: someone who knows the problem well can often spot new features that make the model's job easier. As you work with different datasets, you will get better at recognizing when a new feature might capture something important that the raw inputs miss. Feature engineering is less about following a checklist and more about exploring, experimenting, and trusting your intuition as it develops.
+There are no strict rules for feature engineering. It is a creative part of machine learning where your intuitions and understanding of the data matters a great deal. Good features often come from visualizing your data, looking for patterns, and thinking about the real-world meaning behind each column. Creativity and domain-specific knowledge helps a lot here: someone who knows the problem well can often spot new features that make the model's job easier. As you work with different datasets, you will get better at recognizing when a new feature might capture something important that the raw inputs miss. Feature engineering is less about following a checklist and more about exploring, experimenting, and trusting your intuition as it develops.
 
 
 ## 5. Dimensionality reduction and PCA
-Many real datasets contain far more dimensions, or features, than we truly need (in pandas, represented by columns in a dataframe). Some features are almost duplicates of each other, or they carry very similar information -- this is known as *redundancy*. When our feature space gets large, models can become slower, harder to interpret, harder to fit to data, and become prone to overfitting. Dimensionality reduction is a set of techniques that help us simplify a dataset by creating a smaller number of informative features. 
+Many real datasets contain far more dimensions, or features, than we truly need (in pandas, features are represented by columns in a dataframe). Some features are almost duplicates of each other, or they carry very similar information -- this is known as *redundancy*. When our feature space gets large, models can become slower, harder to interpret, harder to fit to data, and become prone to overfitting. Dimensionality lets us simplify a dataset by creating a smaller number of informative features. 
 
-As discussed previously (add link), one helpful way to picture this is to think about images. A high-resolution photo might have millions of pixels, but you can shrink it down to a small thumbnail and still recognize the main shape and structure. You will lose some detail, but you keep the big picture. Dimensionality reduction works the same way for datasets: the goal is to keep the important structure while throwing away the noise and redundancy. ML algorithms, and visualization tools can work while throwing away a great deal of raw data, and this can speed things up tremendously. 
+As discussed previously (TODO: add link), one helpful way to picture this is to think about images. A high-resolution photo might have hundreds of millions of pixels, but you can shrink it down to a small thumbnail and still recognize that it is a picture of your friend. Dimensionality reduction works the same way for datasets: the goal is to keep the important structure while throwing away noise and redundancy. ML algorithms can work while throwing away a great deal of raw data, and this can speed things up tremendously. 
 
-We see redundancy all the time in real data. For example, if a dataset includes height, weight, and BMI, one of these is technically redundant because BMI is literally just a function of the other two: if you calculated BMI, then you might want to get rid of weight and height if you are estimating certain health risks. Machine learning models can still train with redundant features, but it is often helpful to compress the dataset into a smaller number of non-overlapping dimensions (features). 
+We see redundancy all the time in real data. For example, if a dataset includes height, weight, and BMI, one of these is technically redundant because BMI is literally just a function of the other two. If you calculated BMI, then you might want to get rid of weight and height if your goal is to use BMI to estimate certain health risks. Machine learning models can still train with redundant features, but it is often helpful to compress the dataset into a smaller number of less redundant dimensions (features). 
 
-Dimensionality reduction can be a helpful visualization tool (we will demonstrate this below) help fight overfitting, and can eliminate noise from our data. We saw last week that overfitting comes from model complexity (a model with too many flexible parameters can memorize noise in the training set). However, high-dimensional data can make overfitting more likely because it gives the model many opportunities to chase tiny, meaningless variations. Reducing feature dimensionality can sometimes help by stripping away that noise and highlighting the core structure the model should learn.
+Dimensionality reduction is useful for many reasons. One, it can be a useful tool for visualizing high-dimensional data (our plots are typicically in 2D or 3D, so if we want to visualize a 1000-dimension dataset, it can be helpful to project it to a 2D or 3D space for visualization). 
+
+Also, for ML, dimensionality reduction can help fight overfitting and eliminate noise from our data. We saw last week that overfitting comes from model complexity (a model with too many flexible parameters can memorize noise in the training set). However, high-dimensional data can make overfitting more likely because it gives the model many opportunities to chase tiny, meaningless variations. Reducing feature dimensionality can sometimes help by stripping away that noise and highlighting the core structure the model should learn.
 
 ### Principal component analysis (PCA)
 Before moving on, consider watching the following introductory video on PCA:
 [PCA concepts](https://www.youtube.com/watch?v=pmG4K79DUoI)
 
-PCA is the most popular dimensionality reduction technique: it provides a way to represent numerical data using much fewer features (dimensions), which helps us visualize extremely complex datasets. It also can help as a preprocessing step. 
+PCA is by far the most popular dimensionality reduction technique: it provides a way to represent numerical data using much fewer features, which helps us visualize extremely complex datasets. It also can be a useful preprocessing step for reasons discussed above (fighting overfitting, speeding up training).
 
-A helpful way to understand PCA is to return to the image example. A raw image may have millions of pixel values, but many of those pixels move together. Nearby pixels tend to be highly correlated: if a region of the image is bright, most pixels in that region will be bright too. This means the dataset looks very high dimensional on paper, but the underlying structure is much simpler. As you know from resizing images on your phone, you can shrink an image dramatically and still instantly recognize what it depicts. You rarely need all original pixels to preserve the important content.
+A helpful way to understand PCA is to return to the image example. A raw image may have millions of pixel values, but the intensity levels between many of those pixels fluctuate together. Nearby pixels tend to be highly correlated: if a region of the image is bright, most pixels in that region will be bright too. This means the dataset looks very high dimensional on paper, but the underlying structure is much simpler. 
 
-PCA directly exploits this correlation-based redundancy. It looks for features that vary together and combines them into a single *new feature* that captures their shared variation. These new features are called *principal components*. One nice feature is that principal components are ordered: the first principal component captures the single strongest pattern of variation in the entire dataset. For example, imagine a video of a room where the overall illumination level changes. That widespread, correlated fluctuation across millions of pixels is exactly the kind of pattern PCA will automatically detect. The entire background trend will be extracted as the first principal component, replacing millions of redundant pixel-by-pixel changes with a single number. It will basically represent the "light level" in the room.
+PCA directly exploits this correlation-based redundancy. It looks for features that vary together and combines them into a single *new feature* that captures their shared variation. These new features are called *principal components*. One nice feature is that principal components are ordered: the first principal component captures the single strongest pattern of redundancy in the dataset. For example, imagine a video of a room where the overall background illumination level changes. That widespread, correlated fluctuation across millions of pixels is exactly the kind of pattern PCA will automatically detect. The entire background trend will be extracted as the first principal component, replacing millions of redundant pixel-by-pixel changes with a single number. It will basically represent the "light level" in the room.
 
 ![PCA Room](resources/jellyfish_room_pca.jpg)
 
-Now imagine that on the desk there is a small jellyfish toy with a built-in light that cycles between deep violet and almost-black. But the group of pixels that represent the jellyfish all brighten and darken together in their own violet rhythm, independently of the room's background illumination. This creates a localized cluster of highly correlated pixel changes that are not explained by the global brightness pattern. Because this fluctuation is coherent within that region and independent from the background illumination, PCA will naturally identify this jellyfish pixel cluster as the *second* principal component.
+Now imagine in that video of the room that on the desk there is a small jellyfish toy with a built-in light that cycles between deep violet and almost-black. The group of pixels that represent the jellyfish all brighten and darken together in their own violet rhythm, independently of the room's background illumination. This creates a localized cluster of highly correlated pixel changes that are not explained by the global brightness pattern. Because this fluctuation is coherent within that region and independent from the background illumination, PCA will naturally identify this jellyfish pixel cluster as the *second* principal component.
 
 In this way, PCA acts like a very smart form of compression. Instead of throwing away random pixels or selecting every third column of the image, it builds new features that preserve as much of the original information as possible based on which pixels are correlated with each other. 
 
@@ -309,10 +325,9 @@ In real datasets, the structure is not usually this clean, so you will typically
 We are not going to go deeply into the linear algebra behind PCA, but will next go into a code example to show how this works in practice. 
 
 
-
  ### PCA Demo Using the Olivetti Faces Dataset
 
-In this demo, we will use the Olivetti faces dataset from scikit-learn to see how PCA works on a high-dimensional dataset. Each face image is 64x64 pixels, which means each image has 4096 pixel values. That means each sample lives in a 4096-dimensional space. Many of those pixels are correlated with each other, because nearby pixels tend to have similar intensity values (for instance, the values around the eyes tend to fluctuate together). This makes the Olivetti dataset a great example for dimensionality reduction with PCA.
+In this demo, we will use the Olivetti faces dataset from scikit-learn to see how PCA works on a high-dimensional dataset. Each face image is 64x64 pixels, which means each image has 4096 pixel values. Each pixel in a grayscale image is a different feature, so that means each image lives in a 4096-dimensional space. However, many of those pixels are correlated with each other, because nearby pixels tend to have similar intensity values (for instance, the values around the eyes tend to fluctuate together). This makes the Olivetti dataset a great example for dimensionality reduction with PCA.
 
 First, some imports.
 
@@ -349,7 +364,7 @@ plt.suptitle("Sample Olivetti Faces")
 plt.tight_layout()
 plt.show()
 ```
-This gives you a quick look at the variety of faces in the dataset. Remember that each one of these images is a single point in a 4096-dimensional space.
+This gives you a quick look at the variety of faces in the dataset. 
 
 #### Fit PCA and look at variance explained
 Here we fit PCA to the full dataset. We will look at how much of the total variance is explained as we add more and more components.
@@ -393,7 +408,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-The mean face is the average of all faces in the dataset. You can think of these eigenfaces as basic building blocks for constructing individual faces. PC1 is the eigenface that captures the most correlated activity among the pixels, PC2 the second most, and so on. Each eigenface shows the discovered pattern of pixel intensity changes. Red regions mean "add brightness to the mean" when you move in the direction of that component, and blue regions mean "subtract brightness here".
+The mean face is the average of all faces in the dataset. You can think of the eigenfaces as basic building blocks for constructing individual faces. PC1 is the eigenface that captures the most correlated activity among the pixels, PC2 the second most, and so on. Each eigenface shows the discovered pattern of correlated pixel intensities. Red regions mean "add brightness to the mean" when you move in the direction of that component, and blue regions mean "subtract brightness here".
 
 #### Reconstructions with different numbers of components
 We discussed above how you can use principal components to reconstruct or approximate the original data. We will show this now. The following code will: 
