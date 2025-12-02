@@ -9,6 +9,17 @@
 > Think of it as giving clear directions to a brilliant but literal-minded assistant.
 
 
+### Resources
+
+- Learn Prompting — Basics of few-shot prompting. A concise guide to zero/one/few-shot patterns and practical examples. (~10–15 min)
+    - https://learnprompting.org/docs/basics/few_shot
+
+- DeepLearning.AI — ChatGPT Prompt Engineering for Developers. A hands-on course page with exercises and demos. (course overview, ~1–2 hr)
+    - https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
+
+- Google Cloud — What is prompt engineering? A short overview describing common patterns and real-world use cases. (~5–10 min)
+    - https://cloud.google.com/discover/what-is-prompt-engineering
+
 
 ### Why This Guide?
 * Learn to write better prompts  
@@ -21,6 +32,7 @@
 
 If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s a minimal, ready-to-use setup including a helper function used throughout this lesson:
 
+<br />
 The following function is adapted from the DeepLearning.AI website. 
 
 ```python
@@ -46,6 +58,7 @@ try:
         """Send a single-turn prompt and return the text content."""
         response = client.chat.completions.create(
             model=model,
+<br />
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,  # 0 = deterministic, higher = more creative
         )
@@ -56,6 +69,7 @@ except ImportError:
     openai.api_key = api_key
 
 ```
+<br />
 ## Changing Temperature
 
 Changing the temperature of the API affects how random or creative responses are: lower → more deterministic, higher → more creative.
@@ -66,6 +80,7 @@ Example (use the helper with an explicit temperature):
 
 ```python
 # Call the helper with temperature set to 0 for deterministic results
+<br />
 prompt = """
 Write a single-sentence summary of the text below.
 """
@@ -76,6 +91,7 @@ print(response)
 ---
 ---
 
+<br />
 ## The Golden Rules of Prompting
 This lesson was inspired by the prompt-engineering materials from DeepLearning.AI and other industry references. It distills research-backed guidelines into practical, beginner-friendly advice you can apply immediately. Examples in this chapter are adapted and rewritten for clarity and to avoid duplication; the patterns and ideas are taught so you can reuse them in real projects.
 
@@ -87,6 +103,7 @@ Vague prompts produce vague answers — help the AI help you. Good prompts reduc
 Small, targeted details like the role and output format steer the model's response and make results more consistent and useful. When you're uncertain, give an example.
 
 
+<br />
 Don't say:  
 > “What are the best dogs for beginners"
 
@@ -171,32 +188,33 @@ Do not translate anything?
 
 ### The coding version
 
-Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
+Below is a minimal explanation and a short example showing how to use the helper defined earlier in this lesson.
 
+The `get_completion(prompt, model=..., temperature=...)` helper (defined at the top of this lesson using the modern `OpenAI` client) is a thin wrapper that:
 
-First you would need to setup this: 
+- accepts a single string `prompt` (you can include instructions + delimited data),
+- forwards that prompt to the model as a single user message, and
+- returns the assistant's text content as a Python string.
+
+Key parameters:
+- `model`: the model id to call (e.g., `gpt-4o-mini` or `gpt-3.5-turbo`).
+- `temperature`: controls randomness (0 = deterministic, higher values = more creative).
+
+Example (uses the helper already defined above):
+
 ```python
-import openai
-import os
+# Use the helper defined earlier in this file
+prompt = """
+Write a single-sentence summary of the text below.
 
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv())
+The quick brown fox jumps over the lazy dog.
+"""
 
-openai.api_key  = os.getenv('OPENAI_API_KEY')
-
-
-def get_completion(prompt, model="gpt-3.5-turbo"):
-    messages = [{"role": "user", "content": prompt}]
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=0, # this is the degree of randomness of the model's output
-    )
-    return response.choices[0].message["content"]
-
+response = get_completion(prompt, model="gpt-4o-mini", temperature=0)
+print(response)
 ```
 
-Now try it: summarize a block of text into a single sentence using get_completion !!!
+Continue below with the multi-step prompt example.
 
 
 ```
@@ -577,7 +595,6 @@ https://medium.com/@mike_onslow/ai-simplified-exploring-the-basics-of-zero-shot-
 https://learnprompting.org/docs/basics/few_shot
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YMs-BbNKs0o" title="Intro to Prompting" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 [Watch this video on YouTube](https://www.youtube.com/watch?v=YMs-BbNKs0o)
 
@@ -591,10 +608,13 @@ A) Giving the AI 3 examples before asking a question<br>
 B) Asking the AI a question without any examples<br>
 C) Using emojis to make the AI respond faster<br>
 D) Translating prompts into French first
-<details>
-</summary>
+<details><summary>See Answer</summary>
+
 Correct answer: B
 </details>
+
+<br>
+
 
 2. Which of the following is a one-shot prompt?
 <br>A)
@@ -620,20 +640,22 @@ D)
 ```
     Tell me how to say hello in French.
 ```
-<details>
-</summary>
+<details><summary>See Answer</summary>
+
 Correct answer: B
 </details>
+<br />
 
 3. Why is few-shot prompting often more accurate?<br>
 A)  It uses longer sentences<br>
 B)  It gives the AI multiple examples to recognize patterns<br>
 C)  It forces the AI to guess randomly<br>
 D)  It only works with math problems
-<details>
-</summary>
+<details><summary>See Answer</summary>
+
 Correct answer: B
 </details>
+<br />
 
 4. Which prompt follows the Golden Rules best?<br>
 A) “Tell me about food.”<br>
@@ -641,10 +663,11 @@ B) “List healthy lunch ideas.”<br>
 C) “I’m a vegetarian student who hates green veggies. Suggest a high-protein, cheap, 15-minute lunch recipe with no fancy tools.”<br>
 D) “Give me something to eat.”
 
-<details>
-</summary>
+<details><summary>See Answer</summary>
+
 Correct answer: C
 </details>
+<br />
 
 5. Why should you use delimiters (like triple backticks ``` or INPUT/OUTPUT labels) in prompts?<br>
 A) To make the prompt look visually appealing<br>
@@ -652,12 +675,11 @@ B) To test how well the AI handles confusing formatting<br>
 C) To clearly separate user instructions from data, reducing the risk of prompt injection and misinterpretation<br>
 D) To automatically convert the output into another language
 
-<details>
+<details><summary>See Answer</summary>
 
-</summary>
 Correct answer: C
-
 </details>
+<br />
 
 
 6. True or False:
@@ -666,11 +688,11 @@ Correct answer: C
 A) True<br>
 B) False
 
-<details>
-</summary>
+<details><summary>See Answer</summary>
+
 Correct answer: A
 </details>
-
+<br />
 ## Summary
 Brief recap of key ideas in this lesson:
 
@@ -683,19 +705,5 @@ Brief recap of key ideas in this lesson:
 - When automating replies, combine detected sentiment + original text and instruct the model on tone, steps, and output layout.
 
 - Design efficient prompts by including these core elements: Role (who the AI is), Context (relevant background), Task (what you want), and Constraints (limits like length, tone, or format). Providing specific context leads to more personalized, useful responses.
-
-Keep iterating on prompts: small wording changes often improve accuracy significantly.
-
-
-### Resources
-
-- Learn Prompting — Basics of few-shot prompting. A concise guide to zero/one/few-shot patterns and practical examples. (~10–15 min)
-    - https://learnprompting.org/docs/basics/few_shot
-
-- DeepLearning.AI — ChatGPT Prompt Engineering for Developers. A hands-on course page with exercises and demos. (course overview, ~1–2 hr)
-    - https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
-
-- Google Cloud — What is prompt engineering? A short overview describing common patterns and real-world use cases. (~5–10 min)
-    - https://cloud.google.com/discover/what-is-prompt-engineering
 
 
