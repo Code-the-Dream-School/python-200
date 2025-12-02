@@ -220,26 +220,16 @@ Below that, scikit-learn lists the aggregatre metrics:
 
 Those bottom rows are exactly the multi-class averages we just discussed. These aggregated rows are not particularly interesting for a simple two-class COVID test, since our focus was mainly on detecting COVID cases. But once you work with more realistic multi-class problems (like digits, animals, or clothing categories) these averages become essential for understanding overall classifier performance. We will typically rely on the macro-average F1 score as our main summary metric for multi-class classification problems (the weighted average can hide poor performance on rare classes).
 
-### Which measure to use?  Yes
-At this point, you might be wondering which metric is "best" or which one you should rely on. The answer is: all of them. Each metric highlights a different aspect of the classifier's behavior, and none of them tell the whole story by themselves.
+### Key takeaways
+We used a Covid test as our running example because it acts like a simple real-life classifier. It makes the same kinds of mistakes machine-learning classifiers make, and it lets us introduce the core ideas without extra complexity.
 
-- Accuracy gives you a quick sense of overall correctness, but it can hide important problems.
-- Precision tells you how reliable the positive predictions are.
-- Recall tells you how many true cases the model actually catches.
-- F1 summarizes precision and recall together, making it harder for a model to hide a weakness in one area behind strength in the other.
+The confusion matrix is the foundation of everything. It shows all four types of outcomes -- true positives, false positives, false negatives, and true negatives -- and every evaluation metric is derived from these numbers.
 
-The goal is not to pick a favorite metric. The goal is to use these measures together to understand how the classifier is making mistakes and whether those mistakes matter for the task you care about. If you have a low F1 score, you will probably want to check out the confusion matrix to see what kinds of errors are happening.
+Each metric we examined tells us something different:
 
-Sometimes the most helpful tool is the simplest one: the confusion matrix. It lays out every type of outcome in a single table -- true positives, false positives, false negatives, and true negatives -- so you can literally see where your classifier is succeeding and where it is failing. 
+- Accuracy gives an overall sense of correctness, but it can hide important problems, especially when classes are imbalanced or when one type of error matters more than another.
+- Precision tells us how trustworthy the positive predictions are (how often the classifier tests "positive" when it shouldn't).
+- Recall tells you the proportion of real cases the classifier actually catches (how often it misses people who should have been positive).
+- F1 combines precision and recall into a single score so that a model cannot hide a weakness in one area behind strength in the other.
 
-## Key Takeaways
-We used a Covid test as our example because it is a simple, real-life classifier and makes the same types of mistakes all classifiers can make. The confusion matrix is the foundation of all classifier evaluation, and all metrics can be derived from it:
-
-- Accuracy alone is not enough.  
-- Precision measures false positives (false alarms like the boy who cries wolf).  
-- Recall measures misses (false negatives).  
-- F1 is a combination of precision and recall. 
-
-Scikit-learn returns these same metrics, both for individual categories, and averaged across categories. 
-
-We have been through a lot of discussion of how to evaluate classifiers. Hopefully you feel like you can go forward and determine if a classifier is "good" or not using the above metrics.
+There is no single best metric for every situation, but F1 is often a good balanced choice. Finally, scikit-learn can compute all of these metrics for any classifier you build, both for individual classes and averaged across classes. These tools will help you evaluate whether a model is actually "good" for the task you care about.
