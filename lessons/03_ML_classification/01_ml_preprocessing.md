@@ -136,17 +136,15 @@ So a negative age or income after standardization does not mean a negative age o
 
 [Video about one-hot encoding](https://www.youtube.com/watch?v=G2iVj7WKDFk)
 
-Categorical features (like "dog", "cat", "bird") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
+Assume you have a categorical feature that you are feeding to an ML model. For instance, musical genre (maybe the model is predicting whether the music will contain electric guitar or not, for our instrument sales site).  Categorical features (like "jazz", "classical", "rock") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
 
 ```
-'dog' -> 1
-'cat' -> 2
-'bird' -> 3
+'jazz' -> 1
+'classical' -> 2
+'rock' -> 3
 ```
 
-If we did this, the model would think that "cat" is bigger than "dog", or that the distance between categories carries meaning. That is not true. These numbers would create a false ordering that does not exist in the real categories.
-
-To avoid this, we use one-hot encoding. One-hot encoding represents each category as an array where:
+If we did this, the model would think that "jazz" is smaller than "rock", or that the distance between genres carries meaning. These numbers would create a false ordering that does not exist in the real categories. To avoid this, we use one-hot encoding. One-hot encoding represents each category as an array where:
 
 - all elements are 0 except for one element, which is 1
 - the position of the 1 corresponds to the category
@@ -154,14 +152,14 @@ To avoid this, we use one-hot encoding. One-hot encoding represents each categor
 So the categories from above would become:
 
 ```
-dog  -> [1, 0, 0]
-cat  -> [0, 1, 0]
-bird -> [0, 0, 1]
+jazz  -> [1, 0, 0]
+classical  -> [0, 1, 0]
+rock -> [0, 0, 1]
 ```
 
 Each category is now represented cleanly, without implying any ordering or distance between them. This is exactly what we want for most categorical features in classification.
 
-> Side note: Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories: one-hot encoding works great for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. Even though there is an order to them, we typically map them using one-hot encoding, especially if the goal is to use them as targets for a classifier.   
+> Side note: Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories: one-hot encoding works great for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. For a discussion of some of the nauances of this case, see [this page](https://www.datacamp.com/tutorial/categorical-data).   
 
 ### One-hot encoding in scikit-learn
 
@@ -172,7 +170,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 encoder = OneHotEncoder(sparse=False)
 
-y = [["dog"], ["cat"], ["bird"], ["dog"]]
+y = [["jazz"], ["rock"], ["classical"], ["jazz"]]
 y_encoded = encoder.fit_transform(y)
 
 print("one-hot encoded categories:")
@@ -190,6 +188,8 @@ one-hot encoded categories:
 ```
 
 We will see more practical examples of one-hot encoding in future lessons. 
+
+> One important thing to notice about one-hot encoding is that it increases the number of features in your dataset. If a categorical feature has N unique categories, then one-hot encoding replaces that single column with N new columns. This is usually fine for small categorical features, but it can cause problems when a feature has many unique values. For example, if you have a feature representing ZIP codes, there may be thousands of unique values. One-hot encoding this feature would create thousands of new columns, which can make things very unwieldy in practice. In such cases, alternative encoding methods (like  embedding techniques, which we will cover in the AI lessons) may be more appropriate.
 
 ## 4. Creating New Features (Feature Engineering)
 
@@ -264,9 +264,14 @@ This can help when the exact number is less important than the general range. In
 Before actually feeding such newly created categorical features to an ML model, you would need to one-hot encode them as described above. Let's look at how that would work for the `age_group` feature:
 
 ```python
-age_groups = df[["age_group"]]        # must be 2D for scikit-learn
-encoded = encoder.fit_transform(age_groups)
+from sklearn.preprocessing import OneHotEncoder
 
+encoder = OneHotEncoder(sparse=False)
+
+age_groups = df[["age_group"]]        # must be 2D for scikit-learn
+encoded = encoder.fit_transform(age_groups) # one-hot encoded age groups
+
+# create a dataframe for easy viewing of the one-hot encoded age-group columns
 encoded_df = pd.DataFrame(
     encoded,
     columns=encoder.get_feature_names_out(["age_group"])
@@ -287,6 +292,8 @@ df[["name","age","is_senior"]].head()
 
 Even though age is already numeric, the idea of "senior" might be more directly meaningful for a model (for instance if you are thinking about pricing for restaurants).
 
+Note because this is Boolean, you would not need to one-hot encode it: 0 and 1 are already perfect numeric representations for a binary feature.
+
 ### Final thoughts on feature engineering
 There are no strict rules for feature engineering. It is a creative part of machine learning where your intuitions and understanding of the data matters a great deal. Good features often come from visualizing your data, looking for patterns, and thinking about the real-world meaning behind each column. Creativity and domain-specific knowledge helps a lot here: someone who knows the problem well can often spot new features that make the model's job easier. As you work with different datasets, you will get better at recognizing when a new feature might capture something important that the raw inputs miss. Feature engineering is less about following a checklist and more about exploring, experimenting, and trusting your intuition as it develops.
 
@@ -296,7 +303,7 @@ Many real datasets contain far more dimensions, or features, than we truly need 
 
 As discussed previously (TODO: add link), one helpful way to picture this is to think about images. A high-resolution photo might have hundreds of millions of pixels, but you can shrink it down to a small thumbnail and still recognize that it is a picture of your friend. Dimensionality reduction works the same way for datasets: the goal is to keep the important structure while throwing away noise and redundancy. ML algorithms can work while throwing away a great deal of raw data, and this can speed things up tremendously. 
 
-We see redundancy all the time in real data. For example, if a dataset includes height, weight, and BMI, one of these is technically redundant because BMI is literally just a function of the other two. If you calculated BMI, then you might want to get rid of weight and height if your goal is to use BMI to estimate certain health risks. Machine learning models can still train with redundant features, but it is often helpful to compress the dataset into a smaller number of less redundant dimensions (features). 
+Machine learning models can still train with redundant features, but it is often helpful to compress the dataset into a smaller number of less redundant features. 
 
 Dimensionality reduction is useful for many reasons. One, it can be a useful tool for visualizing high-dimensional data (our plots are typicically in 2D or 3D, so if we want to visualize a 1000-dimension dataset, it can be helpful to project it to a 2D or 3D space for visualization). 
 
@@ -306,28 +313,27 @@ Also, for ML, dimensionality reduction can help fight overfitting and eliminate 
 Before moving on, consider watching the following introductory video on PCA:
 [PCA concepts](https://www.youtube.com/watch?v=pmG4K79DUoI)
 
-PCA is by far the most popular dimensionality reduction technique: it provides a way to represent numerical data using much fewer features, which helps us visualize extremely complex datasets. It also can be a useful preprocessing step for reasons discussed above (fighting overfitting, speeding up training).
+PCA is by far the most popular dimensionality reduction technique: it provides a way to represent numerical data using many fewer features, which helps us visualize complex datasets. It also can be a useful preprocessing step for reasons discussed above (fighting overfitting, speeding up training).
 
-A helpful way to understand PCA is to return to the image example. A raw image may have millions of pixel values, but the intensity levels between many of those pixels fluctuate together. Nearby pixels tend to be highly correlated: if a region of the image is bright, most pixels in that region will be bright too. This means the dataset looks very high dimensional on paper, but the underlying structure is much simpler. 
+A helpful way to understand PCA is to return to the image example. A raw image may have millions of pixel values, but the intensity levels between many of those pixels fluctuates together. Nearby pixels tend to be highly correlated: if a region of the image is bright, most pixels in that region will be bright too. This means the dataset looks very high dimensional on paper, but the underlying structure is much simpler. 
 
-PCA directly exploits this correlation-based redundancy. It looks for features that vary together and combines them into a single *new feature* that captures their shared variation. These new features are called *principal components*. One nice feature is that principal components are ordered: the first principal component captures the single strongest pattern of redundancy in the dataset. For example, imagine a video of a room where the overall background illumination level changes. That widespread, correlated fluctuation across millions of pixels is exactly the kind of pattern PCA will automatically detect. The entire background trend will be extracted as the first principal component, replacing millions of redundant pixel-by-pixel changes with a single number. It will basically represent the "light level" in the room.
+PCA directly exploits this correlation-based redundancy. It looks for features that vary together and combines them into a single *new feature* that captures their shared variation. These new features are called *principal components*. One nice aspect of PCA is that principal components are *ordered*: the first principal component captures the single strongest pattern of redundancy in the dataset. For example, imagine a video of a room where the overall background illumination level changes (for instance because there is a window that lets in light). That widespread, correlated fluctuation across millions of pixels is exactly the kind of pattern PCA will automatically detect. The entire background trend will be extracted as the first principal component, replacing millions of redundant pixel-by-pixel changes with a single number. It will basically represent the "light level" in the room.
 
 ![PCA Room](resources/jellyfish_room_pca.jpg)
 
-Now imagine in that video of the room that on the desk there is a small jellyfish toy with a built-in light that cycles between deep violet and almost-black. The group of pixels that represent the jellyfish all brighten and darken together in their own violet rhythm, independently of the room's background illumination. This creates a localized cluster of highly correlated pixel changes that are not explained by the global brightness pattern. Because this fluctuation is coherent within that region and independent from the background illumination, PCA will naturally identify this jellyfish pixel cluster as the *second* principal component.
+Now imagine in that video of the room that on the desk there is a small jellyfish toy with a built-in light that cycles between deep violet and almost-black. The group of pixels that represent the jellyfish all brighten and darken together in their own violet rhythm, independently of the room's background illumination. This creates a localized cluster of highly correlated pixel changes that are not explained by the global brightness pattern. In a case like this, with pixels that fluctuate together independently of the background illumination, PCA would automatically identify the jellyfish pixel cluster as the *second* principal component.
 
-In this way, PCA acts like a very smart form of compression. Instead of throwing away random pixels or selecting every third column of the image, it builds new features that preserve as much of the original information as possible based on which pixels are correlated with each other. 
+In this way, PCA acts like a very smart form of compression. Instead of throwing away random pixels or selecting every third column of the image, it builds new features that preserve as much of the original information as possible based on which pixels are correlated with each other in a dataset. 
 
-Interestingly, PCA offers a way to reconstruct the original dataset from these compressed features. By weighting and combining the principal components, you can approximate the original pixel values. In the jellyfish room example, knowing only two numbers (background brightness level and brightness of the jellyfish toy) would be enough to recreate the essential content of each frame, even though the full image contained millions of pixels. This would be let us represent an entire image with two numbers instead of millions!
+PCA offers a way to reconstruct the original dataset from these compressed features. In the jellyfish room example, PCA would let us represent each frame of the video using just two numbers: one for the overall background brightness level (the first principal component) and one for the brightness of the jellyfish toy (the second principal component). This is a huge reduction from millions of pixel values to just two numbers, while still capturing the essential content of each frame. 
 
 In real datasets, the structure is not usually this clean, so you will typically need more than two components to retain the information in such high-dimensional datasets. PCA provides a precise way to measure how much variability each component captures, which helps you decide how many components to keep while maintaining an accurate, compact version of the original data. 
 
 We are not going to go deeply into the linear algebra behind PCA, but will next go into a code example to show how this works in practice. 
 
+ ### PCA Demo
 
- ### PCA Demo Using the Olivetti Faces Dataset
-
-In this demo, we will use the Olivetti faces dataset from scikit-learn to see how PCA works on a high-dimensional dataset. Each face image is 64x64 pixels, which means each image has 4096 pixel values. Each pixel in a grayscale image is a different feature, so that means each image lives in a 4096-dimensional space. However, many of those pixels are correlated with each other, because nearby pixels tend to have similar intensity values (for instance, the values around the eyes tend to fluctuate together). This makes the Olivetti dataset a great example for dimensionality reduction with PCA.
+In this demo, we will use the Olivetti faces datasett. This dataset includes pictures of 400 faces. Each face image is 64x64 pixels, which means each image has 4096 pixel values. Each pixel in a grayscale image is a different feature, so that means each image lives in a 4096-dimensional space. However, many of those pixels are correlated with each other: nearby pixels tend to have similar intensity values (for instance, the values around the eyes tend to fluctuate together). This makes the Olivetti dataset a great example for dimensionality reduction with PCA.
 
 First, some imports.
 
@@ -351,7 +357,7 @@ print(images.shape)
 print(y.shape)
 ```
 
-There are 400 faces in the dataset. Each row of `X` is one face, flattened into a 4096-dimensional vector. The `images` array stores the same data in image form, as 64x64 arrays that are easier to visualize.
+Each row of `X` is one face, flattened into a 4096-dimensional vector. The `images` array stores the same data in image form, as 64x64 arrays that are easier to visualize.
 
 Visualize some sample faces
 
@@ -364,10 +370,10 @@ plt.suptitle("Sample Olivetti Faces")
 plt.tight_layout()
 plt.show()
 ```
-This gives you a quick look at the variety of faces in the dataset. 
+This gives you a quick look at the variety of faces in the dataset (hint: there is not that much variety). 
 
 #### Fit PCA and look at variance explained
-Here we fit PCA to the full dataset. We will look at how much of the total variance is explained as we add more and more components.
+Here we get the principal components from the full dataset. We will look at how much of the total variance is explained as we add more and more components.
 
 ```python
 pca_full = PCA().fit(X)
@@ -383,8 +389,8 @@ plt.show()
 
 This curve shows how quickly we can capture most of the variation in the dataset with far fewer than 4096 components. Within 50 components, well over 80 percent of the variance in the dataset has been accounted for. 
 
-#### Plot eigenfaces
-We can plot the principal components to get a sense for what the correlated features look like in our image set, and we can visualize them as images. Note these are often called *eigenfaces* (this is for technical reaons: the linear algebra used to generate principal components uses something called eigenvector decomposition):
+#### Plot the components 
+We can plot the principal components to get a sense for what the correlated features look like in our image set, and we can visualize them as images. Note these are often called *ghost* faces or *eigenfaces* (this is for technical reaons: the linear algebra used to generate principal components uses something called eigenvector decomposition):
 
 ```python
 mean_face = pca_full.mean_.reshape(64, 64)
@@ -399,7 +405,7 @@ axes[0, 0].axis("off")
 # First 9 principal components (eigenfaces)
 for i in range(9):
     ax = axes[(i + 1) // 5, (i + 1) % 5]
-    ax.imshow(pca_full.components_[i].reshape(64, 64), cmap="bwr")
+    ax.imshow(pca_full.components_[i].reshape(64, 64), cmap="bwr") # plotting eigenface i
     ax.set_title(f"PC {i+1}")
     ax.axis("off")
 
@@ -470,9 +476,9 @@ The top row shows the original faces. Each lower row shows reconstructions using
 - `PCs: 1-15` and `PCs: 1-50` look progressively sharper.
 - `PCs: 1-100` usually looks very close to the original, even though we are using far fewer than 4096 numbers.
 
-This demonstrates how PCA can dramatically reduce the dimensionality of the data while still preserving the essential structure of the faces. In sum:
+This demonstrates how PCA can dramatically reduce the dimensionality of the data while still preserving the essential structure of the faces.
 - Each face lives in a very high-dimensional space (4096 features).
-- PCA finds directions (eigenfaces) that capture the main patterns of variation.
+- PCA finds new feature combinations (eigenfaces) that capture the main patterns of variation.
 - A relatively small number of principal components can capture most of the meaningful information.
 
 ## Summary
