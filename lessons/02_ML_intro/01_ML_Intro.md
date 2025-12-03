@@ -120,7 +120,7 @@ Check out this short video: https://www.youtube.com/watch?v=ZNrwlu7cvsI
 
 We’ll start with **Supervised Learning**, which is the most common and widely used type in practical machine learning tasks.
 
-**1. Supervised Learning**
+## 1. Supervised Learning
 
 Supervised machine learning is a type of artificial intelligence in which an algorithm learns to make predictions or decisions based on a labeled dataset. The "supervision" comes from the fact that the training data includes a known output, or "ground truth," which the algorithm uses to learn the correct relationship between inputs and outputs. 
 
@@ -144,7 +144,7 @@ That’s supervised learning - learning from labeled examples.
 
 Supervised learning problems are typically categorized into two main types based on the nature of the output variable: **Regression** and **Classification**.
 
-**1.1 Regression**
+### 1.1 Regression
 
 **Regression** is a type of Supervised Learning used when the target variable is continuous, meaning it can take on any numerical value. In simple terms, regression helps us predict numbers like estimating a house’s price, tomorrow’s temperature, or a car’s fuel efficiency. When you hear “regression,” think of it as the model trying to find a relationship between two things, for example, a house’s size and its price.
 
@@ -166,7 +166,7 @@ Regression is most useful when the **target output is a numerical value** rather
 
 In upcoming lessons, we’ll actually fit this line using scikit-learn, examine the slope and intercept it learns, and measure how well it performs on unseen data.
 
-**1.2 Classification**
+### 1.2 Classification
 
 Classification is a supervised learning task that categorizes data into discrete, predefined classes or labels. The model learns patterns in labeled training data to decide which category a new, unseen data point belongs to. Instead of a numerical value, the output is a qualitative label.
 
@@ -222,7 +222,7 @@ This example shows how both models can approach the same problem differently:
 
 Notice how regression gives a *specific number*, while classification assigns a *label* based on learned thresholds.
 
-**2. Unsupervised Learning**
+## 2. Unsupervised Learning
 
 Unsupervised learning is a machine learning technique where the data has no ground-truth labels. There are no right or wrong answers for the model to learn from. Instead, the goal is for the algorithm to discover patterns, structures, or groups on its own.
 
@@ -230,7 +230,7 @@ Unsupervised learning is a machine learning technique where the data has no grou
 
 Two of the most common types of unsupervised learning are *Clustering* and *Dimensionality Reduction*.
 
-## 2.1 Clustering
+### 2.1 Clustering
 
 Clustering means grouping together data points that are similar to one another.
 
@@ -242,7 +242,7 @@ Think about walking into a party where you do not know anyone. You start noticin
 
 No one labeled these groups for you. You naturally discovered the groups by noticing patterns. That is what clustering algorithms do. In machine learning, we do the same thing: we group similar data points together so we can understand the structure of the dataset. We will see a practical example of a clustering algorithm (using scikit-learn) in the next lesson.
 
-## 2.2 Dimensionality Reduction
+### 2.2 Dimensionality Reduction
 
 Sometimes a dataset has so many columns (features) that it becomes difficult to visualize, slow to process, or hard to reason about. Dimensionality reduction simplifies the dataset by reducing the number of features while preserving the important structure.
 
@@ -259,7 +259,7 @@ This helps us:
 
 We will explore one popular technique, PCA (Principal Component Analysis), later in the course. 
 
-**3. Reinforcement Learning**
+## 3. Reinforcement Learning
 
 Reinforcement Learning (RL) is one of the most fascinating and dynamic branches of Machine Learning. Unlike supervised learning, where a model learns from labeled examples, or unsupervised learning, where the goal is to find patterns in data, Reinforcement Learning is about learning through interaction.
 
@@ -315,9 +315,9 @@ But what if the environment is too complex to be represented by simple inputs?
 
 That’s where *Deep Reinforcement Learning* steps in - combining the perception power of Deep Learning with the decision-making framework of RL.
 
-**Deep Reinforcement Learning (DRL)**
+## Deep Reinforcement Learning (DRL)
 
-Deep Reinforcement Learning (DRL) combines the decision-making power of Reinforcement Learning (RL) with the pattern-recognition strength of Deep Learning (DL) - creating a powerful system that can both understand complex environments and make intelligent decisions within them.
+Deep Reinforcement Learning (DRL) combines the decision-making power of Reinforcement Learning (RL) with the pattern-recognition strength of Deep Learning (DL) creating a powerful system that can both understand complex environments and make intelligent decisions within them.
 
 In traditional Reinforcement Learning, the agent learns through feedback in the form of rewards or penalties. However, this approach struggles when dealing with environments that are extremely complex or have a large state space, meaning there are too many possible situations for the agent to handle effectively.
 Think of challenges like video games, robotics, or self-driving cars, where every frame or movement represents a new, high-dimensional state.
@@ -383,7 +383,7 @@ B. Unsupervised Learning
 C. Regression  
 D. Reinforcement Learning  
 
-<details> <summary>Show Answer</summary> ✅ Answer: D </details>
+<details> <summary>Show Answer</summary> ✅ Answer: D </details
 
 Q5. An AI agent learns to play chess by playing millions of games against itself, improving every time by rewarding winning moves and punishing losing ones - with a deep neural network guiding its strategy.
 Which method does this describe?
@@ -391,7 +391,8 @@ Which method does this describe?
 A. Supervised Learning  
 B. Unsupervised Learning  
 C. Reinforcement Learning
-D. Deep Reinforcement Learning 
+D. Deep Reinforcement Learning  
+
 
 <details> <summary>Show Answer</summary> ✅ Answer: D  </details>
 
