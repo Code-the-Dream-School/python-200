@@ -55,9 +55,9 @@ def extract_text_from_pdf(pdf_path):
 
 `PDFReader` is a particularly useful method to retrieve the text from a pdf file. You can learn more about it [here](https://pypdf.readthedocs.io/en/stable/modules/PdfReader.html). Given a path to the file (and assuming that the file exists) it outputs a reader object that contains the text within the pages. Here, we simply loop through each page in the reader object, extract the text from each page and stack them into the list called `text`. The `strip()` function simply removes any leading or trailing whitespace from the text. Thus at the end the `text` object will simply be a list of strings, each element being the text in a page. For example, the "earnings_report.pdf" file only contains one page with text. So `text` will be a list of length 1 with the only element being the following.
 
-```
+<code>
 "Overview\nThis report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The period\nincludes a growth phase, a temporary dip in 2023 due to supply constraints, and recovery in 2024-2025\ndriven by operations improvements and demand for the HelioPanel line. Our priority remains\nsustainable margins while investing in R&D; and workforce development.\nFinancial Summary (USD, millions)\n2021 Revenue: 2.8 | Net Profit: 0.3\n2022 Revenue: 4.5 | Net Profit: 0.8\n2023 Revenue: 4.0 | Net Profit: 0.5\n2024 Revenue: 6.2 | Net Profit: 1.1\n2025 Revenue: 7.1 | Net Profit: 1.3\nYear-by-Year Commentary\n●\n2021. First full year of HelioPanel X5 shipments. Community and residential projects established\nsteady orders and validated the modular design.\n●\n2022. Growth from multi-site deployments and school microgrids. Gross margin improved via vendor\nconsolidation and higher lamination yields.\n●\n2023. Temporary dip driven by polysilicon price volatility, freight bottlenecks, and a pause in a utility\ninterconnection queue that delayed installs.\n●\nLate 2023. Stabilization began as regional suppliers were qualified and multi-modal shipping\nreduced logistics risk.\n●\n2024. Efficiency programs and field-service telemetry cut downtime; pre-orders for HelioPanel X7\nsupported top-line growth.\n●\n2025. First commercial X7 installs plus SunSpan partnership at Midwestern industrial sites increased\nutilization and restored margin momentum.\nDrivers, Risks, and Mitigations\nRecovery drivers included localized sourcing, improved inverter interoperability, and predictive\nmaintenance from onboard sensors. Key risks remain input-price volatility, interconnection-policy\nuncertainty, and weather-related construction delays. Mitigations include multi-supplier contracts,\ninventory buffers for critical parts, and expanded installer training to shorten commissioning windows.\nForward Outlook\nBrightLeaf expects steady growth into 2026 as X7 adoption broadens and community-scale hybrid\nsystems mature. Investments will continue in tandem-cell R&D;, recycling pathways, and grid-services\nintegration. The objective remains sustainable revenue expansion aligned with product reliability,\ncustomer value, and community impact."
-```
+</code>
 
 This can be slightly disconcerting to look at, but on closer inspection and comparison to the PDF file you will recognize that the `\n` symbols depict the line breaks and there is no distinguishing between the titles and content. Nonetheless, the content of the page is present here which is what we are after.
 
@@ -251,7 +251,7 @@ That's all there is to this! Hopefully this rather crude and basic example helps
 
 Lets first set `use_rag` to `False` and run the script. If you now ask the query: "Explain the different products offered by Brightleaf Solar" you will find that the API confidently hallucinates a generic answer. We expect the answer to be taken from the product_specs pdf document but this is not what we get. An example response is given below:
 
-```
+<code>
 Brightleaf Solar offers a range of products and services focused on solar energy solutions. Here are the primary offerings:
 
 1. **Solar Energy Systems**: Brightleaf Solar designs and installs custom solar energy systems for residential, commercial, and industrial clients. These systems are tailored to meet the specific energy needs and preferences of each customer.
@@ -269,11 +269,11 @@ Brightleaf Solar offers a range of products and services focused on solar energy
 7. **Community Solar Programs**: Brightleaf Solar may also participate in community solar initiatives, allowing customers to benefit from solar energy without needing to install panels on their own property.
 
 These products and services are designed to promote the adoption of solar energy, reduce energy costs, and contribute to a more sustainable future.
-```
+</code>
 
 This type of response is usually obtained from averaging the information on similar solar companies from the internet, recall that the OpenAI GPT is trained on the information available on the internet. Now, set the `use_rag` flag to `True`, rerun the script and ask the same question. Now we expect the response to be richer based on the context obtained from the keyword-based retrieval process. You will notice that the response comes directly from the product_specs pdf:
 
-```
+<code>>
 BrightLeaf Solar offers two main products in their HelioPanel series: the HelioPanel X5 and the HelioPanel X7.
 
 1. **HelioPanel X5**:
@@ -291,7 +291,7 @@ BrightLeaf Solar offers two main products in their HelioPanel series: the HelioP
    - Field tests have shown that the X7 delivers a median 17% increase in energy density compared to the X5 under mixed weather conditions.
 
 Both products are manufactured in a facility powered by renewable energy, and BrightLeaf emphasizes sustainability through practices such as recirculating water in their processes and remelting scrap aluminum for use in mounting hardware. They also provide a 25-year performance warranty and a 10-year hardware replacement guarantee for their panels, along with additional services for commercial customers.
-```
+</code>
 
 Congratulations!! Now you have a simple Q&A loop that can generate responses to user queries with additional context from an external database! Feel free to explore with different prompts and test the responses with and without the retrieved context to understand and appreciate the utility of RAG. This basic implementation was simply meant to get your hands wet on a simple RAG framework and focus on the main mechanisms behind RAG. In the next lesson, we will look at a more elaborate framework that improves both the context search efficiency and quality of the retrieved context.
 
