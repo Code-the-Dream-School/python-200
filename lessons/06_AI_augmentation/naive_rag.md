@@ -1,11 +1,9 @@
 # Keyword-based RAG
-In the previous lesson, we saw the different types of retrieval augmentated generation (RAG) used to augment the chatbot's response to improve it's accuracy. In this lesson, we'll go over the basic keyword-based RAG framework. Please note that this approach is too simple and is not used in industry, but it is useful to see the response augmentation process here. We will build on this approach in the next lesson with the more complex semantic search-based RAG approach.
+In the previous lesson we introduced the idea of adding knowledge to a model using RAG. In this lesson, we will dive into our first real example: a very simple keyword-based RAG system. This is just to illustrate a minimal working RAG pipeline. It is purposely very simple, and too brittle to use in real life. We will build up to an implementation closer to the framework used in industry. At the highest level of abstraction every RAG approach follows the procedure shown in the figure below (taken from the Basic RAG databricks article). 
 
- > **NOTE:**  To get the most out of this lesson, it is recommended that you run the examples yourself. Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI`, `pypdf`, and `dotenv`.
+<!-- > **NOTE:**  To get the most out of this lesson, it is recommended that you run the examples yourself. Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI`, `pypdf`, and `dotenv`.-->
 
 Here are some additional resources for your reference: [Basic RAG databricks article](https://docs.databricks.com/aws/en/generative-ai/retrieval-augmented-generation), [OpenAI RAG article](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts), [RAG vs Fine Tuning vs Prompt Engineering](https://www.youtube.com/watch?v=zYGDpG-pTho).
-
-In the previous lesson we introduced the idea of adding knowledge to a model using RAG. In this lesson, we will dive into our first real example: a very simple keyword-based RAG system. This is just to illustrate a minimal working RAG pipeline. It is purposely very simple, and too brittle to use in real life. We will build up to an implementation closer to the framework used in industry. At the highest level of abstraction every RAG approach follows the procedure shown in the figure below (taken from the Basic RAG databricks article). 
 
 ![Basic Rag Framework](resources/basic_rag.png)
 
@@ -57,7 +55,7 @@ def extract_text_from_pdf(pdf_path):
 
 `PDFReader` is a particularly useful method to retrieve the text from a pdf file. You can learn more about it [here](https://pypdf.readthedocs.io/en/stable/modules/PdfReader.html). Given a path to the file (and assuming that the file exists) it outputs a reader object that contains the text within the pages. Here, we simply loop through each page in the reader object, extract the text from each page and stack them into the list called `text`. The `strip()` function simply removes any leading or trailing whitespace from the text. Thus at the end the `text` object will simply be a list of strings, each element being the text in a page. For example, the "earnings_report.pdf" file only contains one page with text. So `text` will be a list of length 1 with the only element being the following.
 
-```python
+```
 "Overview\nThis report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The period\nincludes a growth phase, a temporary dip in 2023 due to supply constraints, and recovery in 2024-2025\ndriven by operations improvements and demand for the HelioPanel line. Our priority remains\nsustainable margins while investing in R&D; and workforce development.\nFinancial Summary (USD, millions)\n2021 Revenue: 2.8 | Net Profit: 0.3\n2022 Revenue: 4.5 | Net Profit: 0.8\n2023 Revenue: 4.0 | Net Profit: 0.5\n2024 Revenue: 6.2 | Net Profit: 1.1\n2025 Revenue: 7.1 | Net Profit: 1.3\nYear-by-Year Commentary\n●\n2021. First full year of HelioPanel X5 shipments. Community and residential projects established\nsteady orders and validated the modular design.\n●\n2022. Growth from multi-site deployments and school microgrids. Gross margin improved via vendor\nconsolidation and higher lamination yields.\n●\n2023. Temporary dip driven by polysilicon price volatility, freight bottlenecks, and a pause in a utility\ninterconnection queue that delayed installs.\n●\nLate 2023. Stabilization began as regional suppliers were qualified and multi-modal shipping\nreduced logistics risk.\n●\n2024. Efficiency programs and field-service telemetry cut downtime; pre-orders for HelioPanel X7\nsupported top-line growth.\n●\n2025. First commercial X7 installs plus SunSpan partnership at Midwestern industrial sites increased\nutilization and restored margin momentum.\nDrivers, Risks, and Mitigations\nRecovery drivers included localized sourcing, improved inverter interoperability, and predictive\nmaintenance from onboard sensors. Key risks remain input-price volatility, interconnection-policy\nuncertainty, and weather-related construction delays. Mitigations include multi-supplier contracts,\ninventory buffers for critical parts, and expanded installer training to shorten commissioning windows.\nForward Outlook\nBrightLeaf expects steady growth into 2026 as X7 adoption broadens and community-scale hybrid\nsystems mature. Investments will continue in tandem-cell R&D;, recycling pathways, and grid-services\nintegration. The objective remains sustainable revenue expansion aligned with product reliability,\ncustomer value, and community impact."
 ```
 
@@ -65,11 +63,9 @@ This can be slightly disconcerting to look at, but on closer inspection and comp
 
 Now that we have the data from the company documents, we will create the function that retrieves the relevant context from the documents based on the user query. 
 
-### Keyword-based context retrieval
+### Keyword-based retrieval
 
-This is the main engine of this framework and the key step in improving the quality of te response. This is the "Retrieve" step in the image at the beginning of the lesson. It takes in the user prompt and the database of documents and outputs the supporting data that will be augmented to the user prompt. Lets look at this process through the function for keyword-based context retrieval shown below. 
-
-> Note that the `documents` argument for the function is a dictionary with the document names as keys and the list of words as the values, extracted using the `extract_text_from_pdf` function.
+This is the main engine of this framework and the key step in improving the quality of the response. This is the "Retrieve" step in the image at the beginning of the lesson. It takes in the user prompt and the database of documents and outputs the supporting data that will be augmented to the user prompt. Lets look at this process through the function for keyword-based context retrieval shown below. It is not necessary to understand the code itself as much as what the code it doing.
 
 ```python
 def simple_keyword_retrieval(query, documents, verbose=True):
@@ -77,6 +73,7 @@ def simple_keyword_retrieval(query, documents, verbose=True):
     Keyword retrieval using token overlap scoring.
     - Removes stopwords and punctuation for cleaner matching.
     - Returns the single best-matching document.
+    - `documents`: dictionary with the document names as keys and the text as values, extracted using the `extract_text_from_pdf` function.
     """
     import string
 
@@ -129,23 +126,13 @@ def simple_keyword_retrieval(query, documents, verbose=True):
             print("\nNo overlapping keywords found.")
         return [("None found", "No relevant content.")]
 ```
-The main goal of the keyword-based retrieval approach is to retrieve the relevant context to the user prompt based on keyword matching. To do this, we remove words irrelevant to the context determination process (stored in the `stopwords` list) and punctuations (using the string `maketrans` method) from both the user prompt and the text from the documents in the database. This "reduced" query is created in the line
-```python
-query_words = {
-        w.translate(translator)
-        for w in query.lower().split()
-        if w not in stopwords
-    }
-```
-Note that code splits the query into its individual words, converts them to lower case, and removes the "stopwords" and punctuations. `query_words` is a set consisting of the words in the query minus the punctutations and stopwords. A similar treatment is performed on the content in the documents. Recall that `documents` is a dictionary, so `documents.items()` is an iterator over the key-value pairs of the document name and document text. So the loop over each document text removes the stopwords and punctuations from the text, stores the reduced words into a set (`content_words`), and computes a similarity score between the document text and query text. 
+The main goal of the keyword-based retrieval approach is to retrieve the relevant context to the user prompt based on keyword matching. To do this, three main steps are done:
+- Remove irrelevant words such as articles, prepositions etc. (stored in the `stopwords` list) and punctuations (using the string `maketrans` method)
+- Store the reduced words as elements in a set
+- Compare the sets of reduced words in the query and text in each document to determine the overlap score
 
-Since both `query_words` and `content_words` are sets, the `&` operation directly gives the intersection of both sets (i.e. the common words in the query and document). The overlap score is simply the length of this intersection set (`overlap`, i.e. the number of common words). This score is computed for each document and stored in the `scores` list as a tuple with the document name and content. 
+The overlap score is computed for each document and is simply the number of common words between the query and text in the document. This score is stored in the `scores` list as a tuple with the document name and content. Finally, the document name and content corresponding to the highest overlap score is obtained.  
 
-This scores list is sorted in the reverse order of the overlap scores and the document name and content corresponding to the highest overlap score is retrieved.  
-
-```python
-best = next(((name, content) for score, name, content in scores if score > 0), None)
-```
 > Note that best returns a tuple with the document name and content **only** if the score is positive (*think about why this is the case and view the details below to see if you agree*).
 
 <details>
@@ -155,11 +142,25 @@ Since the main goal of Retrieval Augmented Generation is to improve the quality 
 
 Verbosity (the `verbose` boolean argument) is a common feature in many library functions. Setting the argument to true prints statements that allow a greater understanding of the inner workings of the method. In this case, setting `verbose=True` prints the `query_words` set, the overlap score for each document and the name and content for the document with the highest positive overlap score (if one exists). 
 
+Let's see an example output. If we ask the query: "What is the mission of Brightleaf Solar?" and keep `verbose=True`, we get the following outputs:
+```
+Query tokens (filtered): ['brightleaf', 'mission', 'solar', 'what']
+[earnings_report.pdf] overlap=1 -> ['brightleaf']
+[employee_benefits.pdf] overlap=2 -> ['brightleaf', 'solar']
+[mission_statement.pdf] overlap=3 -> ['brightleaf', 'mission', 'solar']
+[partnerships.pdf] overlap=2 -> ['brightleaf', 'solar']
+[product_specs.pdf] overlap=2 -> ['brightleaf', 'solar']
+[security_policy.pdf] overlap=1 -> ['brightleaf']
+Selected best match: mission_statement.pdf
+```
+It is clear to see that the documents are being ranked based on the number of exact keyword matches with the query. Since "mission_statement.pdf" has the highest number of matches, its text will be used as relevant content for the query.
+
 Now that we can extract text from the documents and retrieve the relevant context from them for a given user prompt, next we augment this context to the user prompt and feed it to the LLM.
 
 ### Augment with context and generate response
 
-The other important factor determining the quality of a RAG framework is the "Generator," i.e. the way the retrieved context and user prompt is augmented to generate the response from the LLM. It is interesting to note that prompt engineering is a very useful skill to have for this purpose. The `ask_llm` function to generate the API response based on the user prompt augmented with the retrieved context is shown below. This corresponds to the "Augment" and "Generate" steps in the figure from the beginning of the lesson. 
+<!--The other important factor determining the quality of a RAG framework is the "Generator," i.e. the way the retrieved context and user prompt is augmented to generate the response from the LLM. It is interesting to note that prompt engineering is a very useful skill to have for this purpose.  -->
+The `ask_llm` function to generate the API response based on the user prompt augmented with the retrieved context is shown below. This corresponds to the "Augment" and "Generate" steps in the figure from the beginning of the lesson. 
 
 ```python
 def ask_llm(query, context, with_rag):
@@ -232,27 +233,19 @@ while True:
     print(answer)
     print("\n" + "=" * 60 + "\n")
 ```
-We first set the `use_rag` variable depending on the case we're investigating, here it is set to `True` implying that we want to use the keyword-based RAG framework. The script begins with loading and extracting data from the requisite company documents (using the `extract_text_from_pdf` function). 
-
-```python
-# Load all PDF text into a dictionary
-pdf_dir = Path("brightleaf_pdfs")
-pdf_files = list(pdf_dir.glob("*.pdf"))
-if not pdf_files:
-    raise FileNotFoundError("No PDFs found in the pdfs directory.")
-
-docs = {f.name: extract_text_from_pdf(f) for f in pdf_files}
-print(f"Loaded {len(docs)} BrightLeaf PDF(s).")
-```
-
-Then the conversation scripting is done in the form of a simple infinite while loop (note the use of `while True:`). For each user query, the relevant context from the documents is retrieved using a simple-keyword matching approach (in the `simple_keyword_retrieval` function). This context is then augmented to the user query and input to the API to generate the response (in the `ask_llm` function). This loop continues until the user inputs either "quit" or "exit."
+We first set the `use_rag` variable depending on the case we're investigating, here it is set to `True` implying that we want to use the keyword-based RAG framework. Here are the broad steps that take place in the execution of this script:
+- The script begins with loading and extracting data from the requisite company documents (using the `extract_text_from_pdf` function). 
+- Then the conversation scripting is done in the form of a simple infinite while loop (note the use of `while True:`). For each user query, the relevant context from the documents is retrieved using a simple-keyword matching approach (in the `simple_keyword_retrieval` function). 
+- This context is then augmented to the user query and input to the API to generate the response (in the `ask_llm` function). This loop continues until the user inputs either "quit" or "exit."
 
 ```python
 if query.lower() in {"quit", "exit"}:
     print("Goodbye.")
     break
 ```
-Note that this is not a continuous conversation as the LLM is not aware of the previous conversation so far. So this cannot be classified as a chatbot, however it can be trivially extended to include past context to the LLM (refer to the Chatbots lesson). The ability to retrieve and augment relevant context from the document using keyword based matching to the user prompt is undeniably powerful. Lets look at an example to show this at work.
+Note that this is not a continuous conversation as the LLM is not aware of the previous conversation so far. So this cannot be classified as a chatbot, however it can be trivially extended to include past context to the LLM (refer to the Chatbots lesson). 
+
+That's all there is to this! Hopefully this rather crude and basic example helps you to see the RAG process in the most barebones fashion. To drive home the power of RAG (even at its most basic), lets look at an example. 
 
 ### Example - Keyword RAG in action
 
