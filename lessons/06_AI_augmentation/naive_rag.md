@@ -255,17 +255,11 @@ Lets first set `use_rag` to `False` and run the script. If you now ask the query
 Brightleaf Solar offers a range of products and services focused on solar energy solutions. Here are the primary offerings:
 
 1. **Solar Energy Systems**: Brightleaf Solar designs and installs custom solar energy systems for residential, commercial, and industrial clients. These systems are tailored to meet the specific energy needs and preferences of each customer.
-
 2. **Solar Panel Installation**: The company provides professional installation services for solar panels, ensuring that the systems are set up efficiently and safely. This includes site assessment, design, and installation.
-
 3. **Energy Storage Solutions**: Brightleaf Solar offers energy storage options, such as battery systems, that allow customers to store excess solar energy for use during non-sunny periods or power outages.
-
 4. **Maintenance and Monitoring Services**: To ensure optimal performance, Brightleaf Solar provides ongoing maintenance and monitoring services for installed solar systems. This includes regular inspections, cleaning, and performance tracking.
-
 5. **Financing Options**: Brightleaf Solar offers various financing solutions to make solar energy more accessible. This may include options like solar loans, leases, or power purchase agreements (PPAs) that allow customers to pay for solar energy over time.
-
 6. **Consultation and Energy Audits**: The company provides consultation services to help customers understand their energy needs and the potential benefits of solar energy. This may include energy audits to assess current energy usage and identify opportunities for savings.
-
 7. **Community Solar Programs**: Brightleaf Solar may also participate in community solar initiatives, allowing customers to benefit from solar energy without needing to install panels on their own property.
 
 These products and services are designed to promote the adoption of solar energy, reduce energy costs, and contribute to a more sustainable future.
@@ -273,7 +267,7 @@ These products and services are designed to promote the adoption of solar energy
 
 This type of response is usually obtained from averaging the information on similar solar companies from the internet, recall that the OpenAI GPT is trained on the information available on the internet. Now, set the `use_rag` flag to `True`, rerun the script and ask the same question. Now we expect the response to be richer based on the context obtained from the keyword-based retrieval process. You will notice that the response comes directly from the product_specs pdf:
 
-<code>>
+<code>
 BrightLeaf Solar offers two main products in their HelioPanel series: the HelioPanel X5 and the HelioPanel X7.
 
 1. **HelioPanel X5**:
