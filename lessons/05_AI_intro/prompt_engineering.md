@@ -298,7 +298,7 @@ Output: `mixed`
 
 ### 5. Use Delimiters for Clear Boundaries
 
-Delimiters are markers (like `---`, `\`\`\``, or `<input>...</input>`) that clearly separate your instructions from user data. This prevents the model from accidentally treating user input as a new instruction.
+Delimiters are markers (like `---`, `\`\`\``, or <input>`) that clearly separate your instructions from user data. This prevents the model from accidentally treating user input as a new instruction.
 
 **Why use them:**
 - Keeps instructions and data clearly separate.
