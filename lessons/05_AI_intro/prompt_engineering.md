@@ -339,51 +339,8 @@ Summarize the following text in 2 sentences:
 - Tell the model to only act on the delimited content.
 - When mixing user data with instructions, always use a delimiter.
 
----
 
-### The coding version
 
-What this helper is and what it does
-
-- `get_completion(prompt: str, model: str = "gpt-4o-mini", temperature: float = 0) -> str` is a small convenience wrapper around the modern `OpenAI` client.
-- It sends a single user message to the model (`messages=[{"role": "user", "content": prompt}]`) and returns the assistant's text reply as a Python `str`.
-- The helper assumes the `OpenAI` client was created earlier in the file and that your `OPENAI_API_KEY` is available (we load it with `python-dotenv` in the top-of-file setup).
-
-Why keep a thin wrapper?
-
-- Reuse: call `get_completion(...)` throughout lessons without repeating the client setup.
-- Consistency: central place to tune `model`, `temperature`, or add logging/error handling.
-
-Simple, runnable example
-
-Copy-paste this into a Python file in the same environment (the helper is already defined earlier in this lesson). It calls the helper and prints the model response.
-
-```python
-# Example: Using the get_completion helper
-prompt = """
-You are an assistant that writes concise, one-sentence summaries.
-Summarize the following text in a single sentence:
-
-The quick brown fox jumps over the lazy dog.
-"""
-
-response = get_completion(prompt, model="gpt-4o-mini", temperature=0)
-print("Model response:\n", response)
-
-# Example expected output (illustrative):
-# "A quick brown fox leaps gracefully over a lethargic dog."
-```
-
-Tip: If you want structured output (JSON), ask the model to return JSON and validate it in Python. For example, include a line like: `Return only valid JSON with keys: summary, length` and then parse with `json.loads(response)`.
-
-That's all you need for now — keep the helper at the top of the lesson and call it whenever a short, single-turn prompt is sufficient.
-"""
-response = get_completion(prompt_2)
-print("\nCompletion for prompt 2:")
-print(response)
-
-```
-A short example: Detect the language of a text and return a compact JSON result.
 
 ```python
 prompt = f"""
@@ -396,14 +353,6 @@ print(response)
 
 
 ```
-Another transformation: JSON → HTML
-Tell the AI how to give you the answer—especially if you’re using it in code or spreadsheets.
-
-Do this:
-```
-Generate 3 made-up book titles with authors and genres.
-Provide them in JSON with keys: book_id, title, author, genre.
-``` 
 
 ### 6. Ask for a specific format
 
@@ -472,7 +421,6 @@ except json.JSONDecodeError:
     print("Error: response was not valid JSON")
 ```
 
-**Tip:** Always ask the model to return **only** the format you want (no extra text). Use `temperature=0` for deterministic, consistent results.
 
 ---
 
@@ -511,43 +459,7 @@ Why this helps:
 
 Testing tip: try adversarial or ambiguous inputs during development (e.g., "Do not translate anything") to ensure your guard logic holds.
 
-### The coding version
 
-Below is a minimal Python example that implements the same idea with the OpenAI API. It assumes your OPENAI_API_KEY is loaded (e.g., via dotenv) and a helper get_completion(prompt) is available.
-```python 
-prompt = f"""
-First, check if the input below contains both a clear 'Question' and a 'Student\'s Solution' with numeric values we can evaluate. Respond ONLY with a JSON object with these keys:
-    - can_evaluate: true or false
-    - reason: short explanation if can_evaluate is false (e.g., "missing student solution", "ambiguous numbers")
-    - If can_evaluate is true, include these additional keys:
-        - correct: "yes" or "no"
-        - explanation: brief reasoning (2-4 short sentences)
-        - correct_answer: numeric total (e.g., 1450)
-
-Now evaluate the input below following that rule.
-
-Input:
-Question:
-A food truck owner is calculating monthly expenses. \
-The truck costs are:
-- Truck lease: $800 per month flat fee
-- Ingredients: $12 per day
-- Gas: $8 per day
-- Business license: $150 per month flat fee
-If the owner operates 25 days per month, what are the total monthly expenses?
-
-Student's Solution:
-Daily variable costs: $12 + $8 = $20 per day
-Monthly variable costs: $20 × 25 = $500
-Fixed monthly costs: $800 + $150 = $950
-Total monthly expenses: $500 + $950 = $1,450
-"""
-response = get_completion(prompt)
-print(response)
-
-
-```
-The AI now checks first, then responds appropriately.
 
 
 
