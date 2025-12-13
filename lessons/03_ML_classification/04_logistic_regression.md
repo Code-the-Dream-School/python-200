@@ -482,13 +482,41 @@ Correct answer: B
 </details>
 
 2. Why do we fit the StandardScaler only on the training data and not on the test data?
-A. To make training faster
-B. To reduce model complexity
-C. To prevent information leakage from the test set
-D. To increase accuracy artificially
+
+- A. To make training faster
+- B. To reduce model complexity
+- C. To prevent information leakage from the test set
+- D. To increase accuracy artificially
 <details> <summary><strong>Click to reveal answer</strong></summary>
 Correct answer: C
-Fitting on the test set would leak future information into the model, making evaluation unfair.
+</details>
+
+3. Which statement best describes the decision boundary learned by Logistic Regression?
+
+- A. It learns multiple curved boundaries
+- B. It memorizes training points like KNN
+- C. It learns a single linear boundary separating the classes
+- D. It builds a tree of if-else rules
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: C
+</details>
+
+4. In the feature importance output, what does a large absolute coefficient value indicate?
+- A. The feature has many missing values
+- B. The feature strongly influences the prediction
+- C. The feature is perfectly correlated with others
+- D. The feature must be removed
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: B
+</details>
+
+5. Which metric is most important when you want to minimize false positives in spam detection?
+- A. Accuracy
+- B. Recall
+- C. Precision
+- D. F1 Score
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: C
 </details>
 
 
