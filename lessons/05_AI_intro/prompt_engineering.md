@@ -30,69 +30,39 @@
 ---
 
 
-If you're using AI through code (like OpenAI's API), you’ll need to set up your environment first. Here’s a minimal, ready-to-use setup including a helper function used throughout this lesson:
+## Setup: The `get_completion()` Helper Function
 
-<br />
-The following function is adapted from the DeepLearning.AI website. 
+We will use a small helper function called `get_completion()` throughout this lesson. It sends a prompt to the model and returns the model's text response so you don't have to write the API call every time. This keeps examples simple and lets you focus on the prompt itself.
+
+Its only required input is the prompt. The optional `temperature` input affects how random the responses are: lower is more deterministic, higher is more random. Quick tip: use `temperature=0` for deterministic outputs when testing or validating, and raise it (e.g., 0.7) when you want more creative responses.
 
 ```python
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
 
-# Load OPENAI_API_KEY from a .env file or environment
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    raise EnvironmentError(
-        "Missing OPENAI_API_KEY. Create a .env file with OPENAI_API_KEY=..."
+if load_dotenv():
+    print("Loaded environment variables from .env file")
+else:
+    print("Warning: .env file not found. Make sure OPENAI_API_KEY is set.")
+
+# Initialize OpenAI client
+client = OpenAI()
+
+def get_completion(prompt: str, model="gpt-4o-mini", temperature=0):
+    """
+    Send a prompt to the model and return the assistant's text reply.
+    This helper keeps our examples clean and focused on the prompt itself.
+    """
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}], 
+        temperature=temperature,
     )
-
-
-try:
-    from openai import OpenAI
-
-    client = OpenAI()
-
-
-    def get_completion(prompt: str, model: str = "gpt-4o-mini", temperature: float = 0) -> str:
-        """Send a single-turn prompt and return the text content."""
-        response = client.chat.completions.create(
-            model=model,
-<br />
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature,  # 0 = deterministic, higher = more creative
-        )
-        return response.choices[0].message.content
-except ImportError:
-    import openai
-
-    openai.api_key = api_key
-
-```
-<br />
-
-## Changing Temperature
-
-Changing the temperature of the API affects how random or creative responses are: lower → more deterministic, higher → more creative.
-
-Quick tip: use temperature=0 for deterministic outputs when testing or validating, and raise it (e.g., 0.7) when you want more creative responses.
-
-Example (use the helper with an explicit temperature):
-
-```python
-# Call the helper with temperature set to 0 for deterministic results
-<br />
-prompt = """
-Write a single-sentence summary of the text below.
-"""
-response = get_completion(prompt, model="gpt-3.5-turbo", temperature=0)
-print(response)
+    return response.choices[0].message.content
 ```
 
 ---
----
-
-<br />
 
 ## The Golden Rules of Prompting
 This lesson was inspired by the prompt-engineering materials from DeepLearning.AI and other industry references. It distills research-backed guidelines into practical, beginner-friendly advice you can apply immediately. Examples in this chapter are adapted and rewritten for clarity and to avoid duplication; the patterns and ideas are taught so you can reuse them in real projects.
@@ -212,6 +182,8 @@ Tip: Keep a small notebook or comments in your code documenting which changes he
 
 For tricky problems (math, logic, debugging), don't just ask for the answer—ask the model to **show its work** step-by-step first. This helps you spot mistakes and makes results more reliable.
 
+This pattern is known as **Chain of Thought prompting (CoT)**. By asking the model to show intermediate reasoning, you dramatically increase accuracy on structured or multi-step tasks.
+
 **When to use:**
 - Math or calculations where you want to see intermediate steps.
 - Logic puzzles or debugging where the reasoning process matters.
@@ -294,38 +266,60 @@ Output: `mixed`
 - Use one-shot or few-shot when the task is nuanced or you need a specific output format.
 - Zero-shot is fastest but less reliable for complex tasks.
 
+**Code examples with `get_completion()`:**
+
+**Zero-shot example:**
+```python
+# No examples provided - model uses pre-trained knowledge
+prompt = "What is the sentiment of this review: 'The product works but shipping was slow'?"
+response = get_completion(prompt, temperature=0)
+print(response)
+# Output: "mixed" or "The sentiment is mixed..."
+```
+
+**One-shot example:**
+```python
+# Give one example to clarify the format
+prompt = """
+Classify the tone as professional, casual, or urgent.
+
+Example: "Hey! Want to grab lunch?" → casual
+
+Now classify: "Please respond at your earliest convenience." → ?
+"""
+response = get_completion(prompt, temperature=0)
+print(response)
+# Output: "professional"
+```
+
+**Few-shot example:**
+```python
+# Multiple examples teach the pattern
+prompt = """
+Label each email subject as spam, important, or normal.
+
+Example 1: "Congratulations! You've won $1,000,000!" → spam
+Example 2: "Your account will be closed tomorrow" → important
+Example 3: "Weekly newsletter from our team" → normal
+
+Now label: "URGENT: Verify your account now!" → ?
+"""
+response = get_completion(prompt, temperature=0)
+print(response)
+# Output: "spam" (or possibly "important" - the pattern helps consistency)
+```
+
+**Practical tip:** Start with zero-shot. If results are inconsistent or wrong, add 1-3 examples (few-shot) to guide the model toward your desired format and logic.
+
 ---
 
-### 5. Use Delimiters for Clear Boundaries
+### 5. Use delimiters to keep different parts of your prompt separate
 
-Delimiters are markers (like `---`, `\`\`\``, or <input>`) that clearly separate your instructions from user data. This prevents the model from accidentally treating user input as a new instruction.
+When a prompt has multiple sections — instructions, examples, text to analyze, code, or anything long or messy — the model can lose track of where one part ends and the next begins. Delimiters are simple markers (like triple backticks or dashes) that clearly separate these sections so the model doesn't get confused. Think of delimiters as putting boxes around different ingredients so they don't spill into each other.
 
-**Why use them:**
-- Keeps instructions and data clearly separate.
-- Protects against accidental (or intentional) prompt confusion.
-- Makes results more predictable and consistent.
+**Three common delimiter patterns:**
 
-**Simple patterns to copy-paste:**
-
-Pattern 1 — Triple dashes (good for short text):
-```
-Instruction: Summarize the text between the dashes in one sentence.
-
----
-[USER DATA HERE]
----
-```
-
-Pattern 2 — XML-style tags (clear and explicit):
-```
-Translate only the text in <input> tags to Spanish.
-
-<input>
-Hello, how are you?
-</input>
-```
-
-Pattern 3 — Triple backticks (good for code or long passages):
+**Pattern 1 — Triple backticks** (good for code or long passages):
 ```
 Summarize the following text in 2 sentences:
 
@@ -334,25 +328,65 @@ Summarize the following text in 2 sentences:
 \`\`\`
 ```
 
-**Quick checklist:**
-- Pick one style and use it consistently.
-- Tell the model to only act on the delimited content.
-- When mixing user data with instructions, always use a delimiter.
+**Pattern 2 — Triple dashes** (good for short text):
+```
+Instruction: Summarize the text between the dashes in one sentence.
 
+---
+[USER DATA HERE]
+---
+```
 
+**Pattern 3 — XML-style tags** (clear and explicit):
+```
+Translate only the text in <input> tags to Spanish.
 
+<input>
+Hello, how are you?
+</input>
+```
+
+**Code example with delimiters:**
 
 ```python
+# Use triple backticks to separate the review text from instructions
+user_review = "The laptop works great but the charger broke after 2 weeks."
+
 prompt = f"""
-Identify the language and ISO 639-1 code of the text below.
-Respond as JSON with keys: language, iso639_1.
-Text: ```Bonjour, comment puis-je vous aider aujourd'hui ?```
+Analyze the customer review below and extract:
+1. The product mentioned
+2. The overall sentiment (positive/negative/mixed)
+3. Any specific issues mentioned
+
+Review:
+'''
+{user_review}
+'''
+
+Format your response as:
+Product: <product>
+Sentiment: <sentiment>
+Issues: <list of issues or "none">
 """
-response = get_completion(prompt)
+
+response = get_completion(prompt, temperature=0)
 print(response)
-
-
 ```
+
+Expected output:
+```
+Product: laptop (and charger)
+Sentiment: mixed
+Issues: charger broke after 2 weeks
+```
+
+**Quick checklist:**
+- Pick one delimiter style and use it consistently.
+- Tell the model to only act on the delimited content.
+- When mixing user data with instructions, always use a delimiter.
+- Delimiters help prevent prompt injection and keep results predictable.
+
+---
 
 ### 6. Ask for a specific format
 
