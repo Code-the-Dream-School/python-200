@@ -25,7 +25,7 @@ The goals of NLP span a wide spectrum, including:
 
 Ultimately, NLP aims to make human-computer interaction as intuitive as human-to-human exchanges, so it can be used in fields as diverse as healthcare diagnostics, explaining complex legal documents, and personalized education. 
 
-### NLP Methods
+### NLP Methods: A brief history
 The field of NLP has evolved dramatically over the past 50 years—from rigid, rule-based systems to data-driven methods powered by machine learning and neural networks. In its early days, human experts manually encoded linguistic rules into NLP programs, but these rule-based systems were brittle and struggled with the variability of real-world language.
 
 In the late 20th century, statistical methods introduced probabilities to model language patterns, paving the way for machine learning approaches that learn directly from data. Today, the dominant paradigm is deep learning. This is a subset of machine learning that uses multilayer neural networks to automatically extract features from raw text.
@@ -63,7 +63,7 @@ With this approach, you can train on billions or trillions of examples without h
 
 There are really *two* different learning modes for LLMs. First, by training on huge bodies of text in the next-word-prediction task, we end up with what are often called *foundational*, *pretrained*, or *base* models. These are general purpose models that embody information from extremely broad sources. 
 
-However, these foundational models don't work well in special-purpose jobs like personal assistants, chatbots, etc. A *second* second training step fine-tunes these models on smaller, labeled datasets for specific applications.
+However, these foundational models don't work well in special-purpose jobs like personal assistants, chatbots, etc. A *second* training step fine-tunes these models on smaller, labeled datasets for specific applications.
 
 <p align="center">
   <img src="resources/pretrained_finetuned_llm.jpg" alt="two types of training" width="600"><br>
@@ -76,9 +76,9 @@ Another extremely powerful fine-tuning method is [reinforcement learning from hu
 
 If you have ever been using ChatGPT and it has asked you to rank two responses, this is OpenAI collecting data for future rounds of RLHF.
 
-The result with fine-tuning is the production of specialized models built on top of the same foundation. While in this course we will not go through the process of building your own LLM, the excellent book [Build a Large Language Model from Scratch](https://www.manning.com/books/build-a-large-language-model-from-scratch) by Sebastian Raschka, walks you through this in detailk using PyTorch if you are interested. The above picture is adapted from his book.
+The result with fine-tuning is the production of specialized models built on top of the same foundation. While in this course we will not go through the process of building your own LLM, the excellent book [Build a Large Language Model from Scratch](https://www.manning.com/books/build-a-large-language-model-from-scratch) by Sebastian Raschka, walks you through this in detail using PyTorch if you are interested. The above picture is adapted from his book.
 
-In the next section we will dig into the details about how LLMS actually work. As we said, it isn't just that they are *large*, but their *architecture*, that makes them so powerful. 
+In the next section we will dig into the details about how LLMs actually work. As we said, it isn't just that they are *large*, but their *architecture*, that makes them so powerful. 
 
 ## 3. LLM architecture
 In this section we will walk step-by-step through the following simplifed LLM architecture diagram:
@@ -181,7 +181,9 @@ That’s the entire final step: one context-rich vector in, one predicted token 
 For a quick overview of LLM function, [check out this video](https://www.youtube.com/watch?v=5sLYAQS9sWQ).
 
 ## 4. Demo: Visualizing embeddings
-In the following demonstration we will visualize text embeddings based on their semantic similarity. Instead of similareity of single words like `apple` and `phone`, we will look at similarities among entire *sentences*.  
+In the following demonstration we will visualize text embeddings based on their semantic similarity. Instead of similarity of single words like `apple` and `phone`, we will look at similarities among entire *sentences*.  The following should be run from your local machine so you can see the result of the embedding visualization, and tinker with it as you see fit. 
+
+Embeddings are a concept that will come up again and again in this course, so it is worth spending some time understanding how they work, and building some intuition.
 
 First, let's import the packages required for this demo:
 
@@ -192,9 +194,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from sklearn.decomposition import PCA
 ```
-We first need to load our OpenAI API key so you can use the embedding model that is part of their suite of models. We will discuss this more in the lesson on chat completions 
-
-> TODO: handle this discussion better -- put in README for this week and discuss handling of api keys, where to put it, that it will recursively seach parent dsirectories up to root). Please be sure not to share your API key!
+We first need to load our OpenAI API key so you can use the embedding model that is part of their suite of models. We will discuss this more in the lesson on chat completions. Briefly, load_dotenv() will look for a file called `.env` in the current directory (or parent directories) that contains your API key. 
 
 ```python
 if load_dotenv():
@@ -294,7 +294,7 @@ print(embeddings.shape)
 In this case, each summary is projected to vector that's a little more than 1500-dimensions. 
 
 ### Visualize embeddings
-It is impossible to visualize a 1500-dimension vector space directly, so we will use our old stand-by from Week 2, PCA, to project the 1500-dimension embedding to a 2D space to create more intuitive plots. It makes more clear the similarity relations among the embeddings, revealing the semantic structure between the summaries. 
+It is impossible to visualize a 1500-dimension vector space directly, so we will use our old stand-by from Week 2, principal component analysis (PCA), to project the 1500-dimension embedding to a 2D space to create more intuitive plots. It makes more clear the similarity relations among the embeddings, revealing the semantic structure between the summaries. 
 
 
 ```python
@@ -314,7 +314,7 @@ plt.ylabel("PCA Component 2")
 plt.show()
 ```
 
-This mapping shows that similar movies tend to cluster together in the embedding space. E.g., Christmas movies in one region of the space, romcons in another (note Love Actually is a Christmas Romcom). Feel free to drop new summaries in to see where they fall in this movie map.
+This mapping shows that similar movies tend to cluster together in the embedding space. E.g., Christmas movies in one region of the space, romcons in another (note `Love Actually` is a Christmas Romcom). Feel free to drop new summaries in to see where they fall in this movie map.
 
 You can now experiment with any text you like. Embedding models allow us to search and compare text based on *meaning*, not literal keywords. This is the foundation for semantic search, and retrieval-augmented generation (RAG) systems, which we will explore next week. 
 
