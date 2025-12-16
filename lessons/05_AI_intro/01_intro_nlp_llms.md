@@ -183,7 +183,7 @@ For a quick overview of LLM function, [check out this video](https://www.youtube
 ## 4. Demo: Visualizing embeddings
 In the following demonstration we will visualize text embeddings based on their semantic similarity. Instead of similarity of single words like `apple` and `phone`, we will look at similarities among entire *sentences*.  The following should be run from your local machine so you can see the result of the embedding visualization, and tinker with it as you see fit. 
 
-Embeddings are a concept that will come up again and again in this course, so it is worth spending some time understanding how they work, and building some intuition.
+Embeddings are a concept that will come up again and again in this course, so it is worth spending some time understanding how they work, and building some intuitions.
 
 First, let's import the packages required for this demo:
 
@@ -194,7 +194,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from sklearn.decomposition import PCA
 ```
-We first need to load our OpenAI API key so you can use the embedding model that is part of their suite of models. We will discuss this more in the lesson on chat completions. Briefly, load_dotenv() will look for a file called `.env` in the current directory (or parent directories) that contains your API key. 
+We first need to load our OpenAI API key so you can use the embedding model that is part of their suite of models. We will discuss this more in the lesson on chat completions: briefly, `load_dotenv()` will look for a file called `.env` in the current directory (or parent directories) that contains your API key. 
 
 ```python
 if load_dotenv():
@@ -270,7 +270,7 @@ movies = [
     }
 ]
 ```
-Let's use the above to create a list of titles and summaries:
+Let's use the above to create lists of titles and summaries:
 
 ```python
 movie_titles = [m["title"] for m in movies]
@@ -316,10 +316,10 @@ plt.show()
 
 This mapping shows that similar movies tend to cluster together in the embedding space. E.g., Christmas movies in one region of the space, romcons in another (note `Love Actually` is a Christmas Romcom). Feel free to drop new summaries in to see where they fall in this movie map.
 
-You can now experiment with any text you like. Embedding models allow us to search and compare text based on *meaning*, not literal keywords. This is the foundation for semantic search, and retrieval-augmented generation (RAG) systems, which we will explore next week. 
+You can now experiment with any text you like. Embedding models allow us to search and compare text based on *meaning*, not literal keywords. This is the foundation for semantic search, and most modern-day retrieval-augmented generation (RAG) systems, which we will explore next week. 
 
 ## 5. Key points
-Congrats you have just covered the basics of natural language processing and modern LLM function! Some of the key points we covered:
+Congrats: you have just covered the basics of natural language processing and modern LLM function! Some of the key points we covered:
 
 - Modern NLP helps computers process and generate human language using data-driven deep learning rather than hand-crafted rules.
 - LLMs like GPT are trained with self-supervised learning (autoregression) to predict the next word in a sequence -- essentially, autocomplete at scale.
