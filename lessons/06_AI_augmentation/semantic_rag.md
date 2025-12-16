@@ -122,7 +122,7 @@ Now that we have chunked our documents, we will get into the key ideas behind se
 
 ### From text to embeddings
 
-Next, the text chunks are converted to vector embeddings. This is a key feature in modern RAG implementations. A vector embedding is essentially a list of numbers that uniquely represents a piece of text, audio, image or any other form of data. [Here](https://www.ibm.com/think/topics/embedding) is a great IBM article talking about embeddings in general and their uses. The embedding model used in this example is OpenAI's "text-embedding-3-small." You can learn more about it in the documentation [here](https://platform.openai.com/docs/models/text-embedding-3-small). 
+Next, the text chunks are converted to vector embeddings. This is a key feature in modern RAG implementations. A vector embedding is essentially a list of numbers that uniquely represents a piece of text, audio, image or any other form of data. [Here](https://www.ibm.com/think/topics/embedding) is a great IBM article talking about embeddings in general and their uses. We've also discussed embeddings in the [Intro to AI lesson](../05_AI_intro/01_intro_nlp_llms.md). The embedding model used in this example is OpenAI's "text-embedding-3-small." You can learn more about it in the documentation [here](https://platform.openai.com/docs/models/text-embedding-3-small). 
 <!-- The reason we use embeddings instead of text in LLMs and RAG is that we can perform efficient search operations that account for nuances in context that would be very difficult or even impossible in the text space. -->
 
 <!-- There are many embedding models out there that map text to vectors. The model has been trained on the corpus of text in the internet. -->
@@ -178,13 +178,21 @@ In this semantic RAG implementation, the idea is to retrieve relevant chunks and
 FAISS index ready. Vectors: 930
 ``` -->
 
+Before we build the FAISS index, it's worth pausing to focus on what an index means in the context of RAG pipelines. An index is a vector store that holds our embeddings and is optimized for fast similarity search over those embeddings. The term is used loosely -- sometimes it refers to storage, sometimes to search, and sometimes to both at once.
+
+In our case, FAISS gives us a simple, in-memory way to store embeddings and retrieve the most similar ones, which corresponds to the "Data Indexing" and "Retrieval Similarity" steps in the figure above. FAISS is not a full SQL-based database like the pgvector setup we will see later. Instead, it provides a temporary (ephemeral) vector storage solution that exists only while your script is running. This lets us keep the focus on understanding the retrieval workflow without needing to set up a database server
+
 ```python
 faiss.normalize_L2(emb)
 index = faiss.IndexFlatIP(dim)
 index.add(emb)
 print("FAISS index ready. Vectors:", index.ntotal)
 id2meta = {i: docs[i] for i in range(len(docs))}
+```
 
+Now that we've created the FAISS index, we define a function (`retrieve`) that retrieves the relevant context from this index given the query. 
+
+```python
 def retrieve(query, k=3, model="text-embedding-3-small"):
     q_emb = embed_texts([query], model=model)
     faiss.normalize_L2(q_emb)
@@ -300,14 +308,14 @@ In this basic implementation, the chunking of documents and storing into the FAI
 
 ### Working with an online database
 
-Previously, you built a small semantic RAG system using OpenAI embeddings and  FAISS as a local in-memory vector store. In this notebook, you will rebuild the same basic pipeline using a **real database**:
+Previously, you built a small semantic RAG system using OpenAI embeddings and  FAISS as a local in-memory vector store. In this notebook, you will rebuild the same basic pipeline using a **real database**, using the following:
 
 - PostgreSQL running in Docker
 - The `pgvector` extension for vector similarity search
 
-So far, our RAG systems have stored embeddings in memory. This works for small demos, but becomes impractical as soon as you want to build something real. A database like PostgreSQL with the pgvector extension solves several problems that in-memory systems cannot.
+So far, our RAG systems have stored embeddings in memory. This works for small demos, but becomes impractical as soon as you want to build something real. A database like PostgreSQL with the pgvector extension solves several problems that in-memory systems cannot. Here are the five reasons production teams switch to **PostgreSQL + pgvector**:
 
-1. An in-memory vector store disappears when the notebook stops running. That means every time you restart your environment, you need to re-embed all your documents from scratch. If embeddings come from a paid API, this becomes expensive very quickly. A real vector database stores embeddings permanently, so you only pay for embedding once and reuse them forever.
+1. An in-memory vector store disappears when the notebook stops running. That means every time you restart your environment, you need to re-embed all your documents from scratch. If embeddings come from a paid API, this becomes expensive very quickly. A real vector database stores embeddings permanently, so you only pay for embedding once and reuse them forever. 
 
 2. In-memory stores do not scale. They work for a few dozen or a few hundred vectors, but real applications often need tens of thousands or millions of embeddings. A database is built for this. It handles large datasets, indexes them efficiently, and gives fast retrieval even as your collection grows.
 
@@ -317,9 +325,9 @@ So far, our RAG systems have stored embeddings in memory. This works for small d
 
 5. pgvector is a PostgreSQL extension designed specifically for vector search. It adds the ability to store and query embeddings directly inside the database, using indexes that support efficient similarity search. This combines the familiarity of SQL with the power of vector retrieval in a single place.
 
-This is why we are moving from the simple in-memory stores we built earlier to a real database. It gives us persistence, scale, reliability, shared access, and cost savings by avoiding unnecessary re-embedding.
+To summarize, a real database gives us persistence, scale, reliability, shared access, and cost savings by avoiding unnecessary re-embedding.
 
-Up to now our RAG demos have kept everything in memory (a FAISS index living inside one Python process). That's great for learning, but it breaks the moment you want a real application. Here are the five reasons production teams switch to **PostgreSQL + pgvector**:
+<!-- Up to now our RAG demos have kept everything in memory (a FAISS index living inside one Python process). That's great for learning, but it breaks the moment you want a real application. Here are the five reasons production teams switch to **PostgreSQL + pgvector**:
 
 1. The biggest problem is persistence: if the notebook restarts, you lose everything and have to regenerate all embeddings again. That costs money and time. A real system needs its data to survive restarts, crashes, and deployments, and PostgreSQL with pgvector gives us that durability.
 
@@ -329,15 +337,15 @@ Up to now our RAG demos have kept everything in memory (a FAISS index living ins
 
 4. Traditional in-memory stores also provide no reliability features. There are no backups, no permission systems, no transactions, and no ability to restore your data if something goes wrong. PostgreSQL gives you all of the reliability and features of a real database.
 
-In sum, in memory vector stores are great for learning some basic RAG features, but PostgreSQL + pgvector is the default choice for 90 % of real-world RAG applications.
+In sum, in memory vector stores are great for learning some basic RAG features, but PostgreSQL + pgvector is the default choice for 90 % of real-world RAG applications. --> 
 
-> We will use psycopg2-binary in this demo. Psycopg2 is the standard PostgreSQL driver for Python. It is the library that lets Python code connect to a PostgreSQL database and do standard CRUD operations. It allows you to open a connection, run SQL queries, fetch results, insert/update rows, etc. 
+### A quick primer on Docker, PostgreSQL, and pgvector
 
-### pgvector - A brief introduction
+[Docker](https://www.docker.com/) is an industry-standard tool that runs applications inside containers. A container is a self-contained environment that includes everything the application needs to run: the operating system, libraries, configuration, and the application itself. Because of this, a container behaves the same on Windows, macOS, and Linux.
 
-pgvector is a PostgreSQL extension that adds first-class support for vector data. Normally, relational databases are great at storing tables, text, numbers, and JSON, but they have no idea what to do with embeddings. Without pgvector, you would have to store embeddings as arrays or blobs and write your own similarity-calculation code.
+[PostgreSQL](https://www.postgresql.org/) is an open-source object-relational database management system, developed at the UC Berkeley Computer Science department. It builds on POSTGRES and supports a variety of complex SQL queries. We will use PostgreSQL to create and query the database in the docker container.
 
-pgvector solves this by giving PostgreSQL a new data type called VECTOR, along with built-in functions for similarity search. That means you can store embeddings in the database exactly the same way you store other data, and then run queries like "find the 3 closest embeddings to this query vector" directly inside SQL. 
+[pgvector](https://github.com/pgvector/pgvector) is a PostgreSQL extension that adds first-class support for vector data. Normally, relational databases are great at storing tables, text, numbers, and JSON, but they have no idea what to do with embeddings. Without pgvector, you would have to store embeddings as arrays or blobs and write your own similarity-calculation code. pgvector solves this by giving PostgreSQL a new data type called VECTOR, along with built-in functions for similarity search. That means you can store embeddings in the database exactly the same way you store other data, and then run queries like "find the 3 closest embeddings to this query vector" directly inside SQL. 
 
 The main benefit is that you get a real database as your vector store: instead of running a separate specialized vector engine, you can keep everything inside one well-vetted SQL database system. This is why pgvector has become one of the most widely used vector-store backends in production RAG systems.
 
@@ -345,11 +353,13 @@ To use `pgvector`, we need a PostgreSQL database with the `pgvector` extension i
 
 We could try to install PostgreSQL and pgvector separately on every local machine, but that would look different on each operating system and would take a lot of time to debug. Instead, we use Docker to run everything in a clean, isolated environment that works the same everywhere.
 
+> **Note:** We will use psycopg2-binary in this demo. Psycopg2 is the standard PostgreSQL driver for Python. It is the library that lets Python code connect to a PostgreSQL database and do standard CRUD operations. It allows you to open a connection, run SQL queries, fetch results, insert/update rows, etc.
+
 ### Setting up the database on Docker
 
-Docker is an industry-standard tool that runs applications inside containers. A container is a self-contained environment that includes everything the application needs to run: the operating system, libraries, configuration, and the application itself. Because of this, a container behaves the same on Windows, macOS, and Linux. For our purposes, Docker has one job in this lesson: run a PostgreSQL server that already has the pgvector extension installed. 
+For our purposes, Docker has one job in this lesson: run a PostgreSQL server that already has the pgvector extension installed. 
 
-See installation instructions for Docker for:
+To install Docker, follow the instructions for:
 
 - [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
 - [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
@@ -401,7 +411,7 @@ docker compose up -d
 
 You should only need to do this once per session. If you restart your computer or stop the container, you may need to run it again.
 
-Once that finishes, within Docker Desktop, click run (the arrow sign) on "Actions" column for the `pgvector_store` container that comes up. Once the container is running, you should see something similar to the image below.
+Once that finishes, within Docker Desktop (in Windows) you should see something similar to the image below.
 
 ![Docker screenshot](resources\docker_desktop_running.png)
 
@@ -437,20 +447,22 @@ def get_connection():
     return psycopg2.connect(PG_CONN_STR)
 ```
 
-The loading, chunking and embedding of the text in the documents is the same as the custom semantic RAG implementation as seen previosly. Next, we load the chunks onto the docker container database. To do this, we first initialize the SQL database in the docker container.
+The code up until `PG_CONN_STR` is the same as the semantic RAG implementation from earlier. Note that `PG_CONN_STR` contains the username, password, and port that was set in the `yaml` file earlier. `psycopg2.connect(PG_CONN_STR)` connects to the postgres database `ctd_rag` in the docker container.
+
+The loading, chunking and embedding of the text in the documents(i.e. the "text extraction," "split text into chunks," and "generate embeddings" steps in the figure at the beginning of the lesson) is the same as the custom semantic RAG implementation as seen previously. Next, we load the chunks onto the docker container database. To do this, we first initialize the SQL database in the docker container.
 
 ### Initialize SQL table in docker container
 
-We connect to the Postgres server running in Docker and:
+After we connect to the Postgres server running in Docker, the code below is used to:
 
 - Enable the `pgvector` extension
-- Create a `rag_chunks` table with:
+- Create a `rag_chunks` SQL table with the columns:
   - `doc_id`
   - `chunk_id`
   - `text`
   - `embedding` (a `vector(dim)` column)
 
-We will use the `dim` we just measured from the embeddings.
+We will use the `dim` measured from the embeddings (refer to the "from text to embeddings" section above).
 
 ```python
 with get_connection() as conn:
@@ -480,14 +492,15 @@ with get_connection() as conn:
 print("Database and rag_chunks table are ready.")
 ```
 
+The `CREATE EXTENSION IF NOT EXISTS` query can be thought of as an import statement to enable pgvector. We then pass the standard SQL commands through the connection cursor to the Postgres database to create the `rag_chunks` table (after deleting any previously created duplicates). This table will house the embedded chunks from the documents. Note that once we enable pgvector, we have access to the `vector` datatype which we use to store the vector embeddings of the chunks. 
+
 Next, we insert the chunks into the created table.
 
 ### Insert chunks into table
 
-We now insert every chunk and its embedding into the `rag_chunks` table.
+We now insert every chunk and its embedding into the `rag_chunks` table. This is the "data indexing" step in the figure at the beginning of the lesson.
 
-Each row has:
-
+Each row is associated with a chunk and has:
 - `doc_id`: PDF file name
 - `chunk_id`: chunk index within that document
 - `text`: the chunk text
@@ -513,31 +526,35 @@ with get_connection() as conn:
 print("Inserted", len(docs), "rows into rag_chunks.")
 ```
 
-> **Important**: We only do this embedding step ONCE. In a real RAG system, you never want to re-embed your entire document collection every time you run a notebook or restart your app. That would waste money (thousands of unnecessary embedding API calls),  waste time (minutes to hours of preprocessing), make the system slow to start. By storing all embeddings permanently in Postgres + pgvector, we pay the cost ONE TIME, and from then on all queries are cheap, all retrievals are instant, nothing needs to be rebuilt. This is why real production RAG systems always use a persistent vector store. RAG isn’t cheap unless your vector store is persistent.
+In the code above, we iterate through the chunks (`docs`) and their corresponding embeddings (`emb`), passing the document ID (`doc_id`), chunk ID (`chunk_id`), chunk text (`text`), and the chunk vector embedding (`vec`) to the `rag_chunks` table. Note that we don't need to pass a value of `id` to the table since it is designated as `SERIAL` and `PRIMARY KEY`, meaning it is self-incrementing (serial) and it must be unique and non-null (primary key).
+
+> **Important**: We only do this embedding step ONCE. In a real RAG system, you never want to re-embed your entire document collection every time you run a notebook or restart your app. That would waste money (thousands of unnecessary embedding API calls), waste time (minutes to hours of preprocessing), make the system slow to start. By storing all embeddings permanently in Postgres + pgvector, we pay the cost ONE TIME, and from then on all queries are cheap, all retrievals are instant, nothing needs to be rebuilt. This is why real production RAG systems always use a persistent vector store. RAG isn’t cheap unless your vector store is persistent.
 
 ### 7. Semantic search with pgvector
 
 Now that the database holds all of our chunks and embeddings, we can:
-
 - Embed a query
-- Use the `<->` operator in SQL to compute vector distances. This is a special operator for pgvector for computing distances between embedding vectors. This is what makes pgvector so powerful. 
+- Use the `<->` operator in SQL to compute vector distances. This is a special operator for pgvector for computing distances between embedding vectors. This is what makes pgvector so powerful. The pgvector [github page](https://github.com/pgvector/pgvector) lists all distance measures you can use as similarity metrics.
 - Retrieve the top `k` most similar chunks
 
-For additional information, from their [github page](https://github.com/pgvector/pgvector):
-- `<->` - L2 distance
+<!-- - `<->` - L2 distance
 - `<#>` - (negative) inner product
 - `<=>` - cosine distance
 - `<+>` - L1 distance
 - `<~>` - Hamming distance (for binary vectors)
-- `<%>` - Jaccard distance (for binary vectors)
+- `<%>` - Jaccard distance (for binary vectors) -->
 
+Before we perform semantic search on the SQL database, we must first convert the query to the vector embedding. This is the "generate embeddings" step for the user query in the figure at the beginning of the lesson. The function below does this.
 ```python
 def embed_query(query_text: str) -> np.ndarray:
     """Create an embedding for a single query string."""
     q_vec = embed_texts([query_text])
     return q_vec[0]
+```
 
+The function below searches the database for the top `k` most relevant chunks to the query. The function below performs the "pass query" and "retrieve similarity" steps in the figure at the beginning of the lesson.
 
+```python
 def search_pgvector(query_text: str, k: int = 5):
     q_emb = embed_query(query_text)
     q_vec = q_emb.astype(float).tolist()
@@ -566,8 +583,13 @@ def search_pgvector(query_text: str, k: int = 5):
         for r in rows
     ]
 ```
+Once the query embedding is obtained, the SQL query is called to retrieve the top `k` chunks from the `rag_chunks` database that have the lowest distance to the query embedding (`embedding <-> %s::vector`). Note that since we're using distance as the similarity metric, smaller distance implies greater relevance of the chunk to the query. If you were to use cosine similarity (like in the semantic RAG implementation before this), you would retrieve the chunks in descending order of `embedding <-> %s::vector`. So the SQL query would be modified to have `ORDER BY embedding <-> %s::vector DESC`.
+
+Let's see the SQL based semantic search in action through a quick test.
 
 #### Quick Test
+
+The test query is "When did BrightLeaf partner with SunSpan?" and we want the LLM to base its response on the top 3 retrieved context chunks. The code snippet below feeds this to the `search_pgvector()` method and prints the retrieved chunks one at a time.
 
 ```python
 # Quick test to make sure our function works
@@ -576,20 +598,26 @@ for r in test_results:
     print(f"[{r['doc_id']} chunk {r['chunk_id']}] dist={r['distance']:.4f}")
     print(r["text"], "...\n")
 ```
-The output:
+The output looks like below:
 
-```text
+<code>
 [partnerships.pdf chunk 1] dist=0.7433
-. This partnership targets legacy industrial zones in Ohio and Michigan, pairing solar and wind power systems with SunSpan's real-time grid analytics. The collaboration has already produced measurable results, with the first hybrid sites showing 18 percent improved grid stability and 30 percent lower emissions. SunSpan and BrightLeaf also co-authored a white paper on the economic benefits of decarbonizing regional manufacturing supply chains. Academic and Workforce Collaborations Beyond corporate partnerships, BrightLeaf works closely with universities and community colleges to train the next generation of clean-energy professionals. The Bright Scholars Initiative offers scholarships and internships for students in sustainability, electrical engineering, and environmental data analytics. Collaboration with technical schools ensures a pipeline of skilled labor for new projects. ...
+. This partnership targets legacy industrial zones in Ohio and Michigan, pairing solar and wind power systems with SunSpan's real-time grid analytics. The collaboration has already produced measurable results, with the first hybrid sites showing 18 percent improved grid stability and 30 percent lower emissions. SunSpan and BrightLeaf also co-authored a white paper on the economic benefits of decarbonizing regional manufacturing supply chains. Academic and Workforce Collaborations Beyond corporate partnerships, BrightLeaf works closely with universities and community colleges to train the next generation of clean-energy professionals. The Bright Scholars Initiative offers scholarships and internships for students in sustainability, electrical engineering, and environmental data analytics. Collaboration with technical schools ensures a pipeline of skilled labor for new projects. ... <br>
 
 [partnerships.pdf chunk 0] dist=0.7587
-EcoVolt Energy (2022 Partnership) BrightLeaf's collaboration with EcoVolt Energy, established in 2022, focused on delivering microgrid solutions to rural communities in Georgia and South Carolina. The initiative combined BrightLeaf's solar generation systems with EcoVolt's battery storage expertise. Together, they launched five pilot sites that reduced community energy costs by an average of 25 percent. The partnership also created 40 permanent local jobs and helped utilities in the region study the integration of renewable storage into traditional grids. SunSpan Microgrids (2025 Partnership) In 2025, BrightLeaf joined forces with SunSpan Microgrids to develop hybrid renewable infrastructure for the Midwest. This partnership targets legacy industrial zones in Ohio and Michigan, pairing solar and wind power systems with SunSpan's real-time grid analytics. ...
+EcoVolt Energy (2022 Partnership) BrightLeaf's collaboration with EcoVolt Energy, established in 2022, focused on delivering microgrid solutions to rural communities in Georgia and South Carolina. The initiative combined BrightLeaf's solar generation systems with EcoVolt's battery storage expertise. Together, they launched five pilot sites that reduced community energy costs by an average of 25 percent. The partnership also created 40 permanent local jobs and helped utilities in the region study the integration of renewable storage into traditional grids. SunSpan Microgrids (2025 Partnership) In 2025, BrightLeaf joined forces with SunSpan Microgrids to develop hybrid renewable infrastructure for the Midwest. This partnership targets legacy industrial zones in Ohio and Michigan, pairing solar and wind power systems with SunSpan's real-time grid analytics. ... <br>
 
 [mission_statement.pdf chunk 0] dist=0.8248
 Overview BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a privilege. Our mission is to make solar power practical, affordable, and accessible to communities that have historically been left behind in the transition to clean energy. We are not only engineers and builders, but educators, partners, and advocates for a more resilient and equitable power grid. Every installation represents more than energy savings-it is an investment in long-term community well-being. Expanded Vision The company began its journey in the southeastern United States, where energy poverty and infrastructure challenges remain significant barriers to renewable adoption. ...
-```
+</code>
+
+When you compare with the "Example - Semantic RAG in action" section which uses the same query and is run to retrieve the same number of context chunks, you will notice that the exact same chunks are retrieved inspite of the pgvector search function using distance instead of cosine similarity. Generally the choice of similarity metric should not affect the retrieval process, but in rare circumstances this can happen. Additionally, each chunk contains relevant information to the query which signifies that the retrieval process is working properly. 
+
+Now we have all the pieces to plug in the postgreSQL + pgvector database into the RAG pipeline.
 
 ### Using pgvector in the RAG pipeline
+
+The `answer_with_pgvector` function combines the pgvector based retrieval process with the "pass chunks" and "generate answer" steps in the figure at the beginning of the lesson.
 
 ```python
 def answer_with_pgvector(question: str, k: int = 5) -> str:
@@ -597,8 +625,17 @@ def answer_with_pgvector(question: str, k: int = 5) -> str:
     hits = search_pgvector(question, k=k)
     answer = ask_llm(question, hits)
     return answer
+```
 
+The `ask_llm` function is the same as the one in the "Augment and Generate" section in this lesson, key difference is it uses the context retrieved using pgvector instead of the FAISS-based semantic search approach used before.
 
+Let's look at the full RAG pipeline in action through an example.
+
+### Example - pgvector-based semantic RAG in action
+
+We use the same query as the previous example and run it to retrieve the 3 most relevant chunks as before. The `search_pgvector` method is run to check the retrieved context documents. The `answer_with_pgvector` generates the response based on the pgvector based RAG pipeline. 
+
+```python
 q = "When did BrightLeaf partner with SunSpan and what did they focus on?"
 ctx_hits = search_pgvector(q, k=3)
 print("Context docs:", [c["doc_id"] for c in ctx_hits])
@@ -606,14 +643,14 @@ print()
 print(answer_with_pgvector(q, k=3))
 ```
 
-The `ask_llm` function is the same as before, key difference is it uses the context retrieved using pgvector instead of the FAISS-based semantic search approach used before.
-
-The output:
+The output of the code snippet above looks like below:
 ```text
 Context docs: ['partnerships.pdf', 'partnerships.pdf', 'mission_statement.pdf']
 
 BrightLeaf partnered with SunSpan in 2025, focusing on developing hybrid renewable infrastructure for the Midwest, specifically targeting legacy industrial zones in Ohio and Michigan by pairing solar and wind power systems with SunSpan's real-time grid analytics.
 ```
+
+Like before, the top 3 most relevant retrieved chunks come from the "partnerships.pdf" and "mission_statement.pdf" documents. The generated response also answers the query in an accurate, concise manner.
 
 Congratulations!! We now have a persistent database that we can query, we don't have to re-index every time we start this notebook, it will persist. Others can access it as long as they have the db params (the address, password, etc). To test this, try two things: 
 - Close the notebook/script file but keep the database running, reopen it (clear all outputs if applicable) and run only the code necessary to use the RAG pipeline to answer a query (not the code to read, chunk, embed, and add the text into the docker database)
