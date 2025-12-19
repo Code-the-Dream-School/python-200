@@ -10,153 +10,120 @@
 3. [Hands-on Activity: Your First Cloud AI Application](#3-hands-on-activity-your-first-cloud-ai-application)
 4. [Wrap-up](#4-wrap-up)
 
+Last week, we have successfully set up our cloud account and gtt the first touch of cloud compute. Now we are ready to create something more interesting: a real AI ChatBOT application hosted on a virtual machine on Azure. But before that, we need to make sure we have the right set up!
+
+Here’s what you’ll learn to do:
+1. Use a **Resource Group** to organize your cloud resources 
+2. Set up a **Virtual Machine (VM)** — your own computer in the cloud 
+3. Install Python and deploy a **Streamlit + OpenAI chatbot app** 
+4. Open the correct network ports so you can view your app in a browser 
+5. Shut everything down safely so you don’t rack up charges
+You’ll do all of this through the **Azure Portal** and **Cloud Shell** that we learned about in the previous week.
+
 # 1. Managing Cloud Resources
 
+In Azure, you can create resources to store files, host API, run codes, and do everything you need. But before doing these cool stuff, you will first need to create a resource group.
+
 + **What is a resource group?**  
-  In Azure, a resource group is a collection of resource, such as virtual machines and storage, that is managed with the same rules. You can set one lifecycle, netrowking, or auto-scale policy and apply them to all the resource in the same resource group so that you don't have to specify the rule every time you start a new virtual machine. 
+  A resource group is like a folder that holds all the pieces of one project. For example, your virtual machine, storage, and network settings can all live in the same group. Managing them together makes it easy to update or delete everything later with one command. 
 
-+ **Region and Project**  
-  In addition to resource group, you will also need to specify the region and project. A **region** is where your resources are physically located: if you select US East, that means the machines running your code are physically located in a data center somewhere in the US East region.  
+  When you create a resource group, you also choose a **region**. A region is the physical location of Azure’s data center (for example, "East US" or "West Europe"). All resources in one group live in that region.  
 
-  In Azure, a **project** is not a fixed object but rather a concept that can be implemented using tags, naming conventions, or resource groups. For example, you can use a tag like `project:CustomerPortal` to group resources related to a specific project. This allows you to filter, organize, and report on resources across multiple resource groups or subscriptions.
+  *Tip:* If you want resources in different locations, just make another resource group in a different region.
 
-  + **Warning: One resource group is bound to one region**  
-  This means that, by default, all of your resources will be running from the same region. However, this does not mean you cannot manage multiple resources across regions. You can create multiple resource groups in different regions to distribute your resources geographically. For example, you might have one resource group in `East US` for low-latency access to users on the East Coast and another in `West Europe` for European users. While resources within a single resource group are typically optimized for the same region, cross-region management is possible using Azure's global tools, such as Azure Resource Manager (ARM) templates or the Azure CLI.
-
-+ **Resource Management Accross Platform**  
-  Notice that resource group, project, and region exist in GCP, AWS, and Azure, but there are some minor differences. In Azure, a resource group is a logical container for resources, while in AWS, a similar concept is implemented using tags and organizational units. GCP uses projects as the primary organizational unit, which combines the functionality of Azure's resource groups and subscriptions. Regions, on the other hand, are consistent across all three platforms, representing the physical location of data centers, but the naming conventions and available regions may vary slightly between providers.
-
-+ **Manage Resource Group:**
-  Azure provide the following ways to manage resources so you can choose whichever is most convenient to work with. The following is a simple summary of Azure's resource group management taken from Azure's website  
-     
-    + **Azure Portal:**  
-      A graphic user interface where you can login to your Azure account and manage the resources with mouse and keyboard. The following is a quick snapshot of creating a resource group with Azure portal.  
-    ![Create Resource Group](resources/resource_group_animation.gif)
-    + **Command Line Interface (Azure CLI, Azure Powershell)**  
-      Azure, AWS, GCP all have built-in command line tool so that you can manage resources with bash or powershell syntax. For instance, we can create resource group called `exampleGroup` in `westus` region with the following command:  
-      `az group create --name exampleGroup --location westus`  
-      We can also delete the resource group we just created like this:
-      `az group delete --name exampleGroup`   
-      
-    + **Python API**
-      Most of the cloud providers also have python APIs so that you can manage your resources with python code. For instance, the same create and delete operations could be done in the following python API:  
-      + Create resource group
-      ```
-      import os
-      from azure.identity import AzureCliCredential
-      from azure.mgmt.resource import ResourceManagementClient
-
-      credential = AzureCliCredential()
-      subscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]
-
-      resource_client = ResourceManagementClient(credential, subscription_id)
-
-      rg_result = resource_client.resource_groups.create_or_update(
-          "exampleGroup",
-          {
-              "location": "westus"
-          }
-      )
-
-      print(f"Provisioned resource group with ID: {rg_result.id}")
-      ```
-      + Delete Resource Group
-      ```
-      import os
-      from azure.identity import AzureCliCredential
-      from azure.mgmt.resource import ResourceManagementClient
-
-      credential = AzureCliCredential()
-      subscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]
-
-      resource_client = ResourceManagementClient(credential, subscription_id)
-
-      rg_result = resource_client.resource_groups.begin_delete("exampleGroup")
-      ```
-    + **Warning**
-      The Python API allows you to control the resources without logging into your Azure account so that you can control your resources from your personal computer or anywhere else. However, you will need to have valid API keys corresponding to your account and configure them properly.
-
-+ Read the following page in Azure for more details:
-  + [Azure: Manage Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
+  In this class, you will not create your own resource group. Instead, you will be using a resource group created and managed by CTD staffs and mentors, so you have a little less overhead in managing resource group, and you can focus on managing the resources instead burning your brain on managing resource group. For more information on creating resource group, visit the following [Azure Learn: Create Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
 
 # 2. Deploy Applications on the Cloud
-+ **Select the right machines**:  
-  Azure, AWS, and GCP offer myriad ways to host an application, and choosing the right service for your application is critical to the performance and cost! The following are some common types of services to host your application:  
++ **Select the right services**:  
+  Azure, as well as other cloud service providers, offers myriad of ways to host an application, and choosing the right service for your application is critical to the performance and cost! For this class, we will only deploy small virtual machines for light weight applications, and we will stick to a more traditional ways of deployment so that you can have more hands-on experience in working with virtual machines.
 
-+ **Virtual Machines**  
-  Virtual machines (VMs) provide a flexible and scalable way to host applications by emulating physical hardware. You can choose the operating system, configure the environment, and install software as needed. VMs are ideal for applications requiring full control over the server or legacy software that cannot run in modern containerized environments. However, they require more management effort, such as patching and scaling, compared to other options.  
++ **Virtual Machines**
+  A **virtual machine (VM)** is your cloud computer. It runs an operating system, such as Ubuntu Linux, on Azure hardware. *Provisioning* a VM means creating and configuring it, including network rules and disk size. Virtual machines (VMs) provide a flexible and scalable way to host applications by emulating physical hardware. You can choose the operating system, configure the environment, and install software as needed. VMs are ideal for applications requiring full control over the server or legacy software that cannot run in modern containerized environments. However, they require more management effort, such as patching and scaling, compared to other options. This week, you will learn to create your first virtual machine on Azure and get the first taste of it!
   + **Warning: Operating System and Bash Scripting**  
-    Notice that by default, most of the virtual machines are working on Linux based operating systems (so does most of the CLI tools!). As a result, knowing the basic bash scripts will help tremendously while working with cloud. If you are unfamiliar with bash scripting, the following is a good reference and practice.  
+    Notice that by default, most of the virtual machines are working on Linux based operating systems (so does most of the CLI tools!). As a result, knowing the basic bash scripts will help tremendously while working with cloud. If you are unfamiliar with bash scripting or Linux based system, the following is a good reference and practice.  
     https://www.w3schools.com/bash/bash_commands.php
 
-+ **Containerized Compute**  
-  Containerized compute services, such as Kubernetes or Docker, allow you to package applications and their dependencies into lightweight, portable containers. These containers can run consistently across different environments, making them ideal for microservices architectures and CI/CD workflows. Container orchestration platforms like Azure Kubernetes Service (AKS) or AWS Elastic Kubernetes Service (EKS) simplify scaling, deployment, and management. Containers are more resource-efficient than VMs but may require expertise in containerization and orchestration.  
 
-+ **Serverless API Endpoint**  
-  Hosting API endpoints is essential for applications that expose functionality to external clients or other services. Cloud providers offer managed services like Azure Functions, AWS Lambda, or Google Cloud Functions to host APIs without worrying about server management. Comparing to virtual machines, serverless managed services will handle the CPU, RAM, operating systems for you, so all you need to worry is your code (and cost). These serverless solutions automatically scale based on demand and charge only for the compute time used. They are ideal for lightweight, event-driven applications but may not be suitable for long-running or resource-intensive tasks.  
 
-+ **Batch Data Processing**  
-  Batch data processing services are designed for applications that handle large volumes of data in scheduled or on-demand jobs. Examples include Azure Batch, AWS Batch, and Google Cloud Dataflow. These services are ideal for tasks like ETL (Extract, Transform, Load), machine learning model training, or video rendering. They provide high scalability and cost efficiency by distributing workloads across multiple compute nodes. However, they are not suitable for real-time processing and require careful job configuration to optimize performance.
-
-<!-- I am debating if I should add a section about containerization here. It is a natural place to introduce the concept, but I think it might be too involved here. -->
 
 # 3. Hands-on Activity: Your First Cloud AI Application
 
-This short guide walks through creating a resource group and provisioning a virtual machine (VM) on Azure. We will use the Azure Portal (web interface) for the first step and the Azure Command-Line Interface (CLI) for the second step. The goal is to get a working cloud computer ready to host a small Python app.
+This short guide walks through provisioning a virtual machine (VM) on Azure. We will use the Azure Portal (web interface) for the first step and the Azure Command-Line Interface (CLI) for the second step. The goal is to get a working cloud computer ready to host a small Python app.
 
-## Step 1: Create a Resource Group
-As we saw last week, a *resource group* is a container that holds related resources for an Azure project. You can think of it like a project folder that will contain everything associated with your cloud computer, such as the virtual machine, its network, and its public IP address. -- add more details here and link to rg discussion from azure --
+## Step 1: Find Your Resource Group
+As we saw last week, a *resource group* is a container that holds related resources for an Azure project. You can think of it like a project folder that will contain everything associated with your cloud computer, such as the virtual machine, its network, and its public IP address. 
 
-Creating a resource group first keeps your resources organized and makes it easy to delete everything later when you are done (so you do not continue being charged for any of those resources!).
+For the purpose of this class, we have already created a resource group `ctd-ai-rg` for you. In order to proceed to the next step, you will first need to make sure you can manage the resources in this resource group.
 
 ### How to do it
-
 1. Go to [https://portal.azure.com](https://portal.azure.com) and sign in.
 2. In the left sidebar or search bar, type **Resource group** and select it.
-3. Click **+ Create**.
-4. Under the **Basics** tab:
-   - **Subscription**: choose your default subscription (David: not sure how this will work for CTD students we should figure this out).
-   - **Resource group name**: `ctd-ai-rg` (stands for code the dream ai resource group)
-   - **Region**: choose one close to you, such as `East US` or `Central US`. 
-5. (Optional) Under **Tags**, you can add name-value pairs,e.g.
-   - `project = ctd-ai`
-   - `owner = <yourname>`
-6. Click **Review + create**, then **Create**.
+3. You should see a resource group called `ctd-ai-rg`
+  - Optionally, you can also enter `az group list --output table` to see all the resource groups you have access to
+4. Click the `ctd-ai-rg` resource group, and another window should pop up.
 
-When the deployment finishes, you will have a resource group ready to hold your virtual machine. You can confirm by returning to **Resource groups** in the portal and checking that `ctd-ai-rg` appears in the list. You can also list all resource groups in your account from the command line with: `az group list --output table`
+You should see a similar interface once you follow the step
+
+![Select Resource Group Finish View](to add picture later)
+
+
+Now that we have selected the resource group to create our resources, and we are ready to create resources for our applications!
 
 ## Step 2: Provision the Virtual Machine 
 
-A **virtual machine (VM)** is your cloud computer. It runs an operating system, such as Ubuntu Linux, on Azure hardware. *Provisioning* a VM means creating and configuring it, including network rules and disk size. We will use the Cloud Shell to create the VM. We already set things up last week so we have a persistent shell, with a cloud drive mounted and created SSH keys for authentication. 
-
-We will create a small, low-cost Ubuntu server. Replace `<yourname>` with your name in all commands below. You can copy and paste everything into the Cloud Shell at once.
+ We will use the Cloud Shell to create the VM. We already set things up last week so we have a persistent shell, with a cloud drive mounted and created SSH keys for authentication. 
 
 First we will set up some convenience variables to use in some of the remaining steps. You will need to replace some of them with your values (e.g., what location did you set up your resource group, etc). This is a useful pattern to use generally (for instance if you ever automate deployments or need to build up resources using scripts):
 
 
+<!-- I noticed that students should not use the same name for VMs, this will cause errors in VM creation and SSH connection, so I added some instructions for naming -->
+
+Now, you will need a unique name for your VM. The name of a VM should be unique accross a resource group, so we will use your name and `uuidgen` to create a unique name for your VM. `uuidgen` is a bash command to create unique string. Here is an example of `uuidgen`
+
+```bash
+ctd-$(uuidgen) # will generate a name like ctd-f47ac10b-58cc-4372-a567-0e02b2c3d479
+ctd-$(uuidgen | cut -d- -f1) # will generate shorter name like ctd-118fede1
+```
+
+We will create a small, low-cost Ubuntu server. Replace `<yourname>` with your name in all commands below. You can copy and paste everything into the Cloud Shell at once.
+
+
 ```bash
 RG="ctd-ai-rg"      # resource group name
-VMNAME="ctd-ai-vm"  # desired vm name
+VMNAME="ctd-vm-<yourname>-$(uuidgen | cut -d- -f1)"  # use your name and uuidgen to create a unique name for VM
 LOCATION="eastus"   # you might need to change this
-USERNAME="azureuser" #
+USERNAME="<yourname>" # configure user name
 MY_IP=$(curl -s ifconfig.me)  #ip address of your computer
 ```
 
 To see the values of these later, you can use the `echo` command, e.g., `echo $RG`.
 
+**Important Note: do not add white space at will in bash**
+
+In bash, whitespace is significant and has special meaning. Spaces around the `=` operator in variable assignments will cause errors. For example:
+- ✅ Correct: `RG="ctd-ai-rg"` (no spaces around `=`)
+- ❌ Wrong: `RG = "ctd-ai-rg"` (spaces around `=` will fail)
+- ❌ Wrong: `RG= "ctd-ai-rg"` or `RG ="ctd-ai-rg"` (space on either side causes errors)
+
+Additionally, when using variables in commands, be careful about spaces in file paths or arguments. For example, if you set `RG="ctd ai"` (with a space), then:
+- ✅ Correct: `az vm create --resource-group "$RG" ...` will pass `ctd ai` as a single argument
+- ❌ Wrong: `az vm create --resource-group $RG ...` will split it into two arguments (`ctd` and `ai`), causing an error
+- In general, you are encouraged to avoid spaces in your variable name to avoid errors, so `ctd ai rg` is not a not recommended, while `ctd-ai-rg` and `ctd_ai_rg` are strongly preferred.
+
+Quoting variables ensures they are treated as a single argument, even if they contain spaces or special characters, so they are highly recommended.
+
 Now let's create the virtual machine. Wait until you actually want to use it, because unlike the resource group this will spin up a running compute instance (VM) that will start to generate charges in the cloud :dollar: 
 
 ```bash
 az vm create \
-  --resource-group $RG \
-  --name $VMNAME \
+  --resource-group "$RG" \
+  --name "$VMNAME" \
   --image Ubuntu2204 \
   --size Standard_B1ms \
   --os-disk-size-gb 30 \
-  --admin-username $USERNAME \
+  --admin-username "$USERNAME" \
   --ssh-key-values ~/.ssh/id_rsa.pub \
-  --tags project=ctd-ai owner=eric \
   --public-ip-sku Standard \
   --output yaml
 ```
@@ -164,7 +131,7 @@ az vm create \
 ### What we just did
 The parameters we just used in setting up the VM:
 
-- `--resource-group`: puts the VM inside the resource group you just created.
+- `--resource-group`: puts the VM inside the resource group created by CTD staff
 - `--image Ubuntu2204`: uses Ubuntu Linux 22.04
 - `--size Standard_B1ms`: creates a small, cost-efficient VM.
 - `--os-disk-size-gb 30`: sets a 30 GB system disk.
@@ -175,7 +142,7 @@ The parameters we just used in setting up the VM:
 
 This command takes a few minutes (you will see a `Running` message while it deploys). When it finishes, you will see output containing information about the VM, including its public IP address. 
 
-View and Manage Virtual Machines
+Hooray! Now we have successfully created our VM, and we are ready to view and manage the virtual machines. We can view and manage them in the following ways:
 + Via Portal:
   1. In the search bar, enter virtual machine
   2. Click and go to page for virtual machines
@@ -227,24 +194,32 @@ To restart the VM, you can do it from the portal (go to the VM and click `Start`
 ### Connect to VM
 We will use Azure's built-in SSH connection to open a terminal *directly inside your VM*. Until now, you have been using *Cloud Shell*, which runs on a temporary container. When you connect to your **VM**, you are now working on your own persistent computer in the cloud.  
 
-To ssh into your VM:
+To ssh into your VM, first you will need to open your cloudshell and enter the following command:
 
-1. In the Azure Portal, open your VM (for example, `ctd-ai-vm`).
-2. Click **Connect**.
-3. Scroll down to **More ways to connect**.
-4. Click the icon labeled **SSH using Azure CLI**.
+```
+az ssh vm \
+--resource-group $RG \
+--vm-name $VM \
+--local-user <yourname>
+```
 
+Once you run this command successfully, you should see some messages in your cloudshell
 
-A cli window will open at the bottom of the screen.  
+![VM Successful Login](resources/vm_login.png)
+
+Notice that you should see `<yourname>@VMNAME` as your new username for the shell, which indicate that you have successfully connected to your VM on Azure. Now, this is supposedly an empty environment, and you can use commands like `ls` and `pwd` to verify that you are in a completely empty machine before we start building our applications here.
+
+Notice that now all of the commands you run will be executed inside this virtual machines, which means that you will not be able to run Azure CLI commands without further setup, just like you can't run many commands in a python virtual environment without some setup. You will need to leave the virtual machine before you can run the Azure CLI commands. 
+
+To exit the virtual machine, you can simply enter `exit` in command like (similar to how you would like to exit a python virtual machine!)
+
 
 It is also possible to connect and manage the virual machines with your SSH key from your personal computer or other machines. However, this require additional configurations and might pose some security risk. **Warning: You should never expose your SSH key to the internet or commit your keys to code repos! Your keys should be managed separately from your code!**
 
 For more details about connecting to your virtual machines, visit Azure's guide on [Connect to Virtual Machines](https://learn.microsoft.com/en-us/azure/virtual-machines/linux-vm-connect?tabs=Linux)
 
 
-<!-- -- david we might want to put a screenshot of this, and/or link to discussion of this form another source--
-I am thinking about creating a student account and use that to generate sample images and test the accounts the students will get 
--->
+
 
 ### Set up virtual environment
 Now that you are connected to your Virtual Machine (VM), we will set up your project directory and Python environment on the VM itself. This is the kind of thing you do locally all the time when setting up Python projects, the main difference now is you will be doing it on a remote computer (VM) in the cloud. 
