@@ -10,8 +10,7 @@ All Azure resources — such as storage accounts and virtual machines — must b
 
 For more on [resource groups](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview#resource-groups)
 
-Here, we'll create a resource group to contain resources for storage. 
-Note: Resource groups will already be created for you.
+Steps to Create Resource Group:
 
 1. Sign in at https://portal.azure.com.
 2. In the left menu choose **Resource groups  + Create**.
@@ -20,6 +19,8 @@ Note: Resource groups will already be created for you.
    - **Resource group name:** `cloudshell-rg`  
    - **Region:** your nearest region (for instance, East US)
 4. Click **Review + create  Create**.
+
+>**Note:** Students are already added to a pre-created Resource Group, so you don't have to create one.
 
 ## 2. Set up persistent storage 
 In this section, we're setting up the persistent storage that Cloud Shell needs to save files between sessions. We won't explore how cloud memory and storage work in detail until Week 3, so don't worry if some of these details feel abstract right now. 
@@ -134,4 +135,3 @@ Store them on your computer in a folder such as
 ## 5. Summing up
 Congratulations! You've just set up your persistent Azure Cloud Shell workspace and created your first SSH key pair. That means you now have a secure, browser-based command line that remembers your files and credentials between sessions. This setup will make all your future cloud work easier — especially when you start creating virtual machines and deploying applications in the next lessons.
 
-add cleanup step

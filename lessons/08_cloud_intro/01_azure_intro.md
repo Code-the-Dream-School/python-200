@@ -59,7 +59,7 @@ From here, you can spin up virtual machines, configure security, manage networks
 
 ## **1.2 Logging In and Exploring the Portal**
 
-Welcome to Azure! 🎉  
+Welcome to Azure! 
 This is your first step into a professional-grade cloud environment. Using your **CTD Azure account**, you’ll log into the same kind of platform that powers applications used by millions worldwide.
 
 ### **Steps**
@@ -201,7 +201,7 @@ These are advanced tools, but they show just how flexible cloud development can 
 
 ## **5. Wrap-Up & Next Steps**
 
-Congratulations! 🎉 You just completed your first hands-on Azure lab.  
+Congratulations! You just completed your first hands-on Azure lab.  
 
 You’ve learned how to:
 - Log into Azure using a CTD account.
