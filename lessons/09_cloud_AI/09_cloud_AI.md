@@ -32,7 +32,9 @@ In Azure, you can create resources to store files, host API, run codes, and do e
   *Tip:* If you want resources in different locations, just make another resource group in a different region.
 
   In this class, you will not create your own resource group. Instead, you will be using a resource group created and managed by CTD staffs and mentors, so you have a little less overhead in managing resource group, and you can focus on managing the resources instead burning your brain on managing resource group. For more information on creating resource group, visit the following [Azure Learn: Create Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
-
+  
++ **Mange Resources in Resource Group**  
+  Once you have a resource group, you can create and manage different resources, including virtual machines, storage, API endpoint, and everything you need, and manage them under the same unit. For instance, you can set a policy to manage who can create and delete new resources, and you can also create limit on the type of services a specific user can create. In a more real-life example, the system administrator can grant data scientist Joe access to cloud storage, cloud compute, and AI related services while blocking Joe from accessing confidential information for compliance. In principal, you can use either the portal or Azure CLI commands to control your resource group. For more materials on managing resource group, visit [Azure Documentation: Manage Resource Groups] (https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal)
 
 # 2. Deploy Applications on the Cloud
 + **Select the right services**:  
@@ -65,7 +67,6 @@ For the purpose of this class, we have already created a resource group `ctd-ai-
 
 You should see a similar interface once you follow the step
 
-![Select Resource Group Finish View](to add picture later)
 
 
 Now that we have selected the resource group to create our resources, and we are ready to create resources for our applications!
@@ -74,12 +75,12 @@ Now that we have selected the resource group to create our resources, and we are
 
  We will use the Cloud Shell to create the VM. We already set things up last week so we have a persistent shell, with a cloud drive mounted and created SSH keys for authentication. 
 
-First we will set up some convenience variables to use in some of the remaining steps. You will need to replace some of them with your values (e.g., what location did you set up your resource group, etc). This is a useful pattern to use generally (for instance if you ever automate deployments or need to build up resources using scripts):
+First we will set up some convenience variables to use in some of the remaining steps. You will need to replace some of them with your values (e.g., replace `<yourname>` to your username like `jane_doe`). This is a useful pattern to use generally (for instance if you ever automate deployments or need to build up resources using scripts):
 
 
 <!-- I noticed that students should not use the same name for VMs, this will cause errors in VM creation and SSH connection, so I added some instructions for naming -->
 
-Now, you will need a unique name for your VM. The name of a VM should be unique accross a resource group, so we will use your name and `uuidgen` to create a unique name for your VM. `uuidgen` is a bash command to create unique string. Here is an example of `uuidgen`
+You will need a unique name for your VM. The name of a VM should be unique accross a resource group, so we will use your name and `uuidgen` to create a unique name for your VM. `uuidgen` is a bash command to create unique string every time you run it so that you do not need to burn your brain for unique name each time you create something new. Here is an example of `uuidgen`
 
 ```bash
 ctd-$(uuidgen) # will generate a name like ctd-f47ac10b-58cc-4372-a567-0e02b2c3d479
