@@ -120,7 +120,7 @@ cat hello.txt
 **Outcome:** You can now navigate and manage files within a cloud-based filesystem.  
 Notice how familiar this feels — it’s just like using your own terminal, but this one lives in the cloud!
 
-> ![Cloud Shell terminal](lessons/08_cloud_intro/resources/shell_file_list.png "Cloud Shell terminal")
+> ![Cloud Shell terminal](resources/shell_file_list.png "Cloud Shell terminal")
 
 ---
 
@@ -149,7 +149,7 @@ az vm --help                       # explore VM options
 
 The Cloud Shell comes with a **built-in code editor** that feels like a lightweight version of VS Code right inside your browser. You can write and run scripts directly in the cloud — no setup required!
 
-> ![Cloud Shell Editpr](lessons/08_cloud_intro/resources/shell_editor.png "Cloud Shell Editor")
+> ![Cloud Shell Editpr](resources/shell_editor.png "Cloud Shell Editor")
 ### **Steps**
 1. Open the editor:
    ```bash
