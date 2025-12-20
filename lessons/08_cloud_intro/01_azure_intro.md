@@ -51,7 +51,7 @@ From here, you can spin up virtual machines, configure security, manage networks
 - **IT Teams:** Manage identity and access.  
 - **Businesses:** Maintain reliability, security, and compliance.  
 
-> ![Azure Portal Home/Dashboard](lessons/08_cloud_intro/resources/azure_home.jpg "Azure Portal Home/Dashboard")
+> ![Azure Portal Home/Dashboard](resources/azure_home.jpg "Azure Portal Home/Dashboard")
 
 🔗 [Learn more: Azure Portal Overview](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-overview)
 
