@@ -512,49 +512,56 @@ We will go through the basic steps of building a simple linear regression model 
 
 **Creating the model → Fitting it → Making predictions → Evaluating the results**
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 ## Hands-on Activity: Train a Simple Linear Regression Model
 
-In this activity, we will use a small housing dataset to build a model that predicts the **price of a house based only on its area (square feet)**.  
+In this activity, we will use a small housing dataset to build a model that predicts the  
+**price of a house based only on its area (square feet)**.
 
-This keeps things simple and helps us clearly see how linear regression works.
-
-**The dataset is included in the `resources` folder.**
-
-## Steps We Will Follow
-
-1. **Explore the dataset**  
-   Look at the data and understand what information we have:  
-   - `area` (input)  
-   - `price` (output)
-
-2. **Split the data into training and test sets**  
-   We train the model on one part of the data and test how well it performs on new, unseen data.
-
-3. **Train a Linear Regression model**  
-   Use scikit-learn to learn the relationship between area and price.
-
-4. **Make predictions**  
-   Use the trained model to predict the prices of houses in the test set.
-
-5. **Evaluate the model**  
-   We measure how well the model performs using:  
-   - **RMSE (Root Mean Squared Error)**  
-   - **R² Score**  
-   These tell us how close the predictions are to the real prices.
-
-6. **Reflect on what we learned**  
-   Interpret the results and think about:  
-   - How the model performed  
-   - Whether the line fit the trend well  
-   - How we might improve predictions later
+Using just one feature keeps things simple and helps us clearly see how **linear regression**
+works step by step.
 
 ---
 
-## Let’s Begin
+## Step 1: Imports
 
-### **Step 1: Imports**
+First, we import the tools we need:
+
+- **pandas** → load and explore the dataset  
+- **train_test_split** → split data into training and test sets  
+- **LinearRegression** → build the regression model  
+- **mean_squared_error, r2_score** → evaluate the model  
+- **numpy** → compute RMSE (square root of MSE)
 
 ```python
 import pandas as pd
@@ -564,134 +571,246 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 ```
 
-### **Step 2: Load and Explore the Dataset**
-```python
-# Load the data (only the columns we need)
-data = pd.read_csv("resources/Week2_Housing_Data.csv", usecols=["area", "price"])
+## Step 2: Load and Explore the Dataset
 
-# Look at the first few rows
-print("First 5 rows of the dataset:")
-print(data.head())
+Before training a machine learning model, we need to understand the data we are working with.  
+In this lesson, we are using a housing dataset that contains information about house size and price.
 
-# Basic info
-print("\nBasic info:")
-print(data.info())
+**We load only the columns we need:**
+- **area** → the size of the house in square feet  
+- **price** → the selling price of the house
 
-# Simple statistics
-print("\nSummary statistics:")
-print(data.describe())
-```
+    ```python
+    data = pd.read_csv("resources/Week2_Housing_Data.csv", usecols=["area", "price"])
+    print(data.head())
+    ```
 
-### **Step 3: Set Up Features (X) and Target (y)**
-```python
-# X = input (feature) → area
-# y = output (target) → price
-X = data[["area"]]   # 2D DataFrame
-y = data["price"]    # 1D Series
-```
-
-### **Step 4: Split into Training and Test Sets**
-
-```python
-# Split into training and test sets
-# 80% training, 20% testing
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-print("Number of training examples:", len(X_train))
-print("Number of test examples:", len(X_test))
-```
-
-### **Step 5: Create and Train the Model**
-```python
-# Create the Linear Regression model
-model = LinearRegression()
-
-# Train (fit) the model on the training data
-model.fit(X_train, y_train)
-
-print("Model trained!")
-print("Slope (coefficient):", model.coef_[0])
-print("Intercept:", model.intercept_)
-```
-
-### **Step 6: Make Predictions on the Test Set**
-```python
-# Use the model to predict prices for the test set
-y_pred = model.predict(X_test)
-
-print("First 5 predicted prices:", y_pred[:5])
-print("First 5 actual prices:", y_test.values[:5])
-
-```
-
-### **Step 7: Evaluate the Model (RMSE and R²)**
-```python
-# Mean Squared Error
-mse = mean_squared_error(y_test, y_pred)
-
-# Root Mean Squared Error (easier to interpret)
-rmse = np.sqrt(mse)
-
-# R² score
-r2 = r2_score(y_test, y_pred)
-
-print("RMSE (Root Mean Squared Error):", rmse)
-print("R² score:", r2)
-```
-
-**Note:**
-
-- **RMSE** tells us, on average, how far the predictions are from the actual prices (in the same units as price).  
-- **R²** tells us how well the model explains the variation in house prices (closer to 1 is better).
-
-### **Step 8: A Small Comparison Table**
-
-```python
-results = pd.DataFrame({
-    "area": X_test["area"],
-    "actual_price": y_test,
-    "predicted_price": y_pred
-})
-
-print(results.head(10))
-```
-
-### **Final Results**
-
-    area  actual_price  predicted_price
-316  5900       4060000     5.024060e+06
-77   6500       6650000     5.279498e+06
-360  4040       3710000     4.232203e+06
-90   5000       6440000     4.640903e+06
-493  3960       2800000     4.198144e+06
-209  6720       4900000     5.373159e+06
-176  8520       5250000     6.139473e+06
-249  4990       4543000     4.636646e+06
-516  3240       2450000     3.891619e+06
-426  2700       3353000     3.661725e+06
-
-### What Do These Results Tell Us? (Quick Explanation)
-
-Each row compares a house’s **actual price** with the **predicted price** from our model.
-
-The predictions are not exact, but they follow the general trend:
-
-- Bigger houses → higher predicted prices  
-- The model gets close, but sometimes predicts too high or too low  
-
-This is normal for a **simple linear model** using only **one feature (area)**.  
-It captures the overall pattern, but real house prices depend on many factors we are not including yet.
-
-**Overall:**
-
-- The model is doing an *okay* job  
-- Predictions are reasonable, not perfect  
-
-This is exactly what we expect from **simple linear regression**.
+The `head()` function shows the first few rows of the dataset.  
+This helps us confirm that the data loaded correctly and looks reasonable.
 
 ---
+
+### Checking Basic Information About the Dataset
+
+Next, we check basic information about the dataset.
+
+```python
+    print(data.info())
+```
+
+**This tells us:**
+- How many rows and columns the dataset has  
+- The data type of each column  
+- Whether there are any missing values  
+
+**For machine learning models, it’s important that:**
+- Features are numeric  
+- There are no missing values (or they are handled properly)
+
+---
+
+### Looking at Summary Statistics
+
+Now let’s look at some simple statistics.
+
+```python
+    print(data.describe())
+```
+
+**This shows useful information such as:**
+- Minimum and maximum house area  
+- Minimum and maximum house price  
+- Average (mean) values  
+- How spread out the values are  
+
+Exploring the data helps us catch problems early and understand what we are modeling.
+
+---
+
+## Step 3: Define Features (X) and Target (y)
+
+**Now we separate the dataset into:**
+- **Features (X)** → the inputs the model uses to make predictions  
+- **Target (y)** → the value we want the model to predict  
+
+**In this lesson:**
+- Feature = area  
+- Target = price
+- 
+```python
+    X = data[["area"]]   # must be a 2D structure
+    y = data["price"]    # 1D target
+```
+
+We use a 2D structure for `X` because scikit-learn expects features in that format, even if there is only one feature.
+
+---
+
+## Step 4: Split the Data into Training and Test Sets
+
+To check how well our model works on new, unseen data, we split the dataset into two parts.
+```python
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    print("Training examples:", len(X_train))
+    print("Test examples:", len(X_test))
+```
+
+- **80% training data** → the model learns patterns  
+- **20% test data** → we evaluate how well the model generalizes  
+
+Using a test set helps us avoid judging the model only on data it has already seen.
+
+---
+
+## Step 5: Create and Train the Linear Regression Model
+
+Now we create a Linear Regression model and train it using the training data.
+
+```python
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+```
+
+Training is where the model learns the relationship between house area and house price.
+
+---
+
+### Inspecting the Learned Parameters
+
+```python
+    print("Slope (coefficient):", model.coef_[0])
+    print("Intercept:", model.intercept_)
+```
+
+- **Slope (coefficient):**  
+  How much the predicted house price changes for each additional square foot.
+
+- **Intercept:**  
+  The predicted price when the area is 0.  
+  This isn’t realistic, but it’s needed for the mathematical equation of the line.
+
+---
+
+## Step 6: Make Predictions on the Test Set
+
+Next, we use the trained model to predict prices for houses it has never seen before.
+
+```python
+    y_pred = model.predict(X_test)
+
+    print("First 5 predicted prices:", y_pred[:5])
+    print("First 5 actual prices:", y_test.values[:5])
+```
+
+Comparing predicted and actual values helps us see whether the model’s predictions are in the right range.
+
+---
+
+## Step 7: Evaluate the Model Using RMSE and R²
+
+### Root Mean Squared Error (RMSE)
+
+```python
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    print("RMSE:", rmse)
+```
+
+RMSE is measured in dollars, just like house prices.  
+On average, our predictions are off by about RMSE dollars.
+
+**Example:**
+RMSE ≈ 48,000 → predictions are off by about \$48,000 on average
+
+---
+
+### R² Score
+
+```python
+    r2 = r2_score(y_test, y_pred)
+    print("R² score:", r2)
+```
+
+R² compares this model to always guessing the average house price.
+
+**Example:** 
+R² = 0.72 → the model explains 72% of the variation in house prices.
+
+---
+
+## Step 8: Compare Actual vs. Predicted Prices
+
+To better understand the predictions, we create a comparison table.
+
+```python
+    results = pd.DataFrame({
+        "area": X_test["area"],
+        "actual_price": y_test,
+        "predicted_price": y_pred,
+        "error": y_test - y_pred
+    })
+
+    print(results.head(10))
+```
+
+- **actual_price** → real house price  
+- **predicted_price** → model’s prediction  
+- **error** → how far off the prediction was  
+
+Positive error → model predicted too low  
+Negative error → model predicted too high  
+
+---
+
+## What Do These Results Tell Us?
+
+- The model captures the overall trend (larger houses generally have higher prices)  
+- Predictions are reasonable, but not perfect  
+
+This is expected because the model uses only one feature.
+
+---
+
+## Why Isn’t the Model Perfect?
+
+House prices depend on many factors, such as:
+- location  
+- number of bedrooms  
+- condition  
+- year built  
+- neighborhood  
+
+With only house area, we expect decent performance but not perfect accuracy.  
+This is exactly what we want to see in an introductory regression lesson.
+
+---
+
+## Reflection Questions
+
+- What additional features could improve predictions?  
+- If RMSE were very large, what might that tell us?  
+- How might adding more features affect R²?
+
+---
+
+## Key Takeaway
+
+This walkthrough shows the complete regression workflow:
+- explore the data  
+- split into training and test sets  
+- train a model  
+- make predictions  
+- evaluate results using meaningful metrics  
+
+You now have a strong foundation for building and evaluating regression models.
+
+
+---
+
+
 
 ## Check for Understanding  
 ### Week 2 Quiz: Introduction to Machine Learning & Regression
