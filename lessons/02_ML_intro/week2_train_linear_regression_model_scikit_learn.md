@@ -42,7 +42,7 @@ In all these cases, the answer is a **number**, not a label.
 That’s why we use regression.
 
 ---
-<img src="resources/1_week2_regression_model.jpg" alt="Regression Model" width="350">
+<img src="resources/1_week2_Regression_Model.jpg" alt="Regression Model" width="350">
 
 ### Let’s understand with House Prices example:
 
@@ -153,7 +153,7 @@ model.fit(X_train, y_train)
 predictions = model.predict(X_test)
 ```
 
-<img src="resources/2_week2_regression_model.jpg" alt="Housing Example" width="350">
+<img src="resources/2_week2_Housing_Example.jpg" alt="Housing Example" width="350">
 
 ---
 
@@ -199,7 +199,7 @@ plt.show()
 ```
 **Output:**
 
-<img src="resources/3_week2_regression_model.jpg" alt="fitting a line through points" width="350">
+<img src="resources/3_week2_fitting_a_line_through_points.jpg" alt="fitting a line through points" width="350">
 
 ### What this plot shows:
 
@@ -215,7 +215,7 @@ This is the core idea of simple linear regression: **find the straight line that
 
 ### Let’s understand what is training and evaluation (testing) in ML:
 
-<img src="resources/4_week2_regression_model.jpg" alt="training and evaluation" width="350">
+<img src="resources/4_week2_training.jpg" alt="training and evaluation" width="350">
 
 **Training** is the process where a machine learning model learns patterns and relationships from the data we give it.
 
@@ -254,7 +254,7 @@ Each metric tells us something slightly different about how well our model is pe
 
 ### Mean Squared Error (MSE)
 
-<img src="resources/5_week2_regression_model.jpg" alt="evaluation metrics" width="350">
+<img src="resources/5_week2_evaluation_metrics.jpg" alt="evaluation metrics" width="350">
 
 **MSE** measures the average of the **squared differences** between predicted house prices and the actual house prices.
 
@@ -402,7 +402,7 @@ This is how scikit-learn finds the best-fit line — it’s an optimization proc
 
 ## Training and Test Sets, Why We Split the Data?
 
-<img src="resources/6_week2_regression_model.jpg" alt="Training and Test Sets" width="350">
+<img src="resources/6_week2_Training_Test_Sets.jpg" alt="Training and Test Sets" width="350">
 
 When we train a model, we want to know how well it can make predictions on **new** data, not just the data it has already seen.
 
@@ -455,7 +455,7 @@ When we train a machine learning model, we want it to learn the **real pattern**
 But a model can learn **too little** or **too much**.  
 This leads to **underfitting** or **overfitting**.
 
-<img src="resources/7_week2_regression_model.jpg" alt="Overfitting and Underfitting" width="350">
+<img src="resources/7_week2_Overfitting_and_Underfitting.jpg" alt="Overfitting and Underfitting" width="350">
 
 ---
 
@@ -504,10 +504,9 @@ This is called **generalization**.
 
 ## Next Step
 
-<img src="resources/8_week2_regression_model.jpg" alt="Next Step" width="350">
+<img src="resources/8_week2_Next_Step.jpg" alt="Next Step" width="350">
 
 Now that we understand what regression is and how a line can describe the relationship between house area and price, we are ready to train a **real model**.
-
 We will go through the basic steps of building a simple linear regression model using scikit-learn:
 
 **Creating the model → Fitting it → Making predictions → Evaluating the results**
@@ -809,8 +808,6 @@ You now have a strong foundation for building and evaluating regression models.
 
 
 ---
-
-
 
 ## Check for Understanding  
 ### Week 2 Quiz: Introduction to Machine Learning & Regression
