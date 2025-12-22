@@ -12,7 +12,7 @@ In week 2, machine learning, by now you might have learned most of it:
 - Heard what machine learning is.  
 - Seen examples of ML problems.  
 - Learned about types of ML,  
-  like: supervised and unsupervised learning, regression and classification.  
+  **like:** supervised and unsupervised learning, regression and classification.  
 - Explored scikit-learn.
 
 ---
@@ -237,12 +237,166 @@ And, **evaluation** (we will learn more about this in future lessons) is the pro
 
 ---
 
-### We measure the model’s performance using evaluation metrics, such as
+## How Do We Measure How Good a Regression Model Is?
+
+After training a regression model, we need a way to measure **how close our predictions are to the real house prices**.  
+These measurements are called **error metrics**.
+
+In regression, the most common metrics you’ll see are:
+
+- **MSE (Mean Squared Error)**
+- **RMSE (Root Mean Squared Error)**
+- **R² Score**
+
+Each metric tells us something slightly different about how well our model is performing.
+
+---
+
+### Mean Squared Error (MSE)
 
 <img src="resources/5_week2_regression_model.jpg" alt="evaluation metrics" width="350">
 
-- **MSE (Mean Squared Error)** — shows how far the predictions are from the actual values (smaller is better).
-- **R² Score** — shows how well the model explains the variation in the data (closer to 1 means a better fit).
+**MSE** measures the average of the **squared differences** between predicted house prices and the actual house prices.
+
+In simple terms:
+1. Take the difference between each predicted price and the real price  
+2. Square that difference  
+3. Average all of those squared differences  
+
+**Why do we square the errors?**
+
+- Squaring makes **large mistakes matter more** than small ones  
+- It prevents positive and negative errors from canceling each other out  
+
+**Downside of MSE**
+
+Because we square the errors, the units become harder to interpret.
+
+- If house prices are measured in dollars  
+- MSE is measured in **dollars²**
+
+This makes MSE useful for optimization, but not very intuitive for explaining real-world prediction quality.
+
+---
+
+### Root Mean Squared Error (RMSE)
+
+To make the error easier to understand, we take the square root of MSE.
+
+\[
+\text{RMSE} = \sqrt{\text{MSE}}
+\]
+
+**RMSE is the most commonly used regression error metric in practice.**
+
+Why?
+
+- It still penalizes large errors  
+- **But it returns the error in the same units as the target value**
+
+That means RMSE has a clear, real-world interpretation.
+
+**Example interpretation:**
+
+> “On average, our house price predictions are off by about **$48,000**.”
+
+If you want a number that makes sense in everyday terms, **RMSE is usually the best choice**.
+
+---
+
+### Why Do We Also Use R²?
+
+If RMSE tells us *how wrong our predictions are*, you might wonder:
+
+> “Why do we also need R²?”
+
+R² answers a **different kind of question**.
+
+---
+
+### R² Score (Coefficient of Determination)
+
+**R² compares your regression model to a very simple baseline model.**
+
+That baseline model:
+- Ignores house size completely  
+- Always predicts the **average house price**  
+
+Think of this as the **“just guess the average price” strategy**.
+
+Both your regression model and this baseline model make errors, which we measure using **MSE**.
+
+R² tells us **how much smaller your model’s error is compared to the baseline error**.
+
+\[
+R^2 = 1 - \frac{\text{Model MSE}}{\text{Baseline MSE}}
+\]
+
+---
+
+### Interpreting R²
+
+- **R² = 1.0** → Perfect predictions  
+- **R² = 0.0** → No better than always guessing the average price  
+- **R² < 0.0** → Worse than guessing the average  
+
+**Example:**
+
+If **R² = 0.72**, that means:
+
+> “Using house size, our model removes **72% of the error** we would make by always guessing the average house price.”
+
+In plain language:
+
+**R² measures the fraction of the original prediction error that the model explains.**
+
+---
+
+### Connecting Back to Week 1: Correlation
+
+In **Week 1**, we learned about **correlation**, which measures how strongly two variables move together.
+
+There is a direct connection here:
+
+> In **simple linear regression with one feature**,  
+> **R² is the square of the Pearson correlation coefficient** between the feature (house area) and the target (house price).
+
+What this means:
+
+- Strong correlation between area and price → high R²  
+- Weak correlation → low R²  
+
+This makes intuitive sense:
+- If house prices increase steadily as area increases, a straight line fits well  
+- If there is no clear linear relationship, regression will struggle  
+
+This shows how **correlation (Week 1)** and **regression (Week 2)** are closely related.
+
+---
+
+### How Does Linear Regression Find the “Best” Line?
+
+Linear regression does not guess randomly.
+
+It finds the straight line that **minimizes the Mean Squared Error (MSE)**.
+
+This method is called **least squares**.
+
+**In other words:**
+- The model considers many possible lines  
+- It chooses the one where the **average squared difference between predicted and actual house prices is as small as possible**
+
+This is how scikit-learn finds the best-fit line — it’s an optimization process, not a mystery.
+
+---
+
+### Quick Summary
+
+- **MSE** measures squared prediction error (useful but hard to interpret)
+- **RMSE** is the square root of MSE and is measured in dollars
+- **R²** compares your model to guessing the average house price
+- Linear regression uses **least squares** to minimize MSE and find the best line
+
 
 ---
 
