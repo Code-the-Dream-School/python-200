@@ -290,6 +290,23 @@ Audio(str(speech_file_path))
 
 So far, we've been looking only at the OpenAI completions API. However, there are many such APIs in the market (such as Anthropic's Claude, Google Gemini). Many of these APIs generally follow the OpenAI completions protocol and syntax. However, you would need to account for the differences in syntax when communicating between different APIs. Fortunately, there are packages that provide an abstraction layer between these different APIs so you only need to worry about the input prompt. Examples of this are [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). Of these, any-llm is the most popular and commonly used abstraction tool in industry.
 
+Any-llm allows you to communicate with different LLM models and model managers like [Ollama](https://ollama.com/). Ollama is a server and model database that enables you to download a model locally and communicate with it. The ability to download and chat with local models without any payment is useful for demos, research, and model building. Ollama also has an [API](https://github.com/ollama/ollama-python) that can be used to incorporate your local model into your workflow. You can download and communicate with your local model using Ollama through the following steps
+
+- **Step 1 - Install Ollama**: Follow instructions in [website](https://ollama.com/download)
+- **Step 2 - Pull model locally:**
+Ollama has many LLM models you can download. Check out the list [here](https://ollama.com/search). Let's say we want to run Meta's llama3.2 model locally. We must first "pull" the model from the Ollama server.
+```bash
+ollama serve
+ollama pull llama3.2
+```
+`ollama serve` is generally not needed when you download it the first time as it runs as a background service but is needed if the process is interrupted. The `pull` command downloads a full runnable model artifact to your local machine. <!-- So you may end up with the error: `Error: listen tcp 127.0.0.1:11434: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted`. -->
+- **Step 3 - Communicate with the local model:** 
+You can converse with the LLM model in the command shell using 
+```bash
+ollama run llama3.2
+```
+This opens a command line interface that allows you to send your prompts to the model and receive the responses. 
+
 <!--
 LLM Arena - https://lmarena.ai/leaderboard
 Mozilla AI's [Any-Agent](https://github.com/mozilla-ai/any-agent).You can read more about the abstraction framework and its usage [here](https://blog.mozilla.ai/introducing-any-agent-an-abstraction-layer-between-your-code-and-the-many-agentic-frameworks/). -->
