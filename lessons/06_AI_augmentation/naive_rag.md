@@ -296,3 +296,37 @@ Now you have a RAG-enabled framework that can generate responses to user queries
 Also, it is useful to note that any perceived improvements to the chatbot's responses are heavily dependent on the external database you provide and the user query. In the example provided here, we provide some documents for Brightleaf Solar Solutions. So it is reasonable to assume that if you ask queries directly related to the content in the documents, you will get a richer, more accurate response from the chatbot. 
 
 Another interesting observation is that for every user query, the content in the documents is searched for relevant context. Depending on the number and size of the documents this can be a computationally expensive process. The scanning approach is also not very scalable. The keyword matching based approach is very brittle. Since you are comparing the query and document text for the **same** words, you lose the nuance of text that is similar in content even if the same words are not used. This  brings up the need to search the external database more efficiently while accounting for this nuance. This led to the usage of vector dataspaces, which we will look at in a subsequent lesson.
+
+## Check for Understanding
+
+### Question 1
+
+
+
+Choices:
+- A. 
+- B. 
+- C. 
+- D. 
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong>  <br>
+</details>
+
+### Question 2
+
+
+
+Choices:
+- A. 
+- B. 
+- C. 
+- D. 
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong>  <br>
+</details>
