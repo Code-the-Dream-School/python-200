@@ -658,6 +658,44 @@ Congratulations!! We now have a persistent database that we can query, we don't 
 
 This implementation had several lines of code, consisting of custom functions. The next lesson looks at a library developed by Meta called llama index that condenses a lot of the operations done here into single lines of code. Additionally, llama index also includes metrics to evaluate RAG frameworks. 
 
+## Check for Understanding
+
+### Question 1
+
+In the smeantic RAG implementation using the in-memory vector store shown in this lesson, on which metric is the top `k` most relevant chunks to the query obtained?
+
+Choices:
+- A. Cosine similarity using FAISS
+- B. L2 similarity using FAISS
+- C. L1 similarity using FAISS
+- D. Keyword matching using FAISS
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong> A. Cosine similarity using FAISS <br>
+In our implementation of the in-memory semantic RAG, we use FAISS' internal storage index that searches for the most relevant document chunks using cosine similarity.
+</details>
+
+### Question 2
+
+In our implementation of pgvector and PostgreSQL enabled semantic RAG, what role does the `ankane/pgvector` docker container play?
+
+Choices:
+- A. It serves as an external platform to host the SQL database with the chunk embeddings
+- B. It has PostgreSQL and pgvector installed that can be used to retrieve relevant chunks from the SQL database
+- C. Both A & B
+- D. It contains the documents and code for the implementation
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong> C. Both A & B <br>
+When you run the "ankane\pgvector" docker container, it has an installation of the pgvector library that we use to query the SQL database and retrieve chunks relevant to the user query. The docker container also provides a clean, isolated environment to create and query the SQL database of chunk embeddings, since it is essentially a mini linux OS that will have the same behavior irrespective of the system OS.
+</details>
+
+
+
 <!-- ### Beyond Semantic RAG - Modern RAG frameworks
 
 Although this implementation is undeniably powerful, there have been many advances in RAG over the years. Since generative AI and LLMs have been such hot topics in research and industry over the last 5 years or so, there has been a lot of effort invested in developing ever more efficient RAG techniques. Check out [this](https://www.youtube.com/watch?v=sGvXO7CVwc0) youtube video and [this](https://wandb.ai/site/articles/rag-techniques/) article to learn more about recent advances in RAG. 
