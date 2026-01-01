@@ -301,32 +301,34 @@ Another interesting observation is that for every user query, the content in the
 
 ### Question 1
 
-
+In this keyword-based RAG implementation, on what basis is the most relevant context to the user query obtained?
 
 Choices:
-- A. 
-- B. 
-- C. 
-- D. 
+- A. Semantic similarity
+- B. Highest number of keyword matches
+- C. Highest number of keywords
+- D. Random search
 
 
 <details>
 <summary> View Answer </summary>
-<strong>Answer:</strong>  <br>
+<strong>Answer:</strong> B. Highest number of keyword matches <br>
+The context retrieval implementation outputs the document text with the most number of keyword matches to the user query.
 </details>
 
 ### Question 2
 
-
+Which of the following is **NOT** a drawback of the keyword RAG process? 
 
 Choices:
-- A. 
-- B. 
-- C. 
-- D. 
+- A. It appends the entire text of the relevant document as context for the user query
+- B. It uses relevant context from documents to improve the accuracy of the response
+- C. It is not able to understand semantic similarity between keywords in the query and text in the documents
+- D. It is inefficient in terms of token usage
 
 
 <details>
 <summary> View Answer </summary>
-<strong>Answer:</strong>  <br>
+<strong>Answer:</strong> B. It uses relevant context from documents to improve the accuracy of the response <br>
+The fact that keyowrd RAG uses the additional context from relevant documents to improve response accuracy is a plus and a key reason to use RAG in the first place. While it does retrieve the relevant document to the query, appending the entire text of the document to the query results in high token usage. This can get expensive very quickly. Also, since it is merely matching keywords exactly it is not able to understand and leverage semantic similarity (similar meaning words or similar context words) between the user query and documents text. This can result in the omission of particularly relevant context that is not worded similarly.
 </details>
