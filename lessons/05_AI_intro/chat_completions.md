@@ -286,26 +286,48 @@ print(f"Audio saved as {speech_file_path} with voice of {voice}")
 Audio(str(speech_file_path))
 ```
 
-## A Quick Introduction to Abstractions
+## A Quick Introduction to Abstraction Libraries
 
-So far, we've been looking only at the OpenAI completions API. However, there are many such APIs in the market (such as Anthropic's Claude, Google Gemini). Many of these APIs generally follow the OpenAI completions protocol and syntax. However, you would need to account for the differences in syntax when communicating between different APIs. Fortunately, there are packages that provide an abstraction layer between these different APIs so you only need to worry about the input prompt. Examples of this are [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). Of these, any-llm is the most popular and commonly used abstraction tool in industry.
+So far, we have exclusively been using the OpenAI chat completions API. In the wider world, there are many different providers with similar APIs: OpenAI, Anthropic (Claude), Google Gemini, and others. Each one has its own format, parameters, and authentication.
 
-Any-llm allows you to communicate with different LLM models and model managers like [Ollama](https://ollama.com/). Ollama is a server and model database that enables you to download a model locally and communicate with it. The ability to download and chat with local models without any payment is useful for demos, research, and model building. Ollama also has an [API](https://github.com/ollama/ollama-python) that can be used to incorporate your local model into your workflow. You can download and communicate with your local model using Ollama through the following steps
+Abstraction libraries exist to smooth over those differences. Instead of writing a separate application for OpenAI, Anthropic, and Gemini, you can work within a single abstraction layer. That layer then knows how to call each provider behind the scenes. The key benefit is that you get one unified interface to many model providers. You can switch providers (for cost, quality, or availability reasons) rather than rewriting all your application code. This also helps prevent vendor lock-in: you are not tied to a single API forever.
 
-- **Step 1 - Install Ollama**: Follow instructions in [website](https://ollama.com/download)
-- **Step 2 - Pull model locally:**
-Ollama has many LLM models you can download. Check out the list [here](https://ollama.com/search). Let's say we want to run Meta's llama3.2 model locally. We must first "pull" the model from the Ollama server.
+Examples of these abstraction tools include [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). All of them let you write code once and route requests to different LLM backends. Many of them can also talk to local models, such as models served by Ollama, which is an open-source package that lets you run models locally.
+
+### Running a local model with Ollama
+
+[Ollama](https://ollama.com/) is a local model manager and server. It lets you download language models to your own machine and run them without paying per-token API fees. Ollama also has an [API](https://github.com/ollama/ollama-python) that can be used to incorporate your local model into your workflow. While many abstraction libraries can talk to Ollama as just another backend, you can also use it directly from the command line. Let's check it out!
+
+First, follow instructions in [website](https://ollama.com/download) to install Ollama. Then, open a terminal and check that the CLI is available:
+```bash
+ollama --version
+```
+Next, we need to download a model. Check out the list of available models [here](https://ollama.com/search). We will use a small model called qwen3:0.6b. It is not the smartest model in the world, but it is small enough to run on most laptops, even without an NVIDIA GPU. This only needs to happen once per model:
 ```bash
 ollama serve
-ollama pull llama3.2
+ollama pull qwen3:0.6b
 ```
 `ollama serve` is generally not needed when you download it the first time as it runs as a background service but is needed if the process is interrupted. The `pull` command downloads a full runnable model artifact to your local machine. <!-- So you may end up with the error: `Error: listen tcp 127.0.0.1:11434: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted`. -->
-- **Step 3 - Communicate with the local model:** 
-You can converse with the LLM model in the command shell using 
+
+Sometimes the downloads can be slow (the model is about 500MB). After the pull finishes, you can chat with the model locally:
 ```bash
-ollama run llama3.2
+ollama run qwen3:0.6b
 ```
-This opens a command line interface that allows you to send your prompts to the model and receive the responses. 
+This opens an interactive prompt in your terminal. Type a message and press Enter, just like in a chat window. For example:
+```
+Explain how to define a function in python
+```
+Ollama will stream back a response. When you are done, type `/bye` to finish the chat.
+
+You can see which models are installed locally with:
+```bash
+ollama list
+```
+While a model is running, you can open a second terminal and check whether it is using CPU or GPU:
+```bash
+ollama ps
+```
+Look at the PROCESSOR column in the output. On machines with a supported GPU, you may see GPU. If not you will see CPU.
 
 <!--
 LLM Arena - https://lmarena.ai/leaderboard
