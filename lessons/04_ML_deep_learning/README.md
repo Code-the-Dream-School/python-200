@@ -18,11 +18,11 @@ A brief introduction to neural networks and deep learning, including biological 
 2. [Introduction to pytorch](02_pytorch_intro.md)  
 An overview of the pytorch library, mainly focusing on installation, and tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
 
-3. [Learning XOR](03_xor.md)  
+1. [Training your first neural network](03_xor.md)  
 Before diving into more complex models, we will start with a simple example of learning the XOR function using a small neural network. This will help us understand the basic workflow for training a model in pytorch.
 
-4. [Machine vision](03_visual_classification.md)  
+1. [Machine vision](03_visual_classification.md)  
 For this section, we will use a pre-trained convolutional neural network (CNN) to classify images, to show how deep neural networks can be used for computer vision tasks.
 
-5. [Transfer learning](04_transfer_learning.md)
+1. [Transfer learning](04_transfer_learning.md)
 Here, we will explore transfer learning, which is a technique that allows us to leverage pre-trained models for new tasks with limited data. We will fine-tune a pre-trained model on a new dataset to demonstrate this concept.
