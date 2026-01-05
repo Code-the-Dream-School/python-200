@@ -1,4 +1,4 @@
-# Week 3: Machine Learning: Deep Learning
+# Week 4: Machine Learning: Deep Learning
 > Draft readme to be completed once material is finished.
 > 
 Welcome to Week 4 of Python 200! This week we will explore the world of deep learning, which is a powerful subset of machine learning that uses neural networks to model complex patterns in data. This is probably the most ambitious week of the course, but also one of the most exciting! This is the basis of modern AI systems like ChatGPT, DALL-E, and many others. By understanding deep learning, you will gain insights into how these systems work, and how to help build pipelines and applications that leverage them. Most modern machine learning applications use deep learning in some form, so this knowledge is very useful in modern data engineering, data science, and cloud computing roles.
@@ -12,10 +12,10 @@ Our goal is to equip you with the skills needed to build and deploy deep learnin
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
 
 ## Topics
-1. [Introduction to neural networks and deep learning](01_neural_networks.md)  
+1. [Introduction to neural networks and deep learning](01_ann_intro.md)  
 A brief introduction to neural networks and deep learning, including biological inspiration, architecture, and common use cases.
 
-2. [Introduction to pytorch](02_pytorch.md)  
+2. [Introduction to pytorch](02_pytorch_intro.md)  
 An overview of the pytorch library, mainly focusing on installation, and tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
 
 3. [Learning XOR](03_xor.md)  
