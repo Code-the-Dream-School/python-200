@@ -118,6 +118,8 @@ print(df.shape)
 df.head()
 ```
 
+<img width="930" height="251" alt="Screenshot 2026-01-05 at 4 17 33 PM" src="https://github.com/user-attachments/assets/b49624ed-cc21-4d6a-8a05-4efe4f2ce950" />
+
 ---
 
 ## Train / Test Split
@@ -157,6 +159,8 @@ pred_knn = knn_scaled.predict(X_test)
 print(classification_report(y_test, pred_knn, digits=3))
 ```
 
+<img width="537" height="156" alt="Screenshot 2026-01-05 at 4 18 28 PM" src="https://github.com/user-attachments/assets/d35ea1c0-fdf9-4b80-94a1-53a008ad89e7" />
+
 ### What to Notice
 
 * KNN works reasonably well
@@ -183,6 +187,9 @@ pred_tree = tree.predict(X_test)
 
 print(classification_report(y_test, pred_tree, digits=3))
 ```
+
+<img width="522" height="154" alt="Screenshot 2026-01-05 at 4 19 28 PM" src="https://github.com/user-attachments/assets/7f87bfcf-ab0e-4567-a17f-1e40689f2d66" />
+
 
 ### Why Trees Often Beat KNN Here
 
@@ -234,6 +241,9 @@ pred_rf = rf.predict(X_test)
 print(classification_report(y_test, pred_rf, digits=3))
 ```
 
+<img width="517" height="163" alt="Screenshot 2026-01-05 at 4 20 15 PM" src="https://github.com/user-attachments/assets/70956555-6be3-430e-a4f8-dca201c3c261" />
+
+
 ---
 
 ## Why Random Forests Work Better
@@ -270,6 +280,9 @@ for name, preds in models.items():
     score = f1_score(y_test, preds)
     print(f"{name:15s} F1 = {score:.3f}")
 ```
+
+<img width="297" height="65" alt="Screenshot 2026-01-05 at 4 21 13 PM" src="https://github.com/user-attachments/assets/81688ef4-279c-4f0d-a38c-f08c81944f15" />
+
 
 ### Typical Pattern You’ll See
 
