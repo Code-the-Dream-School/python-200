@@ -296,3 +296,39 @@ Now you have a RAG-enabled framework that can generate responses to user queries
 Also, it is useful to note that any perceived improvements to the chatbot's responses are heavily dependent on the external database you provide and the user query. In the example provided here, we provide some documents for Brightleaf Solar Solutions. So it is reasonable to assume that if you ask queries directly related to the content in the documents, you will get a richer, more accurate response from the chatbot. 
 
 Another interesting observation is that for every user query, the content in the documents is searched for relevant context. Depending on the number and size of the documents this can be a computationally expensive process. The scanning approach is also not very scalable. The keyword matching based approach is very brittle. Since you are comparing the query and document text for the **same** words, you lose the nuance of text that is similar in content even if the same words are not used. This  brings up the need to search the external database more efficiently while accounting for this nuance. This led to the usage of vector dataspaces, which we will look at in a subsequent lesson.
+
+## Check for Understanding
+
+### Question 1
+
+In this keyword-based RAG implementation, on what basis is the most relevant context to the user query obtained?
+
+Choices:
+- A. Semantic similarity
+- B. Highest number of keyword matches
+- C. Highest number of keywords
+- D. Random search
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong> B. Highest number of keyword matches <br>
+The context retrieval implementation outputs the document text with the most number of keyword matches to the user query.
+</details>
+
+### Question 2
+
+Which of the following is **NOT** a drawback of the keyword RAG process? 
+
+Choices:
+- A. It appends the entire text of the relevant document as context for the user query
+- B. It uses relevant context from documents to improve the accuracy of the response
+- C. It is not able to understand semantic similarity between keywords in the query and text in the documents
+- D. It is inefficient in terms of token usage
+
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer:</strong> B. It uses relevant context from documents to improve the accuracy of the response <br>
+The fact that keyowrd RAG uses the additional context from relevant documents to improve response accuracy is a plus and a key reason to use RAG in the first place. While it does retrieve the relevant document to the query, appending the entire text of the document to the query results in high token usage. This can get expensive very quickly. Also, since it is merely matching keywords exactly it is not able to understand and leverage semantic similarity (similar meaning words or similar context words) between the user query and documents text. This can result in the omission of particularly relevant context that is not worded similarly.
+</details>
