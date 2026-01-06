@@ -290,7 +290,7 @@ Audio(str(speech_file_path))
 
 So far, we have exclusively been using the OpenAI chat completions API. In the wider world, there are many different providers with similar APIs: OpenAI, Anthropic (Claude), Google Gemini, and others. Each one has its own format, parameters, and authentication.
 
-Abstraction libraries exist to smooth over those differences. Instead of writing a separate application for OpenAI, Anthropic, and Gemini, you can work within a single abstraction layer. That layer then knows how to call each provider behind the scenes. The key benefit is that you get one unified interface to many model providers. You can switch providers (for cost, quality, or availability reasons) rather than rewriting all your application code. This also helps prevent vendor lock-in: you are not tied to a single API forever.
+Abstraction libraries exist to smooth over those differences. Instead of writing a separate application for OpenAI, Anthropic, and Gemini, you can work with a single package that lets you interface with any one of these AI libraries. That library then knows how to call each provider behind the scenes. The key benefit is that you get one unified interface to many model providers. You can switch providers (for cost, quality, or availability reasons) rather than rewriting all your application code. This also helps prevent vendor lock-in: you are not tied to a single API forever.
 
 Examples of these abstraction tools include [langchain](https://www.langchain.com/langchain), [litellm](https://www.litellm.ai/), [any-llm](https://github.com/mozilla-ai/any-llm). All of them let you write code once and route requests to different LLM backends. Many of them can also talk to local models, such as models served by Ollama, which is an open-source package that lets you run models locally.
 
@@ -304,10 +304,9 @@ ollama --version
 ```
 Next, we need to download a model. Check out the list of available models [here](https://ollama.com/search). We will use a small model called qwen3:0.6b. It is not the smartest model in the world, but it is small enough to run on most laptops, even without an NVIDIA GPU. This only needs to happen once per model:
 ```bash
-ollama serve
 ollama pull qwen3:0.6b
 ```
-`ollama serve` is generally not needed when you download it the first time as it runs as a background service but is needed if the process is interrupted. The `pull` command downloads a full runnable model artifact to your local machine. <!-- So you may end up with the error: `Error: listen tcp 127.0.0.1:11434: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted`. -->
+The `pull` command downloads a full runnable model artifact to your local machine. <!-- So you may end up with the error: `Error: listen tcp 127.0.0.1:11434: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted`. -->
 
 Sometimes the downloads can be slow (the model is about 500MB). After the pull finishes, you can chat with the model locally:
 ```bash
