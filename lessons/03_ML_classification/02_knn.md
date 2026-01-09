@@ -301,4 +301,4 @@ Decision Trees take a very different approach from KNN.
 Instead of measuring distance, they learn a sequence of rules.
 
 Understanding KNN deeply will make it much easier to understand
-why decision trees — and later, random forests — are so powerful.
+why decision trees and later why random forests are so powerful.
