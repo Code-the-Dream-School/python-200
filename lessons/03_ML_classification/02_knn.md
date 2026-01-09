@@ -4,7 +4,7 @@
 
 ---
 
-## Why Do We Need Classifiers?
+#### Why Do We Need Classifiers?
 
 So far in this course, we’ve focused on *describing* data: loading it, exploring it, and summarizing patterns.
 Now we reach an important turning point.
