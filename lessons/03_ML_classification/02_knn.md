@@ -1,79 +1,95 @@
 # Lesson 2  
-### CTD Python 200  
-**k-Nearest Neighbor (KNN) Classifiers**
+## CTD Python 200  
+### k-Nearest Neighbor (KNN) Classifiers
 
 ---
 
 ## Why Do We Need Classifiers?
 
-So far in this course, we’ve focused on working with data: loading it, exploring it, and summarizing it.
+So far in this course, we’ve focused on *describing* data: loading it, exploring it, and summarizing patterns.
 Now we reach an important turning point.
 
-A **classifier** is a model that assigns labels to data.
-Instead of answering questions like “what is the average?” we now ask questions like:
+A **classifier** is a model that assigns a category (or label) to a data point.
+Instead of asking questions like:
+
+> “What is the average value?”
+
+we now ask questions like:
 
 > “Which category does this data point belong to?”
 
-This lesson introduces your **first hands-on classifier**:
+Examples of classification problems include deciding whether an email is spam, identifying the species of a flower, or determining whether a transaction is fraudulent.
+
+In this lesson, you will build and evaluate your **first hands-on classifier**:
 the **k-Nearest Neighbor (KNN)** algorithm.
 
-KNN is simple, intuitive, and powerful enough to teach us many core ideas that apply to *all* classification models.
+KNN is intentionally simple.
+That simplicity allows us to focus on the core ideas behind classification before moving on to more complex models.
 
 ---
 
 ## The Intuition Behind KNN
 
+<img width="790" height="461" alt="KNN intuition diagram" src="https://github.com/user-attachments/assets/515472de-f80d-4149-8a38-dda46229305d" />
 
-<img width="790" height="461" alt="Screenshot 2026-01-09 at 1 31 57 PM" src="https://github.com/user-attachments/assets/515472de-f80d-4149-8a38-dda46229305d" />
+**Image credit:** GeeksforGeeks
 
-**Image Credits- GeeksforGeeks**
-
-Imagine you discover a new flower.
+Imagine you discover a new flower in a garden.
 You don’t know its species, but you *do* know the species of many nearby flowers.
 
 A natural strategy might be:
 
-> “Look at the flowers most similar to this one.
-> If most of them are the same species, that’s probably what this one is too.”
+> “Look at the flowers that are most similar to this one.
+> If most of them belong to the same species, this one probably does too.”
 
 This is exactly how **k-Nearest Neighbor** works.
 
-When we want to classify a new data point, KNN:
+When KNN classifies a new data point, it:
+- finds the **k closest points** in the training data,
+- looks at their labels,
+- and lets them **vote** on the final prediction.
 
-1. Looks at the **k closest points** in the training data  
-2. Checks their labels  
-3. Assigns the most common label among them  
+If most neighbors belong to the same class, that class wins.
 
-There is no training phase in the usual sense.
-KNN simply **stores the data** and compares new points to it.
+There is no complex training phase here.
+KNN simply stores the data and compares new points to what it has already seen.
 
-If this feels very human and intuitive, that’s a good sign.
+---
+
+## A Tiny Example (Pause and Think)
+
+Suppose we choose **k = 3**.
+
+A new flower’s three nearest neighbors include:
+- 2 flowers from the *Setosa* species
+- 1 flower from the *Versicolor* species
+
+**Question:**  
+What will KNN predict?
+
+**Answer:**  
+KNN predicts *Setosa*, because it receives the majority of votes.
+
+This simple voting idea is the foundation of the entire algorithm.
 
 ---
 
 ## A First Dataset: Iris
 
 To learn classification, we want a dataset that is:
+small, clean, easy to understand, and well-studied.
 
-- Small
-- Clean
-- Easy to understand
-- Well-studied
-
-For this lesson, we’ll use the classic **Iris dataset**.
+For this lesson, we use the classic **Iris dataset**.
 
 Each row represents a flower.
-For each flower, we measure four things:
-
-- Sepal length
-- Sepal width
-- Petal length
-- Petal width
+For each flower, we measure four physical properties:
+sepal length, sepal width, petal length, and petal width.
 
 The label tells us which species the flower belongs to.
-There are three possible species.
+There are three possible species in total.
 
-This dataset is simple enough to learn on, but rich enough to reveal important ideas.
+The Iris dataset is simple enough for learning,
+but rich enough to demonstrate real classification behavior.
 
 ---
 
@@ -95,7 +111,9 @@ from sklearn.metrics import (
     confusion_matrix,
     ConfusionMatrixDisplay
 )
-```
+````
+
+---
 
 ## Loading the Iris Dataset
 
@@ -109,17 +127,23 @@ print(X.shape)
 X.head()
 ```
 
-<img width="735" height="225" alt="Screenshot 2026-01-09 at 1 25 08 PM" src="https://github.com/user-attachments/assets/73cb1811-3b89-43b6-82bf-14c2b2b48fdc" />
+<img width="735" height="225" alt="Iris dataset preview" src="https://github.com/user-attachments/assets/73cb1811-3b89-43b6-82bf-14c2b2b48fdc" />
 
-We have 150 flowers and 4 numeric features.
+The dataset contains **150 flowers** and **4 numeric features**.
 The target labels are encoded as numbers, but they correspond to real species names.
+
+---
 
 ## Train / Test Split
 
-Before building any model, we split our data into two parts.
+Before building any model, we split the data into two parts.
 
-The training set is what the model learns from.
-The test set is used only at the end, to see how well the model generalizes to new data.
+The **training set** is used to make decisions.
+The **test set** is kept separate and used only at the end.
+
+This separation is critical.
+Our goal is not to memorize the data,
+but to perform well on **new, unseen examples**.
 
 ```python
 X_train, X_test, y_train, y_test = train_test_split(
@@ -131,14 +155,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 ```
 
-The key idea here is fairness:
-the model should be evaluated on data it has never seen before.
+---
 
 ## Our First KNN Model (Without Scaling)
 
-Let’s start with a very simple KNN classifier.
-We’ll use k = 5, meaning the model will look at the 5 nearest neighbors.
-
+Let’s start with a basic KNN classifier using **k = 5**.
+This means each prediction is based on the five closest neighbors.
 
 ```python
 knn = KNeighborsClassifier(n_neighbors=5)
@@ -148,33 +170,38 @@ preds = knn.predict(X_test)
 
 print("Accuracy:", accuracy_score(y_test, preds))
 print(classification_report(y_test, preds))
-
 ```
-<img width="549" height="208" alt="Screenshot 2026-01-09 at 1 27 42 PM" src="https://github.com/user-attachments/assets/3b861154-c8ca-432f-b256-70bab7e08baa" />
 
-You will likely see fairly good accuracy — but this result hides an important problem.
+<img width="549" height="208" alt="KNN classification report" src="https://github.com/user-attachments/assets/3b861154-c8ca-432f-b256-70bab7e08baa" />
+
+At first glance, the accuracy looks quite good.
+However, this result hides an important issue.
+
+---
 
 ## Why Distance Can Be Tricky
 
-KNN decides what is “near” by computing distances between points.
-But distance depends heavily on scale.
+KNN determines similarity by computing **distances** between data points.
+Distance calculations are strongly affected by the *scale* of features.
 
-If one feature has values between 0 and 100, and another ranges between 0 and 1,
-the larger feature will dominate the distance calculation — even if it isn’t more important.
+If one feature ranges from 0 to 100 and another ranges from 0 to 1,
+the larger-scale feature will dominate the distance —
+even if it is not more informative.
 
-In other words, KNN can be misled simply because features are measured in different units.
+As a result, KNN can make poor decisions simply because features are measured in different units.
 
-To fix this, we need feature scaling.
+To fix this problem, we use **feature scaling**.
+
+---
 
 ## KNN with Feature Scaling (The Right Way)
 
-We will now standardize all features so they:
+Feature scaling transforms each feature so that it:
 
-Have mean 0
+* has a mean of 0,
+* and a standard deviation of 1.
 
-Have standard deviation 1
-
-This puts every feature on equal footing.
+After scaling, all features contribute fairly to distance calculations.
 
 ```python
 knn_scaled = Pipeline([
@@ -189,33 +216,36 @@ print("Accuracy (scaled):", accuracy_score(y_test, preds_scaled))
 print(classification_report(y_test, preds_scaled))
 ```
 
-<img width="524" height="205" alt="Screenshot 2026-01-09 at 1 28 58 PM" src="https://github.com/user-attachments/assets/4dc08460-6198-421f-a558-ce6035cc65dc" />
+<img width="524" height="205" alt="Scaled KNN results" src="https://github.com/user-attachments/assets/4dc08460-6198-421f-a558-ce6035cc65dc" />
 
-In most cases, you should see an improvement.
-This is a crucial lesson:
+In most cases, you will see improved performance.
 
-# KNN almost always requires feature scaling.
+> **Key takeaway:**
+> KNN almost always requires feature scaling.
+
+---
 
 ## Understanding Evaluation Metrics
 
-So far, we’ve looked at accuracy — the fraction of predictions that were correct.
+So far, we’ve focused on **accuracy** —
+the fraction of predictions the model gets correct.
 
 Accuracy is useful, but it does not tell the whole story.
-To understand classifiers more deeply, we also look at:
 
-Precision: When the model predicts a class, how often is it correct?
+To understand classifiers more deeply, we also consider:
 
-Recall: When a class is present, how often does the model find it?
+* **Precision**, which measures how reliable positive predictions are,
+* **Recall**, which measures how many real cases the model successfully identifies,
+* **F1 score**, which balances precision and recall.
 
-F1 score: A balance between precision and recall
+These metrics are especially important in real-world problems,
+where different mistakes have very different consequences.
 
-These metrics become especially important in real-world problems like spam detection or medical diagnosis, where different types of errors have different costs.
-
-The classification report shows all of these values together.
+---
 
 ## Confusion Matrix: Seeing Errors Clearly
 
-A confusion matrix helps us visualize where the model is making mistakes.
+A confusion matrix helps us visualize *where* the model makes mistakes.
 
 ```python
 cm = confusion_matrix(y_test, preds_scaled)
@@ -229,46 +259,46 @@ plt.title("KNN Confusion Matrix (Iris)")
 plt.show()
 ```
 
-<img width="641" height="475" alt="Screenshot 2026-01-09 at 1 30 20 PM" src="https://github.com/user-attachments/assets/1d045263-93db-4df1-92fb-4cabe796e26e" />
+<img width="641" height="475" alt="Confusion matrix for KNN" src="https://github.com/user-attachments/assets/1d045263-93db-4df1-92fb-4cabe796e26e" />
 
-This plot shows which species are being confused with one another.
-Even when accuracy is high, confusion matrices can reveal patterns of error.
+Even when accuracy is high, confusion matrices can reveal
+which classes are being confused with one another.
 
-What We’ve Learned
+---
 
-In this lesson, we saw that:
+## What We’ve Learned
 
-KNN classifies by comparing distances between points
+In this lesson, you:
 
-The choice of k matters
+* built and evaluated your **first classifier**,
+* learned how KNN uses distance and voting,
+* saw why feature scaling is essential,
+* and explored evaluation metrics beyond accuracy.
 
-Feature scaling is essential for distance-based models
+These ideas will appear again and again as we move to more advanced models.
 
-Accuracy alone is not enough to evaluate classifiers
-
-Precision, recall, and confusion matrices give deeper insight
-
-Most importantly, you’ve now trained and evaluated your first classifier.
-
+---
 
 ## External References (Recommended)
 
-If you’d like another explanation of KNN from different perspectives, these are excellent resources:
+If you would like additional explanations from different perspectives:
 
-Text explanation (IBM):
-https://www.ibm.com/think/topics/knn
+**IBM (text):**
+[https://www.ibm.com/think/topics/knn](https://www.ibm.com/think/topics/knn)
 
-Video explanation (IBM Technology, 10 minutes):
-https://www.youtube.com/watch?v=b6uHw7QW_n4
+**IBM Technology (video, ~10 minutes):**
+[https://www.youtube.com/watch?v=b6uHw7QW_n4](https://www.youtube.com/watch?v=b6uHw7QW_n4)
 
-Reading or watching the same idea explained in multiple ways is one of the best ways to build intuition.
+Seeing the same idea explained in multiple ways helps build strong intuition.
+
+---
 
 ## Looking Ahead
 
-In the next lesson, we’ll introduce Decision Trees.
+In the next lesson, we introduce **Decision Trees**.
 
-Decision Trees take a very different approach from KNN:
-instead of measuring distance, they learn a sequence of rules.
+Decision Trees take a very different approach from KNN.
+Instead of measuring distance, they learn a sequence of rules.
 
-Understanding KNN deeply will make it much easier to understand why trees — and later, random forests — are so powerful.
-
+Understanding KNN deeply will make it much easier to understand
+why decision trees — and later, random forests — are so powerful.
