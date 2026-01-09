@@ -123,7 +123,84 @@ You don’t need to memorize this diagram, and we are not going to explain every
 
 ### The Workflow 
 
-![Workflow](resources/workflow.png)
+Load Dataset (df)
+    ↓
+Separate Features and Target
+X = df without "spam_label"
+y = spam_label
+    ↓
+Train-Test Split 
+(protect test data from leakage)
+    ↓
+Lock Away Test Data
+X_test, y_test  → untouched until evaluation
+    ↓
+────────────────────────────────────────
+Intuition Building Phase
+────────────────────────────────────────
+    ↓
+Manually Select 1 Intuitive Feature
+(capital_run_length_longest)
+    ↓
+Fit Scaler ONLY on X_train (1 feature)
+    ↓
+Transform:
+X1_train → scaled
+X1_test  → scaled
+    ↓
+Train Logistic Regression (1 feature)
+    ↓
+Visualize:
+Probability Curve & Decision Threshold
+    ↓
+────────────────────────────────────────
+Feature Interaction Phase
+────────────────────────────────────────
+    ↓
+Manually Select 2 Intuitive Features
+(capital_run_length_longest, char_freq_$)
+    ↓
+Fit Scaler ONLY on X_train (2 features)
+    ↓
+Transform:
+X2_train → scaled
+X2_test  → scaled
+    ↓
+Train Logistic Regression (2 features)
+    ↓
+Visualize:
+2D Decision Boundary
+    ↓
+────────────────────────────────────────
+Full Model Phase
+────────────────────────────────────────
+    ↓
+Scale ALL Features
+(fit scaler only on X_train)
+    ↓
+Transform:
+X_train → scaled
+X_test  → scaled
+    ↓
+Train Logistic Regression (all features)
+    ↓
+Interpret Model:
+Extract Feature Coefficients
+    ↓
+Identify Strongest Features
+    ↓
+────────────────────────────────────────
+Evaluation Phase (Final Step)
+────────────────────────────────────────
+    ↓
+Evaluate on Untouched Test Data:
+Confusion Matrix
+Accuracy
+Precision
+Recall
+F1 Score
+Classification Report
+
 
 Everything we do in code will follow this exact path. If at any point you feel confused later, you can come back to this diagram and ask yourself, “Which step am I in right now?” 
 
@@ -165,6 +242,8 @@ from sklearn.metrics import (
     f1_score,
     classification_report
 )
+
+# Visualization helper
 from sklearn.inspection import DecisionBoundaryDisplay
 
 ```
@@ -293,145 +372,272 @@ We also use stratification to make sure the proportion of spam and non-spam emai
 
 Once the split is done, the test data is off-limits until evaluation time.
 
-## 5. Feature Scaling 
+## 5. Manually Selecting a Single Feature
 
-Logistic Regression relies on **weighted sums of features**. If one feature has values in the thousands and another stays between 0 and 1, the larger-scale feature can dominate unfairly.
+At this point, we have all features available in `X_train` and `X_test`.
+However, instead of immediately training a model with dozens of features, we are going to slow down and take a deliberate step.
 
-That’s why we scale.
+We will start by training Logistic Regression using just one carefully chosen feature.
+
+Because this allows us to clearly understand what the model is learning and visually interpret how Logistic Regression separates spam vs non-spam and build intuition before adding more complexity. 
+
+Choosing Feature 1: `capital_run_length_longest`
+
+We begin by selecting a feature that has a strong intuitive relationship with spam. This feature measures the length of the longest sequence of consecutive capital letters in an email.
 
 ```python
-scaler = StandardScaler()
-# fit only on training data
-X_train_scaled = scaler.fit_transform(X_train)
-# Transform test with same scaling
-X_test_scaled = scaler.transform(X_test)
+# Feature 1: capital_run_length_longest
+feature_1 = ["capital_run_length_longest"]
 
+# Now that we’ve chosen our feature, we extract it from the training and test datasets.
+X1_train = X_train[feature_1]
+X1_test = X_test[feature_1]
 ```
+
+## 6. Feature Scaling 
+
+Before we train our Logistic Regression model, we need to take one more important step: feature scaling.
+Even though we are currently working with just one feature, the scale of that feature still matters. Logistic Regression learns by adjusting weights based on numerical values, and features with larger numeric ranges can dominate the learning process if they are left unscaled.
+To prevent this, we standardize the feature so the model learns from relative patterns, not raw magnitudes.
+
+```python
+# Feature Scaling
+scaler_1 = StandardScaler()
+
+X1_train_scaled = scaler_1.fit_transform(X1_train) # Fit only on training data
+
+# Transform test with same scaling
+X1_test_scaled = scaler_1.transform(X1_test)
+```
+
 Here we use something called `StandardScaler`, which is a very common and beginner-friendly way to scale data.
 
-When we call `scaler.fit_transform(X_train)`, the scaler learns the statistics only from the training set. This prevents information from the test set from leaking into the model. If we were to fit the scaler on all the data, the model would indirectly “peek” at the test set, which would make our evaluation unreliable.
+When we call `scaler_1.fit_transform(X_train)`, the scaler learns the statistics only from the training set. This prevents information from the test set from leaking into the model. If we were to fit the scaler on all the data, the model would indirectly “peek” at the test set, which would make our evaluation unreliable.
 
-After fitting the scaler on `X_train`, we use the same scaler to transform both the training and test sets. This keeps them comparable while maintaining fairness.
+After fitting the scaler on `X1_train`, we use the same scaler to transform both the training and test sets. This keeps them comparable while maintaining fairness.
 
-## 6. Training the Logistic Regression
+## 7. Training the Logistic Regression using one Feature
 
-Now the model finally learns.
+Now that our feature is scaled and ready, we can train our Logistic Regression model.
 
 ```python
-log_reg = LogisticRegression(
+# Train Logistic Regression Model with 1 feature
+log_reg_1 = LogisticRegression(
     max_iter=1000,
     solver="liblinear"
 )
-log_reg.fit(X_train_scaled, y_train)
+log_reg_1.fit(X1_train_scaled, y_train)
 ```
-The parameters we pass in, like `max_iter` and `solver`, control how that machine learns, not the data itself.
 
-The real learning happens when we call the `.fit()`function. In machine learning,`.fit()` is a very common function name, and it always means the same idea: *learn patterns from the training data*. When we write `log_reg.fit(X_train_scaled, y_train)`, we are explicitly telling the model, “Here are the inputs, and here are the correct answers, figure out the best way to connect them.”
+Here, we create a Logistic Regression model and set a couple of important parameters. `max_iter` controls how many optimization steps the model is allowed to take while learning. We increase this value to make sure the model has enough opportunity to converge.
+The `liblinear` solver is a reliable choice for smaller datasets and works well when using one or a few features.
 
-Behind the scenes, Logistic Regression is learning a single linear decision boundary that separates spam from non-spam emails by combining all features.
+The real learning happens when we call the `.fit()`function. In machine learning,`.fit()` is a very common function name, and it always means the same idea: *learn patterns from the training data*. When we write `log_reg1.fit(X1_train_scaled, y_train)`, we are explicitly telling the model, “Here are the inputs, and here are the correct answers, figure out the best way to connect them.”
 
-During the process, it is learning weights (coefficients) that tell us which features push predictions toward spam and which push them away.
+At this point, the model has learned a decision boundary based only on `capital_run_length_longest`, and it is ready to be evaluated on unseen data.
 
-After .fit() completes, the model has officially learned from the training data.
+## 8. 1-Feature Decision Boundary
 
-## 7. Feature Importance
-
-One of the biggest strengths of Logistic Regression is interpretability.
-
-We can inspect the learned coefficients directly.
+Now that the model is trained, we want to see what it has learned.
+Since we are using only one feature, we can directly visualize how Logistic Regression converts feature values into probabilities.
 
 ```python
-coef_df = pd.DataFrame({
-    "feature": X.columns,
-    "coefficient": log_reg.coef_[0]
-})
+# Generate smooth input range
+x_range = np.linspace(
+    X1_train_scaled.min(),
+    X1_train_scaled.max(),
+    300
+).reshape(-1, 1)
+
 ```
-When we sort these coefficients by absolute value, we can see which features had the strongest influence on the model’s decisions. Larger coefficients mean the feature pushes the prediction more strongly toward spam or non-spam.
+Here, we generate a smooth range of values that spans the minimum to maximum of the scaled training feature. This does not represent actual emails. Instead, it creates evenly spaced inputs so we can observe how the model behaves across the entire feature range.
+We reshape the data so it matches the format expected by the model.
+
+### Predicting Spam Probabilities
+
+`# Predict probabilities
+y_probs = log_reg_1.predict_proba(x_range)[:, 1]
+`
+The model outputs probabilities for both classes: non-spam and spam.
+By selecting the second column, we extract the probability that an email is classified as spam. This gives us a smooth probability curve rather than just yes/no predictions.
+
 
 ```python
-coef_df["importance"] = coef_df["coefficient"].abs()
-coef_df = coef_df.sort_values(by="importance", ascending=False)
-coef_df.head(10)
-```
-The output here gives us real insight into how the model thinks, something that’s much harder to do with models like KNN or deep neural networks.
-
-![Top_coefficients](resources/Top_coefficients.png)
-
-From the output, we can see that `word_freq_george` has the largest absolute coefficient, making it the most influential feature in the model. This means that the presence of the word *“George”* strongly affects whether an email is predicted as spam or not, more than any other feature in this dataset. 
-
-## 8. 1-Feature Decision Boundary(Using only the most important feature)
-
-To build intuition, we temporarily step away from the full model and zoom in.
-
-First, we look at the single most important feature and visualize how Logistic Regression separates spam from non-spam using just that one dimension. 
-
-```python
-# 1-Feature Decision Boundary
-top_feature = coef_df.iloc[0]["feature"]
-feature_index = list(X.columns).index(top_feature)
-
-X_top_train = X_train_scaled[:, feature_index]
-
-plt.scatter(X_top_train, y_train, alpha=0.3)
-plt.axvline(0, color='red')
-plt.xlabel(top_feature)
-plt.ylabel("Spam")
-plt.title("1-Feature Logistic Regression Decision Threshold")
+# Plotting the Data and the Model
+plt.figure(figsize=(8, 5))
+plt.scatter(X1_train_scaled, y_train, alpha=0.2, label="Emails")
+plt.plot(x_range, y_probs, color="red", linewidth=2, label="Spam Probability")
+plt.axhline(0.5, linestyle="--", color="gray")
+plt.xlabel("Scaled Longest Capitalization Run")
+plt.ylabel("Probability of Spam")
+plt.title("Logistic Regression with One Feature")
+plt.legend()
 plt.show()
-
 ```
+### Interpreting the Logistic Regression Output
 
-We take the most important feature (word_freq_george) and plot its scaled values against the spam labels. Each dot represents one email. Emails labeled 0 are not spam, and 1 means spam.
+![1-Feature Decision Boundary](<resources/1-Feature Decision Boundary.png>)
 
-![1-feature decision boundary](<resources/1-feature decision boundary.png>)
+This graph shows how Logistic Regression uses one feature `the scaled longest run of capital letters` to estimate the probability that an email is spam.
 
-The red vertical line represents the **decision threshold**. On one side of this line, the model predicts “not spam.” On the other side, it predicts “spam.”
+The x-axis represents the scaled feature values, and the y-axis shows the predicted probability of spam. Each blue dot is a real email from the training data, plotted at either 0 (not spam) or 1 (spam).
 
-## 9. 2-Feauture Decision Boundary 
+The red curve shows how the model’s predicted probability changes as capitalization increases. At very low capitalization values, the model assigns a low spam probability. As the capitalization run increases, the probability rises sharply and quickly approaches 1.
 
-Next, we add the second most important feature and retrain a new Logistic Regression model using two features instead of one. 
+The dashed line at 0.5 marks the decision threshold. Once the red curve crosses this line, the model begins classifying emails as spam. The steep shape of the curve indicates that this feature is a strong signal in the dataset. Even moderate capitalization is enough for the model to become highly confident that an email is spam. 
+
+This visualization helps us see that Logistic Regression is not making a sudden yes/no decision. Instead, it smoothly converts feature values into probabilities and then applies a threshold to classify emails.
+
+## 9. Adding a Second Feature to the Model
+
+So far, we trained Logistic Regression using a single feature. Now, we take the next step by adding a second intuitive feature to give the model more information.
+
+The feature `char_freq_$` measures how frequently the dollar sign appears in an email. Since spam emails often involve money, prizes, or financial offers, this feature is another strong and easily interpretable indicator of spam.
 
 ```python
-# 2-Feature Decision Boundary
-top2_features = list(coef_df.head(2)["feature"])
-indices = [list(X.columns).index(f) for f in top2_features]
+# Adding a second Intuitive Feature
+# Feature: char_freq_$
 
-X2_train = X_train_scaled[:, indices]
+features_2 = [
+    "capital_run_length_longest",
+    "char_freq_$"
+]
 
-model2 = LogisticRegression()
-model2.fit(X2_train, y_train)
+X2_train = X_train[features_2]
+X2_test = X_test[features_2]
+
+```
+Here, we define a list containing both features we want the model to use. By combining capitalization patterns with money-related symbols, we allow the model to learn from two complementary signals instead of just one. 
+
+Finally, we extract these two features from the training and test sets. The training data will be used to learn how the two features interact, while the test data remains untouched for later evaluation.
+
+At this point, we are moving from a one-dimensional view of the problem to a two-dimensional one. This sets the stage for visualizing a decision boundary instead of a simple probability curve, and helps us see how Logistic Regression combines multiple features to make more informed decisions.
+
+## 10. Scaling the Two Selected Features
+
+Now that we are using two features, we apply the same scaling process as before. 
+
+```python
+# scaling feauture_2
+
+scaler_2 = StandardScaler()
+X2_train_scaled = scaler_2.fit_transform(X2_train)
+X2_test_scaled = scaler_2.transform(X2_test)
+```
+We create a new scaler to standardize both features together. The scaler is fit only on the training data and then applied to both the training and test sets. This ensures that both features are on a comparable scale and that no information from the test set leaks into the training process.
+
+## 11. Training Logistic Regression with Two Features
+
+```python
+# Train Logistic Regression with 2 features
+log_reg_2 = LogisticRegression()
+log_reg_2.fit(X2_train_scaled, y_train)
+
+```
+Here, we train a new Logistic Regression model using two features instead of one. The model now learns how capitalization patterns and dollar-sign frequency work together to distinguish spam from non-spam emails.
+
+By fitting the model on the scaled training data, Logistic Regression finds a decision boundary in two dimensions, allowing it to make more informed predictions than with a single feature alone.
+
+## 12. Plotting the Decision Boundary for Two Features
+
+After training the Logistic Regression model with two features, we want to understand how the model is making decisions across the feature space. To do this, we visualize the decision boundary learned by the model.
+
+```python
+plt.figure(figsize=(7, 6))
 
 DecisionBoundaryDisplay.from_estimator(
-    model2,
-    X2_train,
+    log_reg_2,
+    X2_train_scaled,
     response_method="predict",
     cmap="coolwarm",
     alpha=0.3
 )
 
-plt.scatter(X2_train[:, 0], X2_train[:, 1],
-            c=y_train, cmap="coolwarm", edgecolor="k")
-plt.xlabel(top2_features[0])
-plt.ylabel(top2_features[1])
-plt.title("Decision Boundary (Top 2 Features)")
+plt.scatter(
+    X2_train_scaled[:, 0],
+    X2_train_scaled[:, 1],
+    c=y_train,
+    cmap="coolwarm",
+    edgecolor="k",
+    alpha=0.5
+)
+
+plt.xlabel("Scaled Longest Capital Run")
+plt.ylabel("Scaled Dollar Sign Frequency")
+plt.title("Decision Boundary Using Two Spam Indicators")
 plt.show()
 
 ```
 
-This time, instead of a single vertical line, we get a 2D decision boundary. The background colors show which regions of the feature space are classified as spam or not spam, and each dot is still a real email.
+This time, we get a 2D decision boundary. The background colors show which regions of the feature space are classified as spam or not spam, and each dot is still a real email.
 
 To create this visualization, we used Scikit-Learn’s **DecisionBoundaryDisplay**, which automatically shows how the trained Logistic Regression model separates the feature space into spam and non-spam regions. This saves us from manually computing predictions and makes the decision boundary easy to interpret.
 
-![Decision Boundary](<resources/Decision Boundary.png>)
+![Decision Boundary using Two Spam Indicator ](<resources/Decision Boundary.png>)
 
-You can now clearly see that the model has more flexibility. By combining two features, it draws a diagonal boundary that separates the classes better than before. This visually demonstrates an important idea: adding meaningful features gives the model more context and improves its decisions.
+### Interpreting the Decision Boundary
 
-## 10. Final step: Evaluating the Model on Unseen Data
+The colored background shows how Logistic Regression divides the feature space into spam and non-spam regions. The line where the colors change represents the decision boundary.
+
+Emails that fall on one side of the boundary are classified as spam, while those on the other side are classified as non-spam. The plot shows how the model combines both capitalization patterns and dollar sign frequency to make its decisions.
+
+This visualization highlights the key idea that adding features allows the model to make more nuanced decisions than a single-feature model, while still remaining interpretable.
+
+## 13. Scaling All Features for the Full Model
+
+Up to this point, we explored Logistic Regression using one and then two carefully chosen features to build intuition. Now, we move to the final step: training a model using all available features.
+
+Before doing that, we need to scale the entire feature set.
+
+```python
+# Scale all features 
+scaler_full = StandardScaler()
+X_train_scaled = scaler_full.fit_transform(X_train)
+X_test_scaled = scaler_full.transform(X_test)
+
+```
+We create a new scaler that will be applied to every feature in the dataset.
+
+As before, the scaler is fit only on the training data and then applied to both the training and test sets. This ensures that all features are on a comparable scale and that no information from the test set influences the training process.
+
+## 14. Training the Full Logistic Regression Model
+
+Now that all features have been scaled, we can train the final Logistic Regression model using the complete feature set.
+
+```python
+# Train full model
+log_reg_full = LogisticRegression(max_iter=1000, solver="liblinear")
+log_reg_full.fit(X_train_scaled, y_train)
+
+```
+In this step, the model learns from all available features at once. Logistic Regression combines signals from words, characters, and capitalization patterns to find the best decision boundary that separates spam from non-spam emails.
+
+## 15. Interpreting the Model Using Feature Coefficients
+
+After training the full Logistic Regression model, we can examine which features influence the model’s decisions the most.
+
+```python
+# Feature Coefficients (Interpretability)
+coef_df = pd.DataFrame({
+    "feature": X.columns,
+    "coefficient": log_reg_full.coef_[0]
+})
+
+coef_df["abs_importance"] = coef_df["coefficient"].abs()
+coef_df.sort_values("abs_importance", ascending=False).head(10)
+```
+This code creates a table that pairs each feature with its learned coefficient. In Logistic Regression, coefficients represent how strongly a feature pushes the prediction toward spam or non-spam.
+
+![Feature_coefficients](resources/feature_coefficients.png)
+
+We take the absolute value of each coefficient to measure its overall importance, regardless of direction. Sorting by this value highlights the features that have the greatest impact on the model’s decisions.
+
+## 16. Final step: Evaluating the Model on Unseen Data
 
 So far, everything we’ve seen used training data. Now comes the most important moment: evaluation on untouched test data.
 
 ```python
-y_pred = log_reg.predict(X_test_scaled)
+y_pred = log_reg_full.predict(X_test_scaled)
 ```
 
 We then compute multiple evaluation metrics.
@@ -451,13 +657,13 @@ Each metric tells a slightly different story about model performance, especially
 
 OUTPUT: 
 
-![Output](resources/Output.png)
+![Output](resources/output.png)
 
 Now let’s interpret how well our Logistic Regression model performed on the unseen test data.
 
 We’ll start with the confusion matrix: Out of all non-spam emails (class 0), the model correctly identified 530 emails as not spam, but 28 non-spam emails were mistakenly flagged as spam. For spam emails (class 1), the model correctly detected 326 spam messages, while 37 spam emails slipped through and were predicted as non-spam. This tells us the model is strong overall, but like any real system, it still makes a small number of mistakes in both directions.
 
-Next, let’s look at the accuracy, which is **0.93**. This means the model correctly classified about 93% of all test emails. While accuracy gives a quick high-level view, it doesn’t tell the full story by itself especially for problems like spam detection where false positives and false negatives matter differently.
+Next, let’s look at the accuracy, which is **0.92**. This means the model correctly classified about 92% of all test emails. While accuracy gives a quick high-level view, it doesn’t tell the full story by itself especially for problems like spam detection where false positives and false negatives matter differently.
 
 That’s why precision and recall are important. The precision score is 0.92, which means that when the model predicts an email is spam, it is correct 92% of the time. This is important because it shows the model is not overly aggressive in labeling emails as spam. 
 
