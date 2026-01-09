@@ -1,81 +1,79 @@
-# Lesson 3  
+# Lesson 2  
 ### CTD Python 200  
-**Decision Trees and Ensemble Learning (Random Forests)**
+**k-Nearest Neighbor (KNN) Classifiers**
 
 ---
 
-## Why Trees?
+## Why Do We Need Classifiers?
 
-In the previous lesson, we learned about **K-Nearest Neighbors (KNN)**.
-KNN makes predictions by comparing distances between data points.
+So far in this course, we’ve focused on working with data: loading it, exploring it, and summarizing it.
+Now we reach an important turning point.
 
-That works well in some settings — but not all.
+A **classifier** is a model that assigns labels to data.
+Instead of answering questions like “what is the average?” we now ask questions like:
 
-Now imagine a different way of thinking:
+> “Which category does this data point belong to?”
 
-> “If an email has lots of dollar signs and exclamation points, it might be spam.  
-> If it also contains words like *free* or *remove*, that makes spam even more likely.”
+This lesson introduces your **first hands-on classifier**:
+the **k-Nearest Neighbor (KNN)** algorithm.
 
-That style of reasoning — asking a **sequence of yes/no questions** — is exactly how a **Decision Tree** works.
-
-<img width="800" height="400" alt="decision tree" src="https://github.com/user-attachments/assets/3cd4e0d6-8da7-4dc3-b05b-f1379fae0f4c" />
-
-**Image credit:** GeeksForGeeks
-
-Unlike many machine learning models that behave like black boxes, decision trees are:
-
-- **Interpretable** — you can read every decision
-- **Human-like** — they resemble flowcharts
-- **Powerful on tabular data**
-
-But they also have a weakness…
+KNN is simple, intuitive, and powerful enough to teach us many core ideas that apply to *all* classification models.
 
 ---
 
-## The Big Idea
+## The Intuition Behind KNN
 
-A **single decision tree** can become too confident.
-If allowed to grow without constraints, it may memorize the training data.
 
-This problem is called **overfitting**.
+<img width="790" height="461" alt="Screenshot 2026-01-09 at 1 31 57 PM" src="https://github.com/user-attachments/assets/515472de-f80d-4149-8a38-dda46229305d" />
 
-To solve it, we use **Random Forests**, which combine many trees into one stronger model.
+**Image Credits- GeeksforGeeks**
+
+Imagine you discover a new flower.
+You don’t know its species, but you *do* know the species of many nearby flowers.
+
+A natural strategy might be:
+
+> “Look at the flowers most similar to this one.
+> If most of them are the same species, that’s probably what this one is too.”
+
+This is exactly how **k-Nearest Neighbor** works.
+
+When we want to classify a new data point, KNN:
+
+1. Looks at the **k closest points** in the training data  
+2. Checks their labels  
+3. Assigns the most common label among them  
+
+There is no training phase in the usual sense.
+KNN simply **stores the data** and compares new points to it.
+
+If this feels very human and intuitive, that’s a good sign.
 
 ---
 
-## What You’ll Learn Today
+## A First Dataset: Iris
 
-By the end of this lesson, you will be able to:
+To learn classification, we want a dataset that is:
 
-- Compare **KNN vs Decision Trees vs Random Forests**
-- Explain why trees outperform KNN on tabular data
-- Understand **overfitting** in decision trees
-- Use **Random Forests** to improve generalization
-- Interpret results using **precision, recall, and F1 score**
-- Connect model behavior to real-world intuition (spam detection)
+- Small
+- Clean
+- Easy to understand
+- Well-studied
 
----
+For this lesson, we’ll use the classic **Iris dataset**.
 
-## Dataset: Spambase (Real-World Tabular Data)
+Each row represents a flower.
+For each flower, we measure four things:
 
-In this lesson we use the **Spambase dataset** from the UCI Machine Learning Repository.
+- Sepal length
+- Sepal width
+- Petal length
+- Petal width
 
-Each row represents an **email**.
-The features are numeric signals such as:
+The label tells us which species the flower belongs to.
+There are three possible species.
 
-- How often words like `"free"`, `"remove"`, `"your"` appear
-- Frequency of characters like `"!"` and `"$"`
-- Statistics about capital letter usage
-
-The label tells us whether the email is:
-
-- `1` → spam  
-- `0` → not spam (ham)
-
-This dataset is ideal because:
-- It’s realistic
-- It has many features
-- It clearly shows differences between models
+This dataset is simple enough to learn on, but rich enough to reveal important ideas.
 
 ---
 
@@ -86,66 +84,97 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, f1_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-````
-
----
-
-## Load the Dataset
-
-```python
-from io import BytesIO
-import requests
-
-url = "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data"
-response = requests.get(url)
-response.raise_for_status()
-
-df = pd.read_csv(BytesIO(response.content), header=None)
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
 ```
 
-The dataset contains **4601 emails** and **58 columns**
-(57 features + 1 label).
+## Loading the Iris Dataset
 
 ```python
-print(df.shape)
-df.head()
+iris = load_iris(as_frame=True)
+
+X = iris.data
+y = iris.target
+
+print(X.shape)
+X.head()
 ```
 
-<img width="930" height="251" alt="Screenshot 2026-01-05 at 4 17 33 PM" src="https://github.com/user-attachments/assets/b49624ed-cc21-4d6a-8a05-4efe4f2ce950" />
+<img width="735" height="225" alt="Screenshot 2026-01-09 at 1 25 08 PM" src="https://github.com/user-attachments/assets/73cb1811-3b89-43b6-82bf-14c2b2b48fdc" />
 
----
+We have 150 flowers and 4 numeric features.
+The target labels are encoded as numbers, but they correspond to real species names.
 
 ## Train / Test Split
 
-We separate features (`X`) from labels (`y`) and use a **stratified split**.
-This keeps the spam ratio similar in both sets.
+Before building any model, we split our data into two parts.
+
+The training set is what the model learns from.
+The test set is used only at the end, to see how well the model generalizes to new data.
 
 ```python
-X = df.iloc[:, :-1]
-y = df.iloc[:, -1]
-
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
-    test_size=0.25,
-    random_state=0,
+    test_size=0.2,
+    random_state=42,
     stratify=y
 )
 ```
 
----
+The key idea here is fairness:
+the model should be evaluated on data it has never seen before.
 
-## Model 1 — KNN (Scaled Baseline)
+## Our First KNN Model (Without Scaling)
 
-We start with **KNN**, using proper feature scaling.
-This is our **baseline** model.
+Let’s start with a very simple KNN classifier.
+We’ll use k = 5, meaning the model will look at the 5 nearest neighbors.
+
+
+```python
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+preds = knn.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, preds))
+print(classification_report(y_test, preds))
+
+```
+<img width="549" height="208" alt="Screenshot 2026-01-09 at 1 27 42 PM" src="https://github.com/user-attachments/assets/3b861154-c8ca-432f-b256-70bab7e08baa" />
+
+You will likely see fairly good accuracy — but this result hides an important problem.
+
+## Why Distance Can Be Tricky
+
+KNN decides what is “near” by computing distances between points.
+But distance depends heavily on scale.
+
+If one feature has values between 0 and 100, and another ranges between 0 and 1,
+the larger feature will dominate the distance calculation — even if it isn’t more important.
+
+In other words, KNN can be misled simply because features are measured in different units.
+
+To fix this, we need feature scaling.
+
+## KNN with Feature Scaling (The Right Way)
+
+We will now standardize all features so they:
+
+Have mean 0
+
+Have standard deviation 1
+
+This puts every feature on equal footing.
 
 ```python
 knn_scaled = Pipeline([
@@ -154,175 +183,92 @@ knn_scaled = Pipeline([
 ])
 
 knn_scaled.fit(X_train, y_train)
-pred_knn = knn_scaled.predict(X_test)
+preds_scaled = knn_scaled.predict(X_test)
 
-print(classification_report(y_test, pred_knn, digits=3))
+print("Accuracy (scaled):", accuracy_score(y_test, preds_scaled))
+print(classification_report(y_test, preds_scaled))
 ```
 
-<img width="537" height="156" alt="Screenshot 2026-01-05 at 4 18 28 PM" src="https://github.com/user-attachments/assets/d35ea1c0-fdf9-4b80-94a1-53a008ad89e7" />
+<img width="524" height="205" alt="Screenshot 2026-01-09 at 1 28 58 PM" src="https://github.com/user-attachments/assets/4dc08460-6198-421f-a558-ce6035cc65dc" />
 
-### What to Notice
+In most cases, you should see an improvement.
+This is a crucial lesson:
 
-* KNN works reasonably well
-* But performance is limited on high-dimensional tabular data
-* Distance alone is not enough to capture complex patterns
+# KNN almost always requires feature scaling.
 
-This sets the stage for trees.
+## Understanding Evaluation Metrics
 
----
+So far, we’ve looked at accuracy — the fraction of predictions that were correct.
 
-## Model 2 — Decision Tree
+Accuracy is useful, but it does not tell the whole story.
+To understand classifiers more deeply, we also look at:
 
-Decision Trees do **not use distance**.
-Instead, they learn **rules** like:
+Precision: When the model predicts a class, how often is it correct?
 
-> “Is the frequency of `$` greater than X?”
+Recall: When a class is present, how often does the model find it?
 
-This makes them very effective for tabular datasets like spam detection.
+F1 score: A balance between precision and recall
 
-```python
-tree = DecisionTreeClassifier(random_state=0)
-tree.fit(X_train, y_train)
-pred_tree = tree.predict(X_test)
+These metrics become especially important in real-world problems like spam detection or medical diagnosis, where different types of errors have different costs.
 
-print(classification_report(y_test, pred_tree, digits=3))
-```
+The classification report shows all of these values together.
 
-<img width="522" height="154" alt="Screenshot 2026-01-05 at 4 19 28 PM" src="https://github.com/user-attachments/assets/7f87bfcf-ab0e-4567-a17f-1e40689f2d66" />
+## Confusion Matrix: Seeing Errors Clearly
 
-
-### Why Trees Often Beat KNN Here
-
-* Each feature is evaluated independently
-* Trees naturally model non-linear relationships
-* No scaling required
-* Well-suited for mixed and sparse signals
-
-But there’s a problem…
-
----
-
-## Overfitting Warning ⚠️
-
-A decision tree can keep splitting until it perfectly classifies the training data.
-
-That means:
-
-* Very low training error
-* Worse performance on new data
-
-This is **high variance** behavior.
-
-To fix this, we use ensembles.
-
----
-
-## Model 3 — Random Forest 🌲🌲🌲
-
-A **Random Forest** is a collection of decision trees.
-
-Each tree:
-
-* Sees a random sample of the data
-* Uses a random subset of features
-* Makes its own prediction
-
-The forest **votes**, and the majority wins.
+A confusion matrix helps us visualize where the model is making mistakes.
 
 ```python
-rf = RandomForestClassifier(
-    n_estimators=100,
-    random_state=0
+cm = confusion_matrix(y_test, preds_scaled)
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=iris.target_names
 )
 
-rf.fit(X_train, y_train)
-pred_rf = rf.predict(X_test)
-
-print(classification_report(y_test, pred_rf, digits=3))
+disp.plot()
+plt.title("KNN Confusion Matrix (Iris)")
+plt.show()
 ```
 
-<img width="517" height="163" alt="Screenshot 2026-01-05 at 4 20 15 PM" src="https://github.com/user-attachments/assets/70956555-6be3-430e-a4f8-dca201c3c261" />
+<img width="641" height="475" alt="Screenshot 2026-01-09 at 1 30 20 PM" src="https://github.com/user-attachments/assets/1d045263-93db-4df1-92fb-4cabe796e26e" />
+
+This plot shows which species are being confused with one another.
+Even when accuracy is high, confusion matrices can reveal patterns of error.
+
+What We’ve Learned
+
+In this lesson, we saw that:
+
+KNN classifies by comparing distances between points
+
+The choice of k matters
+
+Feature scaling is essential for distance-based models
+
+Accuracy alone is not enough to evaluate classifiers
+
+Precision, recall, and confusion matrices give deeper insight
+
+Most importantly, you’ve now trained and evaluated your first classifier.
 
 
----
+## External References (Recommended)
 
-## Why Random Forests Work Better
+If you’d like another explanation of KNN from different perspectives, these are excellent resources:
 
-* Individual trees make different mistakes
-* Voting cancels out errors
-* Variance is reduced
-* Generalization improves
+Text explanation (IBM):
+https://www.ibm.com/think/topics/knn
 
-This is called **ensemble learning**:
+Video explanation (IBM Technology, 10 minutes):
+https://www.youtube.com/watch?v=b6uHw7QW_n4
 
-> Many weak learners → one strong learner
+Reading or watching the same idea explained in multiple ways is one of the best ways to build intuition.
 
----
+## Looking Ahead
 
-## Comparing F1 Scores
+In the next lesson, we’ll introduce Decision Trees.
 
-Accuracy alone can be misleading for spam detection.
-We care about both:
+Decision Trees take a very different approach from KNN:
+instead of measuring distance, they learn a sequence of rules.
 
-* Catching spam (recall)
-* Not blocking real emails (precision)
+Understanding KNN deeply will make it much easier to understand why trees — and later, random forests — are so powerful.
 
-The **F1 score** balances both.
-
-```python
-models = {
-    "KNN (scaled)": pred_knn,
-    "Decision Tree": pred_tree,
-    "Random Forest": pred_rf
-}
-
-for name, preds in models.items():
-    score = f1_score(y_test, preds)
-    print(f"{name:15s} F1 = {score:.3f}")
-```
-
-<img width="297" height="65" alt="Screenshot 2026-01-05 at 4 21 13 PM" src="https://github.com/user-attachments/assets/81688ef4-279c-4f0d-a38c-f08c81944f15" />
-
-
-### Typical Pattern You’ll See
-
-```
-KNN (scaled)     < Decision Tree < Random Forest
-```
-
----
-
-## Final Takeaways
-
-### Decision Trees
-
-* Easy to understand and visualize
-* Excellent for tabular data
-* High variance → prone to overfitting
-
-### Random Forests
-
-* Reduce overfitting
-* Improve reliability
-* Often the best default choice for tabular ML
-
-| Concept  | Lesson                        |
-| -------- | ----------------------------- |
-| KNN      | Distance-based, needs scaling |
-| Trees    | Rule-based, interpretable     |
-| Forests  | Ensembles reduce variance     |
-| F1 Score | Balances precision & recall   |
-
-> **If you want strong real-world performance on tabular data, Random Forests are a safer choice than a single tree.**
-
----
-
-## Next Steps
-
-In upcoming lessons, we will:
-
-* Use **cross-validation** for more reliable evaluation
-* Tune hyperparameters
-* Explore **feature importance** and model interpretation
-* Discuss trade-offs between different error types
----
