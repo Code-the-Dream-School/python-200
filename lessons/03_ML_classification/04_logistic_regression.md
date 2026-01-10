@@ -474,7 +474,6 @@ plt.title("Logistic Regression with One Feature")
 plt.legend()
 plt.show()
 ```
-### Interpreting the Logistic Regression Output
 
 ![1-Feature Decision Boundary](<resources/1-Feature Decision Boundary.png>)
 
