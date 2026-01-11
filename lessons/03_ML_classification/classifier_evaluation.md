@@ -1,5 +1,5 @@
 # Understanding Classification Metrics 
-Before we begin to work with real classifers, we should discuss how we will *evaluate* their performace -- how good is a classifer? We will use a simple real-life example to introduce the key concepts of classifier evaluation: a rapid Covid test:
+Before we begin to work with real classifers, we should discuss how we will *evaluate* their performace -- how good is a classifer? We will use a simple real-life example to introduce the key concepts of classifier evaluation, a rapid Covid test.
 
 ![Covid test output: image from shutterstock](resources/covid_test.jpg)
 
@@ -16,7 +16,7 @@ To evaluate a classifier, we need to have a ground-truth. Let's imagine 100 pati
 - 30 patients actually have Covid (they are Covid positive)
 - 70 patients do NOT have Covid (they are Covid negative)
 
-These are the true labels. Let's also say that they are all given a rapid Covid test. We want to know how good it is. Suppose the rapid Covid test produces the following predictions:
+These are the true labels. Let's also say that they are all given a rapid Covid test, and we want to know how "good" the test is (using different measures of performance). Suppose the rapid Covid test produces the following predictions:
 
 - Of the 30 people who have Covid:
   
@@ -47,7 +47,7 @@ All of the metrics we use to evaluate a classifier come from the above numbers. 
 We will look at four metrics commonly used to evaluate classifier performance: accuracy, precision, recall, and F1 (which is a combination of precision and recall). 
 
 ### Accuracy
-What percent of predictions were correct overall? This is the total number of correct predictions divided by the total number of tests. In this case it is: 
+Accuracy is the total percentage of predictions that the test made that were correct. It is calculated by dividing the number of correct predictions by the total number of tests:
 
 ```
 accuracy = (TP + TN) / N
@@ -61,7 +61,7 @@ This is helpful because it gives one simple overall number. However, accuracy ha
 
 Two classifiers can have the same accuracy but one might have lots of false positives, another might have lots of false negatives. It would be useful to have measures that can distinguish such cases.
 
-In cases of disease detection, we should trust a Covid test when it tells you that you have Covid: that is, if it has a very low false positive rate. Is there some metric that summarizes this particular aspect of a classifier? It turns out there is, it is called the *precision*. A classifier (or a Covid test) can have moderate accuracy but very high precision. 
+For disease detectors (like Covid tests), we tend to want our tests to have low *false positive* rates. It would be bad if the test frequently told people they had Covid when they really did not, causing unnecessary stress and medical treatment.Is there some metric that summarizes this measure? It turns out there is, it is called the *precision*. Let's look at that next.
 
 ### Precision 
 Precision focuses on cases when the test says someone has Covid (the left column of the confusion matrix). A test with low precision produces many false positives, which can cause unnecessary worry, extra doctor visits, or unneeded medication.
@@ -97,11 +97,9 @@ Precision highlights false positives, and recall highlights false negatives. Is 
 
 Accuracy may seem like a great measure at first: just count how often the classifier is correct. But there are problems with this measure. One, as we saw above, it hides the pattern of errors (it won't tell you if your classifier gets more false positives or false negatives). 
 
-Another problem with accuracy, not mentioned above, is that it can be very misleading when one category is much more common than the other, that is, when you have *imbalanced* data set. For example, if only 2 out of 100 people have Covid then your dataset is extremely imbalanced. A classifier that simply predicts negative for everyone would be right 98% of the time -- an impressive accuracy number! However, it completely fails to detect any of the real Covid cases (**zero** recall/sensitivity). In other words, overall accuracy can look great even when the classifier is doing a terrible job at the task you actually care about!
+Another problem with accuracy, not mentioned above, is that it can be very misleading when one category is much more common than the other, that is, when you have an *imbalanced* data set. For example, if only 2 out of 100 people have Covid then your dataset is extremely imbalanced. A classifier that simply predicts negative for everyone would be right 98% of the time -- an impressive accuracy number! However, it completely fails to detect any of the real Covid cases (**zero** recall/sensitivity). In other words, overall accuracy can look great even when the classifier is doing a terrible job at the task you actually care about!
 
-This is why there is an alternative to accuracy called the *F1 score*. It is a weighted sum of precision and recall, and will be high if both are high, and low if *one* of them is low. So you can't "cheat" the measure by having high precision and low recall (or vice versa). Technically, it is the harmonic mean of the precision and recall. 
-
-F1 is especially useful in situations where we cannot afford to ignore one type of error, or when the underlying data is imbalanced and accuracy could become a misleading metric. 
+This is why there is an alternative to accuracy called the *F1 score*. It is a weighted sum of precision and recall, and will be high if both are high, and low if *one* of them is low. So you can't "cheat" the measure by having high precision and low recall (or vice versa). For those that like math, it is the harmonic mean of the precision and recall: you don't need to worry about the details, but this is a measure that is dominated by the *smaller* of the two numbers.
 
 For those that want the math, F1 is a function of both precision and recall: 
    
@@ -110,7 +108,7 @@ $$
 $$
 
 ## Metrics in scikit-learn
-Later in this lesson when we build algorithms, we will evaluate them using the *same metrics*:
+Later in this lesson when we look at actual classification algorithms like K-nearest neighbor, we will evaluate classifiers using the *same metrics*:
 
 - confusion matrix  
 - precision  
@@ -118,7 +116,7 @@ Later in this lesson when we build algorithms, we will evaluate them using the *
 - accuracy  
 - F1
 
-These are all built into scikit-learn, and we can construct them from our example above. First, we can create a list of the actual covid cases (positive and negative), and the predicted cases: 
+These are all built into scikit-learn! To illustrate how this works in scikit-learn can construct these metrics using synthetic data  from our Covid example above. First, we can create a list of the actual covid cases (positive and negative), and the predicted cases from the confusion matrix above: 
 
 ```python
 # actual values: 100 people: 30 have covid, 70 do not
@@ -139,7 +137,7 @@ from sklearn.metrics import classification_report
 ```
 
 ### Confusion matrix 
-From the actual and predicted outputs (y values) we can determine the pattern of correct/incorrect predictions from the Covid tests, and produce a confusion matrix:
+In scikit learn, the actual and predicted outputs (y values) are used to evaluate classifier output. For instance, to create the confusion matrix from our synthetic Covid data:
 
 ```python
 labels = ['covid +', 'covid -']
@@ -153,7 +151,9 @@ This will give:
     [[24  6]
     [10 60]]
 
-You can visualize this in a color-coded way using a built-in function:
+Which is the confusion matrix we already have from above!
+
+You can visualize this in a color-coded way using the built-in confusion-matrix display function:
 
 ```python
 disp = ConfusionMatrixDisplay(confusion_matrix=cm,
@@ -186,14 +186,14 @@ So far, to simplify our analysis, we have focused only on **one** category in ou
 
 With *multiple categories* instead of calculating precision/recall/F1 for just one label, you calculate *all the metrics for each category*.
 
-This creates a natural question: How do we summarize the classifier’s performance across *all* classes? The answer is that you take an average. There are two standard ways this is done in scikit-learn. One, the *macro average*, in which each class contributes equally to the mean, no matter how many examples it has. Secondly, the *weighted average*, in which classes with with more data count more heavily toward the average.  
+This creates a natural question: How do we summarize the classifier’s performance across *all* classes? The answer is that you take an average. There are two standard ways this is done in scikit-learn. One, the *macro average*, in which each class contributes equally to the mean, no matter how many examples it has. Secondly, the *weighted average*, in which classes with more data count more heavily toward the average.  
 
 In other words, in multi-class classification, you end up with *multiple* precision/recall/F1 scores (one for each category), so you need to average them to get a single summary of classifier performance.
 
 ### Back to Covid: The classification report
 Technically, even our Covid test has two classes (`covid +` and `covid -`). To simplify, we only focused on `covid +`. However,  `covid -` is also important: we could ask of everyone who is covid negative, how likely is the test to correctly identify them? This would be a *recall* measure for the `covid -` category (which could be calculated by looking along the bottom row of our confusion matrix). 
 
-To get a full summary of a classifier's performance, for each category, and a average score across all categories, scikit-learn produces what is known as a `classification_report`. For our example:
+To get a full summary of a classifier's performance, for each category, and an average score across all categories, scikit-learn produces what is known as a `classification_report`. For our example:
 
 ```python
 print(classification_report(y_true, y_pred))
@@ -218,7 +218,7 @@ Below that, scikit-learn lists the aggregatre metrics:
 - **accuracy**: a single overall metric of proportion correct
 - **macro avg** and **weighted avg**: the two multi-class summary measures we just discussed.
 
-Those bottom rows are exactly the multi-class averages we just discussed. These aggregated rows are not particularly interesting for a simple two-class COVID test, since our focus was mainly on detecting COVID cases. But once you work with more realistic multi-class problems (like digits, animals, or clothing categories) these averages become essential for understanding overall classifier performance. We will typically rely on the macro-average F1 score as our main summary metric for multi-class classification problems (the weighted average can hide poor performance on rare classes).
+Those bottom rows are exactly the multi-class averages we just discussed. For disease detection, our focus is often mainly on the positive row of these outputs. But once you work with multi-class problems where all outcomes are equally important (like animals, or clothing categories) these averages become essential for understanding overall classifier performance. We will typically rely on the macro-average F1 score as our main summary metric for multi-class classification problems (the weighted average can hide poor performance on rare classes).
 
 ### Key takeaways
 We used a Covid test as our running example because it acts like a simple real-life classifier. It makes the same kinds of mistakes machine-learning classifiers make, and it lets us introduce the core ideas without extra complexity.
