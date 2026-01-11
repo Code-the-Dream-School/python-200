@@ -216,13 +216,10 @@ for q in questions:
         print("-" * 30)
 ```
 
-When creating the query engine, we define the number of retrieved chunks by setting `similarity_top_k=3`. The vector store index query engine uses cosine similarity to search through the embeddngs to obtain the most relevant chunks. We can also look at the most relevant chunks and their corresponding similarity scores through the `response` object's `source_nodes`. The output will look like the following.
+When creating the query engine, we define the number of retrieved chunks by setting `similarity_top_k=3`. The vector store index query engine uses cosine similarity to search through the embeddngs to obtain the most relevant chunks. We can also look at the most relevant chunks and their corresponding similarity scores through the `response` object's `source_nodes`. The output will look like the following (minus the HTTP requests).
 
 ```
 Q: What is BrightLeaf Solar's mission?
-2026-01-10 18:11:58,038 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
-2026-01-10 18:11:59,518 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2026-01-10 18:11:59,655 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
 A: BrightLeaf Solar's mission is to make solar power practical, affordable, and accessible to communities that have historically been left behind in the transition to clean energy. They aim to be educators, partners, and advocates for a more resilient and equitable power grid, with each installation representing an investment in long-term community well-being.
 Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
 Similarity Score: 0.9034
@@ -241,8 +238,6 @@ This report summarizes BrightLeaf Solar's financial performance from 2021 throug
 ------------------------------
 
 Q: How did profits change between 2023 and 2024?
-2026-01-10 18:12:00,355 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2026-01-10 18:12:00,541 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
 A: Profits increased from 0.5 million USD in 2023 to 1.1 million USD in 2024.
 Node ID: 566668b4-d22b-49df-b166-1932fd899d92
 Similarity Score: 0.7936
@@ -261,7 +256,6 @@ BrightLeaf's collaboration with EcoVolt Energy, established in 202...
 ------------------------------
 
 Q: Which partner joined most recently?
-2026-01-10 18:12:01,469 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
 A: SunSpan Microgrids joined most recently.
 Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
 Similarity Score: 0.7601
@@ -562,8 +556,6 @@ The answer is correct but interestingly the similarity scores for the top 3 most
 
 Congratulations! You have now created a semantic RAG framework that leverages an online database using LlamaIndex. As with the in-memory semantic RAG framework, the creation of the postgres table and using it to generate a response to a query was achieved with much fewer lines of code compared to the custom implementation. The number of lines reduces even further after the table is already populated. This is why LlamaIndex is so helpful in creating custom RAG frameworks quickly.
 
-Interestingly, there also exist hybrid approaches that use both keyword and semantic search techniques to improve the accuracy of the RAG response in situations where the exact context of a common word is different from its commonly understood meaning. Here's some additional resources to explore this approach if interested: [Hybrid Search article](https://machinelearningplus.com/gen-ai/hybrid-search-vector-keyword-techniques-for-better-rag/), [Postgres vector store documentation in LlamaIndex which includes hybrid search](https://developers.llamaindex.ai/python/examples/vector_stores/postgres/).
-
 ### Extra Utilities and Common Issues
 
 Here are a few optional code snippets that address certain utilitarian needs. For example, the code below displays the list of tables in your docker container.
@@ -639,7 +631,17 @@ Now that we saw how to create a semantic RAG framework using LlamaIndex, the las
 
 ## RAG Evaluation using LlamaIndex
 
+In general, the evaluation of a RAG framework is split into two parts:
+- **Retrieval evaluation**: Evaluation of context retrieval process
+- **Generation/Response evaluation**: Evaluation of the generated response
 
+The evaluation is carried out using an "LLM-as-a-judge" approach, meaning the evaluation metrics are computed using an external LLM (different from the RAG framework). The key reason for this is that an external LLM (trained appropriately) will be able to assess these subjective metrics faster compared to multiple human experts. Multiple metrics have been developed for both retrieval and response evaluation. Here are some additional resources on RAG evaluation to explore: [Huggingface article on RAG evaluation](https://huggingface.co/learn/cookbook/en/rag_evaluation), [LlamaIndex documentation on evaluation](https://developers.llamaindex.ai/python/framework/module_guides/evaluating/), [Youtube video on RAG evaluation](https://www.youtube.com/watch?v=cRz0BWkuwHg).
+
+In this exercise, we will look at two such metrics: 
+- Faithfulness: Metric representing whether the response is faithful to the retrieved contexts, i.e. whether the response contains hallucinations or lying.
+- Relevancy: Metric representing whether the response is relevant to the query using the retrieved contexts, i.e. whether the response is off-topic or rambling.
+
+LlamaIndex provides support for multiple models including local Ollama models. But in this case, we use OpenAI's gpt-4o-mini as our judge llm. We use the `FaithfulnessEvaluator` and `RelevancyEvaluator` to compute the faithfulness and relevancy metrics respectively for the given RAG framework (in this case the in-memory semantic RAG framework from earlier). For the evaluation process we need a dataset of user queries, responses, and retrieved contexts for each query (some metrics will also need a reference/true response for each query). In the following example, we show the computation of both metrics using a single query.
 
 ```python
 from llama_index.llms.openai import OpenAI
@@ -658,9 +660,59 @@ response = query_engine.query(q)
 
 # Evaluate faithfulness and relevancy
 faithfulness_result = faithfulness_evaluator.evaluate_response(query=q, response=response)
-print("Faithfulness Evaluation: " + str(faithfulness_result))
+print("Faithfulness Evaluation: " + str(faithfulness_result.score))
 
 relevancy_result = relevancy_evaluator.evaluate_response(query=q, response=response)
-print("Relevancy Result: " + str(relevancy_result))
+print("Relevancy Result: " + str(relevancy_result.score))
 ```
+Note that for the relevancy evaluator, we don't need to provide the contexts separately as the response object contains the retrieved nodes. 
+
+To compute a certain evaluation metric, the judge LLM is queried with set prompts based on the evaluation metric and is instructed to output a "YES" or "NO" based on whether the metric is satisfied. If the response if "YES," the corresponding score is 1.0 otherwise it is 0.0. The result objects for both metrics contain the following important attributes: `query`, `contexts`, `response`, `passing`, `score`, and `feedback`. `Feedback` is the response from the judge LLM, `passing` is True if the `feedback` is "YES" and False if "NO."  
+
+The output looks like the following (minus the HTTP requests):
+```
+Faithfulness Evaluation: 1.0
+Relevancy Result: 1.0
+```
+
+Both the faithfulness and relevancy scores are 1.0 implying that the in-memory semantic RAG implementation has passed the evaluation. Ideally, you would have to test your RAG implementation on a large dataset that covers the entire scope of queries in your application using different evaluation metrics. LlamaIndex provides great support to compute the predefined metrics as well as create your own custom metrics based on the goal of your RAG framework. 
+
+Congratulations! In this lesson, you have learned to create both an in-memory and an online database semantic RAG implementation using LlamaIndex, greatly reducing the lines of code needed to do so. You also learned about RAG evaluation and tested your in-memory semantic RAG implementation on two evaluation metrics. Now you are ready to create your own RAG framework and evaluate it to continue refining it's performance.
+
+Interestingly, there also exist hybrid approaches that use both keyword and semantic search techniques to improve the accuracy of the RAG response in situations where the exact context of a common word is different from its commonly understood meaning. Here's some additional resources to explore this approach if interested: [Hybrid Search article](https://machinelearningplus.com/gen-ai/hybrid-search-vector-keyword-techniques-for-better-rag/), [Postgres vector store documentation in LlamaIndex which includes hybrid search](https://developers.llamaindex.ai/python/examples/vector_stores/postgres/).
+
+Although we covered only naive keyword and semantic RAG in this class, it is important to note that RAG frameworks are a hot topic of research today. As a result, there are many different vairants of RAG being developed continuously. You can learn more in this [Youtube video](https://www.youtube.com/watch?v=tLMViADvSNE).
+
+## Check for Understanding
+
+### Question 1
+By default, what similarity metric does the `VectorStoreIndex` created from a `SimpleVectorStore` use to retrieve the relevant contexts to a user query?
+
+Choices:
+- A. L2 distance
+- B. Cosine similarity
+- C. L1 distance
+- D. Hamming distance
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer: B - Cosine similarity</strong>  <br>
+By default, the simple vector store uses cosine similarity to find the most relevant chunks to the query.
+</details>
+
+### Question 2
+What does the faithfulness metric try to address during the evaluation of a RAG framework?
+
+Choices:
+- A. Hallucinations
+- B. Off-topic ramblings
+- C. Response conciseness
+- D. Both A and B
+
+<details>
+<summary> View Answer </summary>
+<strong>Answer: A - Hallucinations</strong>  <br>
+The faithfulness metric represents whether the response is faithful to the retrieved contexts (i.e. whether the RAG framework hallucinates). The relevancy metric addresses off-topic rambling responses. Response conciseness is not addressed by any of the predefined metrics.
+</details>
+
 
