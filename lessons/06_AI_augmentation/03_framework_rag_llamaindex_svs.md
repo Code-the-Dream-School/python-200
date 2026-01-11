@@ -287,9 +287,11 @@ What makes this so powerful is how much work is wrapped into so little code. Lla
 
 It also supports multiple RAG architectures beyond the simple naive semantic RAG architecture we show here, which makes it adaptable to different real-world use cases as projects grow. As an example, we will look at the implementation for the online-database semantic RAG with pgvector and postgreSQL in LlamaIndex next. Additionally, LlamaIndex includes built-in tools for evaluating how well a RAG system is performing which we will look at later.
 
-## Online docker database semantic RAG using LlamaIndex
+## Online database semantic RAG using LlamaIndex
 
-This notebook is the "framework sequel" to the earlier RAG notebooks:
+LlamaIndex provides support to work with online databases using pgvector and postgreSQL through the `llama-index-vector-stores-postgres` package. As you will see, the package provides the functionality to store chunked and embedded documents into the online database (emulated here using the same docker container as the previous lesson). While the docker container is the same, we will not use the `rag_chunks` table created in the previous lesson but we will have LlamaIndex create its own table. Before we begin with creating the vector store, make sure that your Postgres + pgvector docker container is running and reachable at `localhost:5432`. You can refer to the previous lesson to look at the procedure for starting/restarting your docker container.
+
+<!-- This notebook is the "framework sequel" to the earlier RAG notebooks:
 
 - Hand-rolled semantic RAG (FAISS)
 - Hand-rolled Postgres + pgvector RAG (Docker)
@@ -318,6 +320,9 @@ export OPENAI_API_KEY="..."
 Make sure the following are installed in your virtual environment
 
     llama-index llama-index-vector-stores-postgres llama-index-embeddings-openai psycopg2-binary
+-->
+
+We first define some variables associated with the docker container, table name, and embedding model.
 
 ```python
 # Connection + indexing configuration
@@ -340,11 +345,12 @@ PDF_DIR = "brightleaf_pdfs"
 
 # If you rerun "build" repeatedly, you will insert duplicates.
 # Recommended: build once, then use the query-only section below.
-# BUILD_INDEX = True
-BUILD_INDEX = False
+BUILD_INDEX = True
 ```
 
-Check that postgres is reachable
+### Connect with docker container
+
+Before we let LlamaIndex modify the contents of the docker container, we first check to make sure the container is reachable using the `psycopg2` library.
 
 ```python
 import psycopg2
@@ -363,9 +369,17 @@ cur.close()
 conn.close()
 ```
 
-## Build (first run)
+Assuming that the connection is successful, you should get the following output.
 
-Read PDFs -> chunk -> embed -> store in Postgres via LlamaIndex
+```
+PostgreSQL 15.4 (Debian 15.4-2.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+```
+
+Once the connection is established, we go ahead with building the PostgreSQL table in the docker container using LlamaIndex.
+
+### Build the database table (for the first run)
+
+Since this is the first time using LlamaIndex to create the database table, we will read, chunk, and embed the documents before storing them in the PostgreSQL table in the docker container via LlamaIndex. For this, we first setup our OpenAI client using the loaded API key. 
 
 ```python
 import os
@@ -383,15 +397,22 @@ else:
     
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 ```
-
+Following a successful extraction of the OpenAI API key, the output should be the following
+```
+Loaded openai api key
+```
+Since we want to use a different embedding model, we change the default model in the `Settings` object. Then we use the `SimpleDirectoryReader` as before to read our documents. 
 ```python
 Settings.embed_model = OpenAIEmbedding(model=EMBED_MODEL_NAME)
 
 docs = SimpleDirectoryReader(PDF_DIR).load_data()
 print(f"Loaded {len(docs)} documents from: {PDF_DIR}")
 ```
-
-Before we used fallback (simplevectorstore), now we explicitly call pgvector store using our db with parameters
+The successful output looks as follows (minus any user warnings):
+```
+Loaded 6 documents from: brightleaf_pdfs
+```
+Unlike the previous implementation where we used a `SimpleVectorStore` to store our embeddings in memory, now we use a `PGVectorStore` to connect to the docker container, build the postgreSQL table, and retrieve the relevant chunks using pgvector.
 
 ```python 
 vector_store = PGVectorStore.from_params(
@@ -404,10 +425,7 @@ vector_store = PGVectorStore.from_params(
     embed_dim=EMBED_DIM,
 )
 ```
-
-In our previous SimpleVectorStore example, LlamaIndex used default in-memory storage behind the scenes, so we could build an index without thinking about storage. In this pgvector version, we want the "vector database" from the diagram to be Postgres instead of RAM, so we create a PGVectorStore and pass it in via a StorageContext. 
-
-You can think of StorageContext as the wiring step that tells LlamaIndex, "store and search embeddings in Postgres." Its basically an abstraction layer between different kinds of vector stores. After that, the rest of the workflow is the same: LlamaIndex chunks the documents into nodes (which are called chunks in our hand-rolled example), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
+In the previous implementation with `SimpleVectorStore`, LlamaIndex used default in-memory storage behind the scenes, so we could build the `VectorStoreIndex` index without thinking about storage. In this pgvector version, we want the embeddings database to be the PostgreSQL table instead of local RAM, so we create the `PGVectorStore` and pass it to the `VectorStoreIndex` via a `StorageContext`. 
 
 ```python
 if BUILD_INDEX:
@@ -417,10 +435,17 @@ if BUILD_INDEX:
 else:
     print("BUILD_INDEX is False; skipping indexing.")
 ```
+When building the index for the first time (`BUILD_INDEX=True`), the output will look like the following:
+```
+Indexed documents into Postgres table: data_li_brightleaf_pgvector
+```
+You can think of `StorageContext` as the wiring step that tells LlamaIndex, "store and search embeddings in the PostgreSQL table." It basically acts like an abstraction layer that allows the `VectorStoreIndex` to be built from different kinds of vector stores (such as `PGVectorStore`). After that, the rest of the workflow is the same as the previous implementation: LlamaIndex chunks the documents into nodes (which are called chunks in the example from the previous lesson), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
 
-Once you have the index constructed, we can build the query engine.
+Once we have the index constructed, we can build the query engine.
 
-Also, we can jump here once index is built the first time (set BUILD_INDEX to false):
+### Build the query engine and generate response
+
+Recall that once the Postgres table is added to the docker container, you do not need to read, chunk, and embed the documents again. When building the table for the first run, the vector index is already build so it can be directly used to create the query engine with `similarity_top_k=3`. 
 
 ```python
 # Query (works immediately after build)
@@ -433,6 +458,9 @@ if "index" not in globals():
 
 qe = index.as_query_engine(similarity_top_k=3)
 ```
+In subsequent runs (make sure to set `BUILD_INDEX=False` to avoid duplicate table entries), since the table is already present in the docker container all you need to do is to create the `PGVectorStore` object with the parameters required to connect to the postgres table and create the vector index from it. This is done using the `from_vector_store()` method instead of the `from_documents()` method used before. Note that we don't need to provide a storage context here as it is inferred from the vector store itself.
+
+Now we test the pgvector based query engine with a question and observe the response and retrieved nodes (or chunks) with their similarity scores. Note that, like the `SimpleVectorStore`, `PGVectorStore` also uses cosine similarity by default. 
 
 ```python
 question = "When did BrightLeaf partner with SunSpan and what did they focus on?"
@@ -441,13 +469,40 @@ response = qe.query(question)
 print("Q:", question)
 print()
 print(response)
+for node_with_score in response.source_nodes:
+    print(f"Node ID: {node_with_score.node.node_id}")
+    print(f"Similarity Score: {node_with_score.score:.4f}")
+    print(f"Text Snippet: {node_with_score.node.get_content()[:100]}...")
+    print("-" * 30)
 ```
 
-That's it! We've set up the system to build and query the pgvector store! Let's test it out. 
+The output should look something like so:
+```
+Q: When did BrightLeaf partner with SunSpan and what did they focus on?
 
-## Query-only pattern (later runs)
-Use this pattern when the Postgres table already exists and is populated,
-and you do NOT want to re-read PDFs or re-embed.
+BrightLeaf partnered with SunSpan Microgrids in 2025. Their partnership focused on developing hybrid renewable infrastructure for the Midwest, targeting legacy industrial zones in Ohio and Michigan. The collaboration involved pairing solar and wind power systems with SunSpan's real-time grid analytics, resulting in improved grid stability and lower emissions at the first hybrid sites. Additionally, SunSpan and BrightLeaf co-authored a white paper on the economic benefits of decarbonizing regional manufacturing supply chains.
+Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
+Similarity Score: 0.7224
+Text Snippet: EcoVolt Energy (2022 Partnership)
+BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+------------------------------
+Node ID: d60981ba-879a-4760-a3f2-74f0d858299c
+Similarity Score: 0.6353
+Text Snippet: Overview
+BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
+------------------------------
+Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
+Similarity Score: 0.5912
+Text Snippet: Overview
+This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+------------------------------
+```
+The response is comprehensive and accurate with the retrieved nodes (chunks) also bearing high relevance to the query and high similarity scores.
+
+That's it! We've set up the system to build and query the pgvector store! Let's test it out without the table creation steps.
+
+### Query-only pattern (for later runs)
+The following code merely creates the `PGVectorStore` with the database connection parameters, creates the `VectorStoreIndex` from it, converts it to a query engine and answers a user query. It is assumed that the Postgres table is already present and populated in the docker container so the steps to build and populate the table are skipped. To test this properly, clear all outputs and restart the kernel (assuming a jupyter notebook), stop running the docker container, then restart it and try running the following code. 
 
 ```python
 from llama_index.core import VectorStoreIndex, Settings
@@ -475,59 +530,100 @@ response2 = qe_q.query(question2)
 print("Q:", question2)
 print()
 print(response2)
+for node_with_score in response2.source_nodes:
+    print(f"Node ID: {node_with_score.node.node_id}")
+    print(f"Similarity Score: {node_with_score.score:.4f}")
+    print(f"Text Snippet: {node_with_score.node.get_content()[:100]}...")
+    print("-" * 30)
 ```
+
+Assuming the table exists and connection to the docker container was successful, the ouput should look something like this:
+```
+Q: Which partner joined most recently?
+
+SunSpan Microgrids joined most recently.
+Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
+Similarity Score: 0.3178
+Text Snippet: EcoVolt Energy (2022 Partnership)
+BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+------------------------------
+Node ID: 1aaa91d0-193d-4bb4-84a9-d559e1ef9aa6
+Similarity Score: 0.2184
+Text Snippet: Introduction
+BrightLeaf Solar views employee well-being as inseparable from long-term innovation. Ou...
+------------------------------
+Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
+Similarity Score: 0.1899
+Text Snippet: Overview
+This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+------------------------------
+```
+The answer is correct but interestingly the similarity scores for the top 3 most relevant chunks is relatively low. This can be because of the relative brevity of the question. However, the chunks do seem relevant to the query.
+
+Congratulations! You have now created a semantic RAG framework that leverages an online database using LlamaIndex. As with the in-memory semantic RAG framework, the creation of the postgres table and using it to generate a response to a query was achieved with much fewer lines of code compared to the custom implementation. The number of lines reduces even further after the table is already populated. This is why LlamaIndex is so helpful in creating custom RAG frameworks quickly.
+
+Interestingly, there also exist hybrid approaches that use both keyword and semantic search techniques to improve the accuracy of the RAG response in situations where the exact context of a common word is different from its commonly understood meaning. Here's some additional resources to explore this approach if interested: [Hybrid Search article](https://machinelearningplus.com/gen-ai/hybrid-search-vector-keyword-techniques-for-better-rag/), [Postgres vector store documentation in LlamaIndex which includes hybrid search](https://developers.llamaindex.ai/python/examples/vector_stores/postgres/).
+
+### Extra Utilities and Common Issues
+
+Here are a few optional code snippets that address certain utilitarian needs. For example, the code below displays the list of tables in your docker container.
+
+```python
+# Optional: List tables
+
+import psycopg2
+
+list_sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';"
+
+conn = psycopg2.connect(
+    host=PG_HOST,
+    port=PG_PORT,
+    dbname=PG_DATABASE,
+    user=PG_USER,
+    password=PG_PASSWORD,
+)
+conn.autocommit = True
+cur = conn.cursor()
+cur.execute(list_sql)
+tables = cur.fetchall()
+
+cur.close()
+conn.close()
+
+print(f"Listed tables: {tables}")
+```
+
+Recall that you're using pgvector to explicitly communicate with PostgreSQL in the docker container through SQL commands. The `list_sql` command is basically an SQL command to output the list of table names. Assuming you only built the `data_li_brightleaf_pgvector` table once, the output should be the following:
+```
+Listed tables: [('rag_chunks',), ('data_li_brightleaf_pgvector',)]
+```
+`rag_chunks` is the table from the previous lesson. In case you found duplicates of the `data_li_brightleaf_pgvector` table, you can drop one copy of the table using the following code.
 
 ```python
 # Optional reset: drop the LlamaIndex-managed table so you can rebuild cleanly
 # This is useful for teaching and demos.
 
-# import psycopg2
+import psycopg2
 
-# drop_sql = f'DROP TABLE IF EXISTS "{LI_TABLE_NAME}";'
+drop_sql = f'DROP TABLE IF EXISTS "{LI_TABLE_NAME}";'
 
-# conn = psycopg2.connect(
-#     host=PG_HOST,
-#     port=PG_PORT,
-#     dbname=PG_DATABASE,
-#     user=PG_USER,
-#     password=PG_PASSWORD,
-# )
-# conn.autocommit = True
-# cur = conn.cursor()
-# cur.execute(drop_sql)
-# cur.close()
-# conn.close()
+conn = psycopg2.connect(
+    host=PG_HOST,
+    port=PG_PORT,
+    dbname=PG_DATABASE,
+    user=PG_USER,
+    password=PG_PASSWORD,
+)
+conn.autocommit = True
+cur = conn.cursor()
+cur.execute(drop_sql)
+cur.close()
+conn.close()
 
-# print(f"Dropped table (if existed): {LI_TABLE_NAME}")
+print(f"Dropped table (if existed): {LI_TABLE_NAME}")
 ```
 
-```python
-# Optional: List tables
-
-# import psycopg2
-
-# list_sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';"
-
-# conn = psycopg2.connect(
-#     host=PG_HOST,
-#     port=PG_PORT,
-#     dbname=PG_DATABASE,
-#     user=PG_USER,
-#     password=PG_PASSWORD,
-# )
-# conn.autocommit = True
-# cur = conn.cursor()
-# cur.execute(list_sql)
-# tables = cur.fetchall()
-
-# cur.close()
-# conn.close()
-
-# print(f"Listed tables: {tables}")
-```
-
-## Notes / common issues
-
+Additionally, here are some common issues you may face and how to solve them.
 - If you see duplicate retrieval behavior, you probably re-ran the build cell and inserted more nodes.
   Use the reset cell (drop table) and rebuild.
 
@@ -538,3 +634,33 @@ print(response2)
 - If you cannot connect to Postgres:
   - Confirm the Docker container is running.
   - Confirm the port mapping is `-p 5432:5432` (or update `PG_PORT`).
+
+Now that we saw how to create a semantic RAG framework using LlamaIndex, the last section in this lesson deals with evaluation of a RAG framework using LlamaIndex. 
+
+## RAG Evaluation using LlamaIndex
+
+
+
+```python
+from llama_index.llms.openai import OpenAI
+from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
+
+# Create Judge LLM
+llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
+
+# Define evaluator
+faithfulness_evaluator = FaithfulnessEvaluator(llm=llm)
+relevancy_evaluator = RelevancyEvaluator(llm=llm)
+
+# Get response to query
+q = "What is BrightLeaf Solar's mission?"
+response = query_engine.query(q)
+
+# Evaluate faithfulness and relevancy
+faithfulness_result = faithfulness_evaluator.evaluate_response(query=q, response=response)
+print("Faithfulness Evaluation: " + str(faithfulness_result))
+
+relevancy_result = relevancy_evaluator.evaluate_response(query=q, response=response)
+print("Relevancy Result: " + str(relevancy_result))
+```
+
