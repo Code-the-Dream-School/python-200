@@ -59,8 +59,7 @@ When KNN classifies a new data point, it:
 - looks at their labels,
 - and lets them **vote** on the final prediction.
 
-There is no complex training phase.  
-KNN simply stores the data and compares new points to what it has already seen.
+There is no complex training phase. KNN simply stores the data and compares new points to what it has already seen.
 
 ---
 
