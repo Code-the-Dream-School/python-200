@@ -86,6 +86,7 @@ This simple voting idea is the foundation of the entire algorithm.
 ## The Iris Dataset: The “Hello World” of Classification
 
 <img width="1000" height="447" alt="image" src="https://github.com/user-attachments/assets/01bd1abe-b4c6-463a-9991-b002773bba2c" />
+
 **Image Credit:** Code Signal
 
 Before we build any model, we need to understand our data.
