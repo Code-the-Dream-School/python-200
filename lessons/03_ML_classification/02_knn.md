@@ -303,15 +303,17 @@ Even when accuracy is high, confusion matrices reveal which classes are being co
 ## What We’ve Learned
 
 In this lesson, you:
-Built and evaluated your first classifier
-Learned how KNN uses distance and voting
-Explored the Iris dataset through EDA
-Saw why evaluation metrics matter
+- Built and evaluated your first classifier
+- Learned how KNN uses distance and voting
+- Explored the Iris dataset through EDA
+- Saw why evaluation metrics matter
+
 These ideas form the foundation for everything that comes next.
 
 ## Looking Ahead
 
 In the next lesson, we introduce Decision Trees. Instead of measuring distance, decision trees learn a sequence of rules.
+
 Understanding KNN deeply will make it much easier to understand why trees — and later random forests — are so powerful.
 
 ### You’ve just taken your first real step into machine learning!!!
