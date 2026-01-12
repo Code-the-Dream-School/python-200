@@ -314,6 +314,6 @@ These ideas form the foundation for everything that comes next.
 
 In the next lesson, we introduce Decision Trees. Instead of measuring distance, decision trees learn a sequence of rules.
 
-Understanding KNN deeply will make it much easier to understand why trees — and later random forests — are so powerful.
+Understanding KNN deeply will make it much easier to understand why trees and later random forests are so powerful.
 
-### You’ve just taken your first real step into machine learning!!!
+#### You’ve just taken your first real step into machine learning!!!
