@@ -35,9 +35,7 @@ We now ask:
 Examples of classification problems include deciding whether an email is spam, identifying the species of a flower, or determining whether a transaction is fraudulent.
 
 In this lesson, you will build and evaluate your **first hands-on classifier**:  
-the **k-Nearest Neighbor (KNN)** algorithm.
-
-KNN is intentionally simple. That simplicity lets us focus on the *core ideas behind classification* before moving on to more complex models.
+the **k-Nearest Neighbor (KNN)** algorithm. KNN is intentionally simple. That simplicity lets us focus on the *core ideas behind classification* before moving on to more complex models.
 
 ---
 
