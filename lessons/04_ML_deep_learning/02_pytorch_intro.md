@@ -7,7 +7,7 @@ For this first lesson, we want to just build some familiarity with PyTorch indep
 
 For this lesson, we will use the official PyTorch tutorial notebook on tensors. While you can run it locally if you install PyTorch on your machine, we recommend using Kaggle to avoid installation issues:
 
-[![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/04_ML_deep_learning/resources/pytorch_tensors.ipynb)
+[![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/ml/pytorch_intro/lessons/04_ML_deep_learning/resources/pytorch_tensors.ipynb)
 
 Click the "Open in Kaggle" button above to open the notebook in Kaggle. 
 
