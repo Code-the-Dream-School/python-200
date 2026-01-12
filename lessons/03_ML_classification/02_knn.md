@@ -28,7 +28,7 @@ Instead of asking:
 
 > “What is the average value?”
 
-we now ask:
+We now ask:
 
 > “Which category does this data point belong to?”
 
@@ -80,14 +80,20 @@ It predicts *Setosa*, because that label receives the majority of votes.
 
 This simple voting idea is the foundation of the entire algorithm.
 
+<img width="717" height="422" alt="Screenshot 2026-01-12 at 11 26 58 AM" src="https://github.com/user-attachments/assets/962bbc4f-2998-4995-b531-d33df1bbdc4e" />
+
+**Image Credit:** IBM
+
 ---
 
 ## The Iris Dataset: The “Hello World” of Classification
 
+<img width="1000" height="447" alt="image" src="https://github.com/user-attachments/assets/01bd1abe-b4c6-463a-9991-b002773bba2c" />
+**Image Credit:** Code Signal
+
 Before we build any model, we need to understand our data.
 
-The **Iris dataset** is often called the *hello world of classification*.  
-It is small, clean, balanced, and extremely well-studied — perfect for learning.
+The **Iris dataset** is often called the *hello world of classification*. It is small, clean, balanced, and extremely well-studied — perfect for learning.
 
 Each row represents a flower, and for each flower we measure:
 - **Sepal length**
@@ -95,11 +101,8 @@ Each row represents a flower, and for each flower we measure:
 - **Petal length**
 - **Petal width**
 
-All measurements are in centimeters.
-
-The label tells us which species the flower belongs to:
+All measurements are in centimeters. The label tells us which species the flower belongs to:
 *Setosa*, *Versicolor*, or *Virginica*.
-
 Before jumping into machine learning, let’s do a small amount of **exploratory data analysis (EDA)** — just enough to build intuition.
 
 ---
@@ -123,7 +126,7 @@ from sklearn.metrics import (
 )
 ```
 
-Loading the Dataset-
+## Loading the Dataset-
 
 ```python
 iris = load_iris(as_frame=True)
@@ -140,7 +143,9 @@ X.head()
 The dataset contains 150 flowers and 4 numeric features.
 There are no missing values, and all features are measured in the same units.
 
-Quick EDA: Building Intuition
+---
+
+## Quick EDA: Building Intuition-
 1- How many flowers of each species?
 
 ```python
@@ -167,8 +172,7 @@ plt.show()
 
 <img width="721" height="478" alt="Screenshot 2026-01-12 at 10 49 33 AM" src="https://github.com/user-attachments/assets/41341f42-5f41-47af-ae3b-695f7a7a6aca" />
 
-This plot shows something very important:
-petal measurements separate species extremely well, especially Setosa.
+This plot shows something very important which is petal measurements separate species extremely well, especially Setosa.
 
 3- Sepal Length vs Sepal Width
 
@@ -200,17 +204,16 @@ plt.show()
 
 This gives us a high-level overview of how features relate to each other and to the labels.
 
-5- What We Learn from EDA
+## What We Learn from EDA
 
 From just a few plots, we already learn:
 
 Some features separate classes much better than others
-
 The data is clean and well-structured
-
 Classification should be feasible with a simple model
-
 Now we’re ready to build our first classifier.
+
+---
 
 ## Train / Test Split-
 
@@ -227,6 +230,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 The stratify=y argument ensures that each species appears in roughly the same proportion in both the training and test sets. This makes our evaluation fair and reliable.
 
 ## Our First KNN Model
+
+This is the moment where we actually build and use our first machine learning model. First, we create a KNN classifier with n_neighbors=5.
+This means that whenever the model makes a prediction, it will look at the five most similar flowers in the training data and let them vote on the label.
+
+Next, we call .fit(X_train, y_train).
+For KNN, this step does not learn equations or rules. Instead, it simply stores the training data so it can compare new flowers to it later.
+
+Then we use .predict(X_test) to ask the model to classify flowers it has never seen before. Each prediction is based on which training flowers are closest to that test flower. Finally, we evaluate how well the model did. Seeing strong performance here is encouraging, it shows that even a very simple, intuitive method like KNN can work surprisingly well on real data.
+
+**At this point, you have officially trained and evaluated your first classifier!!!** 
 
 ```python
 knn = KNeighborsClassifier(n_neighbors=5)
@@ -253,17 +266,25 @@ To keep this first example as simple and intuitive as possible, we intentionally
 
 ## Understanding Evaluation Metrics
 
-Accuracy tells us how often the model is correct, but it does not tell the whole story. The classification report also includes:
+This classification report shows perfect performance on the test set.
 
-1- Precision, which measures how reliable predictions are
+Accuracy = 1.0 means the model predicted every flower correctly.
 
-2- Recall, which measures how many real cases are identified
+Precision = 1.0 means whenever the model predicted a species, it was correct.
 
-3- F1 score, which balances precision and recall
+Recall = 1.0 means the model successfully found all flowers of each species.
 
-These metrics become critical in real-world applications like spam detection or medical diagnosis.
+F1-score = 1.0 confirms a perfect balance between precision and recall.
+
+Each class has a support of 10, meaning the test set is balanced.
 
 ## Confusion Matrix: Seeing Errors Clearly
+
+The confusion matrix shows where the model is getting confused. Each row represents the true species of a flower. Each column represents the species predicted by the model. Numbers along the diagonal are correct predictions. Numbers off the diagonal are mistakes.
+
+This visualization helps us see which species the model mixes up, not just how often it is correct. Even when accuracy is high, the confusion matrix reveals patterns in the errors that accuracy alone cannot show.
+
+In this case, most predictions are correct, and the few mistakes tend to happen between species that are naturally similar.
 
 ```python
 cm = confusion_matrix(y_test, preds)
