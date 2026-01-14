@@ -29,22 +29,28 @@ Once you are in your branch, make the edits you want, and make your commits. Ple
 
     git commit -m "Add explanation of p-value for week1 lesson"
 
-3. Push branch to your fork 
+See `Pull request guidelines` below for details when working on features.
+
+1. Push branch to your fork 
 
     git push origin week1_module2
 
-4. Open a pull request
+2. Open a pull request
 At your fork on GitHub, click on "Compare & Pull Request" and open a PR to merge your branch into the `main` branch of the upstream repo. Any additional commits you push to that same branch will automatically be added to the open PR. 
 
 The PR will go through review before being merged into `main`. Thank you for your efforts! 
 
 ## Pull request guidelines
 - Please keep PRs focused and not too large (avoid bundling unrelated changes). 
+- Our lessons are in individual markdown files in the `lessons` folder. Images should be in the `resources` folder within each lesson's folder.
 - Do not commit sensitive data (such as API keys or passwords).
 - Add a short summary of what you are changing in the PR description. 
 - Use `snake_case` for file and folder names
-  - Exception: capitalizing abbreviations (`AI`) is ok for folders if it helps readability
+  - Exception: capitalizing abbreviations (`AI`) is ok for folders if it helps readability (but please not for files).
 - If relevant, please mention related issues in the PR by mentioning the `#issue-number`. 
+- Some modules have associated jupyter notebooks. These should go in `resources/`.
+- For jupyter notebooks, it is *very* important to clear outputs before committing changes. You can do this with the following command before commiting:    
+    `jupyter nbconvert --clear-output --inplace path-to-nb.ipynb`
 - Each lesson directory contains a `resources` folder to place essential images, data (CSV/JSON files), etc. for the lesson. A few guidelines for resources: 
   - Keep file sizes small (under 1MB); large datasets should live outside the repo to be downloaded in individual lessons.
   - Use jpg for images to keep files small.
