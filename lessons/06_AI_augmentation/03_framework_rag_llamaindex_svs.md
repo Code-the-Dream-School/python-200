@@ -2,6 +2,8 @@
 
 In the previous lessons, we looked at custom semantic RAG implementations that leveraged both an in-memory vector store and an online docker container-based vector store. Now we will implement the same semantic RAG frameworks as before using a library called [LlamaIndex](https://www.llamaindex.ai/). LlamaIndex provides a simple API that automates the database reading, chunking, storing, context retrieval and augmentation, and response generation steps. Moreover, LlamaIndex also includes support for many external data storage libraries, models, and embeddings making it a very versatile tool to develop your own custom RAG frameworks. LlamaIndex also includes methods to evaluate your RAG framework, which we will go over briefly towards the end of this lesson.
 
+![LlamaIndex Workflow](resources/LlamaIndex.png)
+
 <!-- Note the "index" in LlamaIndex refers directly to the same kind of semantic index we built manually in previous lessons. It is a package built around the concept of semantic indexes. 
 
 LlamaIndex is a framework for building LLM-powered agents over your data with LLMs and workflows. It can use RAG pipelines. 
