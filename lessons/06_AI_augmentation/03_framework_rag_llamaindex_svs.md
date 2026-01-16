@@ -1,8 +1,10 @@
 # RAG Implementation with LlamaIndex
 
-In the previous lessons, we looked at custom semantic RAG implementations that leveraged both an in-memory vector store and an online docker container-based vector store. Now we will implement the same semantic RAG frameworks as before using a library called [LlamaIndex](https://www.llamaindex.ai/). LlamaIndex provides a simple API that automates the database reading, chunking, storing, context retrieval and augmentation, and response generation steps. Moreover, LlamaIndex also includes support for many external data storage libraries, models, and embeddings making it a very versatile tool to develop your own custom RAG frameworks. LlamaIndex also includes methods to evaluate your RAG framework, which we will go over briefly towards the end of this lesson.
+In the previous lessons, we looked at custom semantic RAG implementations that leveraged both an in-memory vector store and a persistent docker container-based vector store. Now we will implement the same semantic RAG frameworks as before using a library called [LlamaIndex](https://www.llamaindex.ai/). The workflow of a RAG framework in LlamaIndex is shown in the figure below. We will go through the individual elements in the flowchart as we look at the implementations in the following sections.
 
 ![LlamaIndex Workflow](resources/LlamaIndex.png)
+
+LlamaIndex provides a simple API that automates the database reading, chunking, storing, context retrieval and augmentation, and response generation steps. LlamaIndex also includes support for many external data storage libraries, models, and embeddings making it a very versatile tool to develop your own custom RAG frameworks. For example, LlamaIndex supports multiple types of vector storage databases involving FAISS, pgvector and much more. Also, the chunking, embedding and storing of the documents in the vector database of choice is all done through one method in LlamaIndex. Additionally, LlamaIndex includes methods to evaluate your RAG framework, which we will go over briefly towards the end of this lesson.
 
 <!-- Note the "index" in LlamaIndex refers directly to the same kind of semantic index we built manually in previous lessons. It is a package built around the concept of semantic indexes. 
 
@@ -27,8 +29,8 @@ Here are some additional resources to look at: [Youtube video on introduction to
 > **Note:** Make sure your environment has the following packages installed that are important for the current notebook: 
 > - `llama-index-core`:  the base library for llamaindex (make sure the llama-index-core version is 0.14.10)
 > - `llama-index-embeddings-openai`: support for OpenAI's embedding models
-> - `llama-index-vector-stores-postgres`: support for PostgreSQL
-> - `psycopg2-binary`: pgvector library in Python to interact with the postgreSQL database
+> - `llama-index-vector-stores-postgres`: support for PostgreSQL-based vector datastores
+> - `psycopg2-binary`: connection library in Python to interact with the postgreSQL database
 > - `pypdf` and `python-dotenv`: for PDF and key loading
 
 We will first begin with an implementation of the in-memory semantic RAG framework. We will use the same Brightleaf Solar Company example as used in the previous lessons. Note that although LlamaIndex has support for FAISS, we will use LlamaIndex's internal functionality to search through the embeddings and retrieve the relevant context for a query. 
@@ -73,30 +75,7 @@ index = VectorStoreIndex.from_documents(docs)
 
 > **Note**: Make sure the `brightleaf_pdfs` directory is in the appropriate location, you can additionally add an `assert` statement to check the existence of the directory if it is located elsewhere.
 
-Compared to the custom implementation from the semantic RAG lesson, the above two lines of code capture the document reading, chunking, embedding, and storing steps, demonstrating a huge reduction in lines of code! LlamaIndex uses the inbuilt `SimpleDirectoryReader` method to read the documents and store the metadata and text into the `docs` list. Each element of this list is a `Document` object containing the metadata and text for each loaded document. To make sure the text has been read correctly, you can check the metadata and text for each document. For example, to check the first document's metadata you can run the following code.
-
-```python
-print(docs[0].metadata)
-```
-The output should look something like this.
-```
-{'page_label': '1',
- 'file_name': 'earnings_report.pdf',
- 'file_path': 'c:\\Users\\rosha\\Downloads\\CTD RAG\\rag\\brightleaf_pdfs\\earnings_report.pdf',
- 'file_type': 'application/pdf',
- 'file_size': 3658,
- 'creation_date': '2025-10-22',
- 'last_modified_date': '2025-11-10'}
-```
-Now, to make sure the text from the "earnings_report" document (or whichever document was read first) has been read correctly you can check the first 100 characters of the text by running the following code.
-```python
-print(docs[0].text_resource.text[:100])
-```
-The output should look something like this.
-```
-"Overview\nThis report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The"
-```
-If there is a reading error (usually due to the document not being in the UTF-8 encoding format), the text will have some random symbols that do not resemble the english language. 
+Compared to the custom implementation from the semantic RAG lesson, the above two lines of code capture the document reading, chunking, embedding, and storing steps, demonstrating a huge reduction in lines of code! LlamaIndex uses the inbuilt `SimpleDirectoryReader` method to read the documents and store the metadata and text into the `docs` list.  
 
 <!-- Document: LlamaIndex’s core data structure that represents one source file (like a PDF) after it’s loaded.
 id_: A unique identifier automatically assigned to each document.
@@ -134,37 +113,8 @@ Once the documents are read, the next step is to chunk the text, convert them in
 print(type(index._vector_store).__name__)
 ```
 The output should say the following.
-```
-SimpleVectorStore
-```
 
-LlamaIndex uses predefined defaults for the chunking parameters and the embedding model. If not specified, LlamaIndex uses OpenAI's "text-embedding-ada-002" model. You can change these values before creating the vector store index to make sure LlamaIndex uses your custom values. To check the default values you can run the following code.
-
-```python
-from llama_index.core import Settings
-
-print(f"Default chunk size:  {Settings.chunk_size}")
-print(f"Default chunk overlap: {Settings.chunk_overlap}")
-print(f"Default embedding model: {Settings.embed_model.model_name}")
-```
-The output should be the following.
-```
-Default chunk size:  1024
-Default chunk overlap: 200
-Default embedding model: text-embedding-ada-002
-```
-To change these values and the embedding model to different OpenAI embedding model, you can do the following.
-```python
-## Optional: Change default chunking parameters and embedding model (Run before creating vector store index)
-from llama_index.embeddings.openai import OpenAIEmbedding
-
-# Specify the new model
-Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
-
-# Specify the new chunking parameters
-Settings.chunk_size = 512
-Settings.chunk_overlap = 50
-```
+    SimpleVectorStore
 
 Now that we have the text chunked, embedded and stored, the next step is to retrieve the relevant context based on the user query, augment it to the query and generate the response from the LLM.
 
@@ -184,16 +134,7 @@ index = VectorStoreIndex.from_documents(docs)
 ### Retrieve Context, Augment, and Generate Response - The Query Engine
 LlamaIndex uses a helper object called a "query engine" that wraps the entire context retrieval, augmentation, and response generation process. This contributes to further reduction in lines of code. 
 
-LlamaIndex uses OpenAI's "gpt-3.5-turbo" model in the backend by default to generate the response to the user query. You can check this by running the following code.
-
-```python
-#check LLM model currently being used
-print(f"LLM model: {Settings.llm.model}")
-```
-As mentioned earlier, the output should be the following.
-```
-LLM model: gpt-3.5-turbo
-```
+LlamaIndex uses OpenAI's "gpt-3.5-turbo" model in the backend by default to generate the response to the user query. 
     
 Below, we create the query engine from the vector store index and look at the responses and the retrieved contexts to three sample questions.
 
@@ -220,72 +161,72 @@ for q in questions:
 
 When creating the query engine, we define the number of retrieved chunks by setting `similarity_top_k=3`. The vector store index query engine uses cosine similarity to search through the embeddngs to obtain the most relevant chunks. We can also look at the most relevant chunks and their corresponding similarity scores through the `response` object's `source_nodes`. The output will look like the following (minus the HTTP requests).
 
-```
-Q: What is BrightLeaf Solar's mission?
-A: BrightLeaf Solar's mission is to make solar power practical, affordable, and accessible to communities that have historically been left behind in the transition to clean energy. They aim to be educators, partners, and advocates for a more resilient and equitable power grid, with each installation representing an investment in long-term community well-being.
-Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
-Similarity Score: 0.9034
-Text Snippet: Overview
-BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
-------------------------------
-Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
-Similarity Score: 0.8534
-Text Snippet: EcoVolt Energy (2022 Partnership)
-BrightLeaf's collaboration with EcoVolt Energy, established in 202...
-------------------------------
-Node ID: 566668b4-d22b-49df-b166-1932fd899d92
-Similarity Score: 0.8440
-Text Snippet: Overview
-This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
-------------------------------
 
-Q: How did profits change between 2023 and 2024?
-A: Profits increased from 0.5 million USD in 2023 to 1.1 million USD in 2024.
-Node ID: 566668b4-d22b-49df-b166-1932fd899d92
-Similarity Score: 0.7936
-Text Snippet: Overview
-This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
-------------------------------
-Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
-Similarity Score: 0.7257
-Text Snippet: Overview
-BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
-------------------------------
-Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
-Similarity Score: 0.7239
-Text Snippet: EcoVolt Energy (2022 Partnership)
-BrightLeaf's collaboration with EcoVolt Energy, established in 202...
-------------------------------
+    Q: What is BrightLeaf Solar's mission?
+    A: BrightLeaf Solar's mission is to make solar power practical, affordable, and accessible to communities that have historically been left behind in the transition to clean energy. They aim to be educators, partners, and advocates for a more resilient and equitable power grid, with each installation representing an investment in long-term community well-being.
+    Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
+    Similarity Score: 0.9034
+    Text Snippet: Overview
+    BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
+    ------------------------------
+    Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
+    Similarity Score: 0.8534
+    Text Snippet: EcoVolt Energy (2022 Partnership)
+    BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+    ------------------------------
+    Node ID: 566668b4-d22b-49df-b166-1932fd899d92
+    Similarity Score: 0.8440
+    Text Snippet: Overview
+    This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+    ------------------------------
 
-Q: Which partner joined most recently?
-A: SunSpan Microgrids joined most recently.
-Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
-Similarity Score: 0.7601
-Text Snippet: EcoVolt Energy (2022 Partnership)
-BrightLeaf's collaboration with EcoVolt Energy, established in 202...
-------------------------------
-Node ID: 566668b4-d22b-49df-b166-1932fd899d92
-Similarity Score: 0.7209
-Text Snippet: Overview
-This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
-------------------------------
-Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
-Similarity Score: 0.7166
-Text Snippet: Overview
-BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
-------------------------------
-```
+    Q: How did profits change between 2023 and 2024?
+    A: Profits increased from 0.5 million USD in 2023 to 1.1 million USD in 2024.
+    Node ID: 566668b4-d22b-49df-b166-1932fd899d92
+    Similarity Score: 0.7936
+    Text Snippet: Overview
+    This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+    ------------------------------
+    Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
+    Similarity Score: 0.7257
+    Text Snippet: Overview
+    BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
+    ------------------------------
+    Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
+    Similarity Score: 0.7239
+    Text Snippet: EcoVolt Energy (2022 Partnership)
+    BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+    ------------------------------
+
+    Q: Which partner joined most recently?
+    A: SunSpan Microgrids joined most recently.
+    Node ID: b6833bf4-3fea-487c-9843-6b52be02bedb
+    Similarity Score: 0.7601
+    Text Snippet: EcoVolt Energy (2022 Partnership)
+    BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+    ------------------------------
+    Node ID: 566668b4-d22b-49df-b166-1932fd899d92
+    Similarity Score: 0.7209
+    Text Snippet: Overview
+    This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+    ------------------------------
+    Node ID: 6db23967-7cb2-49a8-9814-6d381ce5b69e
+    Similarity Score: 0.7166
+    Text Snippet: Overview
+    BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
+    ------------------------------
+
 Since we only want to augment the top 3 most relevant chunks, the response will only have 3 source nodes. As can be seen, the model is able to respond accurately and retrieve generally relevant chunks to each question.
 
 Congratulations! You've implemented a semantic RAG pipeline using Llamaindex, heavily reducing the total lines of code compared to the custom implementation in the previous lesson!
 
-What makes this so powerful is how much work is wrapped into so little code. LlamaIndex is a fully maintained, widely used framework built by a dedicated team, and it bundles together a large amount of engineering that we would otherwise have to implement ourselves. The library handles chunking, embedding, vector storage, retrieval, ranking, and passing the right context to the LLM, all through a clean and consistent interface. Of course, a big reason for this reduction in lines of code is that LlamaIndex is designed to be a plug-and-play tool with many hyperparameters predefined. Changing these default values will increase some lines of code, but the overall reduction in code lines is still significant.
+What makes this so powerful is how much work is wrapped into so little code. We only needed four lines to create our RAG framework. LlamaIndex is a fully maintained, widely used framework built by a dedicated team, and it bundles together a large amount of engineering that we would otherwise have to implement ourselves. The library handles chunking, embedding, vector storage, retrieval, ranking, and passing the right context to the LLM, all through a clean and consistent interface. Of course, a big reason for this reduction in lines of code is that LlamaIndex is designed to be a plug-and-play tool with many hyperparameters predefined. Changing these default values will increase some lines of code, but the overall reduction in code lines is still significant.
 
-It also supports multiple RAG architectures beyond the simple naive semantic RAG architecture we show here, which makes it adaptable to different real-world use cases as projects grow. As an example, we will look at the implementation for the online-database semantic RAG with pgvector and postgreSQL in LlamaIndex next. Additionally, LlamaIndex includes built-in tools for evaluating how well a RAG system is performing which we will look at later.
+It also supports multiple RAG architectures beyond the simple naive semantic RAG architecture we show here, which makes it adaptable to different real-world use cases as projects grow. As an example, we will look at the implementation for the persistent database semantic RAG with pgvector and postgreSQL in LlamaIndex next. Additionally, LlamaIndex includes built-in tools for evaluating how well a RAG system is performing which we will look at later.
 
-## Online database semantic RAG using LlamaIndex
+## Persistent database semantic RAG using LlamaIndex
 
-LlamaIndex provides support to work with online databases using pgvector and postgreSQL through the `llama-index-vector-stores-postgres` package. As you will see, the package provides the functionality to store chunked and embedded documents into the online database (emulated here using the same docker container as the previous lesson). While the docker container is the same, we will not use the `rag_chunks` table created in the previous lesson but we will have LlamaIndex create its own table. Before we begin with creating the vector store, make sure that your Postgres + pgvector docker container is running and reachable at `localhost:5432`. You can refer to the previous lesson to look at the procedure for starting/restarting your docker container.
+LlamaIndex provides support to work with persistent databases using pgvector and postgreSQL through the `llama-index-vector-stores-postgres` package. As you will see, the package provides the functionality to store chunked and embedded documents into the database (emulated here using the same docker container as the previous lesson). As in the previous lesson, the docker image has postgreSQL with the pgvector extension installed. The llamaindex module doesn't directly use pgvector but relies on pgvector logic internally. While the docker container is the same, we will not use the `rag_chunks` table created in the previous lesson but we will have LlamaIndex create its own table. Before we begin with creating the vector store, make sure that your Postgres + pgvector docker container is running and reachable at `localhost:5432`. You can refer to the previous lesson to look at the procedure for starting/restarting your docker container.
 
 <!-- This notebook is the "framework sequel" to the earlier RAG notebooks:
 
@@ -367,9 +308,7 @@ conn.close()
 
 Assuming that the connection is successful, you should get the following output.
 
-```
-PostgreSQL 15.4 (Debian 15.4-2.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-```
+    PostgreSQL 15.4 (Debian 15.4-2.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
 
 Once the connection is established, we go ahead with building the PostgreSQL table in the docker container using LlamaIndex.
 
@@ -394,9 +333,9 @@ else:
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 ```
 Following a successful extraction of the OpenAI API key, the output should be the following
-```
-Loaded openai api key
-```
+
+    Loaded openai api key
+
 Since we want to use a different embedding model, we change the default model in the `Settings` object. Then we use the `SimpleDirectoryReader` as before to read our documents. 
 ```python
 Settings.embed_model = OpenAIEmbedding(model=EMBED_MODEL_NAME)
@@ -405,9 +344,9 @@ docs = SimpleDirectoryReader(PDF_DIR).load_data()
 print(f"Loaded {len(docs)} documents from: {PDF_DIR}")
 ```
 The successful output looks as follows (minus any user warnings):
-```
-Loaded 6 documents from: brightleaf_pdfs
-```
+
+    Loaded 6 documents from: brightleaf_pdfs
+
 Unlike the previous implementation where we used a `SimpleVectorStore` to store our embeddings in memory, now we use a `PGVectorStore` to connect to the docker container, build the postgreSQL table, and retrieve the relevant chunks using pgvector.
 
 ```python 
@@ -432,10 +371,10 @@ else:
     print("BUILD_INDEX is False; skipping indexing.")
 ```
 When building the index for the first time (`BUILD_INDEX=True`), the output will look like the following:
-```
-Indexed documents into Postgres table: data_li_brightleaf_pgvector
-```
-You can think of `StorageContext` as the wiring step that tells LlamaIndex, "store and search embeddings in the PostgreSQL table." It basically acts like an abstraction layer that allows the `VectorStoreIndex` to be built from different kinds of vector stores (such as `PGVectorStore`). After that, the rest of the workflow is the same as the previous implementation: LlamaIndex chunks the documents into nodes (which are called chunks in the example from the previous lesson), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
+
+    Indexed documents into Postgres table: data_li_brightleaf_pgvector
+
+As seen in the image at the beginning of the lesson, the storage context is able to interface with any type of vector store to create the vector store index. You can think of `StorageContext` as the wiring step that tells LlamaIndex, "store and search embeddings in the PostgreSQL table." It basically acts like an abstraction layer that allows the `VectorStoreIndex` to be built from different kinds of vector stores (such as `PGVectorStore`). After that, the rest of the workflow is the same as the previous implementation: LlamaIndex chunks the documents into nodes (which are called chunks in the example from the previous lesson), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
 
 Once we have the index constructed, we can build the query engine.
 
@@ -473,32 +412,32 @@ for node_with_score in response.source_nodes:
 ```
 
 The output should look something like so:
-```
-Q: When did BrightLeaf partner with SunSpan and what did they focus on?
 
-BrightLeaf partnered with SunSpan Microgrids in 2025. Their partnership focused on developing hybrid renewable infrastructure for the Midwest, targeting legacy industrial zones in Ohio and Michigan. The collaboration involved pairing solar and wind power systems with SunSpan's real-time grid analytics, resulting in improved grid stability and lower emissions at the first hybrid sites. Additionally, SunSpan and BrightLeaf co-authored a white paper on the economic benefits of decarbonizing regional manufacturing supply chains.
-Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
-Similarity Score: 0.7224
-Text Snippet: EcoVolt Energy (2022 Partnership)
-BrightLeaf's collaboration with EcoVolt Energy, established in 202...
-------------------------------
-Node ID: d60981ba-879a-4760-a3f2-74f0d858299c
-Similarity Score: 0.6353
-Text Snippet: Overview
-BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
-------------------------------
-Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
-Similarity Score: 0.5912
-Text Snippet: Overview
-This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
-------------------------------
-```
+    Q: When did BrightLeaf partner with SunSpan and what did they focus on?
+
+    BrightLeaf partnered with SunSpan Microgrids in 2025. Their partnership focused on developing hybrid renewable infrastructure for the Midwest, targeting legacy industrial zones in Ohio and Michigan. The collaboration involved pairing solar and wind power systems with SunSpan's real-time grid analytics, resulting in improved grid stability and lower emissions at the first hybrid sites. Additionally, SunSpan and BrightLeaf co-authored a white paper on the economic benefits of decarbonizing regional manufacturing supply chains.
+    Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
+    Similarity Score: 0.7224
+    Text Snippet: EcoVolt Energy (2022 Partnership)
+    BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+    ------------------------------
+    Node ID: d60981ba-879a-4760-a3f2-74f0d858299c
+    Similarity Score: 0.6353
+    Text Snippet: Overview
+    BrightLeaf Solar was founded on the belief that renewable energy should be a right, not a p...
+    ------------------------------
+    Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
+    Similarity Score: 0.5912
+    Text Snippet: Overview
+    This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+    ------------------------------
+
 The response is comprehensive and accurate with the retrieved nodes (chunks) also bearing high relevance to the query and high similarity scores.
 
 That's it! We've set up the system to build and query the pgvector store! Let's test it out without the table creation steps.
 
 ### Query-only pattern (for later runs)
-The following code merely creates the `PGVectorStore` with the database connection parameters, creates the `VectorStoreIndex` from it, converts it to a query engine and answers a user query. It is assumed that the Postgres table is already present and populated in the docker container so the steps to build and populate the table are skipped. To test this properly, clear all outputs and restart the kernel (assuming a jupyter notebook), stop running the docker container, then restart it and try running the following code. 
+Recall from the previous lesson that once you've built the docker database, it will remain there even if you restart your jupyter kernel or stop your docker container connection (i.e. it is a "persistent" database). For later runs, you don't need to recreate this database. You can simply run the following code that creates the `PGVectorStore` with the database connection parameters, creates the `VectorStoreIndex` from it, converts it to a query engine and answers a user query. To test this properly, clear all outputs and restart the kernel (assuming a jupyter notebook), stop running the docker container, then restart it and try running the following code. 
 
 ```python
 from llama_index.core import VectorStoreIndex, Settings
@@ -533,34 +472,102 @@ for node_with_score in response2.source_nodes:
     print("-" * 30)
 ```
 
-Assuming the table exists and connection to the docker container was successful, the ouput should look something like this:
-```
-Q: Which partner joined most recently?
+Assuming the table exists and connection to the docker container was successful, the output should look something like this:
 
-SunSpan Microgrids joined most recently.
-Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
-Similarity Score: 0.3178
-Text Snippet: EcoVolt Energy (2022 Partnership)
-BrightLeaf's collaboration with EcoVolt Energy, established in 202...
-------------------------------
-Node ID: 1aaa91d0-193d-4bb4-84a9-d559e1ef9aa6
-Similarity Score: 0.2184
-Text Snippet: Introduction
-BrightLeaf Solar views employee well-being as inseparable from long-term innovation. Ou...
-------------------------------
-Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
-Similarity Score: 0.1899
-Text Snippet: Overview
-This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
-------------------------------
-```
+    Q: Which partner joined most recently?
+
+    SunSpan Microgrids joined most recently.
+    Node ID: 1d116f12-c67e-4538-a6dc-d77fda8dab6a
+    Similarity Score: 0.3178
+    Text Snippet: EcoVolt Energy (2022 Partnership)
+    BrightLeaf's collaboration with EcoVolt Energy, established in 202...
+    ------------------------------
+    Node ID: 1aaa91d0-193d-4bb4-84a9-d559e1ef9aa6
+    Similarity Score: 0.2184
+    Text Snippet: Introduction
+    BrightLeaf Solar views employee well-being as inseparable from long-term innovation. Ou...
+    ------------------------------
+    Node ID: 64657f51-466d-4ba5-b9dc-b599a8b14c8c
+    Similarity Score: 0.1899
+    Text Snippet: Overview
+    This report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The...
+    ------------------------------
+
 The answer is correct but interestingly the similarity scores for the top 3 most relevant chunks is relatively low. This can be because of the relative brevity of the question. However, the chunks do seem relevant to the query.
 
-Congratulations! You have now created a semantic RAG framework that leverages an online database using LlamaIndex. As with the in-memory semantic RAG framework, the creation of the postgres table and using it to generate a response to a query was achieved with much fewer lines of code compared to the custom implementation. The number of lines reduces even further after the table is already populated. This is why LlamaIndex is so helpful in creating custom RAG frameworks quickly.
+Congratulations! You have now created a semantic RAG framework that leverages a persistent database using LlamaIndex. As with the in-memory semantic RAG framework, the creation of the postgres table and using it to generate a response to a query was achieved with much fewer lines of code compared to the custom implementation. The number of lines reduces even further after the table is already populated. This is why LlamaIndex is so helpful in creating custom RAG frameworks quickly.
 
 ### Extra Utilities and Common Issues
 
-Here are a few optional code snippets that address certain utilitarian needs. For example, the code below displays the list of tables in your docker container.
+Here are a few optional code snippets that address certain utilitarian needs. You are not required to run these code snippets but they are useful to know.
+
+#### For in-memory semantic RAG
+Each element of the `docs` list (which is the output of the `SimpleDirectoryReader` method) is a `Document` object containing the metadata and text for each loaded document. To make sure the text has been read correctly, you can check the metadata and text for each document. For example, to check the first document's metadata you can run the following code.
+
+```python
+print(docs[0].metadata)
+```
+The output should look something like this.
+
+    {'page_label': '1',
+    'file_name': 'earnings_report.pdf',
+    'file_path': 'c:\\Users\\rosha\\Downloads\\CTD RAG\\rag\\brightleaf_pdfs\\earnings_report.pdf',
+    'file_type': 'application/pdf',
+    'file_size': 3658,
+    'creation_date': '2025-10-22',
+    'last_modified_date': '2025-11-10'}
+
+Now, to make sure the text from the "earnings_report" document (or whichever document was read first) has been read correctly you can check the first 100 characters of the text by running the following code.
+```python
+print(docs[0].text_resource.text[:100])
+```
+The output should look something like this.
+
+    "Overview\nThis report summarizes BrightLeaf Solar's financial performance from 2021 through 2025. The"
+
+If there is a reading error (usually due to the document not being in the UTF-8 encoding format), the text will have some random symbols that do not resemble the english language.
+
+LlamaIndex uses predefined defaults for the chunking parameters and the embedding model. If not specified, LlamaIndex uses OpenAI's "text-embedding-ada-002" model. You can change these values before creating the vector store index to make sure LlamaIndex uses your custom values. To check the default values you can run the following code.
+
+```python
+from llama_index.core import Settings
+
+print(f"Default chunk size:  {Settings.chunk_size}")
+print(f"Default chunk overlap: {Settings.chunk_overlap}")
+print(f"Default embedding model: {Settings.embed_model.model_name}")
+```
+The output should be the following.
+
+    Default chunk size:  1024
+    Default chunk overlap: 200
+    Default embedding model: text-embedding-ada-002
+
+To change these values and the embedding model to different OpenAI embedding model, you can do the following.
+```python
+## Optional: Change default chunking parameters and embedding model (Run before creating vector store index)
+from llama_index.embeddings.openai import OpenAIEmbedding
+
+# Specify the new model
+Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+
+# Specify the new chunking parameters
+Settings.chunk_size = 512
+Settings.chunk_overlap = 50
+```
+
+You can check the response model by running the following code.
+
+```python
+#check LLM model currently being used
+print(f"LLM model: {Settings.llm.model}")
+```
+As mentioned earlier, the output should be the following.
+
+    LLM model: gpt-3.5-turbo    
+
+
+#### For persistent database semantic RAG
+The code below displays the list of tables in your docker container.
 
 ```python
 # Optional: List tables
@@ -588,9 +595,9 @@ print(f"Listed tables: {tables}")
 ```
 
 Recall that you're using pgvector to explicitly communicate with PostgreSQL in the docker container through SQL commands. The `list_sql` command is basically an SQL command to output the list of table names. Assuming you only built the `data_li_brightleaf_pgvector` table once, the output should be the following:
-```
-Listed tables: [('rag_chunks',), ('data_li_brightleaf_pgvector',)]
-```
+
+    Listed tables: [('rag_chunks',), ('data_li_brightleaf_pgvector',)]
+
 `rag_chunks` is the table from the previous lesson. In case you found duplicates of the `data_li_brightleaf_pgvector` table, you can drop one copy of the table using the following code.
 
 ```python
@@ -633,17 +640,15 @@ Now that we saw how to create a semantic RAG framework using LlamaIndex, the las
 
 ## RAG Evaluation using LlamaIndex
 
-In general, the evaluation of a RAG framework is split into two parts:
-- **Retrieval evaluation**: Evaluation of context retrieval process
-- **Generation/Response evaluation**: Evaluation of the generated response
+So far, we learned how to architect a RAG framework that uses relevant context from an external database, augmented to the query to produce a response from the LLM. But how do we know whether the RAG implementation is working as is intended? How can we measure the efficacy of the RAG framework?
 
-The evaluation is carried out using an "LLM-as-a-judge" approach, meaning the evaluation metrics are computed using an external LLM (different from the RAG framework). The key reason for this is that an external LLM (trained appropriately) will be able to assess these subjective metrics faster compared to multiple human experts. Multiple metrics have been developed for both retrieval and response evaluation. Here are some additional resources on RAG evaluation to explore: [Huggingface article on RAG evaluation](https://huggingface.co/learn/cookbook/en/rag_evaluation), [LlamaIndex documentation on evaluation](https://developers.llamaindex.ai/python/framework/module_guides/evaluating/), [Youtube video on RAG evaluation](https://www.youtube.com/watch?v=cRz0BWkuwHg).
+In general, the evaluation of a RAG framework is done by computing certain metrics pertaining to the performance of either the retrieval process or the generation of the response. You can think of these metrics as similar to the accuracy metrics you learned about in the ML lessons, such as the confusion matrix. The biggest difference here is that for RAG frameworks we're trying to assess accuracy in the natural language space as opposed to the numerical or categorical space for ML models. As a result, the evaluation is carried out using an "LLM-as-a-judge" approach, meaning the evaluation metrics are computed using an external LLM (different from the RAG framework). An external LLM (trained appropriately) will be able to assess these subjective metrics faster compared to multiple human experts. LlamaIndex provides support for multiple models including local Ollama models. But in this case, we use OpenAI's gpt-4o-mini as our judge llm.  
 
-In this exercise, we will look at two such metrics: 
-- Faithfulness: Metric representing whether the response is faithful to the retrieved contexts, i.e. whether the response contains hallucinations or lying.
-- Relevancy: Metric representing whether the response is relevant to the query using the retrieved contexts, i.e. whether the response is off-topic or rambling.
+Like the ML accuracy metrics, some RAG evaluation metrics will also need a reference/true response for each query. But not all metrics require a ground truth answer. In this exercise, we will look at two such metrics: 
+- Relevancy: Metric representing whether the response is relevant to the query using the retrieved contexts, i.e. whether the response is off-topic or rambling. This metric can be used to assess the retrieval step.
+- Faithfulness: Metric representing whether the response is faithful to the retrieved contexts, i.e. whether the response contains hallucinations or lying. This metric can be used to assess the generation step.
 
-LlamaIndex provides support for multiple models including local Ollama models. But in this case, we use OpenAI's gpt-4o-mini as our judge llm. We use the `FaithfulnessEvaluator` and `RelevancyEvaluator` to compute the faithfulness and relevancy metrics respectively for the given RAG framework (in this case the in-memory semantic RAG framework from earlier). For the evaluation process we need a dataset of user queries, responses, and retrieved contexts for each query (some metrics will also need a reference/true response for each query). In the following example, we show the computation of both metrics using a single query.
+We use the `FaithfulnessEvaluator` and `RelevancyEvaluator` to compute the faithfulness and relevancy metrics respectively for the given RAG framework (in this case the in-memory semantic RAG framework from earlier). Usually we need a dataset of user queries, responses, and retrieved contexts for each query for the evaluation process. In the following example, we show the computation of both metrics using a single query.
 
 ```python
 from llama_index.llms.openai import OpenAI
@@ -672,14 +677,14 @@ Note that for the relevancy evaluator, we don't need to provide the contexts sep
 To compute a certain evaluation metric, the judge LLM is queried with set prompts based on the evaluation metric and is instructed to output a "YES" or "NO" based on whether the metric is satisfied. If the response if "YES," the corresponding score is 1.0 otherwise it is 0.0. The result objects for both metrics contain the following important attributes: `query`, `contexts`, `response`, `passing`, `score`, and `feedback`. `Feedback` is the response from the judge LLM, `passing` is True if the `feedback` is "YES" and False if "NO."  
 
 The output looks like the following (minus the HTTP requests):
-```
-Faithfulness Evaluation: 1.0
-Relevancy Result: 1.0
-```
+
+    Faithfulness Evaluation: 1.0
+    Relevancy Result: 1.0
+
 
 Both the faithfulness and relevancy scores are 1.0 implying that the in-memory semantic RAG implementation has passed the evaluation. Ideally, you would have to test your RAG implementation on a large dataset that covers the entire scope of queries in your application using different evaluation metrics. LlamaIndex provides great support to compute the predefined metrics as well as create your own custom metrics based on the goal of your RAG framework. 
 
-Congratulations! In this lesson, you have learned to create both an in-memory and an online database semantic RAG implementation using LlamaIndex, greatly reducing the lines of code needed to do so. You also learned about RAG evaluation and tested your in-memory semantic RAG implementation on two evaluation metrics. Now you are ready to create your own RAG framework and evaluate it to continue refining it's performance.
+Congratulations! In this lesson, you have learned to create both an in-memory and a persistent memory database semantic RAG implementation using LlamaIndex, greatly reducing the lines of code needed to do so. You also learned about RAG evaluation and tested your in-memory semantic RAG implementation on two evaluation metrics. Now you are ready to create your own RAG framework and evaluate it to continue refining it's performance. Here are some additional resources on RAG evaluation to explore: [Huggingface article on RAG evaluation](https://huggingface.co/learn/cookbook/en/rag_evaluation), [LlamaIndex documentation on evaluation](https://developers.llamaindex.ai/python/framework/module_guides/evaluating/), [Youtube video on RAG evaluation](https://www.youtube.com/watch?v=cRz0BWkuwHg). 
 
 Interestingly, there also exist hybrid approaches that use both keyword and semantic search techniques to improve the accuracy of the RAG response in situations where the exact context of a common word is different from its commonly understood meaning. Here's some additional resources to explore this approach if interested: [Hybrid Search article](https://machinelearningplus.com/gen-ai/hybrid-search-vector-keyword-techniques-for-better-rag/), [Postgres vector store documentation in LlamaIndex which includes hybrid search](https://developers.llamaindex.ai/python/examples/vector_stores/postgres/).
 
