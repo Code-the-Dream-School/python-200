@@ -4,7 +4,9 @@ In the previous lessons, we looked at custom semantic RAG implementations that l
 
 ![LlamaIndex Workflow](resources/LlamaIndex.png)
 
-LlamaIndex provides a simple API that automates the database reading, chunking, storing, context retrieval and augmentation, and response generation steps. LlamaIndex also includes support for many external data storage libraries, models, and embeddings making it a very versatile tool to develop your own custom RAG frameworks. For example, LlamaIndex supports multiple types of vector storage databases involving FAISS, pgvector and much more. Also, the chunking, embedding and storing of the documents in the vector database of choice is all done through one method in LlamaIndex. Additionally, LlamaIndex includes methods to evaluate your RAG framework, which we will go over briefly towards the end of this lesson.
+To be clear, all steps in the "RAG Framework" box are performed in LlamaIndex. The green arrows are associated with the process of creating the vector datastore using the data sources (PDFs, text files, knowledge graphs etc.). The steps in the green flow (reading, chunking, embedding, creating the vector store index) and the green "data sources" block can be thought of as elements in the pre-use steps before generating a response to a query. The blue flow (query to embedding, to retrieving context from the vector store index and generating the response from the LLM) can be thought of as the regular steps in the usage of the RAG framework to generate the response to a query. The grey blocks are the internal steps and elements in the RAG framework provided/ performed by LlamaIndex.
+
+LlamaIndex provides a simple API that automates the database reading, chunking, storing, context retrieval and augmentation, and response generation steps. LlamaIndex also includes support for many external data storage libraries, models, and embeddings making it a very versatile tool to develop your own custom RAG frameworks. For example, LlamaIndex supports multiple types of vector storage databases involving FAISS, pgvector and much more (depicted by the different types of vector stores in the dotted box in the figure). Also, the chunking, embedding and storing of the documents in the vector database of choice is all done through one method in LlamaIndex. Additionally, LlamaIndex includes methods to evaluate your RAG framework, which we will go over briefly towards the end of this lesson. The blue blocks in the figure (query, retrieved context, and response) are used in the RAG evaluation process.
 
 <!-- Note the "index" in LlamaIndex refers directly to the same kind of semantic index we built manually in previous lessons. It is a package built around the concept of semantic indexes. 
 
@@ -75,7 +77,7 @@ index = VectorStoreIndex.from_documents(docs)
 
 > **Note**: Make sure the `brightleaf_pdfs` directory is in the appropriate location, you can additionally add an `assert` statement to check the existence of the directory if it is located elsewhere.
 
-Compared to the custom implementation from the semantic RAG lesson, the above two lines of code capture the document reading, chunking, embedding, and storing steps, demonstrating a huge reduction in lines of code! LlamaIndex uses the inbuilt `SimpleDirectoryReader` method to read the documents and store the metadata and text into the `docs` list.  
+Compared to the custom implementation from the semantic RAG lesson, the above two lines of code capture the document reading, chunking, embedding, and storing steps, demonstrating a huge reduction in lines of code! LlamaIndex uses the inbuilt `SimpleDirectoryReader` method to read the documents and store the metadata and text into the `docs` list (the "Read" block in the figure at the start of the lesson).  
 
 <!-- Document: LlamaIndex’s core data structure that represents one source file (like a PDF) after it’s loaded.
 id_: A unique identifier automatically assigned to each document.
@@ -107,7 +109,7 @@ docs[0].doc_id, docs[0].text[:500]
     ('8190b231-abe2-45d8-a2cc-05dec4840041',
      '%PDF-1.4\n% ReportLab Generated PDF document http://www.reportlab.com\n1 0 obj\n<<\n/F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R\n>>\nendobj\n2 0 obj\n<<\n/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font\n>>\nendobj\n3 0 obj\n<<\n/BaseFont /Helvetica-BoldOblique /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font\n>>\nendobj\n4 0 obj\n<<\n/BaseFont /ZapfDingbats /Name /F3 /Subtype /Type1 /Type /Font\n>>\nendobj\n5 0 obj\n<<\n/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncodi') -->
 
-Once the documents are read, the next step is to chunk the text, convert them into embeddings, and store them. `VectorStoreIndex` automatically handles the chunking, embedding and storing of the documents. By default, LlamaIndex stores the embeddings in a `SimpleVectorStore` object. You can check this by running the following code.
+Once the documents are read, the next step is to chunk the text, convert them into embeddings, and store them. `VectorStoreIndex` automatically handles the chunking, embedding and storing of the documents (the steps in the dashed box in the figure at the start of the lesson). By default, LlamaIndex stores the embeddings in a `SimpleVectorStore` object. You can check this by running the following code. Note that because we directly create the `VectorStoreIndex` from the documents, there is no need for the "Storage Context" here. We will see the usage of "Storage Context" with the persistent database semantic RAG implementation later.
 
 ```python
 print(type(index._vector_store).__name__)
@@ -132,7 +134,7 @@ index = VectorStoreIndex.from_documents(docs)
 -->
 
 ### Retrieve Context, Augment, and Generate Response - The Query Engine
-LlamaIndex uses a helper object called a "query engine" that wraps the entire context retrieval, augmentation, and response generation process. This contributes to further reduction in lines of code. 
+LlamaIndex uses a helper object called a "query engine" that wraps the entire context retrieval, augmentation, and response generation process. This contributes to further reduction in lines of code. In this sense, the query engine encompasses the "Retrieved Context," "LLM," and "Response" blocks in the figure at the start of the lesson.
 
 LlamaIndex uses OpenAI's "gpt-3.5-turbo" model in the backend by default to generate the response to the user query. 
     
@@ -360,7 +362,7 @@ vector_store = PGVectorStore.from_params(
     embed_dim=EMBED_DIM,
 )
 ```
-In the previous implementation with `SimpleVectorStore`, LlamaIndex used default in-memory storage behind the scenes, so we could build the `VectorStoreIndex` index without thinking about storage. In this pgvector version, we want the embeddings database to be the PostgreSQL table instead of local RAM, so we create the `PGVectorStore` and pass it to the `VectorStoreIndex` via a `StorageContext`. 
+In the previous implementation with `SimpleVectorStore`, LlamaIndex used default in-memory storage behind the scenes, so we could build the `VectorStoreIndex` index without thinking about storage. In this pgvector version, we want the embeddings database to be the PostgreSQL table instead of local RAM, so we create the `PGVectorStore` and pass it to the `VectorStoreIndex` via a `StorageContext`. In this case, the `PGVectorStore` initialization handles the steps in the dashed block in the figure at the start of the lesson.
 
 ```python
 if BUILD_INDEX:
@@ -374,7 +376,7 @@ When building the index for the first time (`BUILD_INDEX=True`), the output will
 
     Indexed documents into Postgres table: data_li_brightleaf_pgvector
 
-As seen in the image at the beginning of the lesson, the storage context is able to interface with any type of vector store to create the vector store index. You can think of `StorageContext` as the wiring step that tells LlamaIndex, "store and search embeddings in the PostgreSQL table." It basically acts like an abstraction layer that allows the `VectorStoreIndex` to be built from different kinds of vector stores (such as `PGVectorStore`). After that, the rest of the workflow is the same as the previous implementation: LlamaIndex chunks the documents into nodes (which are called chunks in the example from the previous lesson), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
+As seen in the image at the beginning of the lesson, the storage context is able to interface with any type of vector store to create the vector store index. You can think of `StorageContext` as the wiring step that tells LlamaIndex, "store and search embeddings in the PostgreSQL table." It basically acts like an abstraction layer that allows the `VectorStoreIndex` to be built from different kinds of vector stores (such as `PGVectorStore`). Thus, the "Storage Context" arrow goes from the dotted block with all different types of vector stores to "Vector Store Index" in the figure at the start of the lesson. After this, the rest of the workflow is the same as the previous implementation: LlamaIndex chunks the documents into nodes (which are called chunks in the example from the previous lesson), embeds them, stores them, and later embeds the user query to retrieve the top-k most relevant nodes for the LLM.
 
 Once we have the index constructed, we can build the query engine.
 
