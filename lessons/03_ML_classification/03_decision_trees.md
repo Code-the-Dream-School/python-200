@@ -35,9 +35,10 @@ Now imagine how *you* decide whether an email is spam:
 
 This style of reasoning — asking a **sequence of yes/no questions** — is exactly how a **Decision Tree** works.
 
-<img width="800" alt="decision tree example" src="https://github.com/user-attachments/assets/4fdb3b63-6e0d-4b2b-a1c0-7f65e84a50f4" />
+![how_decision_trees_work_](https://github.com/user-attachments/assets/6d8c032d-2579-47e9-a1cc-bc571268c209)
 
-**Image credit:** Displayr
+
+**Image credit:** Geeks For Geeks
 
 Decision trees are powerful because they resemble **human decision-making**.  
 They feel like flowcharts rather than equations.
