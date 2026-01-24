@@ -20,12 +20,7 @@ Seeing trees explained visually makes everything that follows much easier to und
 
 ## From Distance to Decisions
 
-In the previous lesson, we learned **K-Nearest Neighbors (KNN)**.  
-KNN makes predictions by measuring *distance* between data points.
-
-That works well for small, clean datasets like Iris.
-
-But many real-world problems don’t behave like points in space.
+In the previous lesson, we learned **K-Nearest Neighbors (KNN)**. KNN makes predictions by measuring *distance* between data points. That works well for small, clean datasets like Iris. But many real-world problems don’t behave like points in space.
 
 Now imagine how *you* decide whether an email is spam:
 
@@ -40,8 +35,7 @@ This style of reasoning — asking a **sequence of yes/no questions** — is exa
 
 **Image credit:** Geeks For Geeks
 
-Decision trees are powerful because they resemble **human decision-making**.  
-They feel like flowcharts rather than equations.
+Decision trees are powerful because they resemble **human decision-making**. They feel like flowcharts rather than equations.
 
 ---
 
@@ -51,15 +45,168 @@ A decision tree repeatedly asks questions like:
 
 > “Is this feature greater than some value?”
 
-Each question splits the data into smaller and more focused groups.  
-Eventually, the tree reaches a **leaf**, where it makes a prediction.
+Each question splits the data into smaller and more focused groups. Eventually, the tree reaches a **leaf**, where it makes a prediction.
 
 Unlike KNN:
 - Trees do **not** use distance
 - Trees do **not** need feature scaling
 - Trees work very well with real-world tabular data
 
-To see why, we’ll use a realistic dataset.
+A decision tree makes predictions based on a series of questions. The outcome of each question determines which branch of the tree to follow. They can be constructed manually (when the amount of data is small) or by algorithms, and are naturally visualized as a tree. 
+The decision tree is typically read from top (root) to bottom (leaves). A question is asked at each node (split point) and the response to that question determines which branch is followed next. The prediction is given by the label of a leaf.
+
+The diagram below shows a decision tree which predicts how to make the journey to work.
+
+<img width="577" height="335" alt="Screenshot 2026-01-24 at 5 35 29 PM" src="https://github.com/user-attachments/assets/cd1cbe6a-24a2-453d-82e0-210a27c21922" />
+
+**Image credit:** Displayr
+
+The first question asked is about the weather. If it’s cloudy, then the second question asks whether I am hungry. If I am, then I walk, so I can go past the café. However, if it’s sunny then my mode of transport depends on how much time I have.
+
+The responses to questions and the prediction may be either:
+
+Binary, meaning the response is yes/no or true/false as per the hungry question above
+Categorical, meaning the response is one of a defined number of possibilities, e.g. the weather question
+Numeric, an example being the time question
+
+---
+
+## How a Decision Tree Works
+
+### A Simple Example: Deciding What to Eat for Lunch
+
+Imagine you’re trying to decide **what to eat for lunch** each day.
+
+You don’t calculate distances or probabilities.
+Instead, you ask yourself a sequence of simple questions.
+
+For example:
+
+> “Do I have a lot of time?”
+> “Am I very hungry?”
+> “Do I want something healthy?”
+
+Based on your answers, you end up choosing something like *salad*, *sandwich*, or *takeout*.
+
+Now imagine we collect a small dataset of past lunch decisions.
+
+| Lunch Choice | Time Available | Very Hungry | Healthy Mood |
+| ------------ | -------------- | ----------- | ------------ |
+| Takeout      | Little         | Yes         | No           |
+| Salad        | Plenty         | No          | Yes          |
+| Sandwich     | Little         | Yes         | Yes          |
+| Takeout      | Little         | No          | No           |
+| Salad        | Plenty         | Yes         | Yes          |
+
+Each row is an **example**:
+
+* The **predictor variables** are the questions (time, hunger, health mood)
+* The **outcome** is the lunch choice
+
+---
+
+## How a Decision Tree Learns from This Data
+
+In real life, we usually *don’t know the rules ahead of time*.
+Instead, the decision tree **learns the rules from examples** like the table above.
+
+Conceptually, the tree is built like this:
+
+1. Start with all lunch examples together at the top (the root).
+2. Ask: *Which question best separates the lunch choices?*
+   For example: “Do I have plenty of time?”
+3. Split the data based on the answer (Yes / No).
+4. For each group, ask another question that improves separation.
+5. Stop once a group mostly leads to the same lunch choice.
+
+At the end, the tree might represent rules like:
+
+> “If I have little time and I’m very hungry → Takeout”
+> “If I have plenty of time and want to eat healthy → Salad”
+
+These rules were **not programmed by hand** — they were discovered from data.
+
+---
+
+## Why This Works So Well
+
+Decision trees are powerful because they:
+
+* Mimic how humans naturally make decisions
+* Turn data into understandable rules
+* Can model complex behavior using simple yes/no questions
+
+However, there’s a catch.
+
+Because trees are so flexible, they can sometimes learn **noise** instead of real patterns.
+That’s why, later, we introduce **Random Forests**, which combine many trees to make more reliable decisions.
+
+For now, the key idea is this:
+
+> A decision tree learns a sequence of questions that best explains the examples it sees.
+
+That’s the core intuition — everything else builds on that.
+
+---
+
+Here’s a **short, self-contained section** you can drop directly into Lesson 3. It keeps things visual and intuitive, with *just enough* explanation.
+
+---
+
+## Gini Impurity
+
+The Gini index measures how mixed the classes are in a group of data. A low Gini value means the group is mostly one class (more certain), while a high Gini value means the group is mixed (more uncertain). Decision trees choose splits that reduce the Gini index the most, creating purer groups at each step. Think of each group of data as a bar showing how mixed it is.
+
+### Before Any Split (Mixed Group)
+
+```
+Spam      ██████████
+Not Spam  ██████████
+```
+
+This group is very mixed.
+There’s a lot of uncertainty about what an email is.
+
+---
+
+### After a Good Split (More Pure Groups)
+
+```
+Group A:
+Spam      ████████████████
+Not Spam  ██
+
+Group B:
+Spam      ██
+Not Spam  ████████████████
+```
+
+Each group is now mostly one class.
+
+* Group A is mostly spam
+* Group B is mostly not spam
+
+The uncertainty is much lower.
+
+---
+
+## What the Tree Learns From This
+
+A decision tree tries many possible questions and chooses the one that:
+
+> **Creates the purest groups after splitting**
+
+The **Gini index** is the score that measures how mixed a group is.
+Lower Gini means purer groups, and that’s what the tree is always trying to achieve.
+
+---
+
+### Key Intuition
+
+> Decision trees don’t “think” like humans —
+> they simply keep asking questions that make the data cleaner and cleaner.
+
+This idea sets up *perfectly* why trees can overfit and why **Random Forests** help later.
 
 ---
 
