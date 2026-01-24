@@ -199,24 +199,13 @@ This intuition will later help explain both the strengths of decision trees and 
 
 ## Dataset: Spambase — Learning From Real Emails
 
-So far, we’ve worked with clean, well-structured datasets like Iris.
-Now we take our **next big step** toward real-world machine learning.
+So far, we’ve worked with clean, well-structured datasets like Iris. Now we take our **next big step** toward real-world machine learning.
+In this lesson, we use the **Spambase dataset**, which is built from **real emails**. Each row represents **one email message**, and our goal is simple: **Can we tell whether an email is spam or not based on how it looks?** This is a realistic and motivating problem — it’s the same idea behind the spam filters you use every day.
 
-In this lesson, we use the **Spambase dataset**, which is built from **real emails**.
-Each row represents **one email message**, and our goal is simple:
-
-> **Can we tell whether an email is spam or not based on how it looks?**
-
-This is a realistic and motivating problem — it’s the same idea behind the spam filters you use every day.
-
----
 
 ## What Do the Columns Actually Mean?
 
-At first glance, this dataset looks intimidating: just lots of numbers.
-But these numbers are *not arbitrary* — each one measures something meaningful about an email.
-
-Each column captures a **specific signal**, such as:
+At first glance, this dataset looks intimidating: just lots of numbers. But these numbers are *not arbitrary* — each one measures something meaningful about an email. Each column captures a **specific signal**, such as:
 
 - How often certain words appear  
   (for example: `"free"`, `"credit"`, `"remove"`, `"your"`)
@@ -239,24 +228,16 @@ think:
 
 That perspective is essential for understanding what the model is learning.
 
----
-
-## Why Spambase Is a Good Learning Dataset
-
 This dataset is especially useful because it is:
-
-- Messier than Iris  
 - High-dimensional (many features)
 - Much closer to real-world machine learning problems
-
-It forces us to interpret features and results carefully — not just trust accuracy scores.
+- It forces us to interpret features and results carefully — not just trust accuracy scores.
 
 ---
 
 ## Setup
 
-Before loading the data, we import the tools we’ll use.
-Don’t worry if some of these feel unfamiliar — we’ll use them step by step.
+Before loading the data, we import the tools we’ll use. Don’t worry if some of these feel unfamiliar — we’ll use them step by step.
 
 ```python
 import pandas as pd
@@ -266,13 +247,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, f1_score
 ````
-
 ---
 
 ## Loading the Dataset (Step by Step)
 
-The Spambase dataset lives online at the UCI Machine Learning Repository.
-We download it directly and load it into a pandas DataFrame.
+The Spambase dataset lives online at the UCI Machine Learning Repository. We download it directly and load it into a pandas DataFrame.
 
 ```python
 from io import BytesIO
@@ -281,7 +260,6 @@ import requests
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data"
 response = requests.get(url)
 response.raise_for_status()
-
 df = pd.read_csv(BytesIO(response.content), header=None)
 ```
 
