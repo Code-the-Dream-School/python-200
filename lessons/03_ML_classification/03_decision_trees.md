@@ -149,10 +149,6 @@ That’s the core intuition — everything else builds on that.
 
 ---
 
-Here’s a **short, self-contained section** you can drop directly into Lesson 3. It keeps things visual and intuitive, with *just enough* explanation.
-
----
-
 ## Gini Impurity
 
 The Gini index measures how mixed the classes are in a group of data. A low Gini value means the group is mostly one class (more certain), while a high Gini value means the group is mixed (more uncertain). Decision trees choose splits that reduce the Gini index the most, creating purer groups at each step. Think of each group of data as a bar showing how mixed it is.
@@ -188,9 +184,8 @@ Each group is now mostly one class.
 
 The uncertainty is much lower.
 
----
 
-## What the Tree Learns From This
+### What the Tree Learns From This
 
 A decision tree tries many possible questions and chooses the one that:
 
@@ -199,7 +194,6 @@ A decision tree tries many possible questions and chooses the one that:
 The **Gini index** is the score that measures how mixed a group is.
 Lower Gini means purer groups, and that’s what the tree is always trying to achieve.
 
----
 
 ### Key Intuition
 
