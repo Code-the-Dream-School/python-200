@@ -164,8 +164,6 @@ Not Spam  ██████████
 ```
 Before any split, the emails are evenly mixed between spam and not spam. In this situation, the model has very little confidence. If you randomly pick an email from this group, it could easily belong to either class. This corresponds to **high Gini impurity**.
 
----
-
 ### After a Good Split (More Pure Groups)
 
 ```
@@ -182,13 +180,9 @@ Not Spam  ████████████████
 
 After the tree asks a good question, the data separates into smaller groups. One group is now mostly spam, while the other is mostly not spam. These groups are much easier to classify because one class clearly dominates in each. This means the **Gini impurity is much lower** after the split.
 
----
-
 ### What the Tree Learns From This
 
 A decision tree tries many possible questions and evaluates each one by checking how much it reduces the Gini impurity. The tree always chooses the question that creates the **purest groups overall**. In other words, it looks for splits that turn messy, uncertain data into cleaner, more predictable pieces.
-
----
 
 ### Key Intuition
 
@@ -196,6 +190,7 @@ Decision trees do not understand emails, words, or meaning the way humans do. In
 This intuition will later help explain both the strengths of decision trees and why combining many trees in a **Random Forest** leads to better performance.
 
 ---
+
 
 ## Dataset: Spambase — Learning From Real Emails
 
@@ -263,13 +258,9 @@ response.raise_for_status()
 df = pd.read_csv(BytesIO(response.content), header=None)
 ```
 
-What just happened?
+**What just happened?**
 
-* We downloaded the raw data file
-* Loaded it into a table structure (a DataFrame)
-* Told pandas there is **no header row**, because the dataset stores only numbers
-
-At this stage, it’s completely normal if the data feels overwhelming.
+We downloaded the raw data file.Loaded it into a table structure (a DataFrame). Told pandas there is **no header row**, because the dataset stores only numbers. At this stage, it’s completely normal if the data feels overwhelming.
 
 ---
 
@@ -281,6 +272,10 @@ Before building *any* model, we stop and explore.
 print(df.shape)
 df.head()
 ```
+
+<img width="940" height="245" alt="Screenshot 2026-01-24 at 6 05 37 PM" src="https://github.com/user-attachments/assets/47d4f94f-0215-466e-bd90-129c87566e6a" />
+
+**Image Credits: Google Colab**
 
 You should see:
 
@@ -306,16 +301,32 @@ We first check how many emails fall into each class.
 df.iloc[:, -1].value_counts()
 ```
 
-This tells us how many emails are spam versus not spam.
+<img width="211" height="187" alt="Screenshot 2026-01-24 at 6 06 39 PM" src="https://github.com/user-attachments/assets/7218b9c3-db19-46b4-9c76-3349550b8daf" />
 
-Seeing both classes well represented is important — it means our models will get to learn from **both types of emails**, not just one.
+**Image Credits: Google Colab**
+
+This tells us how many emails are spam versus not spam. Seeing both classes well represented is important — it means our models will get to learn from **both types of emails**, not just one.
+
+To make this even clearer, let’s visualize it.
+```python
+counts = df.iloc[:, -1].value_counts()
+plt.bar(["Not Spam (0)", "Spam (1)"], counts.sort_index())
+plt.title("Spam vs Not Spam Counts")
+plt.xlabel("Email Type")
+plt.ylabel("Number of Emails")
+plt.show()
+```
+Seeing the balance visually makes it easier to trust later accuracy and F1 scores.
+
+<img width="711" height="481" alt="Screenshot 2026-01-24 at 6 16 46 PM" src="https://github.com/user-attachments/assets/382b4968-80aa-45a2-a2d4-520fabdde75d" />
+
+**Image Credits: Google Colab**
 
 ---
 
 ### 2. Capital Letters as a Spam Signal
 
-One feature measures how intense capital letter usage is in an email.
-Spam messages often use ALL CAPS to grab attention.
+One feature measures how intense capital letter usage is in an email. Spam messages often use ALL CAPS to grab attention.
 
 ```python
 plt.hist(df.iloc[:, 54], bins=30)
@@ -325,62 +336,202 @@ plt.ylabel("Frequency")
 plt.show()
 ```
 
-Most emails have low values, meaning normal capitalization.
-A small number have very high values — these are often aggressive, spam-like emails.
+<img width="618" height="451" alt="Screenshot 2026-01-24 at 6 07 36 PM" src="https://github.com/user-attachments/assets/bbe77c31-4d1f-42ef-b576-44e4d8911321" />
 
-This is a great example of how a **simple numeric feature can encode human behavior**.
+**Image Credits: Google Colab**
 
----
-
-### 3. Interpreting Features Like a Human
-
-At this point, it’s important to pause and reflect:
-
-* These features are **not spatial**
-* They don’t represent physical distance
-* Each column measures a different behavior
-
-This explains why some models struggle and others perform well.
-Understanding the *nature of the features* helps us understand the models later.
+Because a few emails have extremely large values, the histogram is heavily right-skewed. This compresses most of the data near zero, but that skew itself is a strong spam signal. Most emails have low values, meaning normal capitalization. A small number have very high values — these are often aggressive, spam-like emails. This is a great example of how a **simple numeric feature can encode human behavior**.
 
 ---
 
-### 4. Why EDA Comes Before Modeling
+### 3.Comparing Spam vs Non-Spam for One Feature
 
-Before we train anything, EDA helps us answer:
+A boxplot helps us compare how a feature behaves across classes.
 
-* What does each feature represent?
-* Are there strong signals?
-* Does the data reflect real-world behavior?
+```python
+temp = df[[54, 57]].copy()
+temp.columns = ["cap_run_avg", "is_spam"]
 
-Without this step, models become black boxes and accuracy numbers lose meaning.
+plt.boxplot(
+    [
+        temp[temp["is_spam"] == 0]["cap_run_avg"],
+        temp[temp["is_spam"] == 1]["cap_run_avg"]
+    ],
+    labels=["Not Spam (0)", "Spam (1)"]
+)
+plt.title("Capital Letter Run Length Avg: Spam vs Not Spam")
+plt.ylabel("Value")
+plt.show()
+```
+<img width="678" height="444" alt="Screenshot 2026-01-24 at 6 18 32 PM" src="https://github.com/user-attachments/assets/070c02b1-f76f-4d3e-8310-2581100c41df" />
 
----
+**Image Credits: Google Colab**
 
-### 5. Big Picture So Far
-
-At this stage, you should understand:
-
-* What one row represents (an email)
-* What columns represent (email behaviors)
-* What the label means (spam or not spam)
-
-Only **after** this foundation is built does it make sense to train classifiers.
-
----
-## Looking Ahead
-
-Next, we will:
-
-* Tune tree depth and forest size
-* Use cross-validation
-* Interpret feature importance
-* Discuss real-world trade-offs
+**What to notice:**
+Spam emails tend to have higher and more extreme capitalization values than non-spam emails. This is exactly the kind of rule a decision tree can learn naturally.
 
 ---
 
-### 🚀 You’ve just taken a major step toward real-world machine learning.
+### 4. How Do Features Relate to Each Other?
 
+Next, let’s check whether some features move together. We’ll keep this simple by looking at just the first 12 features.
+
+```python
+subset = df.iloc[:, :12]
+corr = subset.corr()
+
+plt.imshow(corr)
+plt.title("Feature Correlation Heatmap (First 12 Features)")
+plt.colorbar()
+plt.xticks(range(12), range(12))
+plt.yticks(range(12), range(12))
+plt.show()
 ```
 
+<img width="536" height="449" alt="Screenshot 2026-01-24 at 6 19 51 PM" src="https://github.com/user-attachments/assets/30b4cc91-c7bc-42c6-8e4f-3cb6ad5264b4" />
+
+**Image Credits: Google Colab**
+
+Correlation patterns like these help explain: Why some features may be redundant and Why models that rely on rules (trees) can outperform distance-based models (KNN).
+
 ---
+
+### 5. Which Features Vary the Most?
+
+Some features barely change across emails. Others vary wildly — and those often carry stronger signals.
+
+```python
+subset = df.iloc[:, :12]
+variances = df.iloc[:, :-1].var().sort_values(ascending=False)
+top10 = variances.head(10)
+
+plt.bar(range(len(top10)), top10.values)
+plt.title("Top 10 Most Variable Features")
+plt.xlabel("Feature Index")
+plt.ylabel("Variance")
+plt.xticks(range(len(top10)), top10.index)
+plt.show()
+```
+<img width="696" height="447" alt="Screenshot 2026-01-24 at 6 21 37 PM" src="https://github.com/user-attachments/assets/5b0483c2-ad09-4101-a067-1f43f92adda6" />
+
+**Image Credits: Google Colab**
+
+High-variance features are often more informative because they capture real behavioral differences between emails.
+
+---
+
+### 6. Interpreting Features Like a Human
+
+At this point, it’s important to pause and reflect.
+
+These features are: Not spatial, Not physical measurements, Independent behavioral signals, Each column measures one aspect of how an email was written.
+
+This explains why:
+
+- Distance-based models struggle
+
+- Rule-based models shine
+
+- Trees feel very natural for this problem
+
+### Why EDA Comes Before Modeling
+
+Before we train any classifiers, EDA helps us answer:
+
+- What does each column actually represent?
+
+- Which features look meaningful?
+
+- Does the data reflect real-world behavior?
+
+Without this step, models become black boxes and accuracy numbers lose their meaning. Now that we understand the data, we’re finally ready to model it.
+
+---
+
+## Our First Decision Tree
+
+Now that we understand the data and what the features represent, we are ready to try our **first rule-based model**. Unlike KNN, which compares distances, a **decision tree asks questions** like:
+
+> “Is capital letter usage unusually high?”
+> “Does this email contain certain word patterns often seen in spam?”
+
+Let’s see if this kind of reasoning actually works on our data.
+
+## Step 1: Create the Model
+
+We start by creating a single **Decision Tree classifier**. At this stage, we use all default settings. Our goal is not to tune or optimize — it’s simply to see how well a tree can learn from the data.
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+tree = DecisionTreeClassifier(random_state=0)
+```
+---
+
+## Step 2: Train the Tree
+
+Next, we fit the model using the training data. For a decision tree, this means:
+* trying many possible yes/no questions,
+* choosing the ones that best separate spam from non-spam and building a sequence of rules.
+
+```python
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.25,
+    random_state=0,
+    stratify=y
+)
+
+tree.fit(X_train, y_train)
+```
+---
+
+## Step 3: Make Predictions on New Emails
+
+Now we ask the tree to classify emails it has **never seen before**.
+```python
+pred_tree = tree.predict(X_test)
+```
+Each prediction follows a path through the tree, answering questions about features like capitalization, word frequency, and symbol usage.
+
+---
+
+## Step 4: Evaluate the Results
+
+Finally, we check how well the tree performed.
+
+```python
+print(classification_report(y_test, pred_tree, digits=3))
+```
+
+<img width="556" height="166" alt="Screenshot 2026-01-24 at 6 34 16 PM" src="https://github.com/user-attachments/assets/1569cffc-a19c-4beb-85a4-d59ec6535673" />
+
+**Image Credits: Google Colab**
+
+You should see **strong performance**, often noticeably better than KNN on this dataset.
+
+---
+
+## What Just Happened?
+
+Even with a single tree and no tuning, the model performs well because each feature represents a meaningful email behavior. The tree examines one feature at a time and builds rules that closely match how spam is actually written, such as aggressive capitalization or specific word patterns. The table summarizes how well our single decision tree performed on emails it has never seen before. The overall accuracy is about 92%, meaning the model correctly classified roughly 9 out of every 10 emails. That’s a strong result for a simple, interpretable model.
+
+Looking class by class:
+
+Not Spam (0):
+Precision and recall are both around 93%, which means the tree is very good at recognizing legitimate emails and rarely mislabeling them as spam.
+
+Spam (1):
+Precision and recall are just under 90%, meaning the model successfully catches most spam emails, though a small number still slip through or get misclassified. The F1-scores (which balance precision and recall) are high for both classes, showing that the tree performs well overall and not just on one category.
+
+---
+
+## Key Takeaway So Far
+
+> A decision tree can learn **human-interpretable rules** directly from data
+> and apply them effectively to real-world problems like spam detection.
+
+Before moving on, take a moment to appreciate this: You’ve now trained **two very different classifiers** and seen how data structure affects model performance. Next, we’ll explore **why this powerful approach has a weakness** — and how Random Forests solve it.
