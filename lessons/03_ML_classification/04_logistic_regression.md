@@ -655,7 +655,6 @@ print(classification_report(y_test, y_pred))
 Each metric tells a slightly different story about model performance, especially in a spam-detection problem where false positives and false negatives matter.
 
 OUTPUT: 
-
 ![Output](resources/output.png)
 
 Now let’s interpret how well our Logistic Regression model performed on the unseen test data.
