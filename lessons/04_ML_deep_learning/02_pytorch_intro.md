@@ -13,7 +13,7 @@ Toward that end, we will work through an official PyTorch tutorial notebook on t
 You can open the notebook directly in Kaggle using the button below.
 [![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/ml/pytorch_intro/lessons/04_ML_deep_learning/resources/pytorch_tensors.ipynb)
 
-Click the "Open in Kaggle" button above to open the notebook in Kaggle. You should already have a Kaggle account from Python 100, but if not please reach out to us for help! 
+Click the "Open in Kaggle" button above to open the notebook in Kaggle. You should already have a Kaggle account from Python 100, but if not please reach out to us for help! Once you open the notebook there, you will have a full working notebook where you can run the code, interact and tinker to optimize your learning experience. 
 
 In that notebook, focus on these sections:
 - Creating tensors
