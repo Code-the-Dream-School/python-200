@@ -7,6 +7,10 @@ After exploring the fundamentals of deep learning, we will use the pytorch libra
 
 Our goal is to equip you with the skills needed to build and deploy deep learning models for various applications, not to become deep learning researchers or academics. As usual, the focus is on building intuition and understanding, not on deep mathematical theory. 
 
+For our hands-on excercises, we will be using PyTorch, which is one of the most popular deep learning frameworks. We will be using PyTorch on Kaggle for our lessons and assignments, so we don't have to worry about installation issues. However, if you want to install PyTorch on your own machine for practice, you can find out how at their [official installation page](https://pytorch.org/get-started/locally/). 
+
+IN our hands-on lessons, we will gently build up in complexity. We will start by treating PyTorch as a library for array (or tensor) operations like NumPy, and then we will build simple neural networks from scratch. After that, we will explore more complex architectures like convolutional neural networks (CNNs) for image classification, and finally we will explore transfer learning, which is a powerful technique that allows us to leverage pre-trained models for new tasks with limited data.
+
 > To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
 
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
@@ -16,13 +20,13 @@ Our goal is to equip you with the skills needed to build and deploy deep learnin
 A brief introduction to neural networks and deep learning, including biological inspiration, architecture, and common use cases.
 
 2. [Introduction to pytorch](02_pytorch_intro.md)  
-An overview of the pytorch library, mainly focusing on installation, and tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
+An overview of the PyTorch library, mainly focusing on tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
 
-1. [Training your first neural network](03_xor.md)  
-Before diving into more complex models, we will start with a simple example with a neural network. This will help us understand the basic workflow for training a model in pytorch.
+3. [Training your first neural network](03_first_network.md)  
+Before diving into more complex models, we will start with a simple neural network example in PyTorch. This will help us understand the basic workflow for building and training a model in PyTorch.
 
-1. [Machine vision](03_machine_vision_cnn.md)  
+4. [Machine vision example](03_machine_vision_cnn.md)  
 For this section, we will use a pre-trained convolutional neural network (CNN) to classify images, to show how deep neural networks can be used for computer vision tasks.
 
-1. [Transfer learning](04_transfer_learning.md)
-Here, we will explore transfer learning, which is a technique that allows us to leverage pre-trained models for new tasks with limited data. We will fine-tune a pre-trained model on a new dataset to demonstrate this concept.
+5. [Transfer learning: learning new tasks](04_transfer_learning.md)
+Here, we will explore transfer learning, which is a technique that allows us to leverage pre-trained models for new tasks with limited data. We will fine-tune a pre-trained CNN on a new dataset to demonstrate this concept.
