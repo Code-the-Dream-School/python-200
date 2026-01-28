@@ -329,34 +329,64 @@ PCA offers a way to reconstruct the original dataset from these compressed featu
 
 In real datasets, the structure is not usually this clean, so you will typically need more than two components to retain the information in such high-dimensional datasets. PCA provides a precise way to measure how much variability each component captures, which helps you decide how many components to keep while maintaining an accurate, compact version of the original data. 
 
-We are not going to go deeply into the linear algebra behind PCA, but will next go into a code example to show how this works in practice. 
+We are not going to go deeply into the linear algebra behind PCA, but will next go into a demo to show how powerful it is in practice for feature extraction/dimensionality reduction.
 
  ### PCA Demo
 
-In this demo, we will use the Olivetti faces datasett. This dataset includes pictures of 400 faces. Each face image is 64x64 pixels, which means each image has 4096 pixel values. Each pixel in a grayscale image is a different feature, so that means each image lives in a 4096-dimensional space. However, many of those pixels are correlated with each other: nearby pixels tend to have similar intensity values (for instance, the values around the eyes tend to fluctuate together). This makes the Olivetti dataset a great example for dimensionality reduction with PCA.
+In this demo, we will actually use a synthetic dataset based on the example above: a movie with *massive* redundancy -- a room where the light slowly goes up and down in the background, but has a weird jellyfish lamp on the table that fluctuates randomly. 
 
-First, some imports.
+We have created the movie as greyscale to simplify things, and it doesn't look *exactly* like the more vivid picture above, but it captures the spirit. 
+
+First, some imports. One import is called `gdown` which we will use to download the movie from google drive (it is about 50MB):
 
 ```python
 import numpy as np
+from pathlib import Path
+import gdown
 import matplotlib.pyplot as plt
-from sklearn.datasets import fetch_olivetti_faces
 from sklearn.decomposition import PCA
 ```
 
-Next, load the Olivetti faces dataset
+Next, load and plot the the actual lamp and room background brightness fluctuations which were used to create the movie. If PCA works, it should be able to reconstruct these values just from the movie. They are stored in `resources/`:
 
 ```python
-faces = fetch_olivetti_faces()
-X = faces.data        # shape (n_samples, 4096)
-images = faces.images # shape (n_samples, 64, 64)
-y = faces.target      # person IDs (0 to 39)
+# Load actual  brightness values
+brightness_df = pd.read_csv("resources/brightness_values.csv")
+frame_idx = brightness_df["frame"].to_numpy()
+room_brightness = brightness_df["room_brightness"].to_numpy()
+jelly_brightness = brightness_df["lamp_brightness"].to_numpy()
 
-print(X.shape)
-print(images.shape)
-print(y.shape)
+# Plot brightness
+plt.plot(room_brightness, color='k', label="room")
+plt.plot(jelly_brightness, color='purple', label="lamp")
+plt.legend()
+plt.xlabel("Frame (Time)");
+plt.ylabel("Brightness");
 ```
 
+You will see that the room brightness was designed to change very slowly, while the lamp fluctuates randomly on a very fast time scale.
+
+Next, let's download the movie using gdown:
+
+```python
+filename = "resources/jellyfish_movie.npz"
+data_path = Path(filename)
+data_url = r"https://drive.google.com/uc?id=1JDNoc1ojz3_MqJURy_KjW4hkOKJ5LtiA"
+
+if not data_path.exists():
+    print(f"Downloading {filename}. This can take a minute.")
+    gdown.download(
+        data_url,
+        str(data_path),
+        quiet=False,
+        fuzzy=True,
+        use_cookies=True,
+    )
+else:
+    print(f"{filename} already downloaded. Download skipped.")
+```
+
+Once you have the data downloaded to `resources/` (it is too large to just include in the repo). 
 Each row of `X` is one face, flattened into a 4096-dimensional vector. The `images` array stores the same data in image form, as 64x64 arrays that are easier to visualize.
 
 Visualize some sample faces
