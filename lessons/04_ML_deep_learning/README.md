@@ -18,7 +18,7 @@ A brief introduction to neural networks and deep learning, including biological 
 2. [Introduction to pytorch](02_pytorch_intro.md)  
 An overview of the pytorch library, mainly focusing on installation, and tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
 
-1. [Training your first neural network](03_xor.md)  
+1. [Training your first neural network](03_training_your_first_neural_network.md)  
 Before diving into more complex models, we will start with a simple example with a neural network. This will help us understand the basic workflow for training a model in pytorch.
 
 1. [Machine vision](03_machine_vision_cnn.md)  
