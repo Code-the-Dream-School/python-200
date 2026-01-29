@@ -331,12 +331,11 @@ In real datasets, the structure is not usually this clean, so you will typically
 
 We are not going to go deeply into the linear algebra behind PCA, but will next go into a demo to show how powerful it is in practice for feature extraction/dimensionality reduction.
 
- ### PCA Demo
+ ## PCA Demo
 
-In this demo, we will actually use a synthetic dataset based on the example above: a movie with *massive* redundancy -- a room where the light slowly goes up and down in the background, but has a weird jellyfish lamp on the table that fluctuates randomly. 
+In this demo, we will actually use a synthetic dataset based on the example above: a movie with *massive* redundancy -- a room where the light slowly goes up and down in the background, but has a weird jellyfish lamp on the table that fluctuates randomly. We have created the movie as greyscale to simplify things, and it doesn't look *exactly* like the more vivid picture above, but it captures the spirit. We *strongly* suggest running the code in this demo in Jupyter (or Kaggle), as there are animations are meant to be run in a browser. 
 
-We have created the movie as greyscale to simplify things, and it doesn't look *exactly* like the more vivid picture above, but it captures the spirit. 
-
+### Imports, download, and inspect data
 First, some imports. One import is called `gdown` which we will use to download the movie from google drive (it is about 50MB):
 
 ```python
@@ -344,6 +343,8 @@ import numpy as np
 from pathlib import Path
 import gdown
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from IPython.display import HTML
 from sklearn.decomposition import PCA
 ```
 
@@ -366,11 +367,14 @@ plt.ylabel("Brightness");
 
 You will see that the room brightness was designed to change very slowly, while the lamp fluctuates randomly on a very fast time scale.
 
-Next, let's download the movie using gdown:
+Next, let's download the movie using gdown. We will download it to your home directory on your local machine. It will create a folder called `ctd_data` (Short for "Code the Dream Data"). If you want to put it somewhere else, go ahead: this lets us avoid putting large files directly in the repo:
 
 ```python
-filename = "resources/jellyfish_movie.npz"
-data_path = Path(filename)
+ctd_data_dir = Path.home() / "ctd_data"
+ctd_data_dir.mkdir(parents=True, exist_ok=True)
+
+filename = "jellyfish_movie.npz"
+data_path = ctd_data_dir / filename
 data_url = r"https://drive.google.com/uc?id=1JDNoc1ojz3_MqJURy_KjW4hkOKJ5LtiA"
 
 if not data_path.exists():
@@ -386,130 +390,187 @@ else:
     print(f"{filename} already downloaded. Download skipped.")
 ```
 
-Once you have the data downloaded to `resources/` (it is too large to just include in the repo). 
-Each row of `X` is one face, flattened into a 4096-dimensional vector. The `images` array stores the same data in image form, as 64x64 arrays that are easier to visualize.
-
-Visualize some sample faces
+Once you have the data downloaded to your drive (it is saved as a numpy array in  `npz` format), we can load it and inspect it. 
 
 ```python
-fig, axes = plt.subplots(4, 10, figsize=(10, 4))
-for i, ax in enumerate(axes.ravel()):
-    ax.imshow(images[i], cmap="gray")
+data = np.load(data_path)
+frames = data["frames"] 
+
+num_frames, num_rows, num_cols = frames.shape
+print(num_frames, num_rows, num_cols)
+print(f"Pixels per frame: {num_rows*num_cols}")
+```
+So we see it's a movie with 250 frames, and each frame is 1024x1024, which is more than 1 million pixels. Each pixel is a dimension, or feature. That's a *lot* of features, and a lot of them are probably redundant. Let's inspect the data. YOu can just [view the movie at YouTube]((https://youtube.com/shorts/uEFkp0mLzgI), but it's nice to have resources to view arrays in code (the following will take a while to initialize and load in Python).
+
+The following will produce a widget that lets you view the movie within a Jupyter notebook in a browswer. 
+
+```Python
+fig, ax = plt.subplots(figsize=(5, 5))
+im = ax.imshow(frames[0], cmap="gray", vmin=0, vmax=255)
+ax.axis("off")
+plt.close(fig)
+
+def update(i):
+    im.set_data(frames[i])
+    return (im,)
+
+anim = FuncAnimation(fig, update, frames=num_frames, interval=80, blit=True)
+HTML(anim.to_jshtml())
+```
+When you view the movie, you will see the dynamics described above: the room's brightness slowly changes from lighit to dark, while the jellyfish lamp rapidly and ramdomly fluctuates independently of the room. 
+
+Let's check out the mean image from the stack and check it out.
+
+```python
+mean_image = frames.mean(axis=0)
+print(mean_image.shape)
+plt.imshow(mean_image, cmap='grey');
+plt.axis('off');
+```
+We see the mean image in the stack is what we'd expect: we see the room, and the lamp at its mean luminance. We will need to use this mean image later when it is used to reconstruct an estimate of the image from the principal components. 
+
+### Perform PCA and inspect components
+First put data in form with each image is linearized into single 1d array (PCA expect data in the shape `num_samples x num_dimensions`). Then, we follow the standard scikit-learn API, creating the PCA model before fitting the data with the model. Note don't worry about all the subtleties here, this is meant to be a demo to illustrate the concepts more than a deep dive into all the details of PCA:
+
+```python
+X = frames.reshape(num_frames, -1).astype(np.float32)
+print(X.shape)
+pca = PCA(n_components=4, svd_solver="randomized", random_state=0)
+pca.fit(X)
+
+components = pca.components_ 
+print(components.shape)
+```
+So we ran PCA, and only had it return four components (otherwise it would have taken a *long* time to run). We have extracted the components, and they have the same dimensions as the original (linearized) images. We can plot the components to get a sense for what the correlated features look like in our image set. We will reshape them back into the image shape to visualize them (we will just plot the first two components):
+
+```python
+fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+for k, ax in enumerate(axes):
+    ax.imshow(components[k].reshape(num_rows, num_cols), cmap="gray")
+    ax.set_title(f"PC{k+1}")
     ax.axis("off")
-plt.suptitle("Sample Olivetti Faces")
+plt.show()
+```
+We see something pretty amazing here. Without any seeding or prompting, PCA has extracted a clean image of the room, and a clean image of the jellyfish lamp, just from the raw movie as input. This is a beautiful example of **source separation** that PCA can perform. The pixels in the room are so highly correlated that PCA discovers this redundancy, and the same with the pixels in the jellyfish. 
+
+We can see percentage of the variance in the original dataset is explained by the four components:
+
+```python
+perc_exp_vals = pca.explained_variance_ratio_ * 100
+total_explained = perc_exp_vals.sum()
+print("Explained variance (%):", ", ".join(f"{v:.2f}" for v in perc_exp_vals))
+print(f"Total (%): {total_explained:.2f}")
+```
+There might be some variability here, but the outputs should be something like:
+
+    Explained variance (%): 98.31, 1.52, 0.04, 0.02
+    Total (%): 99.88
+
+That is, the total variance explained by the four principal components is basically 99.89%, which basically means you can reconstruct the entire movie just using the first four components. But what is most interesting is that if we look at just the first two components, the first component explains 98.3 percent of the variance! This makes sense, as it is the component that captures the room, which is the majority of pixels in the image -- that will naturally capture the majority of the redundancy in the dataset. The second component mops up most of the remaining variance (1.5%). The first two components along capture 99.8% of the variance in the dataset! The remaining two components capture less than 0.06%, which is negligible (feel free to plot them, they look like ghosts of the jellyfish lamp). :smile: 
+
+### Reconstructing original data
+Now if you wanted to *recreate* the movie as a weighted sum of these components, PCA lets you do that. It returns you the weights as *scores*:
+
+```python
+scores = pca.transform(X)
+print(scores.shape)
+```
+We see that the shape of the scores is `(250,4)`, which makes sense -- there are 250 frames in the movie, and four components. Let's visualize the score for the first two components (as well as the actual brightness values for comparison):
+
+```python
+frame_indices = [29, 231] # to recreate later
+
+f, axes = plt.subplots(2,2)
+axes = axes.ravel() # create 1d array of axis
+
+axes[0].plot(signal_room, 'grey', label='Actual Room Brightness')
+axes[0].set_title('Actual Room Brightness')
+axes[0].set_ylabel('Brightness')
+
+axes[2].plot(scores[:,0],  'grey', zorder=1 )
+axes[2].set_title('Component 1 Score')
+axes[2].scatter(frame_indices, scores[frame_indices, 0], s=15, color='black', zorder=3)
+# for frame_ind in frame_indices:
+#     axes[2].axvline(frame_ind, color="black", linewidth=0.5)
+axes[2].axhline(color='k', linewidth=0.5)
+axes[2].set_xlabel('Frame')
+axes[2].set_ylabel('Score')
+
+axes[1].plot(signal_jelly, 'plum', label='Actual Lamp Brightness')
+axes[1].set_title('Actual Lamp Brightness')
+
+axes[3].plot(scores[:,1], 'plum', zorder=1)
+axes[3].scatter(frame_indices, scores[frame_indices, 1], s=15, color='purple', zorder=3)
+# for frame_ind in frame_indices:
+#     axes[3].axvline(frame_ind, color="purple", linewidth=0.5)
+axes[3].axhline(color='k', linewidth=0.5)
+axes[3].set_title('Component 2 Score')
+axes[3].set_xlabel('Frame')
+
+plt.tight_layout()
+
+plt.savefig('pca_results.png')
+```
+You can see the amazing job PCA extracting the shape of the "source" signals for the room and lamp brightness. Note that there are positive and negative values for the scores. This is because the scores represent deviations from the mean values for those components. 
+
+To actually *reconstruct* a frame from the movie, you would add together the mean image, and the components weighted by their scores for those particular frames:
+
+```python
+
+component1 = components[0].reshape(num_rows, num_cols)
+component2 = components[1].reshape(num_rows, num_cols)
+
+def reconstruct_from_scores(frame_idx, scores):
+    """
+    Reconstruct frame `frame_idx` using the first 2 PCs
+    """
+    # First-order reconstruction
+    x_hat1 = mean_image + scores[frame_idx, 0]*component1
+
+    # Second_order reconstruction
+    x_hat2 = x_hat1 + scores[frame_idx, 1]*component2
+      
+    x_hat1 = np.clip(x_hat1, 0, 255)
+    x_hat2 = np.clip(x_hat2, 0, 255)
+    return x_hat1, x_hat2
+
+```
+We can see from that function the simplicity of PCA-based reconstruction. Start with the mean image, and then add a weighted version of the first component. To get the reconstruction with the second component on top of that, just add the second component weighted by its second score. 
+
+Let's see how things go for two frames from our movie (frames 29 and 131, which are highlighted in the brightness plots above: they are chosen to be above and below the mean values for the room and lamp). The following plots the original frame on the left, and the reconstruction using PC1 only in the second column, and PC1 plus PC2 on the right:
+
+```python
+fig, axes = plt.subplots(2, 3, figsize=(8, 5))
+
+for row, idx in enumerate(frame_indices):
+    # Original
+    ax = axes[row, 0]
+    ax.imshow(frames[idx], cmap="gray", vmin=0, vmax=255)
+    ax.set_title(f"Frame {idx}: original")
+    ax.axis("off")
+
+    pc1_reconstruction, pc12_reconstruction = reconstruct_from_scores(idx, scores)
+    
+    # PC1 only
+    ax = axes[row, 1]
+    ax.imshow(pc1_reconstruction, cmap="gray", vmin=0, vmax=255)
+    ax.set_title(f"Frame {idx}: PC1 only")
+    ax.axis("off")
+
+    # PC1 + PC2
+    ax = axes[row, 2]
+    ax.imshow(pc12_reconstruction, cmap="gray", vmin=0, vmax=255)
+    ax.set_title(f"Frame {idx}: PC1 + PC2")
+    ax.axis("off")
+
 plt.tight_layout()
 plt.show()
 ```
-This gives you a quick look at the variety of faces in the dataset (hint: there is not that much variety). 
+Here you can see a bit more of how PCA works. Let's focus on the bottom row, frame 231, which has a dark room and bright lamp. In the middle image the jellyfish is still there, but it looks flat and a bit dull. That is because PCA always starts from the average image, and in the average image there is already an "average" jellyfish. PC1 only controls how bright or dark the whole room is, so when we add only PC1 we are really just turning the overall room lighting up or down around that average scene: it becomes dark, but the average jellyfish stays. When we also add PC2, the jellyfish suddenly pops back to life as in the original frame: PC2 is capturing how the lamp gets brighter or dimmer relative to its average!
 
-#### Fit PCA and look at variance explained
-Here we get the principal components from the full dataset. We will look at how much of the total variance is explained as we add more and more components.
+We could do a lot more with PCA, but this was just a short demo of how PCA can dramatically reduce the dimensionality of a dataset. As long as you have the components it extracted, you can then reconstruct the original movie with almost zero loss with drastic reduction of dimensions (from a million to *two* in our case). 
 
-```python
-pca_full = PCA().fit(X)
-
-plt.figure(figsize=(8, 4))
-plt.plot(np.cumsum(pca_full.explained_variance_ratio_), marker="o")
-plt.xlabel("Number of Components")
-plt.ylabel("Cumulative Variance Explained")
-plt.title("PCA Variance Explained on Olivetti Faces")
-plt.grid(True)
-plt.show()
-```
-
-This curve shows how quickly we can capture most of the variation in the dataset with far fewer than 4096 components. Within 50 components, well over 80 percent of the variance in the dataset has been accounted for. 
-
-#### Plot the components 
-We can plot the principal components to get a sense for what the correlated features look like in our image set, and we can visualize them as images. Note these are often called *ghost* faces or *eigenfaces* (this is for technical reaons: the linear algebra used to generate principal components uses something called eigenvector decomposition):
-
-```python
-mean_face = pca_full.mean_.reshape(64, 64)
-
-fig, axes = plt.subplots(2, 5, figsize=(10, 4))
-
-# Mean face
-axes[0, 0].imshow(mean_face, cmap="gray")
-axes[0, 0].set_title("Mean face")
-axes[0, 0].axis("off")
-
-# First 9 principal components (eigenfaces)
-for i in range(9):
-    ax = axes[(i + 1) // 5, (i + 1) % 5]
-    ax.imshow(pca_full.components_[i].reshape(64, 64), cmap="bwr") # plotting eigenface i
-    ax.set_title(f"PC {i+1}")
-    ax.axis("off")
-
-plt.suptitle("Mean Face and First Eigenfaces")
-plt.tight_layout()
-plt.show()
-```
-
-The mean face is the average of all faces in the dataset. You can think of the eigenfaces as basic building blocks for constructing individual faces. PC1 is the eigenface that captures the most correlated activity among the pixels, PC2 the second most, and so on. Each eigenface shows the discovered pattern of correlated pixel intensities. Red regions mean "add brightness to the mean" when you move in the direction of that component, and blue regions mean "subtract brightness here".
-
-#### Reconstructions with different numbers of components
-We discussed above how you can use principal components to reconstruct or approximate the original data. We will show this now. The following code will: 
-
-- Choose 10 random faces from the dataset.
-- Reconstruct them using different numbers of components.
-- Compare these reconstructions to the original faces.
-
-```python
-rng = np.random.default_rng(42)
-rand_indices = rng.choice(len(X), size=10, replace=False)
-
-components_list = [0, 5, 15, 50, 100]
-
-fig, axes = plt.subplots(len(components_list), len(rand_indices), figsize=(10, 7))
-
-for i, n in enumerate(components_list):
-
-    if n == 0:
-        X_recon = X.copy()
-        row_label = "Original"
-    else:
-        pca = PCA(n_components=n)
-        X_proj = pca.fit_transform(X)
-        X_recon = pca.inverse_transform(X_proj)
-        if n == 1:
-            row_label = "PCs: 1"
-        else:
-            row_label = f"PCs: 1-{n}"
-
-    for j, idx in enumerate(rand_indices):
-        ax = axes[i, j]
-        ax.imshow(X_recon[idx].reshape(64, 64), cmap="gray")
-        ax.set_xticks([])
-        ax.set_yticks([])
-
-        # Row labels on the left
-        if j == 0:
-            ax.set_ylabel(
-                row_label,
-                rotation=0,
-                ha="right",
-                va="center",
-                fontsize=10,
-            )
-
-        # Column labels with person ID on top row
-        if i == 0:
-            ax.set_title(f"ID {y[idx]}", fontsize=8, pad=4)
-
-plt.suptitle("Olivetti Face Reconstructions with Different Numbers of PCs", y=0.97)
-plt.subplots_adjust(left=0.20, top=0.90)
-plt.show()
-```
-
-The top row shows the original faces. Each lower row shows reconstructions using an increasing number of principal components:
-
-- `PCs: 1-5` keeps only a very small number of components, so the faces look blurry but still recognizable.
-- `PCs: 1-15` and `PCs: 1-50` look progressively sharper.
-- `PCs: 1-100` usually looks very close to the original, even though we are using far fewer than 4096 numbers.
-
-This demonstrates how PCA can dramatically reduce the dimensionality of the data while still preserving the essential structure of the faces.
-- Each face lives in a very high-dimensional space (4096 features).
-- PCA finds new feature combinations (eigenfaces) that capture the main patterns of variation.
-- A relatively small number of principal components can capture most of the meaningful information.
+While most real-world datasets are much more messy and noisy, and don't contain *this* much redundancy, this example is useful to demonstrate just how powerful PCA can be at discovering hidden correlated structure in your data. This is why it is typically one of the first tools people use to simplify very high-dimensional datasets. 
 
 ## Summary
 In this lesson you saw that good machine learning does not start with fancy models: it starts with good data. Choosing the right feature types, scaling numeric values, encoding categories, and creating new features all help your models see patterns more clearly. Often it means reducing the dimensionality of our data. There are no magic rules here: you will learn the most by exploring your data, visualizing it, and trying small experiments. The habits you build around preprocessing and feature engineering now will pay off with classifiers you build later in this lesson.
@@ -599,6 +660,6 @@ What does PCA do with datasets that have many correlated features?
 
 <details>
 <summary>View answer</summary>
-**Answer:** Reduce redundancy by combining correlated features into new components.
+**Answer:** Reduce redundancy by combining correlated features into individual components that can be used as new features.
 </details>
 
