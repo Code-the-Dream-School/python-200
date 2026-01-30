@@ -161,7 +161,6 @@ Petal measurements separate species extremely well, especially *Setosa*. This al
 
 Finally, we look at all feature relationships together.
 
-- Pairwise Feature Relationships 
 ```python
 sns.pairplot(
     pd.concat([X, y.rename("species")], axis=1),
@@ -256,6 +255,6 @@ In this lesson, you built and evaluated your **first classifier**, explored a re
 ## Looking Ahead
 
 In the next lesson, we introduce **Decision Trees**. Instead of measuring distance, decision trees learn a sequence of rules.
-Understanding KNN deeply will make it much easier to understand why trees — and later random forests — are so powerful.
+Understanding KNN deeply will make it much easier to understand why trees and later random forests are so powerful.
 
 ### You’ve just taken your first real step into machine learning.
