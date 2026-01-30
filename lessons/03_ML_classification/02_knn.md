@@ -125,6 +125,8 @@ print(X.shape)
 X.head()
 ```
 
+<img width="704" height="237" alt="Screenshot 2026-01-30 at 1 39 58 PM" src="https://github.com/user-attachments/assets/d6b9714b-e9ab-4768-affd-50dc7952ca8b" />
+
 The dataset contains 150 flowers and 4 numeric features. There are no missing values, and all features are measured in the same units.
 
 ## Quick EDA: Building Intuition
@@ -136,6 +138,8 @@ sns.countplot(x=y.map(dict(enumerate(iris.target_names))))
 plt.title("Number of Flowers per Species")
 plt.show()
 ```
+
+<img width="651" height="484" alt="Screenshot 2026-01-30 at 1 42 03 PM" src="https://github.com/user-attachments/assets/f5ac73a9-4f6d-41ad-9800-aea75ea04f5d" />
 
 Each species appears the same number of times, which makes model evaluation more reliable. Next, we look at how petal measurements relate to species.
 
@@ -149,17 +153,9 @@ plt.title("Petal Length vs Petal Width")
 plt.show()
 ```
 
-Petal measurements separate species extremely well, especially *Setosa*. This already hints that classification should be feasible. Sepal measurements overlap more:
+<img width="647" height="469" alt="Screenshot 2026-01-30 at 1 42 31 PM" src="https://github.com/user-attachments/assets/c4dcf161-9c70-4e96-9282-7bc3dd789dc6" />
 
-```python
-sns.scatterplot(
-    x=X["sepal length (cm)"],
-    y=X["sepal width (cm)"],
-    hue=y.map(dict(enumerate(iris.target_names)))
-)
-plt.title("Sepal Length vs Sepal Width")
-plt.show()
-```
+Petal measurements separate species extremely well, especially *Setosa*. This already hints that classification should be feasible. Sepal measurements overlap more:
 
 Finally, we look at all feature relationships together.
 
@@ -170,6 +166,9 @@ sns.pairplot(
 )
 plt.show()
 ```
+
+<img width="1058" height="986" alt="download" src="https://github.com/user-attachments/assets/4f5b1a22-b533-4e02-8235-414b8441b8b8" />
+
 
 From just a few plots, we already learn that some features are much more informative than others and that a simple classifier should work well.
 
@@ -187,7 +186,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 ```
 
-The `stratify=y` argument ensures each species appears in similar proportions in both sets. This makes our evaluation fair.
+The stratify=y argument ensures that each species appears in roughly the same proportion in both the training and test sets. This makes our evaluation fair and reliable. The `stratify=y` argument ensures each species appears in similar proportions in both sets. This makes our evaluation fair.
 
 ## Our First KNN Model
 
@@ -209,6 +208,8 @@ preds = knn.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, preds))
 print(classification_report(y_test, preds))
 ```
+
+<img width="531" height="207" alt="Screenshot 2026-01-12 at 11 06 50 AM" src="https://github.com/user-attachments/assets/5f0f8fa1-a17a-410f-9ba1-822cc5526e71" />
 
 You should see strong performance, which is encouraging for a first classifier.
 
@@ -239,6 +240,8 @@ plt.title("KNN Confusion Matrix (Iris)")
 plt.show()
 ```
 
+<img width="648" height="470" alt="Screenshot 2026-01-12 at 11 09 56 AM" src="https://github.com/user-attachments/assets/7946f208-9d04-4a67-9ab1-7e6ce9e0ecd6" />
+
 Even when accuracy is high, confusion matrices help us see *which* classes are confused with each other.
 
 ## What We’ve Learned
@@ -248,7 +251,6 @@ In this lesson, you built and evaluated your **first classifier**, explored a re
 ## Looking Ahead
 
 In the next lesson, we introduce **Decision Trees**. Instead of measuring distance, decision trees learn a sequence of rules.
-
 Understanding KNN deeply will make it much easier to understand why trees — and later random forests — are so powerful.
 
 ### You’ve just taken your first real step into machine learning.
