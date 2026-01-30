@@ -143,6 +143,8 @@ plt.show()
 
 Each species appears the same number of times, which makes model evaluation more reliable. Next, we look at how petal measurements relate to species.
 
+Now we check the Petal Length Vs Petal Width
+
 ```python
 sns.scatterplot(
     x=X["petal length (cm)"],
@@ -159,6 +161,7 @@ Petal measurements separate species extremely well, especially *Setosa*. This al
 
 Finally, we look at all feature relationships together.
 
+- Pairwise Feature Relationships 
 ```python
 sns.pairplot(
     pd.concat([X, y.rename("species")], axis=1),
@@ -197,7 +200,7 @@ In the previous scikit-learn lesson, you learned the **standard model-building A
 3. Make predictions
 4. Evaluate results
 
-We follow that exact pattern here.
+We follow that exact pattern here. We use .predict(X_test) to ask the model to classify flowers it has never seen before. Each prediction is based on which training flowers are closest to that test flower. Finally, we evaluate how well the model did. Seeing strong performance here is encouraging, it shows that even a very simple, intuitive method like KNN can work surprisingly well on real data.
 
 ```python
 knn = KNeighborsClassifier(n_neighbors=5)
@@ -227,6 +230,8 @@ Briefly:
 * The F1-score balances precision and recall
 
 ## Confusion Matrix: Seeing Errors Clearly
+
+The confusion matrix shows where the model is getting confused. Each row represents the true species of a flower. Each column represents the species predicted by the model. Numbers along the diagonal are correct predictions. Numbers off the diagonal are mistakes.
 
 ```python
 cm = confusion_matrix(y_test, preds)
