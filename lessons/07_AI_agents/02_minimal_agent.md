@@ -3,9 +3,7 @@
 As you've seen in the intro lesson, we will be looking at ReAct agents in our lessons. The following image illustrates the ReAct loop that these types of agents employ to generate responses to queries.
 ![React loop](./resources/react_loop.png)
 
-Two loops are shown here:
-- The orange loop with 3 steps, that does not involve external tool use. In this case, the LLM (can be RAG enabled) reasons that it does not need to run any external tools to answer the query.
-- The black loop with 4 steps, where the LLM reasons that it must use one or more tools to generate an accurate response to the query. Steps 2a and 2b can alternate as many times as needed.
+The ReAct framework involves the reasoning step and the acting step. In the reasoning step, the LLM uses its internal reasoning capability to determine whether external tools are needed to answer the query. If it decides that an external tool is needed, a tool call is output that requests the result of a given tool. The LLM can then use this result to generate the response. If a tool call is not necessary, it will directly generate the response. This loop can continue as long as needed till the agent determines the task to be completed.
 
 To demonstrate how tool usage works in agentic frameworks, we will go through a simple example in this lesson. Before we get started, here are a few important things to note.
 - LLMs cannot run code.
@@ -133,14 +131,14 @@ Now that we have the tool schema ready to pass to the model, we will now impleme
 
 ### Implementing the ReAct Agent
 
-To emulate the ReAct loop for our agent, we develop the `run_agent` function shown below. The following steps are involved in the function:
-1. You send a chat request (system + user messages + tools) to the API. You tell the model what tools are available using the `tools` parameter in the API call. This is step 1 in both the black and orange loops in the image at the beginning of the lesson.
-2. The model looks at the conversation and decides (step 2 in the orange loop and 2a in the black loop) to either:
-   - answer directly (step 3 in the orange loop), or
-   - return a special `tool_calls` field. A `tool_call` is the model saying: "Please run this function and tell me the result." This is step 2b in the black loop.
-3. Your Python code sees the `tool_call`, runs the local Python function, and gets a result.
-4. You send that result back to the model as a new message with `role: tool`. This is step 3 in the black loop.
-5. You call the model again with the updated messages so it can see the tool result and give a final answer (step 4 in the black loop).
+To emulate the ReAct loop for our agent, we develop the `run_agent` function shown below. It is helpful to view these steps in comparison with the image at the beginning of the lesson. The following steps are involved in the function:
+1. You send a chat request (system + user messages + tools) to the API. You tell the model what tools are available using the `tools` parameter in the API call.
+2. The model looks at the conversation and decides (the reasoning step in the image) to either:
+   - answer directly, or
+   - return a special `tool_calls` field. A `tool_call` is the model saying: "Please run this function and tell me the result."
+3. Your Python code sees the `tool_call`, runs the local Python function, and gets a result. This is the acting step.
+4. You send that result back to the model as a new message with `role: tool`.
+5. You call the model again with the updated messages so it can see the tool result and give a final answer.
 
 ```python
 import json
