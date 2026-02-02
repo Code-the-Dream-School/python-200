@@ -3,7 +3,7 @@
 As you've seen in the intro lesson, we will be looking at ReAct agents in our lessons. The following image illustrates the ReAct loop that these types of agents employ to generate responses to queries.
 ![React loop](./resources/react_loop.png)
 
-The ReAct framework involves the reasoning step and the acting step. In the reasoning step, the LLM uses its internal reasoning capability to determine whether external tools are needed to answer the query. If it decides that an external tool is needed, a tool call is output that requests the result of a given tool. The LLM can then use this result to generate the response. If a tool call is not necessary, it will directly generate the response. This loop can continue as long as needed till the agent determines the task to be completed.
+The ReAct framework involves the reasoning step and the acting step. In the reasoning step, the LLM uses its internal reasoning capability to determine whether external tools are needed to answer the query. If it decides that an external tool is needed, the acting step is initiated wherein a tool call is output that requests the result of a given tool. The LLM can then use this result to generate the response. If a tool call is not necessary, it will directly generate the response. This loop can continue as long as needed till the agent determines the task to be completed.
 
 To demonstrate how tool usage works in agentic frameworks, we will go through a simple example in this lesson. Before we get started, here are a few important things to note.
 - LLMs cannot run code.
@@ -328,6 +328,8 @@ This lesson gives you a true hello world for agentic AI. We have:
 - explicit code that shows how tool calls are handled
 - an example where the tool is used
 - an example where it is not used
+
+It is important to note that even a simple task like telling the time is outside the capabilities of an LLM. It is only capable of generating a response to a query based on its training and internal parameters. This is why the ability to leverage an external tool (in addition to external data sources using RAG) represents such a huge leap in the efficacy of agents.
 
 In the next lesson, we will extend this pattern. We will work with multiple tools with arguments that can load a csv file, and summarize and plot its data.
 
