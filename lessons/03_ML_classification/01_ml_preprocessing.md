@@ -47,7 +47,7 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 X_scaled = scaler.fit_transform(X)
 ```
-Now each column of X will have values that fall into the desired range. 
+Now X will have values that fall into the desired range. 
 
 ## Standardization
 Another common approach is standardization, which transforms each numeric feature so that:
@@ -73,9 +73,7 @@ Scaling is especially important for algorithms that use distances or continuous 
 - Logistic regression
 - Neural networks
 
-Some models are much less sensitive to scale:
-
-- Decision trees and random forests
+Some models are much less sensitive to scale, such as decision trees. 
 
 Even numeric features require thoughtful preparation. Scaling helps many models learn fairly from all features instead of just listening to the biggest numbers.
 
@@ -122,7 +120,7 @@ axes[1].set_ylabel("Income (standardized)")
 plt.tight_layout()
 plt.show()
 ```
-On the first two plots, you can see that age and income are on completely different numeric scales. On the bottom plot, after standardization, both features live in the same z-score space and can be directly compared.
+You can see that age and income are on completely different numeric scales. On the bottom plot, after standardization, both features live in the same z-score space and can be directly compared.
 
 A z-score tells you how many standard deviations a value is above or below the mean of that feature:
 
@@ -139,12 +137,12 @@ So a negative age or income after standardization does not mean a negative age o
 Assume you have a categorical feature that you are feeding to an ML model. For instance, musical genre (maybe the model is predicting whether the music will contain electric guitar or not, for our instrument sales site).  Categorical features (like "jazz", "classical", "rock") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
 
 ```
-'jazz' -> 1
-'classical' -> 2
+'classical' -> 1
+'jazz' -> 2
 'rock' -> 3
 ```
 
-If we did this, the model would think that "jazz" is smaller than "rock", or that the distance between genres carries meaning. These numbers would create a false ordering that does not exist in the real categories. To avoid this, we use one-hot encoding. One-hot encoding represents each category as an array where:
+If we did this, the model would think that "classical" is smaller than "rock", or that the distance between genres carries meaning. These numbers would create a false ordering that does not exist in the real categories. To avoid this, we use one-hot encoding. One-hot encoding represents each category as an array where:
 
 - all elements are 0 except for one element, which is 1
 - the position of the 1 corresponds to the category
@@ -152,8 +150,8 @@ If we did this, the model would think that "jazz" is smaller than "rock", or tha
 So the categories from above would become:
 
 ```
-jazz  -> [1, 0, 0]
-classical  -> [0, 1, 0]
+classical  -> [1, 0, 0]
+jazz  -> [0, 1, 0]
 rock -> [0, 0, 1]
 ```
 
@@ -168,7 +166,7 @@ Because one-hot encoding is so important, it a built-in class in scikit-learn:
 ```python
 from sklearn.preprocessing import OneHotEncoder
 
-encoder = OneHotEncoder(sparse=False)
+encoder = OneHotEncoder(sparse_output=False)
 
 y = [["jazz"], ["rock"], ["classical"], ["jazz"]]
 y_encoded = encoder.fit_transform(y)
@@ -177,14 +175,14 @@ print("one-hot encoded categories:")
 print(y_encoded)
 ```
 
-Output:
+Output will be something like:
 
 ```
 one-hot encoded categories:
-[[1. 0. 0.]
- [0. 1. 0.]
+[[0. 1. 0.]
  [0. 0. 1.]
- [1. 0. 0.]]
+ [1. 0. 0.]
+ [0. 1. 0.]]
 ```
 
 We will see more practical examples of one-hot encoding in future lessons. 
@@ -242,7 +240,7 @@ A classifier may learn more easily from BMI than from raw height and weight (for
 If you have a datetime column (as we do above), you can often pull out the pieces that matter for prediction:
 
 ```python
-df["weekday"] = df["date"].dt.weekday  
+df["weekday"] = df["birthdate"].dt.weekday  
 df["birth_year"] = df["birthdate"].dt.year
 ```
 
@@ -266,7 +264,7 @@ Before actually feeding such newly created categorical features to an ML model, 
 ```python
 from sklearn.preprocessing import OneHotEncoder
 
-encoder = OneHotEncoder(sparse=False)
+encoder = OneHotEncoder(sparse_output=False)
 
 age_groups = df[["age_group"]]        # must be 2D for scikit-learn
 encoded = encoder.fit_transform(age_groups) # one-hot encoded age groups
@@ -298,7 +296,7 @@ Note because this is Boolean, you would not need to one-hot encode it: 0 and 1 a
 There are no strict rules for feature engineering. It is a creative part of machine learning where your intuitions and understanding of the data matters a great deal. Good features often come from visualizing your data, looking for patterns, and thinking about the real-world meaning behind each column. Creativity and domain-specific knowledge helps a lot here: someone who knows the problem well can often spot new features that make the model's job easier. As you work with different datasets, you will get better at recognizing when a new feature might capture something important that the raw inputs miss. Feature engineering is less about following a checklist and more about exploring, experimenting, and trusting your intuition as it develops.
 
 
-## 5. Dimensionality reduction and PCA
+## 5. Dimensionality reduction 
 Many real datasets contain far more dimensions, or features, than we truly need (in pandas, individual features are represented by separate columns in a dataframe). Some features are almost duplicates of each other, or they carry very similar information -- this is known as *redundancy*. When our feature space gets large, models can become slower, harder to interpret, harder to fit to data, and become prone to overfitting. Dimensionality reduction lets us simplify a dataset by creating a smaller number of informative features. 
 
 As discussed in the [Introduction to Machine Learning](../02_ML_intro/01_ML_Intro.md), one helpful way to picture this is to think about images. A high-resolution photo might have hundreds of millions of pixels, and each pixel in an image is a feature. But you can shrink an image down to a small thumbnail and still recognize that it is a picture of your friend. Dimensionality reduction works the same way in general: the goal is to keep the important structure while throwing away noise and redundancy. ML algorithms can work while throwing away a great deal of raw data, and this can speed things up tremendously. 
@@ -327,22 +325,30 @@ In this simplified example, PCA reduces millions of pixel features down to just 
 
  ## PCA Demo
 
-In this demo, we will actually use a synthetic dataset based on the example above: a movie with *massive* redundancy -- a room where the light slowly goes up and down in the background, but has a weird jellyfish lamp on the table that fluctuates randomly. We have created the movie as greyscale to simplify things, and it doesn't look *exactly* like the picture above, but it captures the spirit. We *strongly* suggest running the code in this demo in Jupyter (or Kaggle), as there are animations are meant to be run in a browser. 
+In this demo, we will work with a synthetic dataset designed to closely mirror the intuition-building example from the lesson: a movie with *massive* redundancy. The movie shows a room where the background lighting slowly rises and falls over time, while a jellyfish lamp on a table fluctuates independently and much more rapidly.
 
-### Imports, download, and inspect data
-First, some imports. One import is called `gdown` which we will use to download the movie from google drive (it is about 50MB):
+This demo is designed to show three key things:
+
+1. PCA can automatically separate the room and the jellyfish into different components without being told they exist (source separation).
+2. PCA can reduce a dataset with over a million dimensions per frame down to just two meaningful numbers.
+3. Using those two numbers, PCA can reconstruct the original movie with almost no visible loss.
+
+We strongly recommend running this demo in Jupyter or Kaggle. Several steps involve animations that are meant to be viewed in a browser.
+
+### Imports and inspect original data
+First, import the required libraries. We will use `gdown` to download the movie from Google Drive (the file is about 50MB):
 
 ```python
-import numpy as np
-from pathlib import Path
 import gdown
+from IPython.display import YouTubeVideo
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from IPython.display import HTML
+import numpy as np
+import pandas as pd
+from pathlib import Path
 from sklearn.decomposition import PCA
 ```
 
-Next, load and plot the the actual lamp and room background brightness fluctuations which were used to create the movie. If PCA works, it should be able to reconstruct these values just from the movie. They are stored in `resources/`:
+Next, load and plot the *actual* brightness signals that were used to generate the movie. These values are stored separately so that we can later compare them to what PCA discovers on its own. 
 
 ```python
 # Load actual  brightness values
@@ -359,9 +365,14 @@ plt.xlabel("Frame (Time)");
 plt.ylabel("Brightness");
 ```
 
-You will see that the room brightness was designed to change very slowly, while the lamp fluctuates randomly on a very fast time scale.
+When you view the movie, you will see the dynamics described above: the room's brightness slowly changes from light to dark, while the jellyfish lamp ramdomly fluctuates independently of the room. You can [view it on YouTube](https://www.youtube.com/watch?v=uEFkp0mLzgI), or if you are running this notebook in Jupyter or Kaggle, you can view it inline below:
 
-Next, let's download the movie using gdown. We will download it to your home directory on your local machine. It will create a folder called `ctd_data` (Short for "Code the Dream Data"). If you want to put it somewhere else, go ahead: this lets us avoid putting large files directly in the repo:
+```python
+YouTubeVideo("uEFkp0mLzgI", width=600, height=350)
+```   
+
+### Download movie data
+Next, download the movie itself. To keep the repository lightweight, we download the file to a local `ctd_data` directory in your home folder. Feel free to change this path if you prefer.
 
 ```python
 ctd_data_dir = Path.home() / "ctd_data"
@@ -384,7 +395,7 @@ else:
     print(f"{filename} already downloaded. Download skipped.")
 ```
 
-Once you have the data downloaded to your drive (it is saved as a numpy array in  `npz` format), we can load it and inspect it. 
+Once the file is downloaded, load it and inspect its shape:
 
 ```python
 data = np.load(data_path)
@@ -394,26 +405,9 @@ num_frames, num_rows, num_cols = frames.shape
 print(num_frames, num_rows, num_cols)
 print(f"Pixels per frame: {num_rows*num_cols}")
 ```
-So we see it's a movie with 250 frames, and each frame is 1024x1024, which is more than 1 million pixels. Each pixel is a dimension, or feature. That's a *lot* of features, and a lot of them are probably redundant. Let's inspect the data. YOu can just [view the movie at YouTube]((https://youtube.com/shorts/uEFkp0mLzgI), but it's nice to have resources to view arrays in code (the following will take a while to initialize and load in Python).
+Each frame contains over **one million pixels**, meaning each frame lives in a space with over one million dimensions. Despite this, the movie is driven by just two underlying signals: room brightness and jellyfish brightness.
 
-The following will produce a widget that lets you view the movie within a Jupyter notebook in a browswer. 
-
-```Python
-fig, ax = plt.subplots(figsize=(5, 5))
-im = ax.imshow(frames[0], cmap="gray", vmin=0, vmax=255)
-ax.axis("off")
-plt.close(fig)
-
-def update(i):
-    im.set_data(frames[i])
-    return (im,)
-
-anim = FuncAnimation(fig, update, frames=num_frames, interval=80, blit=True)
-HTML(anim.to_jshtml())
-```
-When you view the movie, you will see the dynamics described above: the room's brightness slowly changes from lighit to dark, while the jellyfish lamp rapidly and ramdomly fluctuates independently of the room. 
-
-Let's check out the mean image from the stack and check it out.
+Let's check out the mean movie image from the stack:
 
 ```python
 mean_image = frames.mean(axis=0)
@@ -421,13 +415,13 @@ print(mean_image.shape)
 plt.imshow(mean_image, cmap='grey');
 plt.axis('off');
 ```
-We see the mean image in the stack is what we'd expect: we see the room, and the lamp at its mean luminance. We will need to use this mean image later when it is used to reconstruct an estimate of the image from the principal components. 
+In the mean image we see the room and the lamp at their mean luminance. This average image represents the baseline scene that PCA uses as a starting point for reconstructing individual frames. We will do this below. 
 
 ### Perform PCA and inspect components
-First put data in form with each image is linearized into single 1d array (PCA expect data in the shape `num_samples x num_dimensions`). Then, we follow the standard scikit-learn API, creating the PCA model before fitting the data with the model. Note don't worry about all the subtleties here, this is meant to be a demo to illustrate the concepts more than a deep dive into all the details of PCA:
+Before performing PCA, we need to put data into a format that scikit-learn algorithm expects. We reshape each image into a one-dimensional array. This gives us a data matrix of shape `(num_samples, num_dimensions)`. Then, we will follow the standard scikit-learn API, creating a PCA object before running the `fit()` method. Note we won't worry here about all the subtleties of PCA in this demo -- our goal is to illustrate how it works in practice:
 
 ```python
-X = frames.reshape(num_frames, -1).astype(np.float32)
+X = frames.reshape(num_frames, -1).astype(np.float32)  # num_samples x num_dimensions
 print(X.shape)
 pca = PCA(n_components=4, svd_solver="randomized", random_state=0)
 pca.fit(X)
@@ -435,7 +429,9 @@ pca.fit(X)
 components = pca.components_ 
 print(components.shape)
 ```
-So we ran PCA, and only had it return four components (otherwise it would have taken a *long* time to run). We have extracted the components, and they have the same dimensions as the original (linearized) images. We can plot the components to get a sense for what the correlated features look like in our image set. We will reshape them back into the image shape to visualize them (we will just plot the first two components):
+In the above code cell, we ran PCA, and only had it return four components (otherwise it would have taken a *long* time to run). 
+
+Each principal component has the same dimensionality as one flattened image, which means we can reshape and visualize them:
 
 ```python
 fig, axes = plt.subplots(1, 2, figsize=(8, 4))
@@ -445,8 +441,9 @@ for k, ax in enumerate(axes):
     ax.axis("off")
 plt.show()
 ```
-We see something pretty amazing here. Without any seeding or prompting, PCA has extracted a clean image of the room, and a clean image of the jellyfish lamp, just from the raw movie as input. This is a beautiful example of **source separation** that PCA can perform. The pixels in the room are so highly correlated that PCA discovers this redundancy, and the same with the pixels in the jellyfish. 
+Without any supervision, PCA has separated the room structure and the jellyfish lamp into distinct components. This is a clear example of **source separation** driven purely by correlation across pixels. The first principal component (PC1) captures the room's overall brightness changes, while the second principal component (PC2) captures the jellyfish lamp's independent fluctuations. This is exactly what we expected based on our understanding of the movie's structure.
 
+### Explained variance 
 We can see percentage of the variance in the original dataset is explained by the four components:
 
 ```python
@@ -455,21 +452,22 @@ total_explained = perc_exp_vals.sum()
 print("Explained variance (%):", ", ".join(f"{v:.2f}" for v in perc_exp_vals))
 print(f"Total (%): {total_explained:.2f}")
 ```
-There might be some variability here, but the outputs should be something like:
+There might be some variability here, but the typical outputs look like this:
 
     Explained variance (%): 98.31, 1.52, 0.04, 0.02
     Total (%): 99.88
 
-That is, the total variance explained by the four principal components is basically 99.89%, which basically means you can reconstruct the entire movie just using the first four components. But what is most interesting is that if we look at just the first two components, the first component explains 98.3 percent of the variance! This makes sense, as it is the component that captures the room, which is the majority of pixels in the image -- that will naturally capture the majority of the redundancy in the dataset. The second component mops up most of the remaining variance (1.5%). The first two components along capture 99.8% of the variance in the dataset! The remaining two components capture less than 0.06%, which is negligible (feel free to plot them, they look like ghosts of the jellyfish lamp). :smile: 
+The first component explains 98.3 percent of the variance, which is pretty amazing, but also makes sense because the room occupies most of the pixels, so its correlated brightness changes account for the majority of the variance. The second component mops up most of the remaining variance (1.5%). The first two components combined capture 99.8% of the variance in the dataset! The remaining two components capture less than 0.06%, which is negligible (feel free to plot them, they look like ghosts of the jellyfish lamp). :smile: 
 
-### Reconstructing original data
-Now if you wanted to *recreate* the movie as a weighted sum of these components, PCA lets you do that. It returns you the weights as *scores*:
+### Scores and reconstruction
+
+PCA also provides *scores*, which tell us how strongly each component is expressed in each frame:
 
 ```python
 scores = pca.transform(X)
 print(scores.shape)
 ```
-We see that the shape of the scores is `(250,4)`, which makes sense -- there are 250 frames in the movie, and four components. Let's visualize the score for the first two components (as well as the actual brightness values for comparison):
+We see that the shape of the scores is `(250,4)`, which makes sense -- there are 250 frames in the movie, and four components. Let's compare the first two PC scores to the original brightness signals:
 
 ```python
 frame_indices = [29, 231] # to recreate later
@@ -477,11 +475,11 @@ frame_indices = [29, 231] # to recreate later
 f, axes = plt.subplots(2,2)
 axes = axes.ravel() # create 1d array of axis
 
-axes[0].plot(signal_room, 'grey', label='Actual Room Brightness')
-axes[0].set_title('Actual Room Brightness')
+axes[0].plot(room_brightness, color='grey', label='Actual Room Brightness')
+axes[0].set_title('Original Room Brightness')
 axes[0].set_ylabel('Brightness')
 
-axes[2].plot(scores[:,0],  'grey', zorder=1 )
+axes[2].plot(scores[:,0], color='grey', zorder=1 )
 axes[2].set_title('Component 1 Score')
 axes[2].scatter(frame_indices, scores[frame_indices, 0], s=15, color='black', zorder=3)
 # for frame_ind in frame_indices:
@@ -490,8 +488,8 @@ axes[2].axhline(color='k', linewidth=0.5)
 axes[2].set_xlabel('Frame')
 axes[2].set_ylabel('Score')
 
-axes[1].plot(signal_jelly, 'plum', label='Actual Lamp Brightness')
-axes[1].set_title('Actual Lamp Brightness')
+axes[1].plot(jelly_brightness, color='plum', label='Actual Lamp Brightness')
+axes[1].set_title('Original Lamp Brightness')
 
 axes[3].plot(scores[:,1], 'plum', zorder=1)
 axes[3].scatter(frame_indices, scores[frame_indices, 1], s=15, color='purple', zorder=3)
@@ -505,9 +503,9 @@ plt.tight_layout()
 
 plt.savefig('pca_results.png')
 ```
-You can see the amazing job PCA extracting the shape of the "source" signals for the room and lamp brightness. Note that there are positive and negative values for the scores. This is because the scores represent deviations from the mean values for those components. 
+You can see the amazing job PCA did extracting the shape of the "source" signals for the room and lamp brightness. Note that while the *shape* is captured almost exactly, the *values* are not the same: the original signals were positive, but there are positive and negative values for the scores. PCA scores represent deviations from the mean, not raw brightness values.
 
-To actually *reconstruct* a frame from the movie, you would add together the mean image, and the components weighted by their scores for those particular frames:
+PCA reconstruction starts with the mean image and adds deviations along each principal component. We can write a function to reconstruct any frame using the first two PCs and their scores:
 
 ```python
 
@@ -517,6 +515,8 @@ component2 = components[1].reshape(num_rows, num_cols)
 def reconstruct_from_scores(frame_idx, scores):
     """
     Reconstruct frame `frame_idx` using the first 2 PCs
+
+    Returns PC1 estimate and PC1+PC2 estimate
     """
     # First-order reconstruction
     x_hat1 = mean_image + scores[frame_idx, 0]*component1
@@ -529,9 +529,9 @@ def reconstruct_from_scores(frame_idx, scores):
     return x_hat1, x_hat2
 
 ```
-We can see from that function the simplicity of PCA-based reconstruction. Start with the mean image, and then add a weighted version of the first component. To get the reconstruction with the second component on top of that, just add the second component weighted by its second score. 
+We can see from that function the simplicity of PCA-based reconstruction. Start with the mean image, and then add a weighted version of the first component (the room component). Then add a weighted version of the second component (the jellyfish component) to get the full second-order reconstruction. 
 
-Let's see how things go for two frames from our movie (frames 29 and 131, which are highlighted in the brightness plots above: they are chosen to be above and below the mean values for the room and lamp). The following plots the original frame on the left, and the reconstruction using PC1 only in the second column, and PC1 plus PC2 on the right:
+Let's see how things go for two frames from our movie (frames 29 and 131). The following plots the original frame on the left, and the reconstruction using PC1 only in the second column, and PC1 *and* PC2 on the right:
 
 ```python
 fig, axes = plt.subplots(2, 3, figsize=(8, 5))
@@ -560,11 +560,9 @@ for row, idx in enumerate(frame_indices):
 plt.tight_layout()
 plt.show()
 ```
-Here you can see a bit more of how PCA works. Let's focus on the bottom row, frame 231, which has a dark room and bright lamp. In the middle image the jellyfish is still there, but it looks flat and a bit dull. That is because PCA always starts from the average image, and in the average image there is already an "average" jellyfish. PC1 only controls how bright or dark the whole room is, so when we add only PC1 we are really just turning the overall room lighting up or down around that average scene: it becomes dark, but the average jellyfish stays. When we also add PC2, the jellyfish suddenly pops back to life as in the original frame: PC2 is capturing how the lamp gets brighter or dimmer relative to its average!
+These plots reveal a bit more about how PCA works. Let's focus on the bottom row (Frame 231), which has a dark room and bright lamp. With PC1 alone, the room becomes darker but the jellyfish remains flat and dull. PC1 only controls how bright or dark the whole room is, so when we add only PC1 we are really just turning the overall room lighting up or down around that average scene: the room becomes dark, but the dull mean jellyfish stays. However, when we add in PC2, the jellyfish suddenly pops back to life as in the original frame.
 
-We could do a lot more with PCA, but this was just a short demo of how PCA can dramatically reduce the dimensionality of a dataset. As long as you have the components it extracted, you can then reconstruct the original movie with almost zero loss with drastic reduction of dimensions (from a million to *two* in our case). 
-
-While most real-world datasets are much more messy and noisy, and don't contain *this* much redundancy, this example is useful to demonstrate just how powerful PCA can be at discovering hidden correlated structure in your data. This is why it is typically one of the first tools people use to simplify very high-dimensional datasets. 
+In this demo, PCA reduced a dataset with over one million dimensions per frame down to just *two meaningful numbers* while still allowing us to reconstruct the movie with little visible loss. Most real-world datasets are much more messy and noisy, and don't contain *this* much redundancy, this example is useful to demonstrate just how powerful PCA can be at discovering hidden correlated structure in your data. This is why it is typically one of the first tools people use to simplify very high-dimensional datasets. 
 
 ## Summary
 In this lesson you saw that good machine learning does not start with fancy models: it starts with good data. Choosing the right feature types, scaling numeric values, encoding categories, and creating new features all help your models see patterns more clearly. Often it means reducing the dimensionality of our data. There are no magic rules here: you will learn the most by exploring your data, visualizing it, and trying small experiments. The habits you build around preprocessing and feature engineering now will pay off with classifiers you build later in this lesson.
