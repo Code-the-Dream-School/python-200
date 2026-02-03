@@ -327,13 +327,13 @@ In this simplified example, PCA reduces millions of pixel features down to just 
 
 In this demo, we will work with a synthetic dataset designed to closely mirror the intuition-building example from the lesson: a movie with *massive* redundancy. The movie shows a room where the background lighting slowly rises and falls over time, while a jellyfish lamp on a table fluctuates independently and much more rapidly.
 
-This demo is designed to show three key things:
+This demo is designed to highlight three main ideas:
 
 1. PCA can automatically separate the room and the jellyfish into different components without being told they exist (source separation).
 2. PCA can reduce a dataset with over a million dimensions per frame down to just two meaningful numbers.
 3. Using those two numbers, PCA can reconstruct the original movie with almost no visible loss.
 
-We strongly recommend running this demo in Jupyter or Kaggle. Several steps involve animations that are meant to be viewed in a browser.
+We strongly recommend running this demo in Jupyter or Kaggle. Some steps involve animations that are meant to be viewed in a browser.
 
 ### Imports and inspect original data
 First, import the required libraries. We will use `gdown` to download the movie from Google Drive (the file is about 50MB):
@@ -405,7 +405,7 @@ num_frames, num_rows, num_cols = frames.shape
 print(num_frames, num_rows, num_cols)
 print(f"Pixels per frame: {num_rows*num_cols}")
 ```
-Each frame contains over **one million pixels**, meaning each frame lives in a space with over one million dimensions. Despite this, the movie is driven by just two underlying signals: room brightness and jellyfish brightness.
+Each frame contains over *one million pixels*, meaning each frame lives in a space with over one million dimensions. Despite this, the movie is driven by just two underlying signals: room brightness and jellyfish brightness.
 
 Let's check out the mean movie image from the stack:
 
@@ -441,7 +441,7 @@ for k, ax in enumerate(axes):
     ax.axis("off")
 plt.show()
 ```
-Without any supervision, PCA has separated the room structure and the jellyfish lamp into distinct components. This is a clear example of **source separation** driven purely by correlation across pixels. The first principal component (PC1) captures the room's overall brightness changes, while the second principal component (PC2) captures the jellyfish lamp's independent fluctuations. This is exactly what we expected based on our understanding of the movie's structure.
+Without any supervision, PCA has separated the room structure and the jellyfish lamp into distinct components. This is a clear example of *source separation* driven purely by correlation across pixels. The first principal component (PC1) captures the room's overall brightness changes, while the second principal component (PC2) captures the jellyfish lamp's independent fluctuations. This is exactly what we expected based on our understanding of the movie's structure.
 
 ### Explained variance 
 We can see percentage of the variance in the original dataset is explained by the four components:
@@ -525,7 +525,6 @@ def reconstruct_from_scores(frame_idx, scores):
     x_hat1 = np.clip(x_hat1, 0, 255)
     x_hat2 = np.clip(x_hat2, 0, 255)
     return x_hat1, x_hat2
-
 ```
 We can see from that function the simplicity of PCA-based reconstruction. Start with the mean image, and then add a weighted version of the first component (the room component). Then add a weighted version of the second component (the jellyfish component) to get the full second-order reconstruction. 
 
