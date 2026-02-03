@@ -8,4 +8,6 @@ You can find the associated Jupyter notebook here:
 
 While you can run it locally, you can also run it on Kaggle by clicking the button below:
 
-- Open in Kaggle
+<a href="https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/04_ML_deep_learning/resources/lesson_circle_classification_pytorch.ipynb" target="_blank">
+  <img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Kaggle" />
+</a>
