@@ -500,8 +500,6 @@ axes[3].set_title('Component 2 Score')
 axes[3].set_xlabel('Frame')
 
 plt.tight_layout()
-
-plt.savefig('pca_results.png')
 ```
 You can see the amazing job PCA did extracting the shape of the "source" signals for the room and lamp brightness. Note that while the *shape* is captured almost exactly, the *values* are not the same: the original signals were positive, but there are positive and negative values for the scores. PCA scores represent deviations from the mean, not raw brightness values.
 
