@@ -6,9 +6,9 @@ In standard LLM interaction, you provide a prompt, and the model produces a text
 
 There are many different frameworks for thinking about and building agents, but the most common is called the ReAct framework, which stands for "Reasoning + Acting".
 
-ReAct interleaves reasoning and action in a structured loop: the LLM is given an overarching task and a set of tools, and then is let loose to reason about the problem. It first decides whether it needs additional tools to accomplish the task ("Reasoning"). If not, it responds to the query directly. If it does need tools, it selects an appropriate tool and provides the necessary input ("Acting"). The tool is executed, and the result is fed back to the LLM, which *observes* and uses this new information to inform its next reasoning step. It will continue with this cycle of reasoning, acting, and observing loop until it reaches a final answer.
+ReAct interleaves reasoning and action in a structured loop: the LLM is given an overarching task and a set of tools, and then is let loose to reason about the problem. It first decides whether it needs additional tools to accomplish the task ("Reasoning"). If not, it responds to the query directly. If it does need tools, it selects an appropriate tool and provides the necessary input. The tool is executed, and the result is fed back to the LLM ("Acting"). The LLM will then *observe* and use this new information to inform its next reasoning step. The agent continues with this cycle of reasoning, acting, and observing until it reaches a final answer.
 
-This ReAct loop is illustrated in the following diagram, which was made by CTD instructor Roshan Kumar:
+This ReAct loop is illustrated in the following diagram, which was made by CTD instructor Roshan Suresh Kumar:
 
 ![React framework gif](resources/react_loop.png)
 
