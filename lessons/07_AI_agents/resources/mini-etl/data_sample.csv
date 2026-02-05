@@ -1,0 +1,7 @@
+timestamp,amount,notes
+2024-01-01 09:00:00," $1,200.50 ",big order
+2024-01-01 10:00:00,"9",small order
+2024-01-01 11:00:00,"-5.00",refund
+not-a-date,"$7.00",bad timestamp should be dropped
+2024-01-02 08:30:00,"3.00",ok
+2024-01-02 12:00:00,"$2.00",ok
