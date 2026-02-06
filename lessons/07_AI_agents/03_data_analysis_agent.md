@@ -27,6 +27,8 @@ The idea is to use our tool agent to read and analyse this data to ascertain tre
 
 ### Setting up
 
+As usual we're using the OpenAI client as the base LLM in our agent. So we will setup and connect to the client as we have done before. Additionally, we will also register the path to the `resources` directory that contains the `bike_commute.csv` data file.
+
 ```python
 from dotenv import load_dotenv
 import json
@@ -48,7 +50,7 @@ RESOURCES_DIR = Path("resources")
 RESOURCES_DIR
 ```
 
-Output:
+Once the client and path to the `resources` directory have been successfully created, the output should look like the following:
     
     Successfully loaded environment variables from .env
     OpenAI client created.
@@ -56,6 +58,8 @@ Output:
     WindowsPath('resources')
 
 ### Defining the external tools
+
+We will first define the external tools (defined as methods) that the agent will have access to in order to analyse the data in the CSV file. Since the methods will all share parameters such as the filepath and the pandas dataframe obtained by reading the CSV file, the methods are defined within a `CsvManager` class seen below. Creating separate methods would require either the data to be loaded every time or some global dictionary to track the state, which would be both time and token intensive. 
 
 ```python
 class CsvManager:
@@ -230,15 +234,29 @@ class CsvManager:
         
         return f"Plotted {y} vs {x} as a {plot_type}."
 
-print("Agent loaded")
+print("Class defined")
 
 ```
 
-Output:
+Overall the `CsvManager` class has the following methods to be used as external tools:
+- `list_csv_files`: Lists available CSV files in the `resources` directory.
+- `load_csv`: Load a CSV file into a pandas dataframe
+- `get_columns`: List the columns in a loaded CSV file
+- `summarize_columns`: Using pandas' `describe` method to provide a succinct, readable description of all the dataframe's columns
+- `describe_column`: Using pandas' `describe` method to provide a succinct, readable description of a specific dataframe column
+- `plot_data`: Plotting one or two columns from a dataframe using matplotlib's scatter or line plotting functionality
 
-    Agent loaded
+These methods also use internal helper functions (`_normalize_csv_name`, `_available_csv_files`, and `_ensure_loaded`, note that they begin with "_" signifying that they are internal methods to the class) to aid in the loading of the data. These methods provide the basic functionality to load, describe, and plot data from a CSV file and are meant to assist the agent in data analysis. It is important to note that in case the methods are called without the data being loaded, the error statements are returned as outputs so that the agent can reason the need to load the data first. 
+
+Assuming that the class definition does not produce any errors, the output should be the following: 
+
+    Class defined
+
+Now that we have defined the external tools, the next step is to pass the description and parameters of these tools to the agent through the tool schema.
 
 ### Defining the tool schema
+
+Just like we did for the last lesson, we define the JSON tool schema providing the method names, descriptions, and parameters to the agent. First, we initialize the `CsvManager` class and create a dictionary matching the names to the corresponding class methods. Then, we define the tool schema below.
 
 ```python
 csv_backend = CsvManager(RESOURCES_DIR)
@@ -341,7 +359,11 @@ tools_schema = [
 ]
 ```
 
+The `node_tools` dictionary is created simply to run the methods as requested by the agent. Note that the descriptions do not mention that the methods are part of the same class. The agent merely decides which tools to use and the dictionary maps the agent's tool call to the class method. Next, we define a method that represents one agent ReAct loop in response to a user query (the image at the beginning of the lesson).
+
 ### Defining a response cycle
+
+The `run_agent_cycle` method is defined as a single ReAct loop to generate the response to a user query. 
 
 ```python
 def run_agent_cycle(messages, user_text, max_tool_rounds=5):
@@ -432,7 +454,19 @@ def run_agent_cycle(messages, user_text, max_tool_rounds=5):
     return "I hit the tool-round limit. Try a simpler request."
 ```
 
+The `messages` argument is to pass the system prompt to the agent before the chat begins. First, the user query is appended to the messages list and passed to the LLM (OpenAI API client) to generate the initial response. If, the LLM deems that one or more tool(s) must be used, a tool call message is output (the "requests" arrow in the image). For each tool call, the corresponding function is obtained from the `node_tools` dictionary based on the name and tool arguments obtained from the agent tool call.
+
+    name = tool_call.function.name
+    tool_args = json.loads(tool_call.function.arguments or "{}")
+    fn = node_tools.get(name)
+
+The result from the function run is then "observed" by the LLM (the "results" arrow in the image) and the agent either creates a response (the arrow from LLM to the responses block in the image) or requests more tool calls. A key difference with the previous lesson is that the tools schema is passed onto the agent in every iteration, meaning that the agent can ask for more tool calls based on the observation of the previous tool runs. This loop can be conducted for a `max_tool_rounds=5` rounds (the looping arrow in the LLM block in the image) to reduce token usage. The `observe_tool_result` method is defined internally and simply outputs the LLM response to the tool result. 
+
+Next, we set up the script to chat with the agent.
+
 ### Setting up agent chat
+
+Once the response generation method is defined, we will now create the method to simulate the chatbot that conducts a conversation with a user and leverages the external tools as needed through the ReAct process. We first define our system prompt that is provided to the agent with instructions dictating its behaviour. The system prompt is shown below.
 
 ```python
 SYSTEM_PROMPT = (
@@ -442,6 +476,8 @@ SYSTEM_PROMPT = (
     "Keep answers short and student-friendly."
 )
 ```
+
+It is imperative to provide as much context as you deem necessary to the agent before the start of the conversation. The agent is instructed to behave as a data assistant for CSV files stored in the `resources` directory. Most importantly, we explicitly state that the agent must use the available tools and not guess for data analysis. It is also useful to mention that a CSV file must be loaded from the available list if not done so. Next we create the `run_agent` method that simulates the conversation, shown below.
 
 ```python
 def run_agent():
@@ -473,28 +509,40 @@ def run_agent():
         print(f"\nAssistant: {assistant_text}\n")
 ```
 
+First, the system prompt is added to the `messages` list which is input to the `run_agent_cycle` method defined previously. Recall that this was the reason to include the `messages` argument in the `run_agent_cycle` method. In every iteration, when a user query is provided to the agent it will go through one ReAct loop cycle to either directly generate the response or request the use of external tools to generate the response. The conversation stops when the user enters either "exit," "quit," or "q." In terms of simulating a conversation with the user, this method is similar to the chatbot we developed previously (see the [chatbots lesson](../05_AI_intro/chat_basics.md)). Let's run this agent on the `bike_commute.csv` file and assess its data analysis capabilities.
+
 ### Running the agent
+
+To start the conversation we simply call the `run_agent` method.
 
 ```python
 run_agent()
 ```
 
-Output:
+The example conversation shown here is broken down into question and answer pairs to better understand the working of the agent. You're encouraged to try your own questions and assess the responses.
+
+*Example Chat*:
 
     CSV data agent at your service. Here to help look at your CSV data!
     Type a question. Type 'exit' to quit.
 
     To start, try 'list csv files' or 'load bike_commute.csv'
 
+As we had mentioned in the print statement in the `run_agent` method, we must start by either listing the available CSV files or loading the `bike_commute.csv` file. Let's first list the available CSV files.
+
     User query: list the csv files available to you
     ACT: list_csv_files({})
 
     Assistant: There is one CSV file available: bike_commute.csv. Would you like to load it to explore its content?
 
+Based on the user query, the agent requests the use of the `list_csv_files` method and responds that there is one CSV file available. So far, so good. Let's go ahead and load this file.
+
     User query: Yes go ahead
     ACT: load_csv({'filename': 'bike_commute.csv'})
 
     Assistant: The file bike_commute.csv is loaded. It has 160 rows and 6 columns: distance_km, duration_min, avg_speed_kmh, avg_heart_rate, avg_traffic_density, and rain. What would you like to do next?
+
+The agent loads the `bike_commute.csv` file as requested. Note that we do not need to provide more specifications as the context of the previous messages is being input to the agent. Recall that the output of the `load_csv` method is the shape of the pandas dataframe and the list of the columns, which the agent incorporates in its response. Next, we summarize the columns of the dataframe.
 
     User query: summarize the columns in the loaded csv file
     ACT: summarize_columns({})
@@ -509,6 +557,8 @@ Output:
     ...
     Let me know if you want details or any specific analysis!
 
+The agent requests the use of the `summarize_columns` method and incorporates the result into its response as expected. Now we assess its data analysis capabilities by having it plot two columns and ascertain the correlation between them.
+
     User query: plot the relationship between the average speed and average heart rate
     ACT: plot_data({'x': 'avg_speed_kmh', 'y': 'avg_heart_rate', 'plot_type': 'scatter'})
 
@@ -516,9 +566,13 @@ Output:
 
     Assistant: I have created a scatter plot showing the relationship between average speed (km/h) and average heart rate (bpm). Let me know if you want to see the plot or further analyze the data.
 
+First, we ask the agent to plot the average speed against the average heart rate. The agent appropriately asks for the `plot_data` tool to create a scatter plot with the average speed as the X-axis and the average heart rate as the Y-axis. The agent made the decision to create a scatter plot instead of a line plot which is correct. Next, we assess its data analysis capabilities by asking the kind of correlation between these columns (it can be positive, negative, or none).
+
     User query: What kind of correlation do you see between the columns you plotted?
 
     Assistant: I see a positive correlation between average speed and average heart rate: as average speed increases, the average heart rate tends to increase too. This suggests that cycling faster raises the rider's heart rate.
+
+In this case, the agent deemed that it does not need to use any external tools to answer the query. While its response makes logical sense, it is not readily apparent from the plot or the data by itself. This suggests that the agent might be leaning more on its internal reasoning than the data. This is quite common among agents and is a potential danger that must be accounted for in practice. Let's try this again with the average speed and average traffic density, but this time we ask the agent to both plot and determine the correlation between the two in the same prompt.
 
     User query: Plot the average speed against the average traffic density and ascertain the correlation between the two based on this
     ACT: plot_data({'x': 'avg_traffic_density', 'y': 'avg_speed_kmh', 'plot_type': 'scatter'})
@@ -529,6 +583,8 @@ Output:
 
     To ascertain correlation, from the look of the points, do you want me to calculate a correlation coefficient as well?
 
+Again as expected, the `plot_data` tool is called for by the agent and the scatter plot is created. However, the agent does not provide any analysis on the correlation between the average speed and average traffic density. Instead it asks whether we would like to calculate a correlation coefficient. Interestingly, this comes from the LLM's internal reasoning. We know that none of the external tools have the ability to compute the correlation coefficient. But to see how the agent tackles this problem, we ask it to go ahead.
+
     User query: Yes go ahead
     ACT: describe_column({'column': 'avg_speed_kmh'})
     ACT: describe_column({'column': 'avg_traffic_density'})
@@ -538,36 +594,41 @@ Output:
 
     Assistant: I hit the tool-round limit. Try a simpler request.
 
+This is where the limits of the tool-based agent begin to show. The agent begins by calling for the `describe_column` tool for the average speed and average traffic density columns, ostensibly to gain more knowledge about the spread of values for both. However, evey subsequent tool call (`summarize_columns`, `get_columns` and `load_csv`) is not needed and signifies the agent grasping at straws to answer the query. Since we had set the ReAct loop to run for a maximum of 5 rounds in the `run_agent_cycle` method, the agent is not able to create an appropriate response. Interestingly, based on the pattern of tool calls it is unlikely that the agent would've gotten to an answer even if the maximum number of ReAct rounds were increased. But it is clear that the agent realizes that it does not have the requisite information from any of the tool calls to generate an appropriate response. We now end the conversation, which outputs the following.
+
     Bye.
+
+Congratulations! You have created a tool-based agent that is able to consider and leverage multiple external tools in a smart manner to respond appropriately to a user query. The major limitation here is that tool-based agents do poorly for tasks that are outside of the capabilities of the external tools, as we just saw. The next step in this paradigm is to allow the agent to create its own code to perform the action that is outside of the purview of the available tools. We will see how these so-called code-based agents fill in the gaps in the capabliities of tool-based agents in the next lesson.
 
 ## Check for Understanding
 
 ### Question 1
 
+What are the major steps an agent takes in the ReAct loop?
 
 Choices:
-- A. 
-- B. 
-- C. 
-- D. 
+- A. Reason, and Act
+- B. Reason, Act, and Observe
+- C. Reason, Create, Act
+- D. None of the Above
 
 <details>
 <summary> View Answer </summary>
-<strong>Answer: </strong>  <br>
-
+<strong>Answer: B: Reason, Act, and Observe</strong>  <br>
+In a single ReAct loop iteration, the agent reasons based on the query, acts by requesting a tool call, and generates the response based on the result of the tool call. This response can be a request for more tool calls or the final response to the query.
 </details>
 
 ### Question 2
 
-
+In the example chat shown in this lesson, how did the decision to specifically create a "scatter" plot of two columns come about?
 Choices:
-- A. 
-- B. 
-- C. 
-- D. 
+- A. System prompt 
+- B. User query
+- C. Agent's reasoning
+- D. Both B and C
 
 <details>
 <summary> View Answer </summary>
-<strong>Answer: </strong>  <br>
-
+<strong>Answer: C. Agent's reasoning</strong>  <br>
+Neither the system prompt nor the user query specifically mention the need to create a scatter plot. This decision came directly from the agent's internal reasoning.
 </details>
