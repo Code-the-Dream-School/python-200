@@ -4,7 +4,7 @@ In the previous lessons, we saw how tool-based agents use the ReAct loop (shown 
 - Introduce code-based agents as a powerful alternative to tool-based agents that allow for the agent to develop and utilize its own tools in case the existing tools are incapable of performing the required tasks to answer the user query. 
 - Introduce Huggingface's [smolagents](https://huggingface.co/blog/smolagents) as a flexible and user-friendly library for the creation of both tool-based and code-based agents. Just like LlamaIndex was used in [last week's lesson](../06_AI_augmentation/03_framework_rag_llamaindex_svs.md) to develop RAG frameworks, smolagents is used to develop agentic frameworks. 
 
-> **Note:** LlamaIndex has its own packages to develop agentic frameworks. You can find more information [here](https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/) and [here](https://developers.llamaindex.ai/python/framework/understanding/agent/).
+<!-- >> **Note:** LlamaIndex has its own packages to develop agentic frameworks. You can find more information [here](https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/) and [here](https://developers.llamaindex.ai/python/framework/understanding/agent/). -->
 
 ![react loop](./resources/react_loop.png)
 
@@ -410,7 +410,7 @@ We will now look at code-based agents that can address this issue by creating an
 
 ### Create and test code agent
 
-Just like the `ToolCallingAgent`, the code-based (`CodeAgent`) agent can also be initialized with a single line of code. We provide the model, tools list, system prompt, and the additional set of authorized imports (libraries that the agent can import, here `matplotlib`, `pandas`, `numpy` to keep it simple). We also specify the maximum number of steps in the ReAct loop as 8. 
+Code-based agents represent a significant shift from tool-based agents in the ability to respond to queries. The agent is no longer limited to just the tools you provide, but can also create its own tools to perform the task it deems necessary to answer the query. This is like having a junior developer in your team that can code the tools needed in real-time. 
 
 *Coding Prompt:*
 
@@ -432,7 +432,13 @@ Rules:
 - Be honest: only claim you did something if the code or tool actually did it.
 - Assume the active dataset lives in csv_manager.df after a CSV is loaded.
 """
+```
 
+Since the code agent can create its own tools now, the system prompt is a lot more comprehensive to define the scope of the actions the agent can take. Here, we explicitly state that the agent should prefer the available tools wherever possible and to write new matplotlib code in case plot styling is needed.
+
+*Initializing the Agent:*
+
+```python
 code_agent = CodeAgent(
     tools=TOOLS,
     model=model,
@@ -441,8 +447,7 @@ code_agent = CodeAgent(
     max_steps=8,
 )
 ```
-
-Since the code agent can create its own tools now, the system prompt is a lot more comprehensive to define the scope of the actions the agent can take. Here, we explicitly state that the agent should prefer the available tools wherever possible and to write new matplotlib code in case plot styling is needed.
+Just like the `ToolCallingAgent`, the code-based (`CodeAgent`) agent can also be initialized with a single line of code. We provide the model, tools list, system prompt, and the additional set of authorized imports (libraries that the agent can import, here `matplotlib`, `pandas`, `numpy` to keep it simple). Specifying the additional imports is not strictly necessary but helps to constrain the agent's scope for creating new tools, thereby reducing the chances of hallucination. We also specify the maximum number of steps in the ReAct loop as 8.
 
 As with the tool-based agent, we will test the code-based agent on the two queries from before. We also pass the `csv_manager` as an additional argument as the code agent can make use of it.
 
