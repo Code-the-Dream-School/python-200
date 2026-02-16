@@ -11,3 +11,13 @@ While you can run it locally, you can also run it on Kaggle by clicking the butt
 <a href="https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/04_ML_deep_learning/resources/lesson_circle_classification_pytorch.ipynb" target="_blank">
   <img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Kaggle" />
 </a>
+
+When you open this notebook in Kaggle, make sure to enable GPU support:
+
+- Start the Kaggle session
+
+- Click Settings in the top menue
+
+- Under Accelerator, select GPU
+
+This will significantly speed up training and is good practice for future deep learning work.
