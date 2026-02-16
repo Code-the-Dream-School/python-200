@@ -1,4 +1,4 @@
-# Week 1: Introduction to AI
+# Week 5: Introduction to AI
 
 Welcome to the Week 5 in Python 200, Introduction to Artificial Intelligence! 
 
