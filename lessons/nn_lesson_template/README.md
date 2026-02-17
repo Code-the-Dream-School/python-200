@@ -11,4 +11,7 @@ Brief description of topic 1.
 2. [Topic 2](02_topic2.md)  
 Brief description of topic 2. 
 
+3. [Topic 3](03_topic3.md)
+Brief description of topic 3. Includes Jupyter notebook. 
+
 

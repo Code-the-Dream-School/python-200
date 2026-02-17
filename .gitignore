@@ -177,5 +177,8 @@ cython_debug/
 # VS Code settings
 .vscode/
 
+# macos files
 .DS_Store
-lessons/**/.DS_Store
+
+# IIS VIsual Stuudio directory
+.iis/
