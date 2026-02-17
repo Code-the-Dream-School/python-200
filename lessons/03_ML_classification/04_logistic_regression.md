@@ -123,6 +123,7 @@ You don’t need to memorize this diagram, and we are not going to explain every
 
 ### The Workflow 
 
+```text
 Load Dataset (df)
     ↓
 Separate Features and Target
@@ -201,6 +202,7 @@ Recall
 F1 Score
 Classification Report
 
+```
 
 Everything we do in code will follow this exact path. If at any point you feel confused later, you can come back to this diagram and ask yourself, “Which step am I in right now?” 
 
@@ -262,7 +264,7 @@ from io import BytesIO
 
 We also define column names so the data is easier to understand once it’s loaded.
 
-```python
+```text
 COLUMN_NAMES = [
     "word_freq_make",        # 0   percent of words that are "make"
     "word_freq_address",     # 1
@@ -323,16 +325,17 @@ COLUMN_NAMES = [
     "capital_run_length_total",    # 56  total number of capital letters
     "spam_label"                    # 57  1 = spam, 0 = not spam
 ]
+```
 
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data"
 
+```text
 response = requests.get(url)
 response.raise_for_status()
 
 df = pd.read_csv(BytesIO(response.content), header=None)
 df.columns = COLUMN_NAMES
 df.head()
-
 ```
 
 When you run this cell, you’ll see the first few rows of the dataset.
@@ -468,14 +471,15 @@ plt.figure(figsize=(8, 5))
 plt.scatter(X1_train_scaled, y_train, alpha=0.2, label="Emails")
 plt.plot(x_range, y_probs, color="red", linewidth=2, label="Spam Probability")
 plt.axhline(0.5, linestyle="--", color="gray")
+plt.xlim(-3, 3)
+plt.ylim(-0.1, 1.1)
 plt.xlabel("Scaled Longest Capitalization Run")
 plt.ylabel("Probability of Spam")
 plt.title("Logistic Regression with One Feature")
 plt.legend()
 plt.show()
 ```
-
-![1-Feature Decision Boundary](<resources/1-Feature Decision Boundary.png>)
+![LR with one feature](<resources/LR with one feature.png>)
 
 This graph shows how Logistic Regression uses one feature `the scaled longest run of capital letters` to estimate the probability that an email is spam.
 
@@ -542,17 +546,19 @@ By fitting the model on the scaled training data, Logistic Regression finds a de
 After training the Logistic Regression model with two features, we want to understand how the model is making decisions across the feature space. To do this, we visualize the decision boundary learned by the model.
 
 ```python
-plt.figure(figsize=(7, 6))
+fig, ax = plt.subplots(figsize=(7,6))
 
 DecisionBoundaryDisplay.from_estimator(
     log_reg_2,
     X2_train_scaled,
     response_method="predict",
     cmap="coolwarm",
-    alpha=0.3
+    alpha=0.3,
+    ax=ax,
+    grid_resolution=500
 )
 
-plt.scatter(
+ax.scatter(
     X2_train_scaled[:, 0],
     X2_train_scaled[:, 1],
     c=y_train,
@@ -561,9 +567,13 @@ plt.scatter(
     alpha=0.5
 )
 
-plt.xlabel("Scaled Longest Capital Run")
-plt.ylabel("Scaled Dollar Sign Frequency")
-plt.title("Decision Boundary Using Two Spam Indicators")
+ax.set_xlim(-1.5, 3)
+ax.set_ylim(-1.5, 3)
+
+ax.set_xlabel("Scaled Longest Capital Run")
+ax.set_ylabel("Scaled Dollar Sign Frequency")
+ax.set_title("Decision Boundary Using Two Spam Indicators")
+
 plt.show()
 
 ```
@@ -572,7 +582,7 @@ This time, we get a 2D decision boundary. The background colors show which regio
 
 To create this visualization, we used Scikit-Learn’s **DecisionBoundaryDisplay**, which automatically shows how the trained Logistic Regression model separates the feature space into spam and non-spam regions. This saves us from manually computing predictions and makes the decision boundary easy to interpret.
 
-![Decision Boundary using Two Spam Indicator ](<resources/Decision Boundary.png>)
+![Decision Boundary using Two Spam Indicator](resources/Decision_Boundary.png)
 
 ### Interpreting the Decision Boundary
 
