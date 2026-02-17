@@ -1,18 +1,50 @@
 # Python 200 Assignments Hub
-Welcome to the assignment hub for Python 200! Each week of the course has its own assignment file (for example, `01_analysis_assignment.md`). These assignments are designed to help you practice the material from that week, build confidence, and gradually develop real-world analysis, AI,  and cloud computing skills.
+Welcome to the assignment hub for Python 200! Each week of the course has its own assignment file (for example, `assignments_01.md` for week 1). These assignments are designed to help you practice the material from that week.
 
-Each week the assignments will be broken up into two parts -- warmup exercises, and larger-scale projects: 
+## Assignment Breakdown
+Each week's assignment is divided into two types of questions: warmup exercises and hands-on projects.
 
-## Part I: Warmup Exercises
-Part I is all about easy wins. These questions should feel approachable if you have worked through the main lesson material. They focus on basic syntax, concepts, and short coding tasks to help you build muscle memory.
+### Warmup Exercises
+The first type of question is all about easy wins. These questions should feel approachable if you have worked through the main lesson material. They focus on basic syntax, concepts, and short coding tasks to help you build muscle memory. 
 
-We **strongly** encourage you to not use AI for these warmups: they are meant to help you practice the kinds of tasks you will be expected to do, and discuss, in live coding interviews. These are questions that AI can easily answer very quickly, but that would defeat the purpose. 
+We **strongly** encourage you to not use AI for these warmups: they are meant to help you practice the kinds of tasks you will be expected to do, and discuss, in live coding interviews. These are questions that AI can *easily* answer, but that would defeat the purpose. We have written them so that students can solve them after reading and understanding the course materials (if this is not the case, please let us know!). 
 
-## Part II: Projects
-Part II is where you put things together into larger-scale prooject-based tasks. We'll give you one to three each week. They will typically involve pulling ideas from multiple topics for the week. A mini-project might ask you to load a real dataset, clean it, visualize patterns, or build a small analysis or AI pipeline. These projects usually take a few hours and represent the kind of work that real data analysts, ML engineers, or AI developers do.
+### Mini-Projects
+The best way to learn to build software tools is through hands-on projects. These second class of questions is where you put things together into larger-scale project-based tasks. 
 
-## How to Submit Your Work
+We'll give you one to three each week. They will  involve pulling ideas from multiple topics for the week, and even previous weeks. Projects may ask you to load a real dataset, clean it, visualize patterns, or build a small analysis or AI pipeline. These projects usually take a few hours and represent much more  messy problem solving. They are meant to be more open-ended, and there may be multiple "right" answers. The goal is to practice building tools, and to get comfortable with the process of working through a larger problem.
 
-Like with Python 100, each weekly assignment file will explain how you should submit your work: sometimes through your GitHub repo, sometimes through Kaggle notebooks. Follow the instructions in the assignment for that week.
+## Submitting Your Work
+> Note: This is slightly different from the workflow for Python100, where there is a central homework repository at Code the Dream. 
 
-If you're ever unsure, ask in Slack — we're here to help.
+ For submitting assignments, create your own `python200-homework` repository on GitHub. 
+
+You will submit your work by pushing to a branch in that repository. Each week will have its own directory (e.g. `assignments_01/`) where you will place the required files for that week. 
+
+The filenames and paths will be specified in the weekly assignment instructions. It is important that you follow the specified file structure, as the grader will look for files in those exact locations.
+
+You can work in the same virtual environment that you use for the main course materials. 
+
+### Weekly Workflow
+
+Each week, the process for submitting your assignments is as follows:
+
+1.  Create a feature branch (for instance for week 1):
+
+        git checkout -b assignments_01
+
+2.  Complete the required files inside the corresponding folder (e.g., `assignments_01/`). This include multiple `.py` files inside of the folder, as specified in the assignment instructions.
+3.  Commit your work.
+4.  Push your feature branch to GitHub.
+5.  Open a Pull Request into your own `main` branch.
+6.  Request mentor review.
+7.  Go through review process (make necessary changes, etc.) until your mentor approves the assignment.
+8. Once your mentor approves the assignment, merge it into `main`.
+
+> Some weeks you will submit at Kaggle, so be sure to read the instructions for each week carefully.
+
+### Questions?
+If you have any questions about how this works, or about any individual assignments, please ask in the course Slack channel, or ping your mentor, or open an issue in the Python 200 repo. We are here to help! 
+
+
+
