@@ -1,4 +1,4 @@
-# Week 1: Introduction to AI
+# Week 8: Introduction to AI
 
 Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
 
