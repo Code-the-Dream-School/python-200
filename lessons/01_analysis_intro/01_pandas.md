@@ -1,26 +1,3 @@
-
-# Lesson 1 - Topic 1
-
-## Recapping and Adding to What We Learned in Python 100
-
-### Prerequisites
-- Operators  
-- Data Types  
-- Loops  
-- Functions  
-- File types (.CSV, .Excel)
-
-> 💡 All the code examples and "check for understanding" in this section can (and should!) be run by you in VS Code.  
-> Try them out and see the output for yourself, it’s the best way to learn!
-
-
-### Topics Covered
-- **Pandas** (load, clean, and analyze data)  
-- **Numpy** (complex numerical operations)  
-- **Matplotlib** (visualization or plotting the data on graphs)  
-
----
-
 ## Pandas
 
 Pandas is a Python library that makes it easy to work with structured data, like tables you’d see in Excel or a database. It helps you store, clean, analyze, and explore data quickly and efficiently.
@@ -614,7 +591,7 @@ Here we created a new column called **bonus_score**:
 
 ## Applying Functions to Columns (.apply())
 
-`.apply()` is like telling pandas:  
+`.apply()` is like telling pandas:
 "Please run this function on every element in this column."
 
 **Example: Make all student names uppercase**
@@ -622,6 +599,48 @@ Here we created a new column called **bonus_score**:
 ```python
 students_df["name_upper"] = students_df["name"].apply(str.upper)
 print(students_df[["name", "name_upper"]])
+```
+
+### Working with text columns
+
+You may have noticed we just used `.apply(str.upper)` to uppercase names. That works, but pandas has a more idiomatic tool specifically for string operations: the `.str` accessor.
+
+When you select a text column, you get a *Series* object, not a plain Python string. That means calling string methods like `.upper()` directly on the column will not work:
+
+```python
+students_df["name"].upper()  # TypeError: Series has no attribute 'upper'
+```
+
+The `.str` accessor applies string methods to every value in the column:
+
+```python
+# Make all names uppercase
+students_df["name_upper"] = students_df["name"].str.upper()
+
+# Check which names contain "li"
+name_mask = students_df["name"].str.contains("li")
+
+# Replace spaces in city names with underscores
+students_df["city_clean"] = students_df["city"].str.replace(" ", "_")
+```
+
+You can read `.str.upper()` as: "treat this column as text, and run `upper()` on each value."
+
+This contrast comes up often enough that it is worth making explicit. Numeric columns support direct operations; text columns go through `.str`:
+
+```python
+# Numeric: operate directly
+students_df["bonus_score"] = students_df["final_score"] + 5
+
+# Text: use .str
+students_df["name_upper"] = students_df["name"].str.upper()
+```
+
+One more thing worth knowing: if you extract a *single value* from the DataFrame, you are back in normal Python string territory and can call string methods directly:
+
+```python
+single_name = students_df.loc[0, "name"]  # a plain Python string
+print(single_name.upper())                # works as usual
 ```
 
 ---
