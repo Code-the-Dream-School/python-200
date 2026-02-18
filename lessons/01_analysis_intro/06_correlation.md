@@ -1,67 +1,63 @@
+# Correlation: How Variables Move Together 📈
 
-# Lesson 3: Correlation
+## Useful Resources
 
-## Wondering what is Correlation?
+If you would like a quick external overview before diving in, this
+article provides a gentle introduction:
 
-Correlation tells us how two things move together.
+https://www.geeksforgeeks.org/data-analysis/exploring-correlation-in-python/
+You can also watch this video for a visual explanation of correlation:
+https://www.youtube.com/watch?v=99kC5neKvkE
 
-**Pearson correlation (r):** It’s a number between -1 and +1:  
-- **+1**: Perfect positive relationship: as one goes up, the other goes up too.  
-- **-1**: Perfect negative relationship: as one goes up, the other goes down.  
-- **0**: No linear relationship: one moving doesn’t predict the other.  
+Now let us build a deeper and more structured understanding.
 
-**Real life examples:**  
-- Positive correlation (+): Height vs shoe size (taller people usually have bigger feet).  
-- Negative correlation (-): Hours spent gaming vs hours sleeping (the more you game, the less you sleep).  
-- No correlation (0): Shoe size vs exam score (shoe size doesn’t affect grades).  
+## What Is Correlation?
 
-Correlation shows if two things move together, and how strongly.
+Correlation measures how two variables vary together. If both tend to be above their averages at the same time, the relationship is positive. If one tends to be above its average while the other is below, the relationship is negative. If knowing one variable tells you nothing about the other, the relationship is close to zero.
 
----
+The most common measure is Pearson correlation, written as r. Its value always falls between -1 and +1. Values near +1 indicate a strong positive linear relationship. Values near -1 indicate a strong negative linear relationship. Values near 0 indicate little to no linear relationship.
 
-## Important resources before we move on with the lesson
+Under the hood, correlation is built from a quantity called covariance. Covariance measures how two variables move together, but it depends on the scale of the data. For example, measuring height in centimeters versus meters would change the covariance value.
 
-Before you begin this lesson, take a few minutes to go through the following resource:  
-🔗 [Exploring Correlation in Python – GeeksforGeeks](https://www.geeksforgeeks.org/data-analysis/exploring-correlation-in-python/)
+To make the relationship comparable across different datasets and units, we divide covariance by the variability of each variable. This gives us Pearson’s formula for r:
 
-It provides a quick overview of how correlation works and will help you follow this lesson more easily.
+$$
+r = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}
+$$
 
-Once you’ve gone through that article, come back here — we’ll build on those concepts step-by-step.
+The numerator measures how X and Y move together. The denominator adjusts for how much X and Y vary on their own, forcing r to stay within -1 and +1. This way, r reflects only the strength and direction of their linear relationship.
 
----
+Don't worry about the math for covariation, but you can find it in the links above if you are curious. The key idea is that correlation quantifies how two variables move together, while adjusting for their individual variability.
+
 
 ## Why Correlation Matters
 
-Correlation is more than just a number, it’s a tool that helps us understand relationships in data.
+Correlation helps us discover patterns in data.
 
-**In real life it helps us answer questions like:**  
-- Business: Does spending more on ads increase sales?  
-- Education: Do more hours of study lead to better exam scores?  
-- Health: Is exercise time linked with lower blood pressure?  
+In business, we might ask whether advertising spend rises with sales. In
+education, we might ask whether study time tracks exam performance. In
+health research, we might ask whether exercise time relates to blood
+pressure.
 
-In data analysis & machine learning:  
-- Correlation helps us choose useful features.  
-- Example: If two variables are almost identical (like height in cm and height in inches), we don’t need both.  
+In machine learning, correlation helps us choose useful features. If two
+variables are almost identical, such as height measured in centimeters
+and inches, we do not need both. Correlation helps us detect redundancy.
 
-⚠️ It also helps us avoid mistakes.  
-Example: Ice cream sales and drowning both go up in summer. That doesn’t mean ice cream causes drowning.  
-
-So, correlation matters because it helps us find patterns, make better decisions, and avoid false conclusions.
-
----
+Beware of inferring causality from correlation. Ice cream sales and drowning
+incidents both rise in summer, but one does not cause the other.
+Correlation reveals a *relationship* exists, not causation. Sometimes the relationship could be caused by some third underlying factor (summer weather), or it could be a coincidence. Always reason about the mechanism behind the relationship and visualize your data to understand its structure.
 
 ## Visualizing Correlation
 
-Numbers are useful, but sometimes it’s easier to see relationships.
+Numbers tell us strength. Plots tell us structure.
 
-### Scatterplots (two variables)
+### Scatterplots
 
-Example: Study Hours vs Exam Scores  
+Consider study hours and exam scores.
 
-```python
+``` python
 import matplotlib.pyplot as plt
 
-# Slightly varied data to make it realistic (not perfectly linear)
 study_hours = [1, 2, 3, 4, 5, 6, 7, 8]
 exam_scores = [48, 55, 58, 67, 72, 74, 81, 84]
 
@@ -72,23 +68,22 @@ plt.ylabel("Exam Scores")
 plt.show()
 ```
 
-![Scatterplot of Two Variables](resources/04_correlations_1_scatter_two_variables.png)
+![Scatterplot of Two
+Variables](resources/04_correlation_1_scatter_two_variables.png)
 
+As study hours increase, exam scores increase. The upward pattern shows
+positive correlation.
 
-**Interpretation:**  
-The dots go upwards together, as study hours increase, exam scores increase.  
-This shows a positive correlation (more study = better scores).
+### Heatmaps
 
----
+When working with many variables, we often compute a correlation matrix
+and visualize it as a heatmap.
 
-### Heatmaps (many variables at once)
-
-```python
+``` python
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# More variety in numbers for realistic relationships
 data = {
     "hours_study": [1, 2, 3, 4, 5, 6, 7, 8],
     "exam_score": [50, 54, 63, 66, 72, 77, 80, 86],
@@ -98,11 +93,8 @@ data = {
 }
 
 df = pd.DataFrame(data)
-
-# Correlation matrix
 corr = df.corr()
 
-# Heatmap
 sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f")
 plt.title("Correlation Heatmap")
 plt.show()
@@ -110,73 +102,31 @@ plt.show()
 
 ![Correlation Heatmap](resources/04_correlation_2_heatmap.png)
 
+The heatmap lets us quickly see which variables move together and which
+move in opposite directions.
 
-**Interpretation:**  
-- `hours_study` and `exam_score` → show a **strong positive correlation (close to +1)** — students who study more generally score higher.  
-- `sleep_hours` and `hours_study` → have a **negative correlation** — students who study more tend to sleep less.  
-- `stress_level` increases with both `hours_study` and `screen_time`, showing how study pressure and screen exposure might add up.  
-- The heatmap helps you quickly see **which factors move together** and **which move oppositely**.  
+## Calculating Correlation in Python
 
-✅ Use scatterplots to see two-variable relationships.  
-✅ Use heatmaps to see relationships across many variables.
+### Using NumPy
 
----
-
-## Calculating Correlation
-
-### The Math Behind Pearson Correlation (Optional) 🧮  
-
-If you’re curious about the math behind Pearson’s correlation coefficient, here’s the definition:  
-
-\[
-r = \frac{\text{cov}(X, Y)}{\sigma_X \, \sigma_Y}
-\]
-
-Where:  
-- **cov(X, Y)** = covariance between X and Y (how much they vary together)  
-- **σ_X, σ_Y** = standard deviations of X and Y (how much they vary individually)  
-
-Intuitively:  
-- The numerator (covariance) measures how much two variables move together.  
-- The denominator (product of standard deviations) normalizes this, so we get a value between **-1 and +1**.  
-
-So:  
-- If X and Y always rise/fall together → **r = +1**.  
-- If X rises when Y falls → **r = -1**.  
-- If X and Y move independently → **r ≈ 0**.  
-
- For more details, see the [Pearson correlation documentation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient).  
-
----
-
-### Using NumPy: `np.corrcoef()`
-
-```python
+``` python
 import numpy as np
 
-# Slightly varied data to make it more realistic
 study_hours = [1, 2, 3, 4, 5, 6, 7, 8]
 exam_scores = [48, 53, 60, 66, 72, 76, 80, 84]
 
-# Correlation matrix
 corr_matrix = np.corrcoef(study_hours, exam_scores)
 print(corr_matrix)
 ```
 
-**Output:**  
-```
-[[1.         0.97]
- [0.97       1.        ]]
-```
+The off-diagonal value is the correlation coefficient between the two
+variables.
 
----
+### Using Pandas
 
-### Using Pandas: `.corr()`
-
-```python
+``` python
 import pandas as pd
 
-# Slightly varied data for realistic correlations
 data = {
     "hours_study": [1, 2, 3, 4, 5, 6, 7, 8],
     "exam_score": [52, 57, 62, 66, 71, 75, 79, 83],
@@ -184,134 +134,47 @@ data = {
 }
 
 df = pd.DataFrame(data)
-
-# Correlation matrix
 print(df.corr())
 ```
 
-**Output:**  
-```
-             hours_study  exam_score  sleep_hours
-hours_study     1.000000    0.999035    -0.999156
-exam_score      0.999035    1.000000    -0.997778
-sleep_hours    -0.999156   -0.997778     1.000000
-```
+### Including a p-value with SciPy
 
-**Interpretation:**  
-- `hours_study` & `exam_score` → show a **strong positive correlation** — students who study more generally score higher.  
-- `hours_study` & `sleep_hours` → have a **negative correlation** — students who study more tend to sleep less.  
-- `exam_score` & `sleep_hours` → also show a **negative correlation** — less sleep is often linked with slightly higher scores (though not always a healthy pattern!).  
+Sometimes we want to know whether an observed correlation is significant, or likely due
+to chance. The pearsonr function gives both r and a p-value.
 
----
-
-### Calculating Correlation with p-value (SciPy)
-
-So far we’ve just seen the **correlation coefficient (r)**.  
-But often, we also want to know: **is this correlation statistically significant, or could it be due to random chance?**  
-
-That’s where `scipy.stats.pearsonr()` comes in — it gives both the correlation and a **p-value**.
-
-```python
+``` python
 from scipy.stats import pearsonr
 import numpy as np
 
-# Example 1: Small dataset
 study_hours = [1, 2, 3, 4, 5]
-exam_scores = [52, 56, 63, 64, 71]  # not perfectly linear
+exam_scores = [52, 56, 63, 64, 71]
 
 r, p = pearsonr(study_hours, exam_scores)
-print("Correlation (small sample):", round(r, 2))
-print("p-value (small sample):", round(p, 4))
-
-# Example 2: Larger dataset (100 samples, same general trend + noise)
-np.random.seed(42)
-x = np.linspace(0, 10, 100)
-y = 2 * x + np.random.randn(100) * 2  # add random noise
-
-r_large, p_large = pearsonr(x, y)
-print("\nCorrelation (large sample):", round(r_large, 2))
-print("p-value (large sample):", p_large)
+print("Correlation:", round(r, 2))
+print("p-value:", round(p, 4))
 ```
 
-# Outout(Simplified):
-
-```
-Correlation (small sample): 0.98
-p-value (small sample): 0.0026
-
-Correlation (large sample): 0.96
-p-value (large sample): 3.4845523605597184e-54
-```
-
----
-
-## Positive, Negative & No Correlation Examples
-
-### Positive Correlation
-
-```python
-import numpy as np
-
-study_hours = [1, 2, 3, 4, 5]
-exam_scores = [50, 55, 60, 65, 70]
-
-print(np.corrcoef(study_hours, exam_scores))
-```
-
-Output shows correlation close to +1.
-
----
-
-### Negative Correlation
-
-```python
-gaming_hours = [1, 2, 3, 4, 5]
-sleep_hours = [8, 7, 6, 5, 4]
-
-print(np.corrcoef(gaming_hours, sleep_hours))
-```
-
-Output shows correlation close to -1.
-
----
-
-### No Correlation
-
-```python
-shoe_size = [38, 40, 42, 44, 46]
-exam_scores = [60, 85, 70, 65, 90]
-
-print(np.corrcoef(shoe_size, exam_scores))
-```
-
-Output shows correlation close to 0.
-
----
+A small p-value suggests the relationship is unlikely to be due to random
+noise.
 
 ## Seeing Correlation Strengths in Action
 
-Correlation values range between **-1 and +1**.  
-To build intuition, here’s what scatterplots look like with different correlation strengths (using 100 noisy data points for each case):
+To build deeper intuition, we can generate data with different
+correlation values and visualize them.
 
-**Reminder:** Try running this code yourself in VS Code and see how the plots look. Playing with the numbers is the best way to build intuition!
-
-```python
+``` python
 import numpy as np
 import matplotlib.pyplot as plt
 
 np.random.seed(42)
-
-# Correlation values we want to demonstrate
 correlations = np.arange(-1.0, 1.1, 0.2)
 
 fig, axes = plt.subplots(3, 4, figsize=(15, 10))
 axes = axes.flatten()
 
 for i, r in enumerate(correlations):
-    # Create random data with desired correlation
     x = np.random.randn(100)
     y = r * x + np.sqrt(1 - r**2) * np.random.randn(100)
-    
     axes[i].scatter(x, y, alpha=0.6)
     axes[i].set_title(f"r = {r:.1f}")
 
@@ -319,65 +182,69 @@ plt.tight_layout()
 plt.show()
 ```
 
----
+Seeing the scatter patterns change as r moves from -1 to +1 builds
+strong intuition about what correlation actually represents.
 
-## Pitfalls of Correlation
+## Limits of Correlation
 
-- **Correlation ≠ Causation**: Ice cream sales ≠ drowning.  
-- **Outliers Can Mislead**: One strange data point can distort correlation.  
-- **Large Datasets**: Tiny effects can look “significant” in huge datasets.  
+Correlation only measures linear relationships. Two variables can have
+the same correlation value and completely different shapes.
 
-Always visualize and think logically before trusting correlation numbers.
+A famous example is Anscombe's Quartet. The four datasets below have
+nearly identical correlation values, yet their scatterplots look very
+different.
 
----
-
-### Correlation Only Captures Linear Relationships 📉📈  
-
-Correlation is powerful, but it has limits:  
-- It only measures **linear** relationships.  
-- Two variables can have the *same correlation value* but completely different patterns.  
-
-A famous example is **Anscombe’s Quartet** — four datasets with identical correlation (~0.82), but very different scatterplots.  
-
-```python
+``` python
 import seaborn as sns
 import matplotlib.pyplot as plt
-from seaborn import load_dataset
 
-# Load Anscombe’s quartet (built into seaborn)
 df = sns.load_dataset("anscombe")
 
-# Plot the four datasets
-sns.lmplot(x="x", y="y", col="dataset", data=df, 
-           col_wrap=2, ci=None, palette="muted", 
-           scatter_kws={"s":50, "alpha":0.7}, 
+sns.lmplot(x="x", y="y", col="dataset", data=df,
+           col_wrap=2, ci=None,
+           scatter_kws={"s":50, "alpha":0.7},
            line_kws={"color":"red"})
+
 plt.suptitle("Anscombe's Quartet: Same Correlation, Very Different Data", y=1.05)
 plt.show()
 ```
 
----
+Correlation also does not imply causation. Outliers can distort
+correlation dramatically. In very large datasets, even tiny effects can
+appear statistically significant. Always visualize your data and reason
+about the mechanism behind the relationship.
 
-## Check for understanding:
+## Check for Understanding
 
-**Q1. If the correlation between study hours and exam scores is +0.9, what does that mean?**  
+**Q1. A dataset shows a correlation of +0.85 between advertising spend and sales. What does this tell us, and what does it *not* tell us?**  
 <details>
 <summary>Show Answer</summary>  
-It means students who study more tend to score higher (strong positive relationship).  
+It tells us that higher advertising spend is strongly associated with higher sales. It does not prove that advertising causes the increase in sales, since correlation does not imply causation.  
 </details>
 
-**Q2. If the correlation between gaming hours and sleep hours is -0.8, what does that mean?**  
+**Q2. Two variables have a correlation of 0. Why should you still look at a scatterplot before concluding there is no relationship?**  
 <details>
 <summary>Show Answer</summary>  
-It means students who game more tend to sleep less (strong negative relationship).  
+A correlation of 0 means there is no *linear* relationship, but there could still be a nonlinear pattern. A scatterplot may reveal structure that correlation alone does not capture.  
 </details>
 
-**Q3. Shoe size and exam scores show a correlation close to 0. What does that mean?**  
+**Q3. If we measure height in centimeters instead of meters, will the correlation between height and weight change? Why or why not?**  
 <details>
 <summary>Show Answer</summary>  
-It means shoe size and exam scores have no meaningful relationship (no correlation).  
+No. Correlation does not depend on the units of measurement because it adjusts for the variability of each variable. Changing the scale changes covariance, but not correlation.  
 </details>
 
----
+**Q4. A small dataset shows a correlation of 0.6 with a large p-value. What might this suggest?**  
+<details>
+<summary>Show Answer</summary>  
+It suggests that although the relationship appears moderately strong, the sample size may be too small to confidently rule out random chance.  
+</details>
 
-✅ With this we have completed the **Correlation** section, let’s keep learning.
+**Q5. Why can a single extreme outlier dramatically change a correlation value?**  
+<details>
+<summary>Show Answer</summary>  
+Because correlation depends on how data points vary around the mean, one extreme value can heavily influence the overall pattern and artificially inflate or reduce the measured relationship.  
+</details>
+
+## Congratulations!
+With this we have completed the **Correlation** section, let’s keep learning.
