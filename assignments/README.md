@@ -9,7 +9,7 @@ The first type of question is all about easy wins. These questions should feel a
 
 We **strongly** encourage you to not use AI for these warmups: they are meant to help you practice the kinds of tasks you will be expected to do, and discuss, in live coding interviews. These are questions that AI can *easily* answer, but that would defeat the purpose. We have written them so that students can solve them after reading and understanding the course materials (if this is not the case, please let us know!). 
 
-### Mini-Projects
+### Hands-on Projects
 The best way to learn to build software tools is through hands-on projects. These second class of questions is where you put things together into larger-scale project-based tasks. 
 
 We'll give you one to three each week. They will  involve pulling ideas from multiple topics for the week, and even previous weeks. Projects may ask you to load a real dataset, clean it, visualize patterns, or build a small analysis or AI pipeline. These projects usually take a few hours and represent much more  messy problem solving. They are meant to be more open-ended, and there may be multiple "right" answers. The goal is to practice building tools, and to get comfortable with the process of working through a larger problem.
