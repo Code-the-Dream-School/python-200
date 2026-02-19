@@ -72,7 +72,7 @@ plt.ylabel("Exam Scores")
 plt.show()
 ```
 
-![Scatterplot of Two Variables](resources/04_correlations_1_scatter_two_variables.png)
+![Scatterplot of Two Variables](resources/04_correlation_1_scatter_two_variables.png)
 
 
 **Interpretation:**  
