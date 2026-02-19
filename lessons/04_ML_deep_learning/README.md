@@ -22,8 +22,8 @@ A brief introduction to neural networks and deep learning, including biological 
 2. [Introduction to pytorch](02_pytorch_intro.md)  
 An overview of the PyTorch library, mainly focusing on tensor operations: we will direct you to the excellent tutorial at learnpytorch.io to learn the basics of pytorch.
 
-3. [Training your first neural network](03_first_network.md)  
-Before diving into more complex models, we will start with a simple neural network example in PyTorch. This will help us understand the basic workflow for building and training a model in PyTorch.
+1. [Training your first neural network](03_training_your_first_neural_network.md)  
+Before diving into more complex models, we will start with a simple example with a neural network. This will help us understand the basic workflow for training a model in pytorch.
 
 4. [Machine vision example](03_machine_vision_cnn.md)  
 For this section, we will use a pre-trained convolutional neural network (CNN) to classify images, to show how deep neural networks can be used for computer vision tasks.
