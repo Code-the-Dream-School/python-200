@@ -1,4 +1,4 @@
-## Submission instructions
+# Submission instructions
 In your `python200-homework` repository, create a folder called `assignments_01/`. Inside that folder, create three files:
 
 1. warmup_01.py  : for the warmup exercises
@@ -8,12 +8,12 @@ In your `python200-homework` repository, create a folder called `assignments_01/
 When finished, commit the files to your repo and open a PR as discussed in the assignment's [README page](README.md). 
 
 
-## Part 1: Warmup Exercises
+# Part 1: Warmup Exercises
 Put all warmup exercises  in a single file: `warmups_01.py`. Use comments to mark each section and question (e.g. `# --- Pandas ---` and `# Pandas Q1`). Use `print()` to display all outputs. 
 
-### Pandas Review
+## Pandas Review
 
-#### Pandas Question 1
+### Pandas Question 1
 
 Create the following DataFrame and print the first three rows, the shape, and the data types of each column.
 
@@ -31,37 +31,37 @@ df = pd.DataFrame(data)
 
 Print each result with a label (e.g. `print(f"Num Rows: {len(df)}")`).
 
-#### Pandas Question 2
+### Pandas Question 2
 
 Using the DataFrame from Q1, filter the rows to show only students who passed *and* have a grade above 80. Print the result.
 
-#### Pandas Question 3
+### Pandas Question 3
 
 Add a new column called `"grade_curved"` that adds 5 points to each student's grade. Print the updated DataFrame (all columns, all rows).
 
-#### Pandas Question 4
+### Pandas Question 4
 
 Add a new column called `"name_upper"` that contains each student's name in uppercase, using the `.str` accessor. Print the `"name"` and `"name_upper"` columns together.
 
-#### Pandas Question 5
+### Pandas Question 5
 
 Group the DataFrame by `"city"` and compute the mean grade for each city. Print the result.
 
-#### Pandas Question 6
+### Pandas Question 6
 
 Replace the value `"Austin"` in the `"city"` column with `"Houston"`. Print the `"name"` and `"city"` columns to confirm the change.
 
-#### Pandas Question 7
+### Pandas Question 7
 
 Sort the DataFrame by `"grade"` in descending order and print the top 3 rows.
 
-### NumPy Review
+## NumPy Review
 
-#### NumPy Question 1
+### NumPy Question 1
 
 Create a 1D NumPy array from the list `[10, 20, 30, 40, 50]`. Print its shape, dtype, and ndim.
 
-#### NumPy Question 2
+### NumPy Question 2
 
 Create the following 2D array and print its shape and size (total number of elements).
 
@@ -73,25 +73,25 @@ arr = np.array([[1, 2, 3],
                 [7, 8, 9]])
 ```
 
-#### NumPy Question 3
+### NumPy Question 3
 
 Using the 2D array from Q2, slice out the top-left 2x2 block and print it. The expected result is `[[1, 2], [4, 5]]`.
 
-#### NumPy Question 4
+### NumPy Question 4
 
 Create a 3x4 array of zeros using a built-in command. Then create a 2x5 array of ones using a built-in command. Print both.
 
-#### NumPy Question 5
+### NumPy Question 5
 
 Create an array using `np.arange(0, 50, 5)`. First, think about what you expect it to look like. Then, print the array, its shape, mean, sum, and standard deviation.
 
-#### NumPy Question 6
+### NumPy Question 6
 
 Generate an array of 200 random values drawn from a normal distribution with mean 0 and standard deviation 1 (use `np.random.normal()`). Print the mean and standard deviation of the result.
 
-### Matplotlib Review
+## Matplotlib Review
 
-#### Matplotlib Question 1
+### Matplotlib Question 1
 
 Plot the following data as a line plot. Add a title `"Squares"`, x-axis label `"x"`, and y-axis label `"y"`.
 
@@ -100,7 +100,7 @@ x = [0, 1, 2, 3, 4, 5]
 y = [0, 1, 4, 9, 16, 25]
 ```
 
-#### Matplotlib Question 2
+### Matplotlib Question 2
 
 Create a bar plot for the following subject scores. Add a title `"Subject Scores"` and label both axes.
 
@@ -109,7 +109,7 @@ subjects = ["Math", "Science", "English", "History"]
 scores   = [88, 92, 75, 83]
 ```
 
-#### Matplotlib Question 3
+### Matplotlib Question 3
 
 Plot the two datasets below as a scatter plot on the same figure. Use different colors for each, add a legend, and label both axes.
 
@@ -118,13 +118,13 @@ x1, y1 = [1, 2, 3, 4, 5], [2, 4, 5, 4, 5]
 x2, y2 = [1, 2, 3, 4, 5], [5, 4, 3, 2, 1]
 ```
 
-#### Matplotlib Question 4
+### Matplotlib Question 4
 
 Use `plt.subplots()` to create a figure with 1 row and 2 subplots side by side. In the left subplot, plot `x` vs `y` from Q1 as a line. In the right subplot, plot the subjects and scores from Q2 as a bar plot. Add a title to each subplot and call `plt.tight_layout()` before showing.
 
-### Descriptive Statistics Review
+## Descriptive Statistics Review
 
-#### Descriptive Stats Question 1
+### Descriptive Stats Question 1
 
 Given the list below, use NumPy to compute and print the mean, median, variance, and standard deviation. Label each printed value.
 
@@ -132,11 +132,11 @@ Given the list below, use NumPy to compute and print the mean, median, variance,
 data = [12, 15, 14, 10, 18, 22, 13, 16, 14, 15]
 ```
 
-#### Descriptive Stats Question 2
+### Descriptive Stats Question 2
 
 Generate 500 random values from a normal distribution with mean 65 and standard deviation 10 (use `np.random.normal(65, 10, 500)`). Plot a histogram with 20 bins. Add a title `"Distribution of Scores"` and label both axes.
 
-#### Descriptive Stats Question 3
+### Descriptive Stats Question 3
 
 Create a boxplot comparing the two groups below. Label each box (`"Group A"` and `"Group B"`) and add a title `"Score Comparison"`.
 
@@ -147,7 +147,7 @@ group_b = [75, 80, 78, 90, 85, 79, 82, 88]
 
 Hint: pass `labels=["Group A", "Group B"]` to `plt.boxplot()`.
 
-#### Descriptive Stats Question 4
+### Descriptive Stats Question 4
 
 You are given two datasets: one normally distributed and one 'exponential' distribution.
 
@@ -163,7 +163,7 @@ Create side-by-side boxplots comparing the two distributions. Label each boxplot
 
 Then, add a comment in your code briefly noting which distribution is more skewed, and which descriptive statistic (mean or median) would provide a more appropriate measure of central tendency for each distribution.
 
-#### Descriptive Stats Question 5
+### Descriptive Stats Question 5
 Print the mean, median, and mode of the following:
 
 data1 = [10, 12, 12, 16, 18]  
@@ -172,9 +172,9 @@ data2 = [10, 12, 12, 16, 150]
 Why are the median and mean so different for data2? Add your answer as a comment in the code.
 
 
-### Hypothesis Testing Review
+## Hypothesis Testing Review
 
-#### Hypothesis Question 1
+### Hypothesis Question 1
 
 Run an independent samples t-test on the two groups below. Print the t-statistic and p-value.
 
@@ -185,11 +185,11 @@ group_a = [72, 68, 75, 70, 69, 73, 71, 74]
 group_b = [80, 85, 78, 83, 82, 86, 79, 84]
 ```
 
-#### Hypothesis Question 2
+### Hypothesis Question 2
 
 Using the p-value from Q1, write an `if/else` statement that prints whether the result is statistically significant at alpha = 0.05.
 
-#### Hypothesis Question 3
+### Hypothesis Question 3
 
 Run a paired t-test on the before/after scores below (the same students measured twice). Print the t-statistic and p-value.
 
@@ -198,7 +198,7 @@ before = [60, 65, 70, 58, 62, 67, 63, 66]
 after  = [68, 70, 76, 65, 69, 72, 70, 71]
 ```
 
-#### Hypothesis Question 4
+### Hypothesis Question 4
 
 Run a one-sample t-test to check whether the mean of `scores` is significantly different from a national benchmark of 70. Print the t-statistic and p-value.
 
@@ -206,17 +206,17 @@ Run a one-sample t-test to check whether the mean of `scores` is significantly d
 scores = [72, 68, 75, 70, 69, 74, 71, 73]
 ```
 
-#### Hypothesis Question 5
+### Hypothesis Question 5
 
 Re-run the test from Q1 as a one-tailed test to check whether `group_a` scores are *less than* `group_b` scores. Print the resulting p-value. Use the `alternative` parameter.
 
-#### Hypothesis Question 6
+### Hypothesis Question 6
 
 Write a plain-language conclusion for the result of Q1 (do not just say "reject the null hypothesis"). Format it as a `print()` statement. Your conclusion should mention the direction of the difference and whether it is likely due to chance.
 
-### Correlation Review
+## Correlation Review
 
-#### Correlation Question 1
+### Correlation Question 1
 
 Compute the Pearson correlation between `x` and `y` below using `np.corrcoef()`. Print the full correlation matrix, then print just the correlation coefficient (the value at position `[0, 1]`).
 
@@ -227,7 +227,7 @@ y = [2, 4, 6, 8, 10]
 
 What do you expect the correlation to be, and why? Add your answer as a comment in the code.
 
-#### Correlation Question 2
+### Correlation Question 2
 
 Use `pearsonr()` from `scipy.stats` to compute the correlation between `x` and `y` below. Print both the correlation coefficient and the p-value.
 
@@ -238,7 +238,7 @@ x = [1,  2,  3,  4,  5,  6,  7,  8,  9, 10]
 y = [10, 9,  7,  8,  6,  5,  3,  4,  2,  1]
 ```
 
-#### Correlation Question 3
+### Correlation Question 3
 
 Create the following DataFrame and use `df.corr()` to compute the correlation matrix. Print the result.
 
@@ -251,7 +251,7 @@ people = {
 df = pd.DataFrame(people)
 ```
 
-#### Correlation Question 4
+### Correlation Question 4
 
 Create a scatter plot of `x` and `y` below, which have a negative relationship. Add a title `"Negative Correlation"` and label both axes.
 
@@ -260,7 +260,7 @@ x = [10, 20, 30, 40, 50]
 y = [90, 75, 60, 45, 30]
 ```
 
-#### Correlation Question 5
+### Correlation Question 5
 
 Using the correlation matrix from Q3, create a heatmap with `sns.heatmap()`. Pass `annot=True` so the correlation values appear in each cell, and add a title `"Correlation Heatmap"`.
 
@@ -269,9 +269,9 @@ Hint:
 import seaborn as sns
 ```
 
-### Pipelines
+## Pipelines
 
-#### Pipeline Question 1
+### Pipeline Question 1
 
 A data pipeline is a sequence of processing steps where each step takes in data, transforms it, and passes the result to the next. You don't need a special framework to build one -- chaining plain functions together is often enough.
 
@@ -294,7 +294,7 @@ This is the last answer to put in `warmups_01.py`. Congrats!!!
 
 The next question will be in `prefect_warmup.py`, but will implement the same functionality using Prefect instead of plain Python.
 
-#### Pipeline Question 2
+### Pipeline Question 2
 
 The answer to this question should go in `prefect_warmup.py`, not `warmups_01.py`.
 
@@ -323,8 +323,125 @@ Finally, add a comment block at the bottom of `prefect_warmup.py` answering thes
 2. Describe some realistic scenarios where a framework like Prefect could still be useful, even if the pipeline logic itself stays simple like in this case.
 
 
-## Part 2: Project Exercise
-Contraguations on finishing the warmup exercises! The next step is to apply what you've learned to a mini-project. Please put the code for your project in `project_01.py`. 
+# Part 2: Mini-Project: World Happiness Pipeline
+In this project, you will build a Prefect pipeline that performs an end-to-end analysis of the World Happiness dataset (the data are located in `assignments/resources/happiness_project/`).
 
-The project should take more time, and will be more open-ended than the warmups. The goal is to give you a chance to practice building a data pipeline from start to finish. 
+In your python-200 homework repo, place your project code in `assignments_01/project_01.py`. Any outputs you generate should be saved in `assignments_01/outputs/`.
 
+
+## Pre-preprocessing
+
+For data engineers and analysts, data analysis begins before we code. You are not just loading data -- you are telling stories from data that was often collected at great effort and expense. It is important to have some understanding of the data, why it was collected, and what the questions are. What do the numbers represent? What are the features in the dataset actually measuring?
+
+You do not need to do a deep dive. One useful rule of thumb is this: if you can explain to a non-technical friend what the data is about, you are ready to start coding.
+
+This dataset is derived from the World Happiness Report, which uses survey-based measures of life evaluation along with sociocultural and economic indicators such as GDP per capita, health, social support, freedom, generosity, and perceptions of corruption. It allows us to examine what factors are associated with happiness across different countries and regions.
+
+We have data from 2015-2024. This conveniently spans both pre-pandemic and pandemic periods, which allows you to explore potential changes in happiness over time.
+
+### Inspect the Data
+
+First, inspect the data directory. There is a readme that describes the dataset and what it represents. Open one of the data files (such as `world_happiness_2015.csv`) in a plain text editor (not Excel). Read the first 5-10 lines carefully.
+
+Look at how each row is structured. Notice how the columns are separated. Notice what symbol is used for decimal values. Think about how Excel might misinterpret the file. If you were loading this file in pandas, what parameters might you need to pass to `pd.read_csv()` beyond just the filename?
+
+This is your "pre-preprocessing" stage. It is extremely important to look at raw data before writing code. Excel automatically parses files and makes assumptions about structure and formatting. A plain text editor shows you the raw file exactly as it is stored.
+
+
+## Project Description
+
+Now that you understand the dataset at a high level and have inspected its raw format, you will build a Prefect pipeline that performs a complete multi-year analysis.
+
+Your pipeline should be structured as a series of clearly defined tasks orchestrated inside a single Prefect flow. Each major stage of the analysis should be its own `@task`, and all tasks should be coordinated inside one `@flow`. Use `get_run_logger()` inside every task instead of `print()` -- this is one of the core practices from the lesson, and it means your results will appear in both the terminal and the Prefect dashboard.
+
+
+### Task 1: Load Multiple Years of Data
+
+Load data from all ten yearly CSV files into a single DataFrame. Your implementation should not duplicate code for each year -- iterate over a list of file paths and load them in a loop.
+
+You discovered some quirks when you inspected the raw files. Make sure you account for those when calling `pd.read_csv()`. There is also something missing from each file that you will need to add before merging: each row needs to know which year it came from. Think about where to add that information.
+
+After loading and merging, save the combined dataset to:
+
+```
+assignments_01/outputs/merged_happiness.csv
+```
+
+Add `retries=3, retry_delay_seconds=2` to this task's decorator. File I/O is exactly the kind of operation that can fail intermittently in production pipelines, and this is where retries earn their keep.
+
+
+### Task 2: Descriptive Statistics
+
+Compute and log overall descriptive statistics for `happiness_score`: mean, median, and standard deviation.
+
+Then compute and log the mean happiness score grouped by year and by region. Looking at the regional breakdown is often the most interesting part of this dataset -- you may already have a hypothesis about which regions rank highest before you run the numbers.
+
+
+### Task 3: Visual Exploration
+
+Create and save the following visualizations to `assignments_01/outputs/`:
+
+- A histogram of all happiness scores across all years. Save as `happiness_histogram.png`.
+- A boxplot comparing happiness score distributions across years (one box per year). Save as `happiness_by_year.png`.
+- A scatter plot showing the relationship between GDP per capita and happiness score. Save as `gdp_vs_happiness.png`.
+- A correlation heatmap (using `sns.heatmap()` with `annot=True`) showing the Pearson correlations between all numeric columns. Save as `correlation_heatmap.png`.
+
+Log a message after each plot is saved so you can see the progress in the Prefect dashboard.
+
+
+### Task 4: Hypothesis Testing
+
+The pandemic began in early 2020. Did it affect global happiness scores? Test this directly: run an independent samples t-test comparing happiness scores from 2019 to 2020.
+
+Log the t-statistic, p-value, the mean happiness for each group, and a plain-language interpretation of the result at alpha = 0.05. Your interpretation should say something meaningful -- not just "we reject the null hypothesis" but what that actually means in terms of this data.
+
+Add a second test of your choice (for example, comparing two specific regions that you expect to differ based on the descriptive statistics you computed earlier).
+
+
+### Task 5: Correlation and Multiple Comparisons
+
+For each numeric explanatory variable, compute the Pearson correlation with happiness score using `scipy.stats.pearsonr` and log the coefficient and p-value.
+
+Each time you run a statistical test at alpha = 0.05, you accept a 5% chance of a false positive -- concluding a relationship is real when it isn't. That's a reasonable risk for a single test. But when you run many tests at once, those small risks add up. If you run 20 independent tests, you'd expect roughly one false positive just by chance, even if none of the relationships are actually real. The more tests you run, the more likely you are to stumble onto something that looks significant but isn't.
+
+This is called the *multiple comparisons problem*, and it's one of the most common sources of misleading findings in data analysis. A simple and widely used fix is the *Bonferroni correction*: divide your significance threshold by the number of tests you ran.
+
+Count how many correlation tests you performed, then compute:
+
+```python
+adjusted_alpha = 0.05 / number_of_tests
+```
+
+Log which correlations are significant at the original alpha = 0.05, and which remain significant after applying the correction. You may find that some results that looked significant at first don't hold up under the stricter threshold -- that's a useful finding in itself.
+
+
+### Task 6: Summary Report
+
+Your final task should log a human-readable summary of the key findings from the entire pipeline. Think of it as the "report" step from the lesson -- the thing you'd share with a non-technical colleague. It should include:
+
+- Total number of countries and years in the merged dataset.
+- The top 3 and bottom 3 regions by mean happiness score.
+- The result of the pre/post-2020 t-test in plain language.
+- The variable most strongly correlated with happiness score (after Bonferroni correction).
+
+Log each of these as a separate `logger.info()` message so they're easy to find in the Prefect dashboard.
+
+
+### Running the Pipeline
+
+Structure your file so that all tasks are called inside a single `@flow` function, and the flow runs when the script is executed directly:
+
+```python
+if __name__ == "__main__":
+    happiness_pipeline()
+```
+
+The full pipeline should be runnable with:
+
+```bash
+python project_01.py
+```
+
+When you run it, it should execute all tasks in order, produce all outputs, and save them to the specified locations. You should be able to run the file multiple times without errors -- each run should overwrite the previous outputs cleanly.
+
+Once you have it working, try running `prefect server start` in a separate terminal, then re-run the pipeline and explore the logs and task states in the Prefect dashboard. You'll see exactly what the lesson described.
