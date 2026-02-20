@@ -95,17 +95,17 @@ You should see the installed version number, confirming everything is ready to g
 
 At its core, Prefect is built around two simple yet powerful ideas: tasks and flows. Together, they form the foundation of every Prefect pipeline.
 
-1. **`@task()` decorator**  
+1. Tasks
 
-A task is the smallest unit of work in a pipeline - for instance, loading data, cleaning a dataset, or sending a notification. You define a task in Python using the `@task()` decorator. Prefect automatically tracks its state (such as running, successful, or failed), logs its output, and can retry the task if it encounters an error.
+A task is the smallest unit of work in a pipeline - for instance, loading data, cleaning a dataset, or sending a notification. You define a task in Python by putting the `@task()` decorator in front of a function. Prefect automatically tracks its state (such as running, successful, or failed), logs its output, and can retry the task if it encounters an error.
 
-🔹 Ideally, each task should be simple and focused - since tasks are the atomic unit of work in Prefect flows.
+Ideally, each task should be simple and focused - since tasks are the atomic unit of work in Prefect flows.
 
-2. **`@flow()` decorator**  
+2. Flows
    
-A flow represents the higher-level workflow logic that connects multiple tasks together. You create one using the `@flow()` decorator. A flow orchestrates how and when tasks run, manages dependencies, and serves as the single entry point for running the entire pipeline.
+A flow represents the higher-level workflow logic that connects multiple tasks together into a full pipeline. You create one using the `@flow()` decorator. A flow orchestrates how and when tasks run, and serves as the single entry point for running the entire pipeline.
 
-📖 For more details, you can also check out the [official Prefect docs on flows](https://docs.prefect.io/v3/concepts/flows).
+For more details, you can also check out the [official Prefect docs on flows](https://docs.prefect.io/v3/concepts/flows).
 
 ### Simple Example
 
@@ -114,53 +114,50 @@ Let's see a super simple example to get the idea. In your IDE, create a file cal
 ```python
 from prefect import task, flow
 
-# Define a task
+# Define tasks
 @task
 def say_hello(name):
     print(f"Hello, {name}!")
 
-# Define a flow that uses the task
+@task
+def say_goodbye(name):
+    print(f"Goodbye, {name}!")
+
+# Define a flow that uses the tasks
 @flow
-def output():
-    say_hello("Code The Dream")
-    say_hello("Students")
+def chatty_pipeline(name):
+    say_hello(name)
+    say_goodbye(name)
 
 # To run the flow
-# This condition checks if the current script is the one being executed directly.
 if __name__ == "__main__":  
-    output()
+    chatty_pipeline("Code the Dream")
 ```
-Each function decorated with `@task` becomes a distinct step in your workflow. The `@flow` function orchestrates those steps. Running `output()` executes the whole workflow. 
+Each function decorated with `@task` becomes a distinct step in your workflow. The `@flow` function orchestrates those steps. Running `chatty_pipeline("Code the Dream")` executes the whole workflow. 
 
 **What Happens When You Run It?**
 
-You may notice that when you run the code, you don’t just see:
+You may notice a couple of things when you run the code. First, there is a delay. Second, you don’t just see:
 
 ```bash
 Hello, Code The Dream!
-Hello, Students!
+Goodbye, Code The Dream!
 ```
-Instead, you’ll also see extra startup messages in your terminal - something like this:
+Instead, you’ll also see a *whole bunch* of extra stuff in your terminal - something like this:
 
 ![Task&flow](resources/task&flow.png)
 
-**Here’s what’s happening:**
+This is because Prefect isn't just an ordinary package. It's a *framework* that manages and tracks how your code is executed. When you decorate a function with `@flow`, Prefect *orchestrates* the workflow rather than just running it like plain Python. It spins up a small temporary local server in the background to track the execution of your flow (this explains the delay). 
 
-When you decorate a function with `@flow`, Prefect orchestrates the workflow rather than just running it like plain Python.
-
-To do this, Prefect spins up a small temporary local server in the background to track the execution of your flow.
-
-That’s why you see lines like “Starting temporary server on http://127.0.0.1:8597”
-
-Prefect is not just a typical library with functions you run - it’s a framework that manages and tracks how your code is executed.
+That’s why you see lines like "Starting temporary server on http://127.0.0.1:8597" - this is Prefect’s way of managing the flow run. It also prints logs about task execution, which you can view in real time.
 
 By handing control to Prefect through `@task` and `@flow`, you gain features like Centralized logging, automatic retries on failure, viewing run history in a UI, tracking task states. 
 
-👉 Later in this lesson, we’ll explore the Orion UI to see how Prefect logs, retries, and statuses appear visually - but for now, just know that Prefect is setting the stage for all that automatically.
+Later in this lesson, we’ll explore the Orion UI to see how Prefect logs, retries, and statuses appear visually - but for now, just know that Prefect is setting the stage for all that automatically.
 
 ### 2.2 How Prefect enhances your workflows
 
-Once you've built a basic pipeline using @task and @flow, Prefect gives you powerful tools to make your workflows more **reliable**, **efficient**, and **production-ready**. In this section, we’ll focus on three essential features: 
+Once you've built a basic pipeline using @task and @flow, Prefect gives you powerful tools that can be useful in some production environments. In this section, we’ll focus on three essential features: 
 
 **1. Logging**
 
@@ -171,23 +168,28 @@ from prefect import task, flow
 from prefect.logging import get_run_logger
 
 @task
-def greet(name):
+def add_numbers(a, b):
     logger = get_run_logger()
-    logger.info(f"Hello, {name}!")
+    logger.info(f"Adding {a} + {b}")
+    
+    result = a + b
+    
+    logger.info(f"Result = {result}")
+    return result
 
 @flow
-def log_flow():
-    greet("Code the Dream")
+def math_flow(a, b):
+    total = add_numbers(a, b)
+    return total
 
 if __name__ == "__main__":
-    log_flow()
-
+    math_flow(3, 7)
 ```
 Console Output:
 
 ![Logging](resources/logging.png)
 
-👉 This is how the logs look in your console output after using `get_run_logger()`.
+This is how the logs look in your console output after using `get_run_logger()`.
 
 The same logs also appear in Orion, where they’re stored for later runs.
 
