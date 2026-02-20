@@ -153,7 +153,7 @@ That’s why you see lines like "Starting temporary server on http://127.0.0.1:8
 
 By handing control to Prefect through `@task` and `@flow`, you gain features like Centralized logging, automatic retries on failure, viewing run history in a UI, tracking task states. 
 
-Later in this lesson, we’ll explore the Orion UI to see how Prefect logs, retries, and statuses appear visually - but for now, just know that Prefect is setting the stage for all that automatically.
+Later in this lesson, we’ll discuss the Orion UI to see how Prefect logs, retries, and statuses appear visually.
 
 ### 2.2 How Prefect enhances your workflows
 
@@ -161,7 +161,7 @@ Once you've built a basic pipeline using @task and @flow, Prefect gives you powe
 
 **1. Logging**
 
-Instead of relying on `print()`, Prefect provides structured logging through `get_run_logger()`. These logs are automatically captured and shown in the Orion UI, making debugging much easier.
+Instead of relying on `print()`, Prefect provides structured logging through `get_run_logger()`. This allows you to log messages with different levels (INFO, WARNING, ERROR) that are automatically timestamped and stored in the Prefect UI (Orion) for later review.
 
 ```python
 from prefect import task, flow
@@ -191,11 +191,7 @@ Console Output:
 
 This is how the logs look in your console output after using `get_run_logger()`.
 
-The same logs also appear in Orion, where they’re stored for later runs.
-
-### Why Structured Logging Matters
-
-Unlike `print()`, Prefect’s logger supports log levels like **INFO**, **WARNING**, and **ERROR**.
+The same logs also appear in Orion, where they’re stored for later runs. Unlike `print()`, Prefect’s logger (just like Python's logging system) supports log levels like **INFO**, **WARNING**, and **ERROR**.
 
 - **INFO** – for general updates about what your flow is doing.  
 - **WARNING** – for potential issues that don’t stop execution.  
@@ -203,46 +199,45 @@ Unlike `print()`, Prefect’s logger supports log levels like **INFO**, **WARNIN
 
 These levels help you filter and search logs efficiently, especially in production environments.
 
-✨ **That’s why logging is a best practice** - logs are timestamped, structured, searchable, and automatically saved across runs.
-
----
-
-### ⚠️ Heads Up
-
 When running Prefect locally, you might see a message like:
 
-> `EventsWorker - Still processing items...`
+> `Warning | EventsWorker - Still processing items...`
 
-This simply means Prefect’s server is shutting down before all internal logs are fully written.  
-It’s **normal** and doesn’t affect your results.
-
-If you’d like to remove the warning, you can add this line at the end of your script:
+This simply means Prefect’s server is shutting down before all internal logs are fully written.  This is fine and won't affect your results. If you’d like to remove the warning, you can add this line at the end of your script, which will flush all logs before exiting:
 
 ```python
 import time
-time.sleep(0.5)
+time.sleep(0.2)
 ```
 
 **2. Retries and Failure Handling**
 
-Suppose a network call fails intermittently. Prefect allows you to declare retries.
-
-Here's a very simple example showing retries in action with a flaky function using Prefect:
+Suppose a network call fails intermittently. Prefect allows you to retry it automatically without writing complex try/except logic. You can specify the number of retries and delay between attempts using a `retries` argument to the `@task` decorator:
 
 ```python
 from prefect import flow, task
+from prefect.runtime import task_run
+from prefect.logging import get_run_logger
 from random import random
-import time
 
-# Define a flaky task
-@task(retries=3, retry_delay_seconds=2)
+@task(retries=4, retry_delay_seconds=2)  # 1 initial + 4 retries
 def flaky_task():
-    print("Trying to run task...")
-    if random() < 0.7:  # 70% chance to fail
+    logger = get_run_logger()
+    attempt = task_run.run_count  # 1-based counter
+    logger.info(f"Attempt #{attempt}")
+    
+    # Always fail on first attempt
+    if attempt == 1:
+        logger.warning("Failed on first attempt.")
+        raise ValueError("First attempt always fails.")
+    
+    # 75% chance of failure on subsequent attempts
+    if random() < 0.75:
+        logger.warning("Random failure occurred.")
         raise ValueError("Task failed! Retrying...")
-    print("Task succeeded!")
+    
+    logger.info("Task succeeded!")
 
-# Define a flow
 @flow
 def retry_demo_flow():
     flaky_task()
@@ -251,69 +246,34 @@ if __name__ == "__main__":
     retry_demo_flow()
 ```
 
- The task `flaky_task` has a 70% chance to fail each run. Prefect automatically retries it up to 3 times, waiting 2 seconds between attempts. If it eventually succeeds within 3 retries, the flow continues normally. If it still fails after 3 retries, the flow marks the task as failed.
+We built the above task to fail on the first attempt and then randomly fail 75% of the time on subsequent attempts. When you run this flow, you’ll see logs indicating each attempt, any warnings about failures, and a final success message when it eventually succeeds.
 
-**Sample Output (your console or Orion logs):**
+You may have noticed the `task_run` object, which gives you access to metadata about the current task execution, including how many times it has been attempted. This is a useful feature in general for tasks. For instance, if you are on the first run of a task, you may need to implement some setup logic. On retries, you might want to skip setup and go straight to the main logic. The `task_run.run_count` allows you to implement this kind of conditional behavior based on the attempt number.
 
-```bash
-Trying to run task...
-Task failed! Retrying...
-Trying to run task...
-Task failed! Retrying...
-Trying to run task...
-Task succeeded!
+This kind of built-in feature in Prefect makes your pipelines more robust and resilient to transient issues without needing to write complex error handling code yourself.
 
-```
+**3. Monitoring and Visualization with Prefect Dashboard**
 
-This makes your pipeline robust without manual try/except blocks.
+Prefect provides a web-based UI - the *Prefect Server UI* (which used to be called *Orion*) - that lets you visualize and monitor your workflows in real time. In the web-based dashboard, you can see your pipeline’s execution flow, review detailed task logs and states (including retries), track scheduled runs, and even debug failed steps interactively, all from one convenient dashboard.
 
-**3. Monitoring and Visualization with Orion UI**
+*To launch the Dashboard:*
 
-Prefect provides a web-based UI - the **Prefect Server UI** (often called **Orion**) - that lets you visualize and monitor your workflows in real time. In Orion, you can see your pipeline’s execution flow, review detailed task logs and states (including retries), track scheduled runs, and even debug failed steps interactively, all from one convenient dashboard.
-
-*To launch Orion:*
-
-**Step 1:** Start Orion
+**Step 1:** Launch
 ```bash
 prefect server start
 ```
-This command launches the Orion server, which you can access via your web browser at:
+This command launches the Dashboard server, which you can access via your web browser at:
 
 ```
 http://localhost:4200
 ```
 
-```text
-Note:
-To launch the Prefect UI (version-dependent).
-- For many Prefect 2.x installs run: `prefect orion start`.
-- For some later releases the equivalent command is: `prefect server start`.
-- If unsure, run `prefect --help` (or check `pip show prefect` / your installed version) and follow the CLI shown by your version.
-```
+**Step 2: Run Your Flow**
+In a separate terminal, run any Prefect flow (like the `chatty_pipeline` example from earlier). As your flow runs, you can watch the execution in real time on the Dashboard. You’ll see when each task starts, finishes, and if any retries occur.
 
-**Step 3: Run Your Flow**
+**Step 3: Explore in the Dashboard**
 
-Let’s use the same example from earlier:
-
-```python
-from prefect import flow, task
-from prefect.logging import get_run_logger
-
-@task
-def greet(name: str):
-    logger = get_run_logger()
-    logger.info(f"Hello, {name}!")
-
-@flow
-def log_flow():
-    greet("Code the Dream")
-
-if __name__ == "__main__":
-    log_flow()
-```
-**Step 4: Explore in Orion**
-
-After running your flow, open the **Orion UI** in your browser. The **Dashboard** displays all your active and completed flow runs, giving you a quick overview of what’s happening. Clicking on a specific flow run opens detailed information about its individual tasks and logs.
+After running your flow, open the **Dashboard UI** in your browser. The **Dashboard** displays all your active and completed flow runs, giving you a quick overview of what’s happening. Clicking on a specific flow run opens detailed information about its individual tasks and logs.
 
 Each log entry is structured with timestamps and log levels such as **INFO**, **WARNING**, and **ERROR**, and all logs are stored for future review.
 
@@ -321,52 +281,26 @@ Each log entry is structured with timestamps and log levels such as **INFO**, **
 
 As you can see, the Orion UI provides a clear overview of your flow runs, their statuses, and detailed logs - all in one place. This makes it much easier to monitor and debug your workflows compared to relying on terminal output alone.
 
-**Why This Matters**
-
-Prefect automatically tracks your pipeline runs. The Orion UI gives you:
-
-- Real-time monitoring of flows and tasks
-- Easy log search & filtering
-- Retry history and error tracking
-
-✨ That’s why Prefect encourages logging and visualization in Orion - it turns simple Python scripts into fully observable workflows.
-
 ### Advanced Features of Prefect
 
-Prefect isn’t just about running tasks and viewing logs - it also comes with powerful features to handle real-world workflows. We won’t dive into these right away, but here’s a preview of what’s ahead:
+Prefect isn’t just about running tasks and viewing logs - it also comes with powerful features to handle real-world workflows. We won’t dive into these now, we are are just scratching the surface. But in a deeper dive, we would cover:
 
-1. Caching: Skip re-running expensive tasks if their inputs haven’t changed. This makes your workflows faster and more efficient.
+1. Caching: Skip re-running expensive tasks if their inputs haven’t changed. They can be saved for subsequent runs. This makes your workflows faster and more efficient.
 
 2. Parallelism: Run tasks concurrently to speed up data processing and reduce bottlenecks.
 
 3. Scheduling: Automate your flows to run on a set interval or a cron-like schedule, so they can operate hands-free in production.
 
-📌 We’ll explore these in later weeks, once we’ve built a strong foundation with tasks, flows, and the Orion UI.
 
-
-### Why Prefect and Not Just Python Functions?  
+### When to use Prefect versus building your own?
 
 You might have wondered earlier: *“Couldn’t we just write Python functions and call them in order?”*  
 
-The short answer is **yes** - you can build a simple pipeline by chaining plain Python functions.  
-But the moment you need reliability, monitoring, retries, scheduling, or scaling, plain functions quickly become fragile and hard to manage.  
+The short answer is **yes** - you can build a simple pipeline by chaining plain Python functions. There is no simple answer to this question: it's a matter of trade-offs. For small, one-off scripts, plain Python functions are typically sufficient. They are quick to write and require no additional dependencies.  
 
-That’s where **Prefect** makes the difference. It takes ordinary Python code and turns it into **production-ready workflows** - with features like retries, logging, monitoring, and scheduling built in, so you don’t have to reinvent the wheel.  
+But when things start to scale up, and you start to find yourself building in more tooling for monitoring, retries, scheduling, or want a dashboard to monitor your pipelines, then a framework might be a good option. You don't have to reinvent the wheel!
 
-Here’s the side-by-side view:  
-
-| **Feature**               | **Plain Python**        |  **With Prefect**                    |
-|---------------------------|-------------------------|--------------------------------------|
-| Retry failed steps        | Manual try/except       | Declarative retries (`retries=3`)    |
-| Cache expensive results   | Manual caching          | Built-in caching                     |
-| Parallel execution        | Manual threading        | Easy parallel mapping                |
-| Monitoring & debugging    | Print statements & logs | UI with history & logs *(Orion)*     |
-| Resilience to failures    | Manual error handling   | Automatic retries & recovery         |
-| Scheduling workflows      | Manual script runs      | Built-in scheduling & orchestration  |
-
-👉 In short, Prefect handles the *operational complexity* so you can focus on writing clear analysis logic. 
-
-## 3. Building Your First Prefect Pipeline
+## 3. Building a Prefect Pipeline
 
 Now that we’ve explored Prefect’s core ideas and enhancements, let’s bring everything together and build a tiny, end-to-end data analysis pipeline from scratch.
 
@@ -382,23 +316,6 @@ Here’s what we’ll do:
 - Wrap everything in Prefect tasks and flows with logging
 
 By the end, you’ll have a clear picture of how a simple Python script can evolve into a well-orchestrated Prefect pipeline.
-
-### Step 0: Setup
-
-Before we start coding, let’s confirm that everything is installed correctly.
-This lesson assumes you’ve already installed Prefect and the supporting libraries (as covered in Section 2 → 🛠️ Installation).
-
-Run the following commands in your terminal or notebook cell to verify your setup:
-
-```bash
-prefect --version
-python -c "import prefect; print(prefect.__version__)"
-python -c "import pandas as pd; print(pd.__version__)"
-```
-
-If any command fails, revisit the installation steps in Section 2 and ensure your terminal or editor is using the correct Python environment.
-
-✅ Once you see version numbers for both Prefect and Pandas, you’re ready to move on to the next step.
 
 ### Step 1: Imports & Data Loader `(load_data)` with logging
 
@@ -434,23 +351,11 @@ def load_data() -> pd.DataFrame:
     return df
 
 ```
-🔎 Utility:
+Utility:
 
 Instead of using plain print statements, Prefect’s logs are automatically searchable, timestamped, and stored in the UI, making them easy to review. If your pipeline runs daily, you can quickly filter logs for today’s runs without sifting through raw console output.
 
-#### 📌Function Reference:
-
-- pd.DataFrame(data) → creates a table (DataFrame) from a dictionary.
-- `logger.info("...")` → adds timestamped logs in Prefect.
-- Task returns a DataFrame for downstream tasks.
-
-💡 Shortcut to repeat labels:
-
-```python
-["A"]*5 + ["B"]*5
-# →  ["A","A","A","A","A", "B","B","B","B","B"]
-```
-👉 Next step: Once data is loaded, we need to clean it for reliability.
+Once data is loaded, we need to clean it for reliability.
 
 ### Step 2: Clean the Data `(clean_data)` with Retries
 
@@ -473,20 +378,13 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 ```
-🔎 Utility:
-
-- If the first attempt fails, Prefect waits 3 seconds and tries again (up to 3 retries).
-- No manual restart needed → pipelines are more resilient.
-
-#### 📌Function Reference:
 - df.copy() → makes a safe copy so we don’t overwrite the original.
 - pd.to_numeric(..., errors="coerce") → converts values to numbers (invalid → NaN).
 - df.dropna(...) → removes rows with missing values
 
-👉 Once the data is clean, the next step is to explore and visualize it so we can understand class-wise performance.
+ Once the data is clean, the next step is to explore and visualize it so we can understand class-wise performance.
 
 ### Step 3: Describe & Plot (describe_and_plot)
-
 After cleaning, let’s summarize the dataset and visualize the score distribution.
 
 ```python
@@ -537,14 +435,7 @@ From the output, we can see that **Class B has higher average scores (80 vs 68.2
 
 ![Output_pipeline](resources/Output_pipeline.png)
 
-#### 📌Function Reference: 
-
-- df.groupby("Class") → splits data into Class A and Class B. 
-- .describe() → gives stats: count, mean, std, min, max, quartiles. 
-- df.boxplot(by="Class", column="Score") → makes side-by-side boxplots.
-- plt.savefig("file.png") → saves plot as an image.
-
-👉 With this overview, we now have both numerical summaries and visual patterns, making it easier to move into statistical testing in the next step.
+With this overview, we now have both numerical summaries and visual patterns, making it easier to move into statistical testing in the next step.
 
 ### Step 4: Run a t-test (run_ttest)
 
@@ -563,37 +454,13 @@ def run_ttest(df: pd.DataFrame) -> tuple[float, float]:
     a = df[df["Class"] == "A"]["Score"]
     b = df[df["Class"] == "B"]["Score"]
 
-    # Welch’s t-test is more robust when groups have unequal variance
-    t_stat, p_val = ttest_ind(a, b, equal_var=False)
+    t_stat, p_val = ttest_ind(a, b)
 
     logger.info("T-test result: t=%.2f, p=%.4f", t_stat, p_val)
     return t_stat, p_val
 ```
 
-#### 📌 Function Reference:
-
-- df[df["Class"] == "A"]["Score"] → filter rows where Class = A, get scores.
-- ttest_ind(a, b, equal_var=False) → compares mean of group A vs group B.
-- t-statistic = size of the difference relative to variation.
-- Null hypothesis (H0): both classes have the same average score.
-- p-value: probability we’d see a difference this large if H0 were true.
-
-**T-test output**
-```bash
-T-test result: t = -8.07, p = 0.0002
-```
-
-**Interpreting Results:**
-
-**1. t = -8.07**
-
-The t-statistic (t = -8.07) measures how many standard errors the difference between the group means is away from zero. The negative sign indicates that the mean of Class A is lower than that of Class B, and the large magnitude (8.07) shows a strong difference between the groups.
-
-**2. p = 0.0002**
-
-The p-value (p = 0.0002) tells us the probability of observing such a difference if the two groups were actually the same. Because this value is much smaller than 0.05, the result is statistically significant, meaning the difference in scores is unlikely to be due to chance.
-
-✅ With the t-test done, we now have statistical evidence. But numbers alone aren’t enough -  let’s translate them into clear conclusions in the next step.
+With the t-test done, we now have statistical evidence. But numbers alone aren’t enough -  let’s translate them into clear conclusions in the next step.
 
 ### Step 5: Report Results (report_results)
 
@@ -625,10 +492,6 @@ def report_results(ttest_result: tuple[float, float], df: pd.DataFrame) -> None:
 Conclusion: The difference is statistically significant (p < 0.05)
 ```
 
-📌 Function Reference:
-- .mean() → calculates average of values.
-- if p_val < 0.05: → 5% threshold is a common cutoff for significance.
-
 With this final reporting step, your pipeline now summarizes group means and explains whether the difference is statistically meaningful.
 
 ### Step 6: Orchestrate Everything (@flow)
@@ -652,18 +515,17 @@ if __name__ == "__main__":
 ```
 Now you have a full mini pipeline - from data loading to cleaning, visualization, statistical testing, and reporting - all orchestrated with Prefect in a single flow.
 
-- The **@flow** decorator turns `analysis_pipeline` into a complete workflow.
-- When called, it executes all steps in sequence, automatically passing data between tasks.
+This gives you a clear, reproducible, and automated workflow that’s easy to run, track, and extend as your project grows.
 
-✨ This gives you a clear, reproducible, and automated workflow that’s easy to run, track, and extend as your project grows.
+If you want to see it in the dashboard, you can run the flow and then open the Prefect UI to watch the tasks execute in real time, view logs, and see the final results.
 
-📝 In your homework, we’ll dive deeper into the Orion UI, where you’ll run this pipeline, explore logs, observe retries, and monitor task states in a dashboard.
+You should incorporate this code into a single .py file and run it to see the full pipeline in action. 
 
 ## 4. Wrap-up
 
 In this lesson, you’ve learned how pipelines automate complex workflows, making your data analysis **reproducible**, **modular**, and **scalable**. Prefect enhances this process by providing decorators for tasks and flows, built-in centralized **logging**, **retries**, caching, and seamless **monitoring** through the *Orion* dashboard. By building your pipeline from clear, modular steps, you can run the entire analysis with one command, handle failures automatically, and monitor your workflow in real time, all while keeping your code maintainable.
 
-✍️ For your upcoming assignment, you’ll build your own data pipeline following this structure. Define each analysis step as a Prefect task, orchestrate them in a flow, and consider how you can use retries and logging to make your pipeline robust and observable. Think about how the Orion dashboard can help you monitor and debug your workflow efficiently as you run it on different datasets.
+For your upcoming assignment, you’ll build your own data pipeline following this structure. Define each analysis step as a Prefect task, orchestrate them in a flow, and consider how you can use retries and logging to make your pipeline robust and observable. 
 
 **👏 Well done!**
-You just walked through your very first Prefect pipeline. 🎉Keep this momentum for your assignment. 
+You just walked through your very first Prefect pipeline. Keep this momentum for your assignment. Congratulations on finishing your final lesson for Python 200. You are ready to do some more hands-on work. 
