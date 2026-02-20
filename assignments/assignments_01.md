@@ -149,15 +149,19 @@ Hint: pass `labels=["Group A", "Group B"]` to `plt.boxplot()`.
 
 #### Descriptive Stats Question 4
 
-Create the following DataFrame and use `groupby()` to compute the mean and standard deviation of `"salary"` for each `"department"`. Print the result.
+You are given two datasets: one normally distributed and one 'exponential' distribution.
 
 ```python
-employees = {
-    "department": ["Engineering", "Marketing", "Engineering", "Marketing", "Engineering"],
-    "salary":     [95000, 72000, 105000, 68000, 89000]
-}
-df = pd.DataFrame(employees)
+import numpy as np
+import matplotlib.pyplot as plt
+
+normal_data = np.random.normal(50, 5, 200)
+skewed_data = np.random.exponential(10, 200)
 ```
+
+Create side-by-side boxplots comparing the two distributions. Label each boxplot appropriately (`"Normal"` and `"Exponential"`) and add a title `"Distribution Comparison"`.
+
+Then, add a comment in your code briefly noting which distribution is more skewed, and which descriptive statistic (mean or median) would provide a more appropriate measure of central tendency for each distribution.
 
 #### Descriptive Stats Question 5
 Print the mean, median, and mode of the following:
@@ -318,4 +322,9 @@ Finally, add a comment block at the bottom of `prefect_warmup.py` answering thes
 1. This pipeline is simple -- just three small functions on a handful of numbers. Why might Prefect be more overhead than it is worth here?
 2. Describe some realistic scenarios where a framework like Prefect could still be useful, even if the pipeline logic itself stays simple like in this case.
 
+
+## Part 2: Project Exercise
+Contraguations on finishing the warmup exercises! The next step is to apply what you've learned to a mini-project. Please put the code for your project in `project_01.py`. 
+
+The project should take more time, and will be more open-ended than the warmups. The goal is to give you a chance to practice building a data pipeline from start to finish. 
 
