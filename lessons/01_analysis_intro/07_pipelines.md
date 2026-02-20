@@ -528,4 +528,4 @@ In this lesson, you’ve learned how pipelines automate complex workflows, makin
 For your upcoming assignment, you’ll build your own data pipeline following this structure. Define each analysis step as a Prefect task, orchestrate them in a flow, and consider how you can use retries and logging to make your pipeline robust and observable. 
 
 **👏 Well done!**
-You just walked through your very first Prefect pipeline. Keep this momentum for your assignment. Congratulations on finishing your final lesson for Python 200. You are ready to do some more hands-on work. 
+You just walked through your very first Prefect pipeline. Keep this momentum for your assignment. Congratulations on finishing your final lesson for Python 200. You are ready to do some more hands-on work.
