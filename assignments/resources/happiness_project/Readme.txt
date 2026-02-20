@@ -21,16 +21,16 @@ Each file contains the following columns:
 
 ## Files Included
 The dataset includes the following files:
-World Happiness 2015.xlsx
-World Happiness 2016.xlsx
-World Happiness 2017.xlsx
-World Happiness 2018.xlsx
-World Happiness 2019.xlsx
-World Happiness 2020.xlsx
-World Happiness 2021.xlsx
-World Happiness 2022.xlsx
-World Happiness 2023.xlsx
-World Happiness 2024.xlsx
+world_happiness_2015.csv
+world_happiness_2016.csv
+world_happiness_2017.csv
+world_happiness_2018.csv
+world_happiness_2019.csv
+world_happiness_2020.csv
+world_happiness_2021.csv
+world_happiness_2022.csv
+world_happiness_2023.csv
+world_happiness_2024.csv
 Each file is structured identically, allowing for longitudinal analysis of happiness trends over time.
 
 ## License
@@ -67,16 +67,16 @@ Cada archivo representa un año específico y contiene métricas clave relaciona
 
 ## Archivos incluidos
 El conjunto incluye los siguientes archivos:
-World Happiness 2015.xlsx
-World Happiness 2016.xlsx
-World Happiness 2017.xlsx
-World Happiness 2018.xlsx
-World Happiness 2019.xlsx
-World Happiness 2020.xlsx
-World Happiness 2021.xlsx
-World Happiness 2022.xlsx
-World Happiness 2023.xlsx
-World Happiness 2024.xlsx
+world_happiness_2015.csv
+world_happiness_2016.csv
+world_happiness_2017.csv
+world_happiness_2018.csv
+world_happiness_2019.csv
+world_happiness_2020.csv
+world_happiness_2021.csv
+world_happiness_2022.csv
+world_happiness_2023.csv
+world_happiness_2024.csv
 Cada archivo contiene datos estructurados de manera idéntica, lo que facilita el análisis longitudinal de las tendencias en felicidad a lo largo del tiempo.
 
 ## Licencia
