@@ -264,25 +264,7 @@ plt.show()
 
 If you’d like to go further with Matplotlib, here are some excellent resources:
 
-- 🎥 [Corey Schafer’s YouTube Series on Matplotlib](https://www.youtube.com/watch?v=UO98lJQ3QGI&list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — great video walkthroughs.  
-- 📖 [DataCamp Matplotlib Tutorial](https://www.datacamp.com/tutorial/matplotlib-tutorial-python) — step-by-step written guide.  
+[Corey Schafer’s YouTube Series on Matplotlib](https://www.youtube.com/watch?v=UO98lJQ3QGI&list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_) — great video walkthroughs.  
+[DataCamp Matplotlib Tutorial](https://www.datacamp.com/tutorial/matplotlib-tutorial-python) — step-by-step written guide.  
 
 These will give you extra practice and deeper insights into data visualization.
-
-📌 Keep practicing, the more you play with data, the more confident you’ll get. You’re off to a great start!
-
----
-
-## Lesson 1 Wrap-Up
-
-🎉 Congrats! You’ve completed Lesson 1.  
-
-You now know the **three pillars of data analysis**:  
-- **Pandas** → handle and explore data tables  
-- **NumPy** → fast math & calculations  
-- **Matplotlib** → turn numbers into visual stories  
-
-With just these, you can already clean data, analyze trends, and make charts. This is the foundation every data scientist uses daily. 
-
----
-

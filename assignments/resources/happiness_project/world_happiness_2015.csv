@@ -1,0 +1,159 @@
+Ranking;Country;Regional indicator;Happiness score;GDP per capita;Social support;Healthy life expectancy;Freedom to make life choices;Generosity;Perceptions of corruption
+1;Switzerland;Western Europe;7,59;8,26;0,96;73;0,99;0,37;0,24
+2;Iceland;Western Europe;7,56;7,7;1;73;0,94;0,55;0,74
+3;Denmark;Western Europe;7,53;7,84;0,97;70;0,97;0,43;0,12
+4;Norway;Western Europe;7,52;8,63;0,95;71;1;0,44;0,34
+5;Canada;North America and ANZ;7,43;7,85;0,94;71;0,95;0,58;0,4
+6;Finland;Western Europe;7,41;7,63;0,94;71;0,96;0,29;0,25
+7;Netherlands;Western Europe;7,38;7,86;0,91;71;0,92;0,6;0,42
+8;Sweden;Western Europe;7,36;7,88;0,92;72;0,99;0,46;0,21
+9;New Zealand;North America and ANZ;7,29;7,4;0,94;72;0,95;0,6;0,22
+10;Australia;North America and ANZ;7,28;7,89;0,93;72;0,97;0,55;0,35
+11;Israel;Middle East and North Africa;7,28;7,27;0,87;72;0,62;0,42;0,86
+12;Costa Rica;Latin America and Caribbean;7,23;5,65;0,88;70;0,95;0,32;0,81
+13;Austria;Western Europe;7,2;7,91;0,92;71;0,93;0,42;0,66
+14;Mexico;Latin America and Caribbean;7,19;6,04;0,65;68;0,72;0,18;0,61
+15;United States;North America and ANZ;7,12;8,25;0,89;70;0,82;0,5;0,71
+16;Brazil;Latin America and Caribbean;6,98;5,8;0,88;64;0,73;0,18;0,68
+17;Luxembourg;Western Europe;6,95;9,25;0,87;72;0,92;0,35;0,32
+18;Ireland;Western Europe;6,94;7,9;0,98;71;0,92;0,58;0,48
+19;Belgium;Western Europe;6,94;7,74;0,92;71;0,87;0,28;0,59
+20;United Arab Emirates;Middle East and North Africa;6,9;8,44;0,8;68;0,96;0,33;0,3
+21;United Kingdom;Western Europe;6,87;7,49;0,92;72;0,89;0,65;0,42
+22;Oman;Middle East and North Africa;6,85;8,05;0,77;66;0,94;0,27;0,41
+23;Venezuela;Latin America and Caribbean;6,81;6,18;0,9;65;0,64;0,07;0,8
+24;Singapore;Southeast Asia;6,8;9;0,73;76;0,81;0,39;0,11
+25;Panama;Latin America and Caribbean;6,79;6,29;0,85;68;0,81;0,31;0,83
+26;Germany;Western Europe;6,75;7,86;0,93;71;0,92;0,35;0,6
+27;Chile;Latin America and Caribbean;6,67;6,55;0,8;70;0,66;0,42;0,77
+28;Qatar;Middle East and North Africa;6,61;10;0,77;68;0,96;0,41;0,05
+29;France;Western Europe;6,57;7,56;0,9;73;0,82;0,15;0,63
+30;Argentina;Latin America and Caribbean;6,57;6,23;0,89;67;0,67;0,14;0,85
+31;Czech Republic;Central and Eastern Europe;6,51;6,97;0,86;69;0,69;0,13;0,95
+32;Uruguay;Latin America and Caribbean;6,49;6,28;0,86;68;0,9;0,29;0,56
+33;Colombia;Latin America and Caribbean;6,48;5,43;0,88;64;0,8;0,23;0,91
+34;Thailand;Southeast Asia;6,45;5,72;0,9;65;0,83;0,72;0,94
+35;Saudi Arabia;Middle East and North Africa;6,41;8,25;0,77;65;0,46;0,17;0,41
+36;Spain;Western Europe;6,33;7,28;0,94;73;0,69;0,23;0,88
+37;Malta;Western Europe;6,3;7,14;0,93;71;0,9;0,65;0,75
+38;Taiwan;East Asia;6,3;7,64;0,77;70;0,59;0,32;0,85
+39;Kuwait;Middle East and North Africa;6,3;9,19;0,83;65;0,83;0,2;0,54
+40;Suriname;Latin America and Caribbean;6,27;5,89;0,69;61;0,89;0,21;0,75
+41;Trinidad and Tobago;Latin America and Caribbean;6,17;7,17;0,84;61;0,83;0,4;0,98
+42;El Salvador;Latin America and Caribbean;6,13;4,52;0,73;63;0,6;0,13;0,79
+43;Guatemala;Latin America and Caribbean;6,12;4,41;0,74;62;0,86;0,35;0,83
+44;Uzbekistan;Commonwealth of Independent States;6;3,74;0,96;60;0,98;0,29;0,44
+45;Slovakia;Central and Eastern Europe;5,99;6,91;0,91;67;0,47;0,21;0,94
+46;Japan;East Asia;5,99;7,52;0,9;75;0,74;0,13;0,67
+47;South Korea;East Asia;5,98;7,36;0,68;74;0,5;0,23;0,86
+48;Ecuador;Latin America and Caribbean;5,97;5,11;0,71;67;0,73;0,15;0,67
+49;Bahrain;Middle East and North Africa;5,96;7,83;0,87;66;0,68;0,22;0,45
+50;Italy;Western Europe;5,95;7,4;0,85;73;0,39;0,29;0,95
+51;Bolivia;Latin America and Caribbean;5,89;4,03;0,7;58;0,86;0,26;0,84
+52;Moldova;Commonwealth of Independent States;5,89;3,52;0,72;61;0,49;0,26;0,97
+53;Paraguay;Latin America and Caribbean;5,88;4,5;0,93;63;0,8;0,43;0,85
+54;Kazakhstan;Commonwealth of Independent States;5,86;6,64;0,8;62;0,77;0,15;0,85
+55;Slovenia;Central and Eastern Europe;5,85;7,01;0,91;70;0,91;0,32;0,93
+56;Lithuania;Central and Eastern Europe;5,83;6,79;0,9;65;0,32;0,03;0,98
+57;Nicaragua;Latin America and Caribbean;5,83;3,51;0,81;66;0,83;0,35;0,65
+58;Peru;Latin America and Caribbean;5,82;5,33;0,7;65;0,62;0,19;0,89
+59;Belarus;Commonwealth of Independent States;5,81;6,1;0,88;65;0,57;0,14;0,65
+60;Poland;Central and Eastern Europe;5,79;6,66;0,91;67;0,79;0,21;0,92
+61;Malaysia;Southeast Asia;5,77;6,65;0,76;65;0,79;0,42;0,81
+62;Croatia;Central and Eastern Europe;5,76;6,4;0,57;67;0,39;0,07;0,96
+63;Libya;Middle East and North Africa;5,75;6,69;0,8;64;0,62;0,23;0,8
+64;Russia;Commonwealth of Independent States;5,72;6,73;0,88;63;0,55;0;0,95
+65;Jamaica;Latin America and Caribbean;5,71;4,79;0,82;64;0,75;0,27;0,96
+66;North Cyprus;Western Europe;5,7;7,15;0,76;72;0,73;0,33;0,74
+67;Cyprus;Western Europe;5,69;7,15;0,64;72;0,61;0,38;0,89
+68;Algeria;Middle East and North Africa;5,61;5,56;0,77;61;0,43;0,1;0,69
+69;Kosovo;Central and Eastern Europe;5,59;4,74;0,58;62;0,37;0,36;0,91
+70;Turkmenistan;Commonwealth of Independent States;5,55;5,67;0,87;58;0,71;0,21;0,44
+71;Mauritius;Sub-Saharan Africa;5,48;5,96;0,7;64;0,84;0,47;0,86
+72;Hong Kong;East Asia;5,47;8,2;0,75;75;0,89;0,5;0,33
+73;Estonia;Central and Eastern Europe;5,43;6,81;0,88;67;0,67;0,11;0,72
+74;Indonesia;Southeast Asia;5,4;4,9;0,78;62;0,7;0,65;1
+75;Vietnam;Southeast Asia;5,36;3,74;0,65;66;0,89;0,21;0,81
+76;Turkey;Middle East and North Africa;5,33;6,28;0,67;65;0,34;0,15;0,71
+77;Kyrgyzstan;Commonwealth of Independent States;5,29;2,81;0,82;62;0,65;0,38;0,92
+78;Nigeria;Sub-Saharan Africa;5,27;3,87;0,64;45;0,51;0,34;0,93
+79;Bhutan;South Asia;5,25;4,56;0,79;59;0,79;0,6;0,72
+80;Azerbaijan;Commonwealth of Independent States;5,21;6,06;0,67;62;0,55;0,1;0,71
+81;Pakistan;South Asia;5,19;3,52;0,3;57;0,18;0,42;0,81
+82;Montenegro;Central and Eastern Europe;5,19;5,76;0,65;65;0,27;0,2;0,74
+83;Jordan;Middle East and North Africa;5,19;5,34;0,75;64;0,61;0,14;0,74
+84;China;East Asia;5,14;5,27;0,68;68;0,77;0,1;0,95
+85;Zambia;Sub-Saharan Africa;5,13;2,78;0,65;50;0,73;0,25;0,77
+86;Romania;Central and Eastern Europe;5,12;6,17;0,63;67;0,52;0,17;0,99
+87;Serbia;Central and Eastern Europe;5,12;5,45;0,72;66;0,3;0,24;0,95
+88;Portugal;Western Europe;5,1;6,86;0,81;70;0,77;0,17;0,98
+89;Latvia;Central and Eastern Europe;5,1;6,58;0,78;65;0,44;0,23;0,89
+90;Philippines;Southeast Asia;5,07;4,17;0,74;60;0,93;0,31;0,78
+91;Somaliland region;Sub-Saharan Africa;5,06;1,11;0,68;55;0,7;0,63;0,28
+92;Morocco;Middle East and North Africa;5,01;4,35;0,46;61;0,62;0,09;0,85
+93;Macedonia;Central and Eastern Europe;5,01;5,43;0,71;65;0,5;0,28;0,9
+94;Mozambique;Sub-Saharan Africa;4,97;0,49;0,73;42;0,51;0,28;0,72
+95;Albania;Central and Eastern Europe;4,96;5,2;0,57;68;0,53;0,18;0,88
+96;Bosnia and Herzegovina;Central and Eastern Europe;4,95;4,92;0,66;67;0,14;0,31;1
+97;Lesotho;Sub-Saharan Africa;4,9;2,22;0,74;41;0,47;0,21;0,77
+98;Dominican Republic;Latin America and Caribbean;4,89;5,3;0,84;63;0,86;0,27;0,74
+99;Laos;Southeast Asia;4,88;3,49;0,53;59;0,89;0,53;0,56
+100;Mongolia;East Asia;4,87;4,9;0,93;60;0,65;0,42;0,95
+101;Swaziland;Sub-Saharan Africa;4,87;4,21;0,77;41;0,46;0,23;0,94
+102;Greece;Western Europe;4,86;6,83;0,66;71;0,11;0;0,97
+103;Lebanon;Middle East and North Africa;4,84;6,07;0,57;69;0,51;0,27;0,92
+104;Hungary;Central and Eastern Europe;4,8;6,63;0,86;66;0,48;0,16;0,95
+105;Honduras;Latin America and Caribbean;4,79;3,52;0,68;64;0,6;0,29;0,88
+106;Tajikistan;Commonwealth of Independent States;4,79;2,31;0,61;59;0,7;0,29;0,73
+107;Tunisia;Middle East and North Africa;4,74;5,21;0,43;65;0,39;0,08;0,88
+108;Palestinian Territories;Middle East and North Africa;4,72;3,54;0,66;63;0,37;0,14;0,77
+109;Bangladesh;South Asia;4,69;2,35;0,31;60;0,61;0,27;0,77
+110;Iran;Middle East and North Africa;4,69;5,97;0,39;64;0,45;0,48;0,89
+111;Ukraine;Commonwealth of Independent States;4,68;4,73;0,86;63;0,38;0,19;0,95
+112;Iraq;Middle East and North Africa;4,68;5,83;0,58;60;0;0,23;0,75
+113;South Africa;Sub-Saharan Africa;4,64;5,45;0,84;49;0,5;0,15;0,84
+114;Ghana;Sub-Saharan Africa;4,63;3,23;0,48;53;0,63;0,29;0,92
+115;Zimbabwe;Sub-Saharan Africa;4,61;1,6;0,74;51;0,39;0,24;0,85
+116;Liberia;Sub-Saharan Africa;4,57;0,42;0,56;51;0,43;0,31;0,89
+117;India;South Asia;4,57;3,82;0,27;57;0,59;0,33;0,85
+118;Sudan;Sub-Saharan Africa;4,55;3,08;0,72;52;0,15;0,24;0,73
+119;Haiti;Latin America and Caribbean;4,52;1,58;0,53;53;0,36;0,58;0,69
+120;Congo (Kinshasa);Sub-Saharan Africa;4,52;0;0,71;42;0,34;0,31;0,86
+121;Nepal;South Asia;4,51;2,13;0,62;59;0,57;0,41;0,89
+122;Ethiopia;Sub-Saharan Africa;4,51;1,13;0,43;55;0,65;0,31;0,73
+123;Sierra Leone;Sub-Saharan Africa;4,51;1,95;0,68;39;0,61;0,27;0,84
+124;Mauritania;Sub-Saharan Africa;4,44;2,69;0,62;52;0,36;0,28;0,68
+125;Kenya;Sub-Saharan Africa;4,42;2,16;0,71;54;0,63;0,47;0,89
+126;Djibouti;Sub-Saharan Africa;4,37;2,6;0,42;52;0,69;0,23;0,49
+127;Armenia;Commonwealth of Independent States;4,35;4,54;0,55;65;0,3;0,1;0,93
+128;Botswana;Sub-Saharan Africa;4,33;5,88;0,79;40;0,74;0,13;0,77
+129;Myanmar;Southeast Asia;4,31;1,6;0,51;56;0,66;1;0,66
+130;Georgia;Commonwealth of Independent States;4,3;4,39;0,28;65;0,61;0,07;0,31
+131;Malawi;Sub-Saharan Africa;4,29;0,09;0,29;47;0,64;0,42;0,87
+132;Sri Lanka;South Asia;4,27;4,94;0,73;64;0,8;0,51;0,83
+133;Cameroon;Sub-Saharan Africa;4,25;2,5;0,63;47;0,74;0,26;0,9
+134;Bulgaria;Central and Eastern Europe;4,22;5,99;0,79;66;0,46;0,15;0,98
+135;Egypt;Middle East and North Africa;4,19;5,22;0,53;61;0,26;0,14;0,89
+136;Yemen;Middle East and North Africa;4,08;3,23;0,49;53;0,53;0,11;0,86
+137;Angola;Sub-Saharan Africa;4,03;4,48;0,61;45;0,16;0,16;0,87
+138;Mali;Sub-Saharan Africa;3,99;1,54;0,74;46;0,58;0,24;0,78
+139;Congo (Brazzaville);Sub-Saharan Africa;3,99;4,01;0,47;50;0,62;0,16;0,79
+140;Comoros;Sub-Saharan Africa;3,96;1,41;0,57;52;0,34;0,22;0,64
+141;Uganda;Sub-Saharan Africa;3,93;1,25;0,81;51;0,68;0,37;0,87
+142;Senegal;Sub-Saharan Africa;3,9;2,16;0,7;54;0,55;0,26;0,81
+143;Gabon;Sub-Saharan Africa;3,9;6,27;0,65;54;0,48;0,09;0,8
+144;Niger;Sub-Saharan Africa;3,85;0,41;0,55;49;0,71;0,24;0,72
+145;Cambodia;Southeast Asia;3,82;2,72;0,45;61;0,99;0,51;0,87
+146;Tanzania;Sub-Saharan Africa;3,78;1,69;0,72;53;0,49;0,43;0,9
+147;Madagascar;Sub-Saharan Africa;3,68;1,23;0,48;56;0,29;0,27;0,85
+148;Central African Republic;Sub-Saharan Africa;3,68;0,46;0;41;0,73;0,3;0,85
+149;Chad;Sub-Saharan Africa;3,67;2,02;0,54;44;0,35;0,23;0,9
+150;Guinea;Sub-Saharan Africa;3,66;1,03;0,33;47;0,56;0,36;0,78
+151;Ivory Coast;Sub-Saharan Africa;3,65;2,75;0,55;44;0,7;0,25;0,68
+152;Burkina Faso;Sub-Saharan Africa;3,59;1,53;0,61;49;0,59;0,27;0,77
+153;Afghanistan;South Asia;3,58;1,89;0,22;50;0,35;0,46;0,82
+154;Rwanda;Sub-Saharan Africa;3,46;1,31;0,55;54;0,88;0,28;0
+155;Benin;Sub-Saharan Africa;3,34;1,7;0,25;50;0,72;0,23;0,85
+156;Syria;Middle East and North Africa;3,01;3,92;0,34;65;0,23;0,59;0,66
+157;Burundi;Sub-Saharan Africa;2,9;0,09;0,3;47;0,18;0,25;0,82
+158;Togo;Sub-Saharan Africa;2,84;1,23;0,1;49;0,54;0,21;0,81

@@ -1,4 +1,4 @@
-# Descriptive statistics and Distributions
+# Describing Data: Descriptive Statistics and Probability Distributions
 
 ## **Learning Objective**: 
 Every dataset tells a story - but without the right tools, we can’t understand it. Descriptive statistics and distributions help us summarize, visualize, and see patterns at a glance.  
