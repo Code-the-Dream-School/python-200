@@ -17,14 +17,10 @@ It’s used in data analytics, machine learning, finance, science, and pretty mu
 ---
 
 ## Getting Started with Pandas with some important resources
-📺 [Learning Pandas for Data Analysis?](https://www.youtube.com/watch?v=DkjCaAMBGWM)  
-📺 [What is Pandas?](https://www.youtube.com/watch?v=dcqPhpY7tWk&t=70s)
-📺 [10 Minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html) — official quickstart guide from the pandas developers
+[Video: Learning Pandas for Data Analysis?](https://www.youtube.com/watch?v=DkjCaAMBGWM)  
+[Video: What is Pandas?](https://www.youtube.com/watch?v=dcqPhpY7tWk&t=70s)    
+[10 Minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html) -- official quickstart guide from the pandas developers
 
-## Pro-tip: 
-- You’ll definitely run into errors sometimes, that’s normal! Just read the error message on your screen carefully and search online. Errors are your best hints for fixing problems.
-
----
 
 ### What is a DataFrame and a Series?
 
@@ -237,7 +233,7 @@ print(students_df.info())
 ```
 - When you run df.info(), Pandas gives you a summary report of your DataFrame.
 
-![DataFrame Info Output](./resources/01_pandas_6_dinfo.png)
+![DataFrame Info Output](./resources/01_pandas_6_dfinfo.png)
 
 - Understanding .info() Output
 - RangeIndex: The dataset has 6 rows (0 to 5).
@@ -558,7 +554,7 @@ students_df = students_df.drop_duplicates()
 
 Cleaning data may feel boring, but it’s like sharpening your pencil ✏️ before writing an exam — it makes sure you don’t get stuck later.  
 
-📖 More on cleaning data: [W3Schools Pandas Cleaning](https://www.w3schools.com/python/pandas/pandas_cleaning.asp)
+More on cleaning data: [W3Schools Pandas Cleaning](https://www.w3schools.com/python/pandas/pandas_cleaning.asp)
 
 
 # Topic 5 of Lesson 1: Modifying Data

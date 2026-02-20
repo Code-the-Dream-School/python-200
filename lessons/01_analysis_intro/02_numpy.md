@@ -90,7 +90,6 @@ This is also the reason why NumPy is the foundation of data science — almost e
 For example: exam scores for 10 students is fine with a list. But what if you had 10,000 students? Or some kind of sensor readings collected every second with millions of data points?  
 👉 This is where NumPy arrays shine.
 
----
 
 ### Memory Efficiency & Speed
 
@@ -120,8 +119,6 @@ print("Size of NumPy array:", np_array.nbytes)
 ```
 
 As we can see in the above output, NumPy uses less memory, which means faster calculations, especially with large datasets.
-
----
 
 ### Easier Math with Arrays
 
@@ -192,7 +189,7 @@ print(np.zeros(5)) # Output: [0. 0. 0. 0. 0.]
 print(np.ones(5)) # Output: [1. 1. 1. 1. 1.]
 ```
 
-👉 Follow the article for more on creating NumPy arrays:  
+Follow the article for more on creating NumPy arrays:  
 [GeeksforGeeks - Different Ways to Create NumPy Arrays](https://www.geeksforgeeks.org/numpy/different-ways-to-create-numpy-arrays-in-python/)
 
 ---
@@ -293,8 +290,6 @@ NumPy provides simple attributes for this:
 - `.dtype` → the type of data stored in the array (e.g., int, float)  
 
 **Example:**  
-> 🔔 **Reminder:** Run this code in VS Code and check the output yourself. It’s the best way to learn!
-
 ```python
 arr = np.array([[1, 2, 3],
                 [4, 5, 6]])
@@ -387,13 +382,12 @@ Standard Deviation: 17.93
 - Sum → Total marks (or sales revenue, etc.)  
 - Standard Deviation → How much scores differ from the average  
 
-📌 This is super useful in real life: businesses use it for sales trends, sports teams for performance consistency, and teachers for class analysis.
+This is super useful in real life: businesses use it for sales trends, sports teams for performance consistency, and teachers for class analysis.
 
 
-```markdown
-👉 NumPy has many more statistical tools you can explore: [see full list here](https://numpy.org/doc/stable/reference/routines.statistics.html)
+ NumPy has many more statistical tools you can explore: [see full list here](https://numpy.org/doc/stable/reference/routines.statistics.html)
 
-📌 And then for statistics specifically, we’ll be going into much more detail in a later lesson this week and in later weeks. In the meantime, there are tons of resources available directly in NumPy: [see statistics resources here](https://numpy.org/doc/stable/reference/routines.statistics.html)
+And then for statistics specifically, we’ll be going into much more detail in a later lesson this week and in later weeks. In the meantime, there are tons of resources available directly in NumPy: [see statistics resources here](https://numpy.org/doc/stable/reference/routines.statistics.html)
 
----
+
 
