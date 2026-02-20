@@ -1,3 +1,16 @@
+# Week 1 Assignments
+This week's assignments will cover the week 1 material, including:
+
+-   Python 100 review (Pandas, NumPy, Matplotlib)
+-   Describing data
+-   Hypothesis testing
+-   Correlation
+-   Pipelines (both home-grown and Prefect)
+  
+As discussed in the overview of how to approach assignments, the first part of this assignment is a set of warmup exercises to review the week 1 material. The second part is a mini-project that applies the concepts in a more realistic context (setting up a pipeline). 
+
+Good luck, and have fun with it! This is the time to get hands-on practice with the material, feel free to experiment and explore as you work through the material: that is often the best way to learn! 
+  
 # Submission instructions
 In your `python200-homework` repository, create a folder called `assignments_01/`. Inside that folder, create three files:
 
@@ -7,6 +20,7 @@ In your `python200-homework` repository, create a folder called `assignments_01/
 
 When finished, commit the files to your repo and open a PR as discussed in the assignment's [README page](README.md). 
 
+Don't be afraid to write your thoughts/comments in your code. This can often helpful for the mentors/reviewers to understand your thought process and give you better feedback.
 
 # Part 1: Warmup Exercises
 Put all warmup exercises  in a single file: `warmups_01.py`. Use comments to mark each section and question (e.g. `# --- Pandas ---` and `# Pandas Q1`). Use `print()` to display all outputs. 
