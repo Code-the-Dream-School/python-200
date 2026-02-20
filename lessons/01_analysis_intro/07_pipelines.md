@@ -2,7 +2,7 @@
 
 Imagine running your analysis once, then being asked to run it again tomorrow, next week, or on a larger dataset. Manually re-running each step - loading, cleaning, analyzing, and reporting - would be painful, error-prone, and time-consuming.
 
-**Pipelines solve this**. They give us reproducible, modular workflows where each step is defined and orchestrated. This approach becomes especially powerful in **cloud computing**, a topic we’ll explore in more detail in future lessons of Python 200.
+Pipelines solve this. They give us reproducible, modular workflows where each step is defined and orchestrated. This approach becomes especially powerful in *cloud computing*, a topic we’ll explore in more detail in future lessons of Python 200.
 
 ### Learning objectives: 
 By the end of this lesson, you’ll be able to:
@@ -21,9 +21,9 @@ By the end of this lesson, you’ll be able to:
 
 ## 1. Understanding Data Pipelines
 
-What is a **Data Pipeline**?
+Watch this video for an overview of data pipeline basics: https://www.youtube.com/watch?v=DHO2PuR3jrs 
 
-A **data pipeline** is a series of connected data processing steps where the output of one step becomes the input of the next. Think of it like a factory assembly line for data - raw materials (data) enter at one end, go through various transformation stations, and emerge as a finished product (insights, reports, or processed datasets).
+A *data pipeline* is a series of connected data processing steps where the output of one step becomes the input of the next. Think of it like a factory assembly line for data - raw materials (data) enter at one end, go through various transformation stations, and emerge as a finished product (insights, reports, or processed datasets).
 
 ```text
 Raw Data → Load → Clean → Analyze → Visualize → Report
@@ -31,22 +31,12 @@ Raw Data → Load → Clean → Analyze → Visualize → Report
 
 If you’ve ever written a script that loads data, cleans it, analyzes it, and saves results — you’ve already built a pipeline! You don’t need a special framework to have a pipeline.
 
-Frameworks like **Prefect**, **Airflow**, or **Luigi** simply make it easier to manage, monitor, and automate complex workflows - especially when they run on large datasets, across multiple systems, or in the cloud.
+Specialized software packages like *Prefect*, *Airflow*, or *Luigi* simply make it easier to manage, monitor, and automate complex workflows - especially when they run on large datasets, across multiple systems, or in the cloud.
 
-The most important thing is the pipeline *mindset*: organizing your work into clear, ordered steps. Start with whatever tooling matches your project (a simple script is fine for exploration), and introduce orchestration tools only when you need scheduling, retries, observability, or cross-system coordination.
+The most important thing for data engineering and analysis is the pipeline *mindset*: organizing your work into clear, ordered steps. Start with whatever tooling matches your project (a simple script is often fine), and introduce orchestration tools only when you need scheduling, retries, observability, or cross-system coordination.
 
-- Without pipelines → manual re-runs, messy scripts, hard to reproduce results.
-- With pipelines → clear modular steps, easy to run end-to-end, scalable to cloud systems.
-
-## Key Features & Benefits of Data Pipelines
-
-
-
-Thinking in pipelines helps you turn ad-hoc code into reliable, repeatable workflows. By breaking an analysis into clear steps (extract → transform → analyze → report), you make each part easier to test, document, and improve. Pipelines also let you **automate routine** work so you stop manually re-running scripts and reduce human error.
-
-As projects grow, a pipeline mindset makes it natural to integrate **multiple data sources** and add operational features - scheduling, retries, logging, and monitoring - without rewriting your core analysis.
-
-💡 In short: Start simple with a clear sequence of steps, and adopt more tooling only when you need the operational guarantees that frameworks provide.
+- Without pipelines : manual re-runs, messy scripts, hard to reproduce results.
+- With pipelines : clear modular steps, easy to run end-to-end, scalable to cloud systems.
 
 ## Types of Data Pipelines
 
@@ -59,74 +49,47 @@ Batch pipelines process data in groups at scheduled intervals, such as hourly, n
 Streaming pipelines handle continuous data flow in real time. They’re useful for monitoring live or fast-moving sources, such as social media feeds, IoT sensors, or stock tickers, where new data keeps arriving every second.
 
 ### Data Integration Pipelines
-Integration pipelines focus on combining data from multiple systems into a single, unified format. For example, merging customer data from a CRM with transaction data from an e-commerce platform creates a complete picture for analytics or machine learning.
+Integration pipelines focus on combining data from multiple systems or file formats into a single, unified format. For example, in biology labs you might have data from imaging systems, electrical sensors, and manual lags that all need to be integrated into a single dataset for analysiys. 
 
 ## ETL Pipeline
 
 An **ETL pipeline** (Extract, Transform, Load) is a specific type of data pipeline designed to move and prepare structured data for analysis. These pipelines are the backbone of many analytics systems, ensuring that data flows cleanly from raw sources to organized storage.
 
 ### How ETL Pipelines Work
-1. **Extract** – Data is pulled from one or more sources such as databases, APIs, logs, or flat files.  
-2. **Transform** – The extracted data is cleaned, reshaped, aggregated, or enriched in a staging area. This ensures the data is consistent and ready for analysis.  
-3. **Load** – The processed data is moved into its final destination, such as a **data warehouse**, **data lake**, or **analytics platform**.  
-
-This process is especially common in organizations that rely on large volumes of structured data for **reporting, dashboards, and business intelligence**.
+1. **Extract** – Data is pulled from one or more sources such as databases, web pages, APIs, or a file system.  
+2. **Transform** – The extracted data is cleaned, reshaped, aggregated, or enriched in a staging area. This ensures the data is consistent and ready for analysis. For instance, you might remove duplicates, handle missing values, or standardize formats during this step. 
+3. **Load** – The processed data is moved into its final destination, such as database server.  
 
 ### How ETL Pipelines Differ from General Data Pipelines
 
-Every ETL pipeline is a data pipeline, but not every data pipeline follows the ETL structure. Some pipelines may move raw data directly from one location to another (Extract → Load) without any transformation, while others follow an ELT approach (Extract, Load, Transform), where transformations occur after loading—usually inside a warehouse or lake. 
+Every ETL pipeline is a data pipeline, but not every data pipeline follows the ETL structure. Some pipelines may move raw data directly from one location to another (Extract → Load) without any transformation, while others follow an ELT approach (Extract, Load, Transform), where transformations occur after loading. 
 
-ETL pipelines are typically used when structured data needs to be cleaned and standardized before storage, whereas broader data pipelines may handle real-time streams, machine learning models, or automated event triggers.
+ETL pipelines are typically used when structured data needs to be cleaned and standardized before storage.
 
 ### Example
 
 Imagine a company collecting sales data from multiple regional databases. An ETL pipeline would pull all sales records (Extract), clean and standardize currency formats (Transform), and store them in a central data warehouse (Load) for unified reporting.
 
-In short, ETL pipelines focus on **structured data preparation**, while general data pipelines can power many other workflows, from streaming to predictive modeling.
-
 ## Pipeline Tools in Python
 
-Python provides several powerful tools for building pipelines:
+Python provides several powerful tools for building pipelines, such as Luigi, Airflow, Metaflow, Dagster, and Prefect. Each has its strengths and use-cases. 
 
-- **Luigi** – workflow management and batch pipeline scheduling.  
-- **Airflow** – orchestrates complex workflows with dependencies.  
-- **Metaflow** – simplifies data science pipelines and ML workflow management.  
-- **Dagster** – modern framework for data orchestrations and testing pipelines.  
+In this lesson, we will focus on *Prefect*, a Python workflow orchestration tool with a gentle learning curve and allows us to build and run pipelines locally very quickly. We'll explain Prefect in more detail below. 
 
-In this lesson, we will focus on **Prefect**, a Python workflow orchestration tool that provides a gentle learning curve and allows us to build and run pipelines locally. We'll explain Prefect in detail in the next topic.  
-
-### Further Learning  
-
-Watch this video for an overview of data pipeline basics: https://www.youtube.com/watch?v=DHO2PuR3jrs 
 
 ## 2. Prefect
+Prefect is an open-source workflow orchestration tool that helps you define, run, and monitor your data pipelines. It’s designed to make workflows more *robust* (automatic retries, error handling) and more *observable* (logs, states, dashboards).
 
-Now that we understand why pipelines are useful, let's look at a tool that helps us build them: **Prefect**.  
+For a nice video introduction to Prefect, check out the following:
+https://www.youtube.com/watch?v=Kt8GAZRpTcE
 
-Prefect is an open-source workflow orchestration tool that helps you define, run, and monitor your data pipelines. It’s designed to make workflows more **robust** (automatic retries, error handling) and more **observable** (logs, states, dashboards).
 
-Instead of writing plain Python scripts that can silently fail or become difficult to manage, Prefect gives you structure and visibility. You can break your work into tasks, connect them in flows, and then track everything in real-time through the Prefect UI.
-
-💡 **When to use Prefect:**
-- Automating a daily data pipeline (e.g., load → clean → analyze → report).
-- Running machine learning training jobs with monitoring.
-- Orchestrating ETL workflows across multiple systems.
-
-**🛠️ Installation**
-
-Before we start writing any Prefect code, install it on your system (along with supporting libraries we’ll use later)
-
-```bash
-pip install prefect pandas matplotlib scipy
-```
-Once installation completes, you can verify it by running:
+Prefect lets you break your work into tasks, connect them in flows, and then track everything in real-time through the Prefect UI. You should have Prefect installed in your virtual environment for this lesson. To check if Prefect is installed, run:
 
 ```bash
 prefect version
 ```
-You should see the installed version number, confirming everything is ready to go.
-
-👉 At the heart of Prefect are two simple but powerful building blocks - tasks and flows. We’ll explore each of them in the next section.
+You should see the installed version number, confirming everything is ready to go. We are assuming you have Prefect 2.x installed, which is the latest major version as of this writing.
 
 ### 2.1 Core Concepts in Prefect
 
@@ -167,7 +130,7 @@ def output():
 if __name__ == "__main__":  
     output()
 ```
-🔸 Each function decorated with `@task` becomes a distinct step in your workflow. The `@flow` function orchestrates those steps. Running `output()` executes the whole workflow. 
+Each function decorated with `@task` becomes a distinct step in your workflow. The `@flow` function orchestrates those steps. Running `output()` executes the whole workflow. 
 
 **What Happens When You Run It?**
 
@@ -378,10 +341,6 @@ Prefect isn’t just about running tasks and viewing logs - it also comes with p
 
 📌 We’ll explore these in later weeks, once we’ve built a strong foundation with tasks, flows, and the Orion UI.
 
-📺 Want to see this in action?
-In this video, you’ll see how Prefect not only schedules a Python script but also solves common workflow challenges. 
-
-https://www.youtube.com/watch?v=Kt8GAZRpTcE
 
 ### Why Prefect and Not Just Python Functions?  
 
