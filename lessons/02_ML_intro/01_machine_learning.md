@@ -186,23 +186,25 @@ Think about walking into a party where you do not know anyone. You start noticin
 - another group is talking about tech
 - another is talking about art
 
-No one labeled these groups for you. You naturally discovered the groups by noticing patterns. That is what clustering algorithms do. In machine learning, we do the same thing: we group similar data points together so we can understand the structure of the dataset. We will see a practical example of a clustering algorithm (using scikit-learn) in the next lesson.
+No one labeled these groups for you. You naturally discovered the groups by noticing patterns. That is what clustering algorithms do.They group similar data points together based on the intrinsic structure of the dataset. We will see a practical example of a clustering algorithm (using scikit-learn) in the next lesson.
 
 ### 2.2 Dimensionality Reduction
 
 Sometimes a dataset has so many columns (features) that it becomes difficult to visualize, slow to process, or hard to reason about. Dimensionality reduction simplifies the dataset by reducing the number of features while preserving the important structure.
 
-Imagine you have an extremely high-resolution photo with millions of pixels (features). You can compress the image and still recognize the main shapes and colors. Even though the final image has fewer pixels, the essential information remains.
+Imagine you have an extremely high-resolution photo with millions of pixels (features). You can compress the image and still recognize the main shapes and colors, you can still "see" your friend's face. Even though the final image has fewer pixels, the essential information remains.
 
 That's the idea behind dimensionality reduction: we reduce the number of features while keeping the core patterns. This helps us visualize high-dimensional data, speed up models, and uncover structure hidden across many dimensions.
 
-We will explore one popular technique, PCA (Principal Component Analysis), later in the course.
+We will explore one popular technique, PCA (Principal Component Analysis), next week using scikit-learn. It is a very important preprocessing and feature engineering technique. 
 
 ## 3. Reinforcement Learning
 
-Reinforcement Learning (RL) is one of the most fascinating and dynamic branches of machine learning. Unlike supervised learning, where a model learns from labeled examples, or unsupervised learning, where the goal is to find patterns in data, reinforcement learning is about learning through interaction.
+Reinforcement Learning (RL) is one of the most fascinating and dynamic branches of machine learning. Reinforcement learning derives from the study of how animals learn to adaptively interact with the world via trial and error.  Reinforcement learning is about *agents learning through interaction with an environment*. 
 
 In this paradigm, the learning system -- called an *agent* -- isn't simply fed a dataset. Instead, it must explore, experiment, and learn from experience. The agent takes actions within an *environment*, observes what happens, and receives feedback in the form of rewards or penalties. Over time, it learns a *policy*, a strategy that helps it make better decisions to maximize its long-term reward.
+
+We will not be doing hands-on activities with RL in Python 200, but it is important to know about this branch of ML. It is used to train many AI systems such as ChatGPT. 
 
 Think of it as how we humans (or animals) learn through trial and error. For example, learning to ride a bike or play a video game -- at first, we make mistakes, but with each attempt, we improve based on the feedback we receive.
 
@@ -217,7 +219,7 @@ At its core, the reinforcement learning process is a continuous feedback loop be
 Here are the main components:
 
 - *Agent*: The learner and decision-maker (e.g., a software program or a robot).
-- *Environment*: The external world that the agent interacts with (e.g., a virtual game or the real world).
+- *Environment*: The external world that the agent interacts with (e.g., a virtual game or the real world). At any given time, the environment is in some state.
 - *Actions*: The choices the agent can make at each step.
 - *Reward*: The positive or negative feedback the agent receives after taking an action.
 - *Policy*: The agent's evolving strategy that maps situations to the best possible actions based on experience.
@@ -232,25 +234,7 @@ Real-world applications include:
 - Robotics: A robotic arm can be trained to pick and place objects by receiving rewards for successful actions. It learns the best way to manipulate objects through repeated trial and error.
 - Gaming: AI agents trained with RL have achieved superhuman performance in complex games like chess and Go by learning optimal strategies through countless rounds of play against themselves.
 
-So far, we've seen how reinforcement learning enables agents to learn from rewards and penalties through trial and error. But what if the environment is too complex to be represented by simple inputs? That's where *deep reinforcement learning* steps in -- combining the perception power of deep learning with the decision-making framework of RL.
-
-## Deep Reinforcement Learning (DRL)
-
-Deep Reinforcement Learning (DRL) combines the decision-making power of reinforcement learning (RL) with the pattern-recognition strength of deep learning (DL), creating a powerful system that can both understand complex environments and make intelligent decisions within them.
-
-In traditional reinforcement learning, the agent learns through feedback in the form of rewards or penalties. However, this approach struggles when dealing with environments that are extremely complex or have a large state space -- meaning there are too many possible situations for the agent to handle effectively. Think of challenges like video games, robotics, or self-driving cars, where every frame or movement represents a new, high-dimensional state.
-
-That's where deep learning comes in. By using deep neural networks to approximate the agent's policy (how it chooses actions) or value function (how it evaluates situations), the model can process raw, high-dimensional inputs such as images, videos, or sensor data and still make effective decisions.
-
-In essence, the neural network acts as the "brain" of the agent, enabling it to see, understand, and act all at once. Just like humans use their eyes and experience to interpret the world before deciding what to do next, a DRL agent uses deep networks to interpret data and choose the best possible actions.
-
-Example applications:
-
-- Game AI: Algorithms like Deep Q-Networks (DQN) learned to play Atari games directly from pixels, achieving human-level performance.
-- Autonomous Driving: DRL helps vehicles learn how to navigate safely by observing the environment and optimizing driving actions.
-- Robotics: Robots can learn complex motion control tasks -- such as grasping, balancing, or walking -- purely through simulated experience.
-
-Deep reinforcement learning is a powerful hybrid that brings together learning from experience (RL) and understanding complex data (DL), enabling machines to operate intelligently in highly dynamic environments.
+Reinforcement learning can be combined with large neural networks (discussed above) to yield cutting-edge *deep reinforcement learning* approaches, which can yield extremely powerful robotic agents. 
 
 ## Check for Understanding
 
