@@ -311,7 +311,7 @@ Each coefficient in multiple regression reflects the relationship between that f
 
 ## Key Takeaways
 
-Linear regression predicts continuous values by fitting a line (with one feature) or a plane/hyperplane (with multiple features) through the data. MSE and RMSE measure the size of prediction errors in interpretable units; R² measures how much better the model does than simply predicting the mean. In simple regression, R² equals the square of the Pearson correlation -- a direct numerical link to week 1 -- but that equality breaks down once we add more features. Overfitting happens when a model captures noise in the training data rather than the true pattern; comparing train R² and test R² is the simplest diagnostic. As we add more predictors, each coefficient tells us about one variable's relationship with the outcome holding all others constant -- the central idea of multiple regression.
+Linear regression predicts continuous values by fitting a line (with one feature) or a plane/hyperplane (with multiple features) through the data. MSE and RMSE measure the size of prediction errors in interpretable units; R² measures how much better the model does than simply predicting the mean. As we add more predictors, each coefficient tells us about one variable's relationship with the outcome holding all others constant -- the central idea of multiple regression. 
 
 ## Check for Understanding
 
