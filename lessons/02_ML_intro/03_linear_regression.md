@@ -125,7 +125,7 @@ print("Slope:", model.coef_[0])
 print("Intercept:", model.intercept_)
 ```
 
-The *slope* is the most important number here. It tells you how much the predicted price increases for each additional square foot, all else being equal. If the slope is around 80, the model predicts an $80 increase in price per additional square foot.
+The *slope* is the most important number here. It tells you how much the predicted price increases for each additional square foot, all else being equal. With this dataset the slope comes out around $107 -- meaning the model predicts roughly a $107 increase in price for each additional square foot.
 
 The *intercept* is the predicted price when sqft is 0 -- not meaningful in this context (no real house has zero square footage), but mathematically required to define a line.
 
@@ -140,11 +140,14 @@ print("RMSE:", rmse)
 print("R²:", r2)
 ```
 
-<img src="resources/rmse.jpg" alt="evaluation metrics" width="350">
 
 #### Root Mean Squared Error (RMSE)
+The most natural question to ask is: how far off are our predictions? For each house in the test set, we could compute the difference between the predicted price and the actual price. 
 
-The most natural question to ask is: how far off are our predictions? For each house in the test set, we could compute the difference between the predicted price and the actual price. But if we average those raw differences, positive and negative errors cancel each other out -- a $10,000 overprediction and a $10,000 underprediction would average to zero, making the model look perfect when it is not.
+Image from Geeks for Geeks:
+<img src="resources/rmse.jpg" alt="evaluation metrics">
+
+But if we average those raw differences, positive and negative errors cancel each other out -- a $10,000 overprediction and a $10,000 underprediction would average to zero, making the model look perfect when it is not.
 
 The standard fix is to square each error before averaging. Squaring does two things: it makes every error positive, and it penalizes large errors more heavily than small ones -- a prediction that is $20,000 off contributes four times as much to the average as one that is $10,000 off. This quantity is *MSE* (Mean Squared Error).
 
@@ -156,7 +159,7 @@ $$
 \text{RMSE} = \sqrt{\text{MSE}}
 $$
 
-RMSE keeps the penalty for large errors while returning the result to the same units as the target. The interpretation is direct: an RMSE of $25,000 means the model's predictions are typically off by about $25,000. That is the number to reach for when explaining model quality to someone unfamiliar with squared errors.
+RMSE keeps the penalty for large errors while returning the result to the same units as the target. The interpretation is direct: with square footage as the only predictor, this model's RMSE comes out around $42,000 -- meaning predictions are typically off by about $42,000. That is a real number you can reason about. It also tells us there is a lot of variation in price that sqft alone cannot explain, which motivates adding more features.
 
 #### R²
 R² answers a different question: how much better is the model than simply predicting the mean price every time (the baseline)? It is defined as:
@@ -175,48 +178,15 @@ There is a direct connection between R² and the Pearson correlation coefficient
 
 ```python
 corr_coeff = df["sqft"].corr(df["price"])
-print("Correlation coefficient:", corr)
-print("Correlation coefficient squared", corr ** 2)
+print("Correlation coefficient:", corr_coeff)
+print("Correlation coefficient squared:", corr_coeff ** 2)
 ```
 
-Compare `corr coeff ** 2` to the R² you computed above -- they should be very close. This is the numerical bridge between week 1 and week 2. 
-
-### Overfitting 
-
-Now that we have a train/test split in place, we can make something important concrete. What happens when we give the model more flexibility than it actually needs?
-
-We can test this by adding *polynomial features* -- extra input columns computed as powers of sqft, specifically sqft² and sqft³. The model still uses linear regression internally, but now it is fitting a *curve* instead of a line, because it has those extra columns available to work with.
-
-<img src="resources/7_week2_Overfitting_and_Underfitting.jpg" alt="Overfitting and Underfitting" width="350">
-
-```python
-from sklearn.preprocessing import PolynomialFeatures
-
-poly = PolynomialFeatures(degree=3, include_bias=False)
-X_poly = poly.fit_transform(df[["sqft"]])   # columns: sqft, sqft², sqft³
-
-X_train_p, X_test_p, y_train_p, y_test_p = train_test_split(
-    X_poly, y, test_size=0.2, random_state=42
-)
-
-model_poly = LinearRegression()
-model_poly.fit(X_train_p, y_train_p)
-
-print("Linear   -- Train R²:", model.score(X_train, y_train))
-print("Linear   -- Test R²: ", model.score(X_test, y_test))
-print("Degree-3 -- Train R²:", model_poly.score(X_train_p, y_train_p))
-print("Degree-3 -- Test R²: ", model_poly.score(X_test_p, y_test_p))
-```
-
-The degree-3 model will show a higher train R² than the linear model -- but a lower test R². That gap is the hallmark of *overfitting*: the model bent its curve to chase every noisy point in the training data, and that curve does not represent the true pattern. It represents noise. A simpler straight line generalizes better, even though it fits the training data less tightly.
-
-The opposite failure is *underfitting*: the model is too simple to capture the real pattern and performs poorly on both training and test data. The goal is always a model that finds the right level of complexity -- simple enough to generalize, expressive enough to capture the real trend. Comparing train R² and test R² is the first diagnostic.
-
-The goal here is not to master polynomial fitting -- it is to see overfitting clearly before it becomes a problem in practice.
+Compare `corr_coeff ** 2` to the R² you computed above -- they should be very close. This is the numerical bridge between week 1 and week 2. 
 
 ## Adding Distance as a Second Feature
 
-Here is where things get genuinely exciting. 🏠
+Here is where things get much more powerful. 🏠
 
 Everything we just did -- the split, the fit, the evaluation -- used a single column of data. `X` was a (500, 1) array: 500 houses, one feature each. What happens if we just... add another column?
 
@@ -276,9 +246,56 @@ print("distance coefficient: ", model_multi2.coef_[1])
 print("is_new coefficient:   ", model_multi2.coef_[2])
 ```
 
-The `is_new` coefficient gives you the average price premium for a new home, holding square footage and distance constant. If that coefficient is around $20,000, the model predicts that new homes sell for roughly $20,000 more than comparable older homes in the same location and size range.
+The `is_new` coefficient gives you the average price premium for a new home, holding square footage and distance constant. With this dataset it comes out around $27,500 -- the model predicts that new homes sell for roughly $27,500 more than otherwise comparable older homes in the same location and size range.
 
 
+### On overfitting
+
+Overfitting happens when a model learns the training data *too well* -- so well that it memorizes the noise rather than the underlying pattern. The image below illustrates what this looks like visually. With too little flexibility (left panel), the model misses the real trend entirely. With just enough flexibility (middle), it captures the trend without chasing every fluctuation. With too much flexibility (right), the curve bends and twists to pass near every training point -- but that curve represents noise, not reality.
+
+<img src="resources/7_week2_Overfitting_and_Underfitting.jpg" alt="Underfitting, good fit, and overfitting illustrated on housing data">
+
+The key diagnostic is the gap between train R² and test R². A model that has overfit will score well on training data and poorly on new data. The more dramatic the gap, the worse the overfit.
+
+To see this clearly, we can use a small synthetic dataset where overfitting is easy to induce. With only 30 points and a degree-10 polynomial -- which adds 10 columns of features (x, x², x³, all the way to x¹⁰) -- the model has far more flexibility than the data can support.
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+
+np.random.seed(0)
+n = 30
+X_demo = np.sort(np.random.uniform(0, 10, n)).reshape(-1, 1)
+y_demo = 2 * X_demo.ravel() + np.random.normal(0, 3, n)
+
+X_train_d, X_test_d, y_train_d, y_test_d = train_test_split(
+    X_demo, y_demo, test_size=0.3, random_state=42
+)
+
+model_lin = LinearRegression().fit(X_train_d, y_train_d)
+
+poly = PolynomialFeatures(degree=10, include_bias=False)
+X_poly_d = poly.fit_transform(X_demo)
+X_train_p, X_test_p, y_train_p, y_test_p = train_test_split(
+    X_poly_d, y_demo, test_size=0.3, random_state=42
+)
+model_poly = LinearRegression().fit(X_train_p, y_train_p)
+
+print("Linear    -- Train R²:", model_lin.score(X_train_d, y_train_d))
+print("Linear    -- Test R²: ", model_lin.score(X_test_d, y_test_d))
+print("Degree-10 -- Train R²:", model_poly.score(X_train_p, y_train_p))
+print("Degree-10 -- Test R²: ", model_poly.score(X_test_p, y_test_p))
+```
+
+```text
+Linear    -- Train R²: 0.6617   Test R²:  0.6690
+Degree-10 -- Train R²: 0.7614   Test R²: -2.1644
+```
+
+The linear model shows a small, healthy gap -- train and test R² are nearly identical (0.66 and 0.67), meaning the model generalizes well. The degree-10 model trains slightly better (0.76 vs 0.66), but collapses completely on the test set: R² = -2.16.
+
+A negative R² means the degree-10 model is *worse than just predicting the mean for every point*. It has memorized the specific wiggles of the training data so precisely that its predictions on new data are actively harmful. This is what overfitting looks like when you measure it rather than just imagine it.
+
+The goal is always a model that finds the right level of complexity: expressive enough to capture the real trend, but not so flexible that it memorizes noise. Comparing train R² and test R² is your first and most useful diagnostic. Linear regression is often the first model you reach for precisely because it is so constrained -- a line or a plane does not have enough flexibility to memorize noise, which makes it naturally resistant to overfitting. More powerful models will give you more flexibility, but they will also require more care.
 
 ## Pulling It Together
 
