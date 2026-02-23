@@ -124,3 +124,126 @@ Add a comment interpreting the `smoker` coefficient: what does it represent in p
 Using the two-feature model from Linear Regression Question 4, create a predicted vs actual scatter plot on the test set. Predicted values go on the x-axis, actual values on the y-axis. Add a diagonal reference line, a title `"Predicted vs Actual"`, labeled axes, and save to `outputs/predicted_vs_actual.png`.
 
 Add a comment: what does it mean when a point falls above the diagonal? What about below?
+
+# Part 2: Mini-Project -- Predicting Student Math Performance
+
+This project uses the [UCI Student Performance Dataset](https://archive.ics.uci.edu/dataset/320/student+performance), collected from two Portuguese secondary schools during the 2005-2006 school year. The dataset records demographic, social, and academic attributes for students enrolled in a math course, along with their grades at three points in the year: G1 (first period), G2 (second period), and G3 (final grade, 0-20).
+
+Your goal is to build a regression model that predicts G3 from student background and behavioral features -- without using G1 or G2. Predicting a final grade from earlier grades in the same class is a narrow task; predicting it from who students are and how they live is a much more interesting problem, and the kind of thing a real analyst or data engineer would be asked to do.
+
+The data file `student_performance_math.csv` is in the course repository at `assignments/resources/`. Copy it into your `assignments_02/` folder before starting, and place your code in `project_02.py`.
+
+## Pre-preprocessing
+
+Before writing a single line of code, open `student_performance_math.csv` in a plain text editor (not Excel). Read the first few rows carefully.
+
+Notice how fields are separated. Notice which values are quoted and which are not. Look at what G1, G2, and G3 look like in the raw file. If you were loading this with `pd.read_csv()`, what parameter would you need to specify beyond the filename? Write that observation as a comment at the top of your script before you write the load call.
+
+## Feature Guide
+
+The version of the dataset used here has been trimmed to 18 columns (the original has 33). The tables below describe everything included. Read through them before you start coding.
+
+*Numeric features* -- use directly as numbers:
+
+| Column | Description |
+|---|---|
+| `age` | Student age (15-22) |
+| `Medu` | Mother's education: 0=none, 1=primary (4th grade), 2=5th-9th grade, 3=secondary, 4=higher education |
+| `Fedu` | Father's education (same 0-4 scale as Medu) |
+| `traveltime` | Home-to-school travel time: 1=under 15 min, 2=15-30 min, 3=30-60 min, 4=over 1 hour |
+| `studytime` | Weekly study time: 1=under 2 hours, 2=2-5 hours, 3=5-10 hours, 4=over 10 hours |
+| `failures` | Number of past class failures (0-3; values above 3 are coded as 3) |
+| `absences` | Number of school absences (0-93) |
+| `freetime` | Free time after school (1=very low to 5=very high) |
+| `goout` | Time going out with friends (1=very low to 5=very high) |
+| `Walc` | Weekend alcohol consumption (1=very low to 5=very high) |
+
+*Binary features stored as "yes"/"no"* -- you will convert these to 1/0:
+
+| Column | Description |
+|---|---|
+| `schoolsup` | Extra educational support from the school (remedial help, tutoring) |
+| `internet` | Has internet access at home |
+| `higher` | Wants to pursue higher education after secondary school |
+| `activities` | Participates in extra-curricular activities |
+
+*Binary feature stored as "F"/"M"* -- you will convert to 0/1:
+
+| Column | Description |
+|---|---|
+| `sex` | Student sex (F=0, M=1). In this Portuguese dataset from 2005, male students show a modest math advantage. [PISA research](https://www.oecd.org/pisa/keyfindings/pisa-2012-results-gender.htm) shows this gap varies significantly by country and correlates with gender equality -- suggesting it reflects a social pattern in the educational context, not an inherent difference. The coefficient is worth noticing and discussing. |
+
+*Grade columns:*
+
+| Column | Description |
+|---|---|
+| `G1` | First period grade (0-20) |
+| `G2` | Second period grade (0-20) |
+| `G3` | Final period grade (0-20) -- your prediction target. Note: 38 students have G3=0. This represents absence from the final exam, not an actual score of zero. You will need to decide how to handle these rows. |
+
+G1 and G2 are in the dataset but are not used as features in the main tasks.
+
+## Task 1: Load and Explore
+
+Load the dataset with the correct separator. Print the shape, the first five rows, and the data types of all columns.
+
+Then plot a histogram of G3 with 21 bins (one per possible value, 0-20). Add a title `"Distribution of Final Math Grades"`, label both axes, and save to `outputs/g3_distribution.png`. You should see a cluster of zeros sitting apart from the main distribution. They represent students who didn't finish the class. 
+
+## Task 2: Prepare the Data
+
+Handle the G3=0 rows first. Filter them out and save the result to a new DataFrame. Print the shape before and after to confirm how many rows were removed. Add a comment explaining your reasoning -- why would keeping these rows distort the model?
+
+Then convert the yes/no binary columns to 1/0 using `.map({"yes": 1, "no": 0})` and the sex column to 0/1 using `.map({"F": 0, "M": 1})`.
+
+Now check something interesting before moving on. Compute the Pearson correlation between `absences` and G3 on both the original dataset and the filtered one, and print both values. The difference is striking. Add a comment explaining why filtering changes the result: what were students with G3=0 doing in the original data that made `absences` look like a weak predictor?
+
+## Task 3: Exploratory Data Analysis
+
+Compute the Pearson correlation between each numeric feature and G3 on the filtered dataset, and print them sorted from most negative to most positive. Which feature has the strongest relationship with G3? Are any results surprising?
+
+Then create at least two visualizations of your own choosing and save them to `outputs/`. Use the correlation results to guide you -- what relationships look worth a closer look? Add a comment for each plot describing what you see.
+
+## Task 4: Baseline Model
+
+Build the simplest possible model: use `failures` alone to predict G3. Split into training and test sets (80/20, `random_state=42`), fit a `LinearRegression` model, and print the slope, intercept, RMSE, and R² on the test set.
+
+Add a comment: given that grades are on a 0-20 scale, what does the RMSE tell you in plain English? Is R² better or worse than you expected from a single feature?
+
+## Task 5: Build the Full Model
+
+Now build a regression model using all of the numeric and binary features from the Feature Guide:
+
+```python
+feature_cols = ["failures", "Medu", "Fedu", "studytime", "higher", "schoolsup",
+                "internet", "sex", "freetime", "activities", "traveltime"]
+X = df_clean[feature_cols].values
+y = df_clean["G3"].values
+```
+
+Split into training and test sets (80/20, `random_state=42`), fit a `LinearRegression` model, and print both train R² and test R², as well as RMSE on the test set. Compare the test R² to your baseline from Task 4 -- how much does adding more features help?
+
+Print each feature name alongside its coefficient:
+
+```python
+for name, coef in zip(feature_cols, model.coef_):
+    print(f"{name:12s}: {coef:+.3f}")
+```
+
+Look carefully at the results. The `schoolsup` coefficient will likely surprise you -- add a comment explaining why a support program might correlate *negatively* with grades. Think about who receives that kind of support. Then look at the coefficients for `freetime`, `activities`, and `traveltime`, and compare train R² to test R². What does that pattern suggest about how much those features are actually contributing?
+
+## Task 6: Evaluate and Summarize
+
+Create a predicted vs actual scatter plot on the test set. Predicted values go on the x-axis, actual on the y-axis. Add a diagonal reference line, a title `"Predicted vs Actual (Full Model)"`, labeled axes, and save to `outputs/predicted_vs_actual.png`.
+
+Then write a plain-language summary as a series of `print()` statements covering:
+
+- The size of the filtered dataset and the test set
+- The RMSE and R² of your best model in plain language -- on a 0-20 scale, what does a typical prediction error actually mean?
+- Which two features have the largest positive and largest negative coefficients, and what those mean
+- One result that surprised you
+
+## The Power of G1
+
+Add `G1` (first period grade) as a feature to the full model from Task 5 and refit. We kept it out because it is basically a proxy for final grade. Print the new test R². The jump will be large -- from roughly 0.30 to somewhere around 0.80.
+
+Add a comment addressing these questions: does a high R² here mean G1 is *causing* G3? Is this a useful model for identifying students who might struggle? What might educators need to do if they wanted to intervene early, before G1 is even available?
