@@ -41,15 +41,13 @@ Create a `LinearRegression` model, fit it to this data, and then predict the sal
 
 ### scikit-learn Question 2
 
-scikit-learn requires the feature array `X` to be 2D -- shape `(num_samples, num_features)` -- even when you only have one feature. This question is about understanding that requirement.
-
-Start with this 1D array:
+scikit-learn requires the feature array `X` to be 2D even when you only have one feature. Start with this 1D array:
 
 ```python
 x = np.array([10, 20, 30, 40, 50])
 ```
 
-Print its shape. Use `.reshape(-1, 1)` to convert it to a 2D array and print the new shape. Add a comment explaining, in your own words, why scikit-learn needs `X` to be 2D.
+Print its shape. Use `.reshape()` to convert it to a 2D array and print the new shape. Add a comment explaining, in your own words, why scikit-learn needs `X` to be 2D.
 
 ### scikit-learn Question 3
 
@@ -65,27 +63,11 @@ X_clusters, _ = make_blobs(n_samples=120, centers=3, cluster_std=0.8, random_sta
 
 Create a `KMeans` model with `n_clusters=3` and `random_state=42`, fit it to `X_clusters`, and predict a cluster label for each point. Print the cluster centers (`kmeans.cluster_centers_`) and how many points fell into each cluster using `np.bincount(labels)`.
 
-Then create a scatter plot coloring each point by its cluster label, mark the cluster centers as black X's, add a title and axis labels, and save the figure to `outputs/kmeans_clusters.png`.
-
-```python
-plt.figure(figsize=(7, 5))
-plt.scatter(X_clusters[:, 0], X_clusters[:, 1], c=labels, cmap="viridis", s=60, alpha=0.7)
-plt.scatter(
-    kmeans.cluster_centers_[:, 0],
-    kmeans.cluster_centers_[:, 1],
-    c="black", marker="X", s=200, label="Cluster centers"
-)
-plt.title("K-Means Clusters")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.legend()
-plt.savefig("outputs/kmeans_clusters.png")
-plt.show()
-```
+Then create a scatter plot coloring each point by its cluster label, plot the cluster centers as black X's, add a title and axis labels. Save the figure to `outputs/kmeans_clusters.png`.
 
 ## Linear Regression
 
-The questions below all use the same synthetic medical costs dataset: 100 patients, each with an age (20 to 65), a smoker flag (0 = non-smoker, 1 = smoker), and an annual medical cost generated from both. Generate it once and reuse the variables throughout. Also create the `outputs/` directory at the top of your file:
+The questions below all use the same synthetic medical costs dataset: 100 patients, each with an age (20 to 65), a smoker flag (0 = non-smoker, 1 = smoker), and an annual medical cost as the target. Generate it once and reuse the variables throughout.
 
 ```python
 import os
@@ -93,8 +75,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-
-os.makedirs("outputs", exist_ok=True)
 
 np.random.seed(42)
 num_patients = 100
@@ -115,7 +95,7 @@ Split the data into training and test sets using `age` as the only feature, an 8
 
 ### Linear Regression Question 3
 
-Fit a `LinearRegression` model to the training data. Print the slope and intercept. Then predict on the test set and print:
+Fit a `LinearRegression` model to your training data from Question 2. Print the slope and intercept. Then predict on the test set and print:
 
 - RMSE: `np.sqrt(np.mean((y_pred - y_test) ** 2))`
 - R² on the test set: `model.score(X_test, y_test)`
@@ -130,14 +110,14 @@ Now add `smoker` as a second feature and fit a new model.
 X_full = np.column_stack([age, smoker])
 ```
 
-Split, fit, and print the test R². Compare it to the R² from Linear Regression Question 3 -- does adding the smoker flag help? Print both coefficients using explicit index access:
+Split, fit, and print the test R². Compare it to the R² from Question 3 -- does adding the smoker flag help? Print both coefficients:
 
 ```python
 print("age coefficient:    ", model_full.coef_[0])
 print("smoker coefficient: ", model_full.coef_[1])
 ```
 
-Add a comment interpreting the `smoker` coefficient: what does it represent in practical terms, holding age constant?
+Add a comment interpreting the `smoker` coefficient: what does it represent in practical terms?
 
 ### Linear Regression Question 5
 
