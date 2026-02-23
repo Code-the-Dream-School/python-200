@@ -1,891 +1,336 @@
-# CTD Python 200 (Weeks 2–4 : Machine Learning)
+# Linear Regression
 
-## Week 2: Introduction to Machine Learning and Regression  
-### 4. Train and Evaluate a Regression Model Using scikit-learn
+For a helpful overview before diving in: [Linear Regression explained (YouTube)](https://youtu.be/ukZn2RJb7TU?si=Jz65OxZeGuUKDbO7)
 
----
+### Recap
 
-### Let’s pause and recap
+In week 1 we explored *correlation* -- a way to measure how strongly two variables move together. This week we shift from measuring relationships to modeling them. You have also seen the scikit-learn `create → fit → predict` workflow. This lesson brings those ideas together with a close look at *regression* -- the kind of ML problem where the goal is to predict a continuous number.
 
-In week 2, machine learning, by now you might have learned most of it:
+We will build a regression model step by step using a synthetic housing dataset, starting with one predictor and gradually extending to multiple variables so you can see clearly how the model grows.
 
-- Heard what machine learning is.  
-- Seen examples of ML problems.  
-- Learned about types of ML,  
-  **like:** supervised and unsupervised learning, regression and classification.  
-- Explored scikit-learn.
+## What is a Regression Model?
 
----
+A regression model is used when we want to predict a *continuous value* -- a number that can take on any value in a range, like a price, a temperature, or a duration. In all these cases, the answer is a number rather than a label, and that is what distinguishes regression from classification.
 
-### Essential Resources  
-These will help you follow along:
+## The Intuition Behind Regression
 
-**YouTube:** https://youtu.be/ukZn2RJb7TU?si=Jz65OxZeGuUKDbO7
+Suppose we want to predict the price of a house. One obvious factor is *the size of the house in square feet*.
 
----
-
-## Let’s also quickly recap Regression Model & scikit-learn
-
-### What is a Regression Model?
-
-A regression model is used when we want to predict a number, a value that can go up and down.  
-This kind of value is called a **continuous value**.
-
-### Examples of things we might want to predict:
-
-- House price (in dollars)  
-- Car mileage (in miles per gallon)  
-- Temperature (in degrees)  
-- Time something will take (in minutes)
-
-In all these cases, the answer is a **number**, not a label.  
-That’s why we use regression.
-
----
 <img src="resources/1_week2_Regression_Model.jpg" alt="Regression Model" width="350">
 
-### Let’s understand with House Prices example:
+Imagine plotting that data with house size on the x-axis and price on the y-axis. Each house becomes a point in that scatterplot, and you will usually see a trend: bigger houses tend to cost more. The goal of linear regression is to draw a straight line through that cloud of points that best captures the trend. That line lets us answer questions like "If a house is 1800 square feet, what price should we expect?" -- and that is where machine learning becomes useful.
 
-Suppose we want to predict the price of a house.
+The *steepness* of the line (the slope) tells us how much price increases for every additional square foot. scikit-learn finds that line automatically.
 
-We know that things like:  
-We know that one important factor that affects price is **the area of the house (square feet)**.
+## Fitting a Line Through Points
 
-A regression model looks at many past houses and learns:
-
-- “If size increases, price tends to increase.”  
-- “If located in area A, the price might be higher.”
-
-It learns the relationship between the **inputs (features)** and the **price (target)**.
-
----
-
-### Before we build anything in scikit-learn, let’s understand the idea behind regression:
-
-Imagine you collect data from many different houses:
-- each house has a size (in square feet)  
-- each house has a price  
-
-We can plot this information on a graph:
-- **x-axis (horizontal)** → house area  
-- **y-axis (vertical)** → house price  
-
-This creates a scatterplot, a cloud of points where each point is one house.
-
-If you look at the points, you’ll usually notice a trend:  
-**As the area of the house gets bigger, price tends to increase.**  
-That’s our real-world pattern.
-
-Now, the goal of linear regression is simple:  
-**Draw a straight line through this cloud of points that best represents the trend.**
-
-This line helps us answer questions like:  
-*“If a new house is 1800 square feet, what price should we expect?”*  
-That prediction is where machine learning becomes useful.
-
-### Here’s the intuition:
-
-- Houses above the line cost more than usual for their size  
-- Houses below the line cost less than usual  
-- The **steepness of the line** tells us how much price increases for every extra square foot  
-
----
-
-### So regression is really just this:
-
-Find a line that describes how one number (area) affects another number (price),  
-and use that line to predict future prices.
-
-Once we understand this visual idea, then scikit-learn simply helps us compute and draw that line automatically.
-
----
-
-### Quick recap: What is scikit-learn?
-
-scikit-learn is a Python library that gives us easy-to-use tools for building machine learning models.  
-Instead of writing math from scratch, we use scikit-learn to handle the heavy lifting.
-
----
-
-### Why we use scikit-learn
-
-- It provides ready-to-use models (like Linear Regression).  
-- It provides tools to split data into training and test sets.  
-- It provides evaluation metrics to measure how good our model is.  
-- It keeps our code simple, clear, and consistent.
-
----
-
-### Connecting to Our Housing Example
-
-Think about predicting house prices.
-
-If we tried to figure this out ourselves, we’d need to:
-
-- Study a lot of past house sales  
-- Notice patterns (like bigger houses cost more)  
-- Build a formula  
-- Test whether our formula works on new houses  
-
-Scikit-learn helps us do exactly this, but automatically.  
-We just tell scikit-learn:
-
-- What data to learn from (house size, number of bedrooms…)  
-- What value we want to predict (house price)  
-
-And scikit-learn learns the relationship for us.
-
-### The scikit-learn basic workflow:
-
-**1. Choose a model:**
-```python
-from sklearn.linear_model import LinearRegression
-model = LinearRegression()
-```
-
-**2. Train the model on the training data:**
-```python
-model.fit(X_train, y_train)
-```
-
-**3. Make predictions on new data:**
-```python
-predictions = model.predict(X_test)
-```
-
-<img src="resources/2_week2_Housing_Example.jpg" alt="Housing Example" width="350">
-
----
-
-### Let’s take a look at how this idea of “fitting a line through points” looks in code.
-
-Here we’re doing something very simple:
-
-- loading a small dataset with area and price  
-- training a basic Linear Regression model  
-- plotting the scatterplot of points  
-- drawing the best-fit line that the model learns  
-
-This helps us see the relationship before we learn the full training and evaluation steps.
-
-**Try this example in the coding environment (VS Code, Jupyter Notebook) for better understanding.**
+The `create → fit → predict` workflow works the same way for regression. Let's see it with a minimal synthetic example before moving to more realistic examples.
 
 ```python
-import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
-# Simple example dataset
-data = pd.read_csv("resources/Week2_Housing_Data.csv", usecols=["area", "price"])  # contains: area, price
+np.random.seed(42)
+sqft = np.linspace(500, 3000, 50).reshape(-1, 1)
+price = 150 * sqft.ravel() + np.random.normal(0, 40000, 50)
 
-X = data[["area"]]   # feature (must be 2D)
-y = data["price"]    # target
+model = LinearRegression()       # 1. create
+model.fit(sqft, price)           # 2. fit
+predicted = model.predict(sqft)  # 3. predict
 
-# Create and train the model
-model = LinearRegression()
-model.fit(X, y)
+print("Slope:", model.coef_[0])
+print("Intercept:", model.intercept_)
 
-# Make predictions for drawing the line
-predicted_prices = model.predict(X)
-
-# Plot
-plt.scatter(X, y, color="blue", label="Actual data")
-plt.plot(X, predicted_prices, color="red", label="Best-fit line")
-
-plt.xlabel("House Area (sqft)")
-plt.ylabel("House Price")
+plt.scatter(sqft, price, color="blue", alpha=0.5, label="Data")
+plt.plot(sqft, predicted, color="red", label="Linear fit")
+plt.xlabel("Square Feet")
+plt.ylabel("Price ($)")
 plt.legend()
 plt.show()
 ```
-**Output:**
 
 <img src="resources/3_week2_fitting_a_line_through_points.jpg" alt="fitting a line through points" width="350">
 
-### What this plot shows:
+Each blue dot is one house; the red line is what the model learned. The slope should be close to 150 -- the true relationship we baked into the data. Even with noise, the model recovers the trend cleanly. That is the core idea: linear regression finds the straight line that best describes the relationship between an input and an output.
 
-This scatterplot shows real houses from our dataset, each blue dot is one house, with its area on the x-axis and price on the y-axis.
+Now let's apply this to a more realistic dataset, and along the way introduce the tools we need to evaluate a model properly.
 
-The red line is the best-fit line that linear regression learns. It represents the general trend: **As house area increases, house price tends to increase.**
+## Working with a Synthetic Housing Dataset
 
-This is the core idea of simple linear regression: **find the straight line that best describes the relationship between one input (area) and one output (price).**
+We will use a synthetic dataset of 500 house sales with four columns:
 
----
+`sqft` -- size of the house in square feet, ranging from about 600 to 3000.
+`distance` -- distance from the city center in miles.
+`is_new` -- 1 if the home was recently built, 0 if older.
+`price` -- sale price in dollars.
 
-## Now what?
-
-### Let’s understand what is training and evaluation (testing) in ML:
-
-<img src="resources/4_week2_training.jpg" alt="training and evaluation" width="350">
-
-**Training** is the process where a machine learning model learns patterns and relationships from the data we give it.
-
-It looks at many examples of inputs (features) and their correct answers (labels or targets), and tries to find a rule or formula that connects them.
-
-In other words, during training the model is learning how changes in the input affect the output, so it can make good predictions on new, unseen data later.
-
----
-
-### Think of training this way:
-
-If we show the model house sizes (input) and their prices (output), it learns how price usually changes when the size changes — that’s training.
-
-Think of training like *studying from examples*. The model “studies” the training data to learn how inputs relate to outputs.
-
-**In scikit-learn, this happens when we call:** .fit(X_train, y_train). We will learn more in this lesson.
-
-And, **evaluation** (we will learn more about this in future lessons) is the process of checking how well a trained model performs — in other words, how good it is at making predictions on new, unseen data.
-
----
-
-## How Do We Measure How Good a Regression Model Is?
-
-After training a regression model, we need a way to measure **how close our predictions are to the real house prices**.  
-These measurements are called **error metrics**.
-
-In regression, the most common metrics you’ll see are:
-
-- **MSE (Mean Squared Error)**
-- **RMSE (Root Mean Squared Error)**
-- **R² Score**
-
-Each metric tells us something slightly different about how well our model is performing.
-
----
-
-### Mean Squared Error (MSE)
-
-<img src="resources/5_week2_evaluation_metrics.jpg" alt="evaluation metrics" width="350">
-
-**MSE** measures the average of the **squared differences** between predicted house prices and the actual house prices.
-
-In simple terms:
-1. Take the difference between each predicted price and the real price  
-2. Square that difference  
-3. Average all of those squared differences  
-
-**Why do we square the errors?**
-
-- Squaring makes **large mistakes matter more** than small ones  
-- It prevents positive and negative errors from canceling each other out  
-
-**Downside of MSE**
-
-Because we square the errors, the units become harder to interpret.
-
-- If house prices are measured in dollars  
-- MSE is measured in **dollars²**
-
-This makes MSE useful for optimization, but not very intuitive for explaining real-world prediction quality.
-
----
-
-### Root Mean Squared Error (RMSE)
-
-To make the error easier to understand, we take the square root of MSE.
-
-\[
-\text{RMSE} = \sqrt{\text{MSE}}
-\]
-
-**RMSE is the most commonly used regression error metric in practice.**
-
-Why?
-
-- It still penalizes large errors  
-- **But it returns the error in the same units as the target value**
-
-That means RMSE has a clear, real-world interpretation.
-
-**Example interpretation:**
-
-> “On average, our house price predictions are off by about **$48,000**.”
-
-If you want a number that makes sense in everyday terms, **RMSE is usually the best choice**.
-
----
-
-### Why Do We Also Use R²?
-
-If RMSE tells us *how wrong our predictions are*, you might wonder:
-
-> “Why do we also need R²?”
-
-R² answers a **different kind of question**.
-
----
-
-### R² Score (Coefficient of Determination)
-
-**R² compares your regression model to a very simple baseline model.**
-
-That baseline model:
-- Ignores house size completely  
-- Always predicts the **average house price**  
-
-Think of this as the **“just guess the average price” strategy**.
-
-Both your regression model and this baseline model make errors, which we measure using **MSE**.
-
-R² tells us **how much smaller your model’s error is compared to the baseline error**.
-
-\[
-R^2 = 1 - \frac{\text{Model MSE}}{\text{Baseline MSE}}
-\]
-
----
-
-### Interpreting R²
-
-- **R² = 1.0** → Perfect predictions  
-- **R² = 0.0** → No better than always guessing the average price  
-- **R² < 0.0** → Worse than guessing the average  
-
-**Example:**
-
-If **R² = 0.72**, that means:
-
-> “Using house size, our model removes **72% of the error** we would make by always guessing the average house price.”
-
-In plain language:
-
-**R² measures the fraction of the original prediction error that the model explains.**
-
----
-
-### Connecting Back to Week 1: Correlation
-
-In **Week 1**, we learned about **correlation**, which measures how strongly two variables move together.
-
-There is a direct connection here:
-
-> In **simple linear regression with one feature**,  
-> **R² is the square of the Pearson correlation coefficient** between the feature (house area) and the target (house price).
-
-What this means:
-
-- Strong correlation between area and price → high R²  
-- Weak correlation → low R²  
-
-This makes intuitive sense:
-- If house prices increase steadily as area increases, a straight line fits well  
-- If there is no clear linear relationship, regression will struggle  
-
-This shows how **correlation (Week 1)** and **regression (Week 2)** are closely related.
-
----
-
-### How Does Linear Regression Find the “Best” Line?
-
-Linear regression does not guess randomly.
-
-It finds the straight line that **minimizes the Mean Squared Error (MSE)**.
-
-This method is called **least squares**.
-
-**In other words:**
-- The model considers many possible lines  
-- It chooses the one where the **average squared difference between predicted and actual house prices is as small as possible**
-
-This is how scikit-learn finds the best-fit line — it’s an optimization process, not a mystery.
-
----
-
-### Quick Summary
-
-- **MSE** measures squared prediction error (useful but hard to interpret)
-- **RMSE** is the square root of MSE and is measured in dollars
-- **R²** compares your model to guessing the average house price
-- Linear regression uses **least squares** to minimize MSE and find the best line
-
-
----
-
-## Training and Test Sets, Why We Split the Data?
-
-<img src="resources/6_week2_Training_Test_Sets.jpg" alt="Training and Test Sets" width="350">
-
-When we train a model, we want to know how well it can make predictions on **new** data, not just the data it has already seen.
-
-Think of it this way:  
-When you study for a test, you practice using your notes and homework problems (**training**).  
-Then, during the real exam (**testing**), you get new questions you haven’t seen before — that’s how we see if you truly understand the topic!
-
-To do this in machine learning, we divide our dataset into two parts:
-
-### **1. Training set**
-The data the model learns from.  
-The model uses this data to find patterns and relationships.
-
-### **2. Test set**
-The data we keep aside to check how well the model learned.  
-This simulates how the model will perform on real-world, unseen data.
-
-### Typical Split
-We usually use around **70–80%** of the data for training and **20–30%** for testing.
-
-### Splitting the Data in scikit-learn
-
-In scikit-learn, we can easily split the data using:
+The data was designed to be somewhat realistic and illustrate the core concepts in regression. Let's load it and take a quick look.
 
 ```python
-from sklearn.model_selection import train_test_split  # imports the function
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 
+df = pd.read_csv("resources/synthetic_housing_data.csv")
+print(df.head())
+print(df.describe())
+```
+
+`df.describe()` gives you the value ranges for each column and confirms there are no missing values -- both important things to check before modeling.
+
+## Simple Linear Regression: sqft → price
+
+We start with the simplest possible case: a single predictor where we will predict price from square footage alone. The model learns one equation:
+
+price = slope × sqft + intercept
+
+### Define Features and Target
+
+```python
+X = df[["sqft"]]   # 2D -- scikit-learn expects features as a DataFrame or 2D array
+y = df["price"]
+```
+
+### Train-Test Split
+
+Before we fit anything, we need to talk about evaluation. When we train a model, we want to know how well it performs on *new* data -- data it has never seen. Without that check, we have no way to know whether the model is genuinely learning the pattern or just memorizing the training examples.
+
+Think of it like studying for an exam: you practice on notes and homework (*training*), then the real exam tests you on questions you have not seen before (*testing*). In machine learning, we simulate this by splitting the dataset into two parts before training. The *training set* is what the model learns from. The *test set* is held aside to check how well the model generalizes. We will use 80% for training and 20% for testing.
+
+Luckily, scikit-learn has built-in tools for splitting data into testing and training subsets. This is an extremely important idea, that you will see time and time again in ML and other contexts.
+
+```python
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 ```
 
-This line splits our data into **four parts**:
+`random_state=42` makes the split repeatable -- you will get the same assignment of rows every time you run the code.
 
-- **X_train**: features for training  
-- **X_test**: features for testing  
-- **y_train**: labels (answers) for training  
-- **y_test**: labels for testing  
+Create the model, come up with the best fit, and predict values on the test data:
 
-### What the parameters mean:
+```python
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+```
 
-- **test_size=0.2** → 20% of the data will be used for testing, and the rest (80%) for training.  
-- **random_state=42** → makes the split repeatable, so we get the same result every time we run the code.
+Inspect the learned parameters
 
----
+```python
+print("Slope:", model.coef_[0])
+print("Intercept:", model.intercept_)
+```
 
-## Introduction to Overfitting and Underfitting
+The *slope* is the most important number here. It tells you how much the predicted price increases for each additional square foot, all else being equal. If the slope is around 80, the model predicts an $80 increase in price per additional square foot.
 
-When we train a machine learning model, we want it to learn the **real pattern** in the data so it can make good predictions on new houses, not just the ones it has already seen.  
-But a model can learn **too little** or **too much**.  
-This leads to **underfitting** or **overfitting**.
+The *intercept* is the predicted price when sqft is 0 -- not meaningful in this context (no real house has zero square footage), but mathematically required to define a line.
+
+### Evaluate: RMSE and R²
+The above yielded the best fitting line, but how can we tell how *good* the model is?  There are a couple of measures that are common in regression contexts, RMSE and R-squared. For reasons stated above, we evaluate how good the model is on the data that it was not trained on, on the *test* data:
+
+```python
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+r2 = r2_score(y_test, y_pred)
+
+print("RMSE:", rmse)
+print("R²:", r2)
+```
+
+<img src="resources/rmse.jpg" alt="evaluation metrics" width="350">
+
+#### Root Mean Squared Error (RMSE)
+
+The most natural question to ask is: how far off are our predictions? For each house in the test set, we could compute the difference between the predicted price and the actual price. But if we average those raw differences, positive and negative errors cancel each other out -- a $10,000 overprediction and a $10,000 underprediction would average to zero, making the model look perfect when it is not.
+
+The standard fix is to square each error before averaging. Squaring does two things: it makes every error positive, and it penalizes large errors more heavily than small ones -- a prediction that is $20,000 off contributes four times as much to the average as one that is $10,000 off. This quantity is *MSE* (Mean Squared Error).
+
+The catch is that squaring changes the units. If house prices are in dollars, MSE ends up in dollars², which is not intuitive to report or explain.
+
+To fix the units problem, we take the square root of MSE. The result is *RMSE* -- Root Mean Squared Error:
+
+$$
+\text{RMSE} = \sqrt{\text{MSE}}
+$$
+
+RMSE keeps the penalty for large errors while returning the result to the same units as the target. The interpretation is direct: an RMSE of $25,000 means the model's predictions are typically off by about $25,000. That is the number to reach for when explaining model quality to someone unfamiliar with squared errors.
+
+#### R²
+R² answers a different question: how much better is the model than simply predicting the mean price every time (the baseline)? It is defined as:
+
+$$
+R^2 = 1 - \frac{\text{Model MSE}}{\text{Baseline MSE}}
+$$
+
+An R² of 1.0 means perfect predictions. An R² of 0.0 means the model does no better than guessing the mean. Despite the name, R² is *not* defined as a mathematical square -- it is one minus a ratio of errors. That is why R² can be negative: if the model performs worse than predicting the mean on test data (which happens when a model has overfit the training set), the ratio exceeds 1.0 and R² drops below zero. 
+
+> On *training* data, R² is always non-negative, because the fitted line is guaranteed to do at least as well as just estimating the average.
+
+#### Connecting R² to Correlation
+
+There is a direct connection between R² and the Pearson correlation coefficient r that you computed in week 1: in simple linear regression with one feature, R² equals the square of the correlation between that feature and the target. Let's verify it directly:
+
+```python
+corr_coeff = df["sqft"].corr(df["price"])
+print("Correlation coefficient:", corr)
+print("Correlation coefficient squared", corr ** 2)
+```
+
+Compare `corr coeff ** 2` to the R² you computed above -- they should be very close. This is the numerical bridge between week 1 and week 2. 
+
+### Overfitting 
+
+Now that we have a train/test split in place, we can make something important concrete. What happens when we give the model more flexibility than it actually needs?
+
+We can test this by adding *polynomial features* -- extra input columns computed as powers of sqft, specifically sqft² and sqft³. The model still uses linear regression internally, but now it is fitting a *curve* instead of a line, because it has those extra columns available to work with.
 
 <img src="resources/7_week2_Overfitting_and_Underfitting.jpg" alt="Overfitting and Underfitting" width="350">
 
----
-
-### **Underfitting**
-
-Underfitting happens when the model is **too simple** to capture the pattern in the data.
-
-**In the housing example:**  
-If the relationship between area and price is not perfectly straight, a simple straight line might miss important patterns, so the predictions will not be very accurate.
-
-**Signs of Underfitting:**
-- Low performance on training data  
-- Low performance on test data  
-
-**Think of it like:**  
-A student who barely studied — they do poorly on homework **and** the test.
-
----
-
-### **Overfitting**
-
-Overfitting happens when the model becomes **too complex** and starts memorizing noise or random fluctuations in the training data.
-
-Even with **one feature**, this can happen — for example, if we fit a complicated curved line instead of a simple straight one.
-
-**Signs of Overfitting:**
-- Very high accuracy on training data  
-- Poor accuracy on test data  
-
-**Think of it like:**  
-A student who memorized every answer — great on practice questions but struggles with new ones.
-
----
-
-### **Goal: Find the Right Balance**
-
-We want a model that:
-
-- Learns the important pattern  
-- Ignores random noise  
-- Performs well on new, unseen houses  
-
-This is called **generalization**.
-
----
-
-## Next Step
-
-<img src="resources/8_week2_Next_Step.jpg" alt="Next Step" width="350">
-
-Now that we understand what regression is and how a line can describe the relationship between house area and price, we are ready to train a **real model**.
-We will go through the basic steps of building a simple linear regression model using scikit-learn:
-
-**Creating the model → Fitting it → Making predictions → Evaluating the results**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----
-
-## Hands-on Activity: Train a Simple Linear Regression Model
-
-In this activity, we will use a small housing dataset to build a model that predicts the  
-**price of a house based only on its area (square feet)**.
-
-Using just one feature keeps things simple and helps us clearly see how **linear regression**
-works step by step.
-
----
-
-## Step 1: Imports
-
-First, we import the tools we need:
-
-- **pandas** → load and explore the dataset  
-- **train_test_split** → split data into training and test sets  
-- **LinearRegression** → build the regression model  
-- **mean_squared_error, r2_score** → evaluate the model  
-- **numpy** → compute RMSE (square root of MSE)
-
 ```python
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-import numpy as np
+from sklearn.preprocessing import PolynomialFeatures
+
+poly = PolynomialFeatures(degree=3, include_bias=False)
+X_poly = poly.fit_transform(df[["sqft"]])   # columns: sqft, sqft², sqft³
+
+X_train_p, X_test_p, y_train_p, y_test_p = train_test_split(
+    X_poly, y, test_size=0.2, random_state=42
+)
+
+model_poly = LinearRegression()
+model_poly.fit(X_train_p, y_train_p)
+
+print("Linear   -- Train R²:", model.score(X_train, y_train))
+print("Linear   -- Test R²: ", model.score(X_test, y_test))
+print("Degree-3 -- Train R²:", model_poly.score(X_train_p, y_train_p))
+print("Degree-3 -- Test R²: ", model_poly.score(X_test_p, y_test_p))
 ```
 
-## Step 2: Load and Explore the Dataset
+The degree-3 model will show a higher train R² than the linear model -- but a lower test R². That gap is the hallmark of *overfitting*: the model bent its curve to chase every noisy point in the training data, and that curve does not represent the true pattern. It represents noise. A simpler straight line generalizes better, even though it fits the training data less tightly.
 
-Before training a machine learning model, we need to understand the data we are working with.  
-In this lesson, we are using a housing dataset that contains information about house size and price.
+The opposite failure is *underfitting*: the model is too simple to capture the real pattern and performs poorly on both training and test data. The goal is always a model that finds the right level of complexity -- simple enough to generalize, expressive enough to capture the real trend. Comparing train R² and test R² is the first diagnostic.
 
-**We load only the columns we need:**
-- **area** → the size of the house in square feet  
-- **price** → the selling price of the house
+The goal here is not to master polynomial fitting -- it is to see overfitting clearly before it becomes a problem in practice.
 
-    ```python
-    data = pd.read_csv("resources/Week2_Housing_Data.csv", usecols=["area", "price"])
-    print(data.head())
-    ```
+## Adding Distance as a Second Feature
 
-The `head()` function shows the first few rows of the dataset.  
-This helps us confirm that the data loaded correctly and looks reasonable.
+Here is where things get genuinely exciting. 🏠
 
----
+Everything we just did -- the split, the fit, the evaluation -- used a single column of data. `X` was a (500, 1) array: 500 houses, one feature each. What happens if we just... add another column?
 
-### Checking Basic Information About the Dataset
+That is it. That is the whole move. We pass `X` with two columns instead of one, and the *exact same* `LinearRegression()` model, the *exact same* `.fit()` call, and the *exact same* evaluation code all work without any modification. scikit-learn figures out that there are now two features and adapts automatically. You do not change a single line of the training or evaluation code.
 
-Next, we check basic information about the dataset.
+What changes is the geometry. With one feature, the model fit a straight line in two dimensions (sqft on one axis, price on the other). With two features, it fits a *plane* in three dimensions -- sqft, distance, and price each get an axis, and the plane tilts to best match all 500 houses at once. That may sound more complex, but the equation is still just addition and multiplication:
 
-```python
-    print(data.info())
-```
+price = b1 × sqft + b2 × distance + c
 
-**This tells us:**
-- How many rows and columns the dataset has  
-- The data type of each column  
-- Whether there are any missing values  
+No curves, no tricks. The model is still *linear* -- a linear combination of the features. And because linear algebra generalizes naturally to higher dimensions, this same approach scales to 10 features, 100 features, or more, with the same code every time. That is one of the reasons linear regression remains one of the most powerful and widely used tools in data science. We are not going to worry about this mathematical voodoo wizardry here, but it is one of the best worked-out fields in mathematics, so we are resting on good foundations here. 
 
-**For machine learning models, it’s important that:**
-- Features are numeric  
-- There are no missing values (or they are handled properly)
-
----
-
-### Looking at Summary Statistics
-
-Now let’s look at some simple statistics.
+Houses closer to the city center typically sell for more, so `distance` should have a negative coefficient -- more miles means lower price. Let's see.
 
 ```python
-    print(data.describe())
+X_multi = df[["sqft", "distance"]]   # now (500, 2): 500 houses, 2 features each
+
+X_train_m, X_test_m, y_train_m, y_test_m = train_test_split(
+    X_multi, y, test_size=0.2, random_state=42
+)
+
+model_multi = LinearRegression()
+model_multi.fit(X_train_m, y_train_m)
+
+print("R²:", model_multi.score(X_test_m, y_test_m))
+print("Area coefficient:    ", model_multi.coef_[0])
+print("distance coefficient:", model_multi.coef_[1])
 ```
+Check out the coefficients (slopes) for the two features: does it match your expectations?
 
-**This shows useful information such as:**
-- Minimum and maximum house area  
-- Minimum and maximum house price  
-- Average (mean) values  
-- How spread out the values are  
+What about R²? It has the same meaning in higher dimensions as well. How much better does the model do than when you just use the baseline (mean). The R² should be higher than the single-feature model -- adding a relevant predictor almost always helps. The `sqft` coefficient tells you how much price increases per square foot while holding distance constant; the `distance` coefficient (likely negative) tells you how much price drops per additional mile from the city center while holding sqft constant.
 
-Exploring the data helps us catch problems early and understand what we are modeling.
+This is the essential idea of multiple regression: each coefficient tells you about one feature's relationship with the outcome while the model accounts for all the others.
 
----
+## Adding a Binary Feature: is_new
 
-## Step 3: Define Features (X) and Target (y)
+Our dataset also records whether a home is newly built. Let's add `is_new` and fit a third model. This is a categorical feature (0/1). Binary (0/1) variables slot naturally into linear regression -- no special encoding is required. The coefficient for a binary variable is interpreted as the shift in the predicted outcome when that variable goes from 0 to 1, with all other features held constant.
 
-**Now we separate the dataset into:**
-- **Features (X)** → the inputs the model uses to make predictions  
-- **Target (y)** → the value we want the model to predict  
+Our new model is: 
 
-**In this lesson:**
-- Feature = area  
-- Target = price
-- 
-```python
-    X = data[["area"]]   # must be a 2D structure
-    y = data["price"]    # 1D target
-```
+price = b1 × sqft + b2 × distance + b3 x is_new +  c
 
-We use a 2D structure for `X` because scikit-learn expects features in that format, even if there is only one feature.
-
----
-
-## Step 4: Split the Data into Training and Test Sets
-
-To check how well our model works on new, unseen data, we split the dataset into two parts.
-```python
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    print("Training examples:", len(X_train))
-    print("Test examples:", len(X_test))
-```
-
-- **80% training data** → the model learns patterns  
-- **20% test data** → we evaluate how well the model generalizes  
-
-Using a test set helps us avoid judging the model only on data it has already seen.
-
----
-
-## Step 5: Create and Train the Linear Regression Model
-
-Now we create a Linear Regression model and train it using the training data.
+Let's check it out:
 
 ```python
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+X_multi2 = df[["sqft", "distance", "is_new"]]
+
+X_train_m2, X_test_m2, y_train_m2, y_test_m2 = train_test_split(
+    X_multi2, y, test_size=0.2, random_state=42
+)
+
+model_multi2 = LinearRegression()
+model_multi2.fit(X_train_m2, y_train_m2)
+
+print("R²:", model_multi2.score(X_test_m2, y_test_m2))
+print("sqft coefficient:     ", model_multi2.coef_[0])
+print("distance coefficient: ", model_multi2.coef_[1])
+print("is_new coefficient:   ", model_multi2.coef_[2])
 ```
 
-Training is where the model learns the relationship between house area and house price.
+The `is_new` coefficient gives you the average price premium for a new home, holding square footage and distance constant. If that coefficient is around $20,000, the model predicts that new homes sell for roughly $20,000 more than comparable older homes in the same location and size range.
 
----
 
-### Inspecting the Learned Parameters
 
-```python
-    print("Slope (coefficient):", model.coef_[0])
-    print("Intercept:", model.intercept_)
-```
+## Pulling It Together
 
-- **Slope (coefficient):**  
-  How much the predicted house price changes for each additional square foot.
+It is worth pausing to consolidate what we have built across this lesson.
 
-- **Intercept:**  
-  The predicted price when the area is 0.  
-  This isn’t realistic, but it’s needed for the mathematical equation of the line.
+"Linear" in linear regression means the prediction is a *linear combination* of the features: each feature is multiplied by its coefficient and the results are summed. A model with ten features is still linear regression; the decision surface is just a hyperplane in ten dimensions instead of a line in two.
 
----
+R² continues to measure the fraction of variance in the target that the model explains, regardless of how many features are in the model. In the one-feature case it has a clean numerical connection to the Pearson correlation between that feature and the target. In the multi-feature case that connection no longer holds, but R² remains a useful summary of overall model fit.
 
-## Step 6: Make Predictions on the Test Set
+Correlation, which we covered in week 1, is a *pairwise* measure -- it describes the relationship between exactly two variables. Multiple regression brings all the features together simultaneously and estimates each feature's relationship with the target after accounting for everything else. That is why a feature can appear weakly correlated with the target on its own but still be a useful predictor in a multi-feature model.
 
-Next, we use the trained model to predict prices for houses it has never seen before.
+Each coefficient in multiple regression reflects the relationship between that feature and the outcome *holding all other features constant*. This concept of controlling for other variables is what separates multiple regression from simply looking at pairwise correlations, and it is one of the core reasons regression is such a powerful analytical tool.
 
-```python
-    y_pred = model.predict(X_test)
+## Key Takeaways
 
-    print("First 5 predicted prices:", y_pred[:5])
-    print("First 5 actual prices:", y_test.values[:5])
-```
+Linear regression predicts continuous values by fitting a line (with one feature) or a plane/hyperplane (with multiple features) through the data. MSE and RMSE measure the size of prediction errors in interpretable units; R² measures how much better the model does than simply predicting the mean. In simple regression, R² equals the square of the Pearson correlation -- a direct numerical link to week 1 -- but that equality breaks down once we add more features. Overfitting happens when a model captures noise in the training data rather than the true pattern; comparing train R² and test R² is the simplest diagnostic. As we add more predictors, each coefficient tells us about one variable's relationship with the outcome holding all others constant -- the central idea of multiple regression.
 
-Comparing predicted and actual values helps us see whether the model’s predictions are in the right range.
+## Check for Understanding
 
----
+1. What does R² measure?
 
-## Step 7: Evaluate the Model Using RMSE and R²
+    a. The slope of the regression line
+    b. How much variation in the target the model explains compared to predicting the mean
+    c. The number of data points
+    d. The size of the largest error
 
-### Root Mean Squared Error (RMSE)
+    <details>
+    <summary>Show Answer</summary>
+    b -- R² measures how much better the model performs compared to always predicting the mean target value.
+    </details>
 
-```python
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-    print("RMSE:", rmse)
-```
+2. Why can R² be negative when evaluated on test data?
 
-RMSE is measured in dollars, just like house prices.  
-On average, our predictions are off by about RMSE dollars.
+    a. Because the Pearson correlation can be negative
+    b. Because R² is defined as error reduction relative to a baseline, not as a mathematical square
+    c. Because the dataset is too small
+    d. Because the slope is negative
 
-**Example:**
-RMSE ≈ 48,000 → predictions are off by about \$48,000 on average
+    <details>
+    <summary>Show Answer</summary>
+    b -- R² is defined as 1 - (model error / baseline error). If the model performs worse than predicting the mean on test data, this ratio exceeds 1.0 and R² drops below zero.
+    </details>
 
----
+3. What changes conceptually when we add a second feature to a regression model?
 
-### R² Score
+    a. The model fits a plane instead of a line, and each coefficient reflects a partial relationship
+    b. R² is no longer a valid metric
+    c. The model requires a different algorithm
+    d. The train-test split is no longer needed
 
-```python
-    r2 = r2_score(y_test, y_pred)
-    print("R² score:", r2)
-```
+    <details>
+    <summary>Show Answer</summary>
+    a -- Multiple regression extends the model to higher dimensions. Each coefficient reflects the relationship between one feature and the outcome while holding all other features constant.
+    </details>
 
-R² compares this model to always guessing the average house price.
-
-**Example:** 
-R² = 0.72 → the model explains 72% of the variation in house prices.
-
----
-
-## Step 8: Compare Actual vs. Predicted Prices
-
-To better understand the predictions, we create a comparison table.
-
-```python
-    results = pd.DataFrame({
-        "area": X_test["area"],
-        "actual_price": y_test,
-        "predicted_price": y_pred,
-        "error": y_test - y_pred
-    })
-
-    print(results.head(10))
-```
-
-- **actual_price** → real house price  
-- **predicted_price** → model’s prediction  
-- **error** → how far off the prediction was  
-
-Positive error → model predicted too low  
-Negative error → model predicted too high  
-
----
-
-## What Do These Results Tell Us?
-
-- The model captures the overall trend (larger houses generally have higher prices)  
-- Predictions are reasonable, but not perfect  
-
-This is expected because the model uses only one feature.
-
----
-
-## Why Isn’t the Model Perfect?
-
-House prices depend on many factors, such as:
-- location  
-- number of bedrooms  
-- condition  
-- year built  
-- neighborhood  
-
-With only house area, we expect decent performance but not perfect accuracy.  
-This is exactly what we want to see in an introductory regression lesson.
-
----
-
-## Reflection Questions
-
-- What additional features could improve predictions?  
-- If RMSE were very large, what might that tell us?  
-- How might adding more features affect R²?
-
----
-
-## Key Takeaway
-
-This walkthrough shows the complete regression workflow:
-- explore the data  
-- split into training and test sets  
-- train a model  
-- make predictions  
-- evaluate results using meaningful metrics  
-
-You now have a strong foundation for building and evaluating regression models.
-
-
----
-
-## Check for Understanding  
-### Week 2 Quiz: Introduction to Machine Learning & Regression
-
----
-
-**1. What is the goal of training a machine learning model?**  
-a. To memorize the dataset  
-b. To learn patterns in the data and make predictions  
-c. To generate random numbers  
-d. To sort data alphabetically  
-
-<details>
-<summary><strong>Show Answer</strong></summary>
-b — The model learns patterns so it can make useful predictions on new data.
-</details>
-
----
-
-**2. Why do we split data into training and test sets?**  
-a. To make the dataset smaller  
-b. To make the model run faster  
-c. To check if the model can handle new, unseen data  
-d. Because scikit-learn requires it  
-
-<details>
-<summary><strong>Show Answer</strong></summary>
-c — The test set shows whether the model can generalize instead of memorizing.
-</details>
-
----
-
-**3. In a regression problem, what type of value are we trying to predict?**  
-a. A category (like cat vs. dog)  
-b. A continuous number (like price or temperature)  
-c. A color  
-d. A True/False answer  
-
-<details>
-<summary><strong>Show Answer</strong></summary>
-b — Regression predicts continuous numeric values.
-</details>
-
----
-
-**4. What does the R² score tell us?**  
-a. How random the model is  
-b. How close the model is to making accurate predictions  
-c. The number of errors the model made  
-d. The size of the dataset  
-
-<details>
-<summary><strong>Show Answer</strong></summary>
-b — R² closer to 1 means the model fits the data well.
-</details>
-
----
-
-**5. If the model performs well on training data but poorly on test data, what is happening?**  
-a. Underfitting  
-b. Overfitting  
-c. Perfect learning  
-d. The dataset is broken  
-
-<details>
-<summary><strong>Show Answer</strong></summary>
-b — Overfitting means the model memorized the training data but struggles with new data.
-</details>
-
-
----
-
-### 🎉 Congratulations & Thank You!
-
-Great job completing Week 2 of the Machine Learning module!  
-You’ve learned ML concepts, explored real data, trained a regression model, and evaluated its performance.
-
-Your effort, curiosity, and consistency are what make you a stronger developer each week.  
-Keep going, the skills you’re building now will open many opportunities ahead.
-
-**See you in the next lesson!**
