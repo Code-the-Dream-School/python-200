@@ -12,15 +12,16 @@ As discussed in the overview of how to approach assignments, the first part of t
 Good luck, and have fun with it! This is the time to get hands-on practice with the material, feel free to experiment and explore as you work through the material: that is often the best way to learn! 
   
 # Submission instructions
-In your `python200-homework` repository, create a folder called `assignments_01/`. Inside that folder, create three files:
+In your `python200-homework` repository, create a folder called `assignments_01/`. Inside that folder, create three files and an outputs directory:
 
-1. warmup_01.py  : for the warmup exercises
-2. prefect_warmup.py  : for the prefect pipeline warmup exercise
-3. project_01.py  : for the project exercise
+1. `warmup_01.py`      : for the warmup exercises
+2. `prefect_warmup.py` : for the prefect pipeline warmup exercise
+3. `project_01.py`     : for the project exercise
+4. `outputs/`          : for any plots or data files your code generates
 
 When finished, commit the files to your repo and open a PR as discussed in the assignment's [README page](README.md). 
 
-Don't be afraid to write your thoughts/comments in your code. This can often helpful for the mentors/reviewers to understand your thought process and give you better feedback.
+Note it is very helpful for your mentors if you write your thoughts/comments in your code. This helps us understand your thought process and give you better feedback.
 
 # Part 1: Warmup Exercises
 Put all warmup exercises  in a single file: `warmups_01.py`. Use comments to mark each section and question (e.g. `# --- Pandas ---` and `# Pandas Q1`). Use `print()` to display all outputs. 
