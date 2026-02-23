@@ -248,6 +248,13 @@ print("is_new coefficient:   ", model_multi2.coef_[2])
 
 The `is_new` coefficient gives you the average price premium for a new home, holding square footage and distance constant. With this dataset it comes out around $27,500 -- the model predicts that new homes sell for roughly $27,500 more than otherwise comparable older homes in the same location and size range.
 
+Each time we added a feature -- distance, then is_new -- test R² improved. That improvement on held-out data is the practical signal that a feature is earning its place in the model. If you were taking this model into production to predict prices on new listings, you would carry these features into your model in production.
+
+> *A note on statistical significance*
+>
+> After last week, you may be wondering about p-values -- the formal test of whether a coefficient is significantly different from zero. Classical linear regression gives each coefficient a t-statistic and p-value, and the Python library `statsmodels` provides that full summary table: [statsmodels regression documentation](https://www.statsmodels.org/stable/regression.html).
+>
+> Statsmodels is a large and fairly complex package and beyond the scope of this introduction. Luckily, in an ML workflow, train/test R² is doing a related job from a different angle. Rather than asking "is this coefficient statistically non-zero?", you are asking "does adding this feature actually improve predictions on data the model has never seen?" Both are legitimate questions and they are not mutually exclusive -- a rigorous analysis might use both. For the prediction-focused work in an ML pipeline, test R² improvement is the directly relevant signal you need to monitor.
 
 ### On overfitting
 
@@ -285,17 +292,21 @@ print("Linear    -- Test R²: ", model_lin.score(X_test_d, y_test_d))
 print("Degree-10 -- Train R²:", model_poly.score(X_train_p, y_train_p))
 print("Degree-10 -- Test R²: ", model_poly.score(X_test_p, y_test_p))
 ```
-
+Your output will look *something* like:
 ```text
-Linear    -- Train R²: 0.6617   Test R²:  0.6690
-Degree-10 -- Train R²: 0.7614   Test R²: -2.1644
+Linear    --  Train R²: 0.6617  
+Linear    --  Test R²:  0.6690
+Degree-10 --  Train R²: 0.7614   
+Degree-10 --  Test R²: -2.1644
 ```
 
-The linear model shows a small, healthy gap -- train and test R² are nearly identical (0.66 and 0.67), meaning the model generalizes well. The degree-10 model trains slightly better (0.76 vs 0.66), but collapses completely on the test set: R² = -2.16.
+The linear model shows a small, healthy gap -- train and test R² are nearly identical (0.66 and 0.67), meaning the model generalizes well. The degree-10 model trains better (0.76 vs 0.66), but collapses completely on the test set: R² = -2.16. 
 
-A negative R² means the degree-10 model is *worse than just predicting the mean for every point*. It has memorized the specific wiggles of the training data so precisely that its predictions on new data are actively harmful. This is what overfitting looks like when you measure it rather than just imagine it.
+A negative R² means the degree-10 model is *much worse than just predicting the mean for every point*. It has memorized the specific wiggles of the training data so precisely that its predictions on new data are actively harmful. This is an *extreme* case of overfitting. Typically, overfitting just means your R2 drops compared to your training data. 
 
-The goal is always a model that finds the right level of complexity: expressive enough to capture the real trend, but not so flexible that it memorizes noise. Comparing train R² and test R² is your first and most useful diagnostic. Linear regression is often the first model you reach for precisely because it is so constrained -- a line or a plane does not have enough flexibility to memorize noise, which makes it naturally resistant to overfitting. More powerful models will give you more flexibility, but they will also require more care.
+The goal is always a model that finds the right level of complexity: expressive enough to capture the real trend, but not so flexible that it memorizes noise. Comparing train R² and test R² is your first and most useful diagnostic. 
+
+Linear models are often the first model people reach for precisely because they are so simple -- a line or a plane does not have enough flexibility to memorize noise, which makes it naturally resistant to overfitting. More powerful models will give you more flexibility, but they will also require more caution.
 
 ## Pulling It Together
 
