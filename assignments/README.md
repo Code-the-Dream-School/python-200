@@ -21,7 +21,7 @@ We'll give you one to three each week. They will  involve pulling ideas from mul
 
 You will submit your work by pushing to a branch in that repository. Each week will have its own directory (e.g. `assignments_01/`) where you will place the required files for that week. 
 
-The filenames and paths will be specified in the weekly assignment instructions. It is important that you follow the specified file structure, as the grader will look for files in those exact locations.
+The filenames and paths you need to create to submit work will be specified in the weekly assignment instructions. It is important that you follow the specified file structure, as the grader will look for files in those exact locations.
 
 You can work in the same virtual environment that you use for the main course materials. 
 
