@@ -1,26 +1,22 @@
 # Week 6: Augmenting AI: From Memory to Retrieval
 
-> Note this is a draft. We'll finish it out once the lessons are more finalized.
- 
-Welcome to the Week 6 in Python 200. This week we will focus on ways to augment the knowledge base of LLMs. As we saw last week, LLMs are models trained on data just like other ML models. They are subject to the same shortcomings as other ML models -- they lack information, and can hallucinate, and make things up. It is important to augment, or expand their knowledge base, so they have all the information needed to perform optimally with updated or proprietary information. 
-
-> To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
+Welcome to Week 6 of Python 200! Last week we learned to interact with LLMs through APIs and to prompt them effectively. But LLMs have a fundamental limitation: their knowledge is frozen at training time. Ask one about your company's internal documents, a recent news event, or a database it has never seen, and it will either guess or hallucinate. This week we look at the main strategies for getting around that -- injecting context into prompts, fine-tuning models on new data, and retrieval-augmented generation (RAG). We will spend most of our time on RAG, which is the most practical and widely used approach in production pipelines.
 
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
 
 ## Topics
-1. [Overview](01_llm_augmentation_review.md)  
-Here we will discuss the three main types of ways to augment LLMs knowledge base (adding required information its prompt (context injection), fine-tuning, and retrieval-augmented generation (RAG)), and when each method should be used. We will focus on different types of RAG before diving into practical examples.
+1. [Intro to LLM Knowledge Augmentation](01_llm_augmentation_intro.md)  
+An overview of the three main strategies for augmenting an LLM's knowledge: context injection (adding information directly to the prompt), fine-tuning (retraining the model on new data), and retrieval-augmented generation (RAG, giving the model access to an external data store at query time). We discuss the trade-offs of each before diving into RAG for the rest of the week.
 
-2. [Naive keyword-based RAG](02_keyword_rag.md)  
-Parse a set of PDFs into text chunks, and perform basic keyword matching on chunks, and inject the best-matching chunk into the prompt. Evaluate results. Highlights the limitations of brittle keyword search. This will be VERY simple, to illustrate the most basic concepts of RAG (like 100 lines of code). Introduce concept of evaluation of RAG system using deepeval.
+2. [Keyword-based RAG](02_keyword_rag.md)  
+To illustrate the concept of RAG, we will implement a very simple RAG pipeline where we give an LLM access to a folder of PDFs that it searches to help it generate better answers. This is meant to illustrate the core RAG ideas in a simple context that we build from scratch. 
 
 3. [Semantic RAG](03_semantic_rag.md)  
-Adapt Nir Diamant's semantic RAG example: 
-https://github.com/NirDiamant/RAG_TECHNIQUES/blob/main/all_rag_techniques/simple_rag.ipynb
-
-    Use sentence embeddings to represent text chunks, and store embeddings in a FAISS index. Retrieve top-k semantically similar chunks for each query: inject retrieved content into the prompt. Re-evaluate using same criteria as 1. Expect noticeable improvements in relevance and accuracy. Also build a semantic store using pgvector for more production-level pipeline. 
+Keyword search finds documents that contain your exact words -- but what if the document says "automobile" and you searched for "car"? Semantic RAG solves this by using embeddings (which we saw last week) to search by meaning instead of exact words. We build a semantic RAG pipeline from scratch to illustrate the concept, and use Docker to spin up a pgvector database for persistent vector storage.
 
 4. [Llamaindex](04_llamaindex.md)  
-Introduction to Llamaindex, and implement what we did in step 3, but using Llamaindex. The main point here will be about a 10:1 code reduction, and using a production-ready framework that is maintained by a group of developers, versus rolling our own. In professional settings, we will most likely be using something like llamaindex, but it is  important to understand what is going on on the back end (hence why we are rolling our own in step 3. 
+Introduction to LlamaIndex, a production-ready framework for building RAG pipelines. We will re-implement what we built in lesson 3, but using LlamaIndex -- the main takeaway being roughly a 10:1 reduction in code, plus the reliability that comes from using a well-maintained framework rather than rolling our own.
+
+## Week 6 Assignments
+Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
 
