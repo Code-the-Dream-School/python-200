@@ -1,22 +1,22 @@
-# Week 8: Introduction to AI
+# Week 8: Introduction to Cloud Computing
 
-Welcome to the Week 8 in Python 200, Introduction to Cloud Computing!
+Welcome to Week 8 of Python 200 -- and welcome to the cloud. 🌩️
 
-> To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
+Over the past seven weeks you have built a serious foundation: statistical thinking, classical machine learning, deep learning, large language models, RAG, and AI agents. That is a genuine achievement, and you should feel good about it. But there is a gap between building something on your laptop and deploying it somewhere it can actually be used. The cloud is where that gap gets closed.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
+Cloud platforms are the infrastructure that makes modern data engineering possible -- scalable storage, managed databases, on-demand compute, ML services, and the pipelines that tie it all together. In the final stretch of this course, you will learn to work in that environment. We are using Microsoft Azure, which is one of the three main cloud platforms in enterprise and nonprofit settings.
+
+This week is about getting oriented. By the end of it, you will understand the core concepts of cloud computing, have your own workspace set up in Azure, and be ready for the hands-on work ahead.
+
+> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
 
 
 ## Topics
-1. [Cloud overview](01_cloud_overview.md)  
-Platform-agnostic oveview of the what-and-why of cloud computing. This is a big shift for the students, so we want to motivate why they should care about the cloud when they can just run code on their laptop. :smile: For the assignment, we'll have lots of questions about cloud concepts that are less hands-on than the other weeks of Python 100/200.
+1. [Cloud overview](01_cloud_overview.md)
+A platform-agnostic introduction to cloud computing: what it is, why it matters, and what changes when you move from running code on your laptop to running it in the cloud. We cover the core concepts you will encounter regardless of which cloud provider you use.
 
-1. [A Practical Introduction to Azure](02_azure_intro.md)  
-This will be their first hands-on introduction to Azure. The main focus is on making sure students can log in and access the portal, and familiarizing them with the basic layout and organization of the portal. I'm assuming this will be a heavy week of troubleshooting, so nothing too heavy. The assignments should be mostly about logging in and making sure things are working for the students, getting acquainted with the portal. 
+2. [A Practical Introduction to Azure](02_azure_intro.md)
+Your first hands-on introduction to Azure. We will make sure you can log in, navigate the portal, and get set up with your own resource group -- the sandbox you will use for the rest of the course.
 
-- Logging in and getting to the portal (log in etc)
--  Overview of portal it's their first time in the cloud! 🎉
-- Run and use Azure CLI (something simple exploring the file system): it's just bash but in the cloud. 
-- Write/run a simple python script from IDE (they can `runcode .` from CLI and start VS Code in cloud): again, it's effectively VS Code but in the cloud. 
-- Show how to set cost alerts
-- Explore cost estimator for significant job that they won't actually do but is costly (using some of the resources/services discussed in 1)
+## Week 8 Assignments
+Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
