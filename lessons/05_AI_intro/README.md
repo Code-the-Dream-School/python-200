@@ -1,27 +1,27 @@
 # Week 5: Introduction to AI
+Welcome to Week 5 of Python 200! The past few weeks we have been building intuition for how machine learning works -- from regression and classification to deep neural networks. This week we zoom out to look at the most consequential application of neural networks right now: large language models, or LLMs. ChatGPT, Claude, Gemini, and similar systems are all neural networks, but trained at a scale that gives them remarkable generative capabilities that have transformed how people interact with software.
 
-Welcome to the Week 5 in Python 200, Introduction to Artificial Intelligence! 
+As a data engineer, you will increasingly be asked to build pipelines that incorporate LLM components: chatbots, content moderation systems, document processing tools, and more. This week we focus on how to work with these models through APIs -- you don't need to train one, but you do need to understand how they work and how to use them effectively. We will also spend time on prompt engineering, the practical skill of getting reliable, useful outputs from a model. 
 
-> To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
+We will end by taking a look at some of the important ethical questions that come with deploying AI systems. Some people argue we should reconsider the use of large language models. Why? We want to create space for that perspective in this class, while also making sure you have the skills to use these tools if you do chose to use them. 
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
+> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
 
 ## Topics
-1. [Introduction to language processing](01_intro_nlp.md)  
-Explain what LLMs are and how they differ from earlier NLP models, and why language models have become so much more powerful recently. Discuss how language is converted to vectors (tokenization). Give broad overview of AI landscape.
+1. [Introduction to language processing and LLMs](01_intro_nlp_llms.md)  
+Overview of the field of natural language processing (NLP), and the recent explosion of interest in large language models (LLM). We do a fairly deep dive into how LLMs work, from tokenization to embedding, as this is the basis for so many pipelines.
 
-2. [OpenAI Chat Completions API](02_open_ai_api.md)  
-Intro and overview of openai api chat completions endpoint. Go over required params (messages/model), but also the important optional params (max_tokens, temperature, top_p etc). Mention responses endpoint (more friendly to tools/agents). Discuss and demonstrate use of moderations endpoint.
+2. [OpenAI Chat Completions API](02_completions_api.md)  
+Intro and overview of the OpenAI chat completions API: this is the bread and butter of how we will interact with an LLM. We also discuss and demonstrate the moderations endpoint to filter out inappropriate content.
 
-3. [Abstraction layers](03_abstractions.md)  
-Instead of getting locked into a single vendor or style, there are a few packages that provide an abstraction layer across LLM providers and local LLMs (you can run inference locally using Ollama). Here we'll discuss a few of these (langchain, liteLLM, any-llm). 
+3. [Chatbots](03_chatbots.md)  
+By default, LLMs have no memory of previous messages. This lesson covers how to work around that limitation to build a chatbot that can hold a coherent conversation.
 
 4. [Prompt engineering](04_prompt_engineering.md)  
 There are better and worse ways to get responses from a model, here we'll go over the fundamentals of *prompt engineering*. Zero shot, one shot, few-shot, and chain of thought prompting.
 
-5. [Chatbots](05_chatbots.md)  
-LLMS don't remember what came before, they are intrinsically stateless. Discuss why this is important and how to use messages and roles witht he APIs to build a thin persistence layer to get memory of conversation and build chat application. 
+5. [Ethics, bias, and responsible AI](05_ai_ethics.md)    
+LLMs are just ML models trained on data, so they are subject to the same biases as other models -- and they come with additional concerns around energy use, misinformation, and labor displacement. A lot of people are telling us how AI is going to change our lives for the better, but there are real ethical questions to consider in this new landscape.
 
-
-6. [Ethics, bias, and responsible AI](06_ai_ethics.md)    
-LLMs are just ML models trained on data, so are subject to the same biases as other models. But also, companies are literally building nuclear reactors to fuel the GPU cores needed for training and inference. A lot of people are telling us how AI is going to change our lives for the better, but we should ask whose lives, and how exactly will they be improved?
+## Week 5 Assignments
+Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.

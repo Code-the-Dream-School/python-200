@@ -1,25 +1,26 @@
 # Week 7: AI Agents: Building Autonomous Systems
 
-> Note this is a draft. We'll finish it out once the lessons are more finalized.
- 
-Welcome to the Week 7 in Python 200. This week we will focus on AI *agents*, which are systems that can autonomously perform tasks when given a goal and a set of tools. AI agents are becoming increasingly important in the field of artificial intelligence.
+Welcome to Week 7 of Python 200! Last week we gave LLMs access to external information through RAG. This week we take the next step: giving them the ability to *act*. An AI agent is a system that can autonomously plan and execute a sequence of steps to accomplish a goal -- calling tools, running code, querying databases, and deciding what to do next based on the results.
 
-> To fill in later: brief motivational preview here. Briefly explain why this lesson matters, what students will be able to do by the end, and what topics will be covered. Keep it tight and motivating.
+Agents are increasingly showing up in data engineering workflows: automated ETL pipelines, data quality monitoring, code generation, and more. By the end of the week you will have built agents from scratch and with a production framework, and you will have a clear picture of where they are genuinely useful and where they are not.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
+> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
 
 ## Topics
 1. [Overview](01_agents_intro.md)  
-An overview of AI agents, including definitions, types of agents, and real-world applications. Introduce the concept of autonomous systems and how they differ from traditional AI models. Introduction to the ReAct framework for agents, and the distinctions between tool-based and code-based agents. We will discuss different frameworks for building agents, including smolagents, Langchain, Llamaindex. 
+What is an agent, and how does it differ from a simple LLM call? We introduce the core concepts: tools, the ReAct (reason + act) loop, and the distinction between tool-based and code-based agents. We also survey the main frameworks (smolagents, LangChain, LlamaIndex) before choosing one for the rest of the week.
 
-2. [Hello, agent](02_time_agent.md)  
-We will introduce a minimal agent, a kind of "Hello word" of agents, showing how to build and call a simple tool (function) from scratch. 
+2. [Hello, agent](02_minimal_agent.md)  
+The "Hello world" of agents -- we build and call a simple tool from scratch to see the basic mechanics before adding complexity.
 
-3. [Building a simple ETL Agent](03_etl_agent.md)  
-ETL agent from scratch. We will build an agent that can perform a simple ETL (Extract, Transform, Load) task using the ReAct framework. The agent will be able to extract data from a source (e.g., a CSV file), transform the data (e.g., cleaning, filtering, aggregating), and load the data into a target destination (e.g., a database or another file). This will involve defining the tools (functions) for each step of the ETL process, and implementing the agent logic to orchestrate these tools based on user input.
+3. [Building a simple ETL Agent](03_analysis_agent.md)  
+A more realistic application: we build an agent that can extract, transform, and load data using the ReAct framework, defining tools for each step and letting the agent orchestrate them based on user input.
 
 4. [Smolagents](04_smolagents.md)  
-An introduction to the smolagents framework for building AI agents, which is HuggingFace's lightweight and flexible framework for creating agents. We will cover the basics of smolagents, including how to define tools, create and run agents. We will demonstrate both tool-based and code-based agents using smolagents, and discuss best practices for building effective agents.
+An introduction to smolagents, HuggingFace's lightweight framework for building agents. We cover tool definition, running agents, and the difference between tool-based and code-based agents in a production-ready context.
 
-5. [Demo: AI Paired Programmer](05_github_copilot.md)    
-A demonstration of how to install and use Github Copilot as a code-assistant agent. We will show how to use it to evaluate an entire code project, fix tests that are not passing, and build a jupyter notebook to demonstrate the project's features. We will also discuss the strengths and limitations of using AI code assistants when writing code. 
+5. [Demo: AI Paired Programmer](05_code_agent_demo.md)    
+A demonstration of AI code assistant agents in practice -- using one to evaluate a project, fix failing tests, and generate documentation. We also discuss the strengths and limitations of code agents, and how tools like GitHub Copilot and Claude Code compare.
+
+## Week 7 Assignments
+Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
