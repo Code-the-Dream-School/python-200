@@ -11,7 +11,7 @@ We will cover:
 
 Some of the material will be review of what you learned in Python 100, but specifically geared toward optimizing data for consumption by classifiers. 
 
-## 1. Numerical vs Categorical Features
+## Numerical vs Categorical Features
 
 [Video on numeric vs categorical data](https://www.youtube.com/watch?v=rodnzzR4dLo)
 
@@ -23,7 +23,7 @@ Before we can train a classifier, we need to understand the kind of data we are 
 
 Even large language models (LLMs) do not work with strings: as we will see in future weeks when we cover LLMs, linguistic inputs must be converted to numerical arrays before large language models can get traction with them. 
 
-## 2. Scaling Numeric Features
+## Scaling Numeric Features
 
 [Video overview of feature scaling](https://www.youtube.com/watch?v=dHSWjZ_quaU)
 
@@ -34,11 +34,11 @@ For example, imagine a dataset with two numeric features:
 - age (with range 18 to 70)
 - income (with range 15,000 to 350,000)
 
-Both features matter, but income numbers vary on a much larger scale. Many ML algorithms will be sensitive to this, especially those that depend on distance calculations, will end up weighting income more heavily than age, just because of this difference in scale.  
+Both features matter, but income numbers vary on a much larger scale. Many ML algorithms will be sensitive to this, especially those that depend on distance calculations, will end up weighting income more heavily than age, just because of this difference in scale.
 
 Scaling helps put numeric features on a similar footing so that models can consider them more fairly. There are two main scaling methods, normalization and standardization.
 
-## Normalization (Min-Max Scaling)
+### Normalization (Min-Max Scaling)
 Normalization, aka min-max scaling, rescales each feature so that it falls into the range [0, 1]. This helps ensure that no feature overwhelms another just because it uses larger numbers.
 
 ```python
@@ -47,9 +47,9 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 X_scaled = scaler.fit_transform(X)
 ```
-Now X will have values that fall into the desired range. 
+Now X will have values that fall into the desired range.
 
-## Standardization
+### Standardization
 Another common approach is standardization, which transforms each numeric feature so that:
 
 - Its mean becomes 0
@@ -130,11 +130,11 @@ A z-score tells you how many standard deviations a value is above or below the m
 
 So a negative age or income after standardization does not mean a negative age or negative dollars. It just means that value is below the average for that feature.
 
-## 3. One-Hot Encoding for Categorical Features
+## One-Hot Encoding for Categorical Features
 
 [Video about one-hot encoding](https://www.youtube.com/watch?v=G2iVj7WKDFk)
 
-Assume you have a categorical feature that you are feeding to an ML model. For instance, musical genre (maybe the model is predicting whether the music will contain electric guitar or not, for our instrument sales site).  Categorical features (like "jazz", "classical", "rock") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
+Assume you have a categorical feature that you are feeding to an ML model. For instance, musical genre (maybe the model is predicting whether the music will contain electric guitar or not, for our instrument sales site). Categorical features (like "jazz", "classical", "rock") must be converted into numbers before a machine learning model can use them. But we cannot simply assign integers like:
 
 ```
 'classical' -> 1
@@ -157,11 +157,11 @@ rock -> [0, 0, 1]
 
 Each category is now represented cleanly, without implying any ordering or distance between them. This is exactly what we want for most categorical features in classification.
 
-> Side note: Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories: one-hot encoding works great for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. For a discussion of some of the nauances of this case, see [this page](https://www.datacamp.com/tutorial/categorical-data).   
+> Side note: Most categorical features have no natural order (dog, cat, bird; red, green, blue). These are known as *nominal* categories: one-hot encoding works great for them. Some categories do have an order (`small` < `medium` < `large`). These are known as *ordinal* categories. For a discussion of some of the nauances of this case, see [this page](https://www.datacamp.com/tutorial/categorical-data).
 
 ### One-hot encoding in scikit-learn
 
-Because one-hot encoding is so important, it a built-in class in scikit-learn: 
+Because one-hot encoding is so important, it is a built-in class in scikit-learn:
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
@@ -185,11 +185,11 @@ one-hot encoded categories:
  [0. 1. 0.]]
 ```
 
-We will see more practical examples of one-hot encoding in future lessons. 
+We will see more practical examples of one-hot encoding in future lessons.
 
-> One important thing to notice about one-hot encoding is that it increases the number of features in your dataset. If a categorical feature has N unique categories, then one-hot encoding replaces that single column with N new columns. This is usually fine for small categorical features, but it can cause problems when a feature has many unique values. For example, if you have a feature representing ZIP codes, there may be thousands of unique values. One-hot encoding this feature would create thousands of new columns, which can make things very unwieldy in practice. In such cases, alternative encoding methods (like  embedding techniques, which we will cover in the AI lessons) may be more appropriate.
+> One important thing to notice about one-hot encoding is that it increases the number of features in your dataset. If a categorical feature has N unique categories, then one-hot encoding replaces that single column with N new columns. This is usually fine for small categorical features, but it can cause problems when a feature has many unique values. For example, if you have a feature representing ZIP codes, there may be thousands of unique values. One-hot encoding this feature would create thousands of new columns, which can make things very unwieldy in practice. In such cases, alternative encoding methods (like embedding techniques, which we will cover in the AI lessons) may be more appropriate.
 
-## 4. Creating New Features (Feature Engineering)
+## Creating New Features (Feature Engineering)
 
 [Video overview of feature engineering](https://www.youtube.com/watch?v=4w-S6Hi1mA4)
 
@@ -296,12 +296,12 @@ Note because this is Boolean, you would not need to one-hot encode it: 0 and 1 a
 There are no strict rules for feature engineering. It is a creative part of machine learning where your intuitions and understanding of the data matters a great deal. Good features often come from visualizing your data, looking for patterns, and thinking about the real-world meaning behind each column. Creativity and domain-specific knowledge helps a lot here: someone who knows the problem well can often spot new features that make the model's job easier. As you work with different datasets, you will get better at recognizing when a new feature might capture something important that the raw inputs miss. Feature engineering is less about following a checklist and more about exploring, experimenting, and trusting your intuition as it develops.
 
 
-## 5. Dimensionality reduction 
-Many real datasets contain far more dimensions, or features, than we truly need (in pandas, individual features are represented by separate columns in a dataframe). Some features are almost duplicates of each other, or they carry very similar information -- this is known as *redundancy*. When our feature space gets large, models can become slower, harder to interpret, harder to fit to data, and become prone to overfitting. Dimensionality reduction lets us simplify a dataset by creating a smaller number of informative features. 
+## Dimensionality Reduction
+Many real datasets contain far more dimensions, or features, than we truly need (in pandas, individual features are represented by separate columns in a dataframe). Some features are almost duplicates of each other, or they carry very similar information -- this is known as *redundancy*. When our feature space gets large, models can become slower, harder to interpret, harder to fit to data, and become prone to overfitting. Dimensionality reduction lets us simplify a dataset by creating a smaller number of informative features.
 
-As discussed in the [Introduction to Machine Learning](../02_ML_intro/01_ML_Intro.md), one helpful way to picture this is to think about images. A high-resolution photo might have hundreds of millions of pixels, and each pixel in an image is a feature. But you can shrink an image down to a small thumbnail and still recognize that it is a picture of your friend. Dimensionality reduction works the same way in general: the goal is to keep the important structure while throwing away noise and redundancy. ML algorithms can work while throwing away a great deal of raw data, and this can speed things up tremendously. 
+As discussed in the [Introduction to Machine Learning](../02_ML_intro/01_ML_Intro.md), one helpful way to picture this is to think about images. A high-resolution photo might have hundreds of millions of pixels, and each pixel in an image is a feature. But you can shrink an image down to a small thumbnail and still recognize that it is a picture of your friend. Dimensionality reduction works the same way in general: the goal is to keep the important structure while throwing away noise and redundancy. ML algorithms can work while throwing away a great deal of raw data, and this can speed things up tremendously.
 
-Dimensionality reduction is useful for many reasons. One, it can be a useful tool for visualizing high-dimensional data (our plots are typicically in 2D or 3D, so if we want to visualize a 1000-dimension dataset, it can be helpful to project it to a 2D or 3D space for visualization). Also, for ML, dimensionality reduction can help fight overfitting and eliminate noise from our data. We saw last week that overfitting comes from model complexity (a model with too many flexible parameters can memorize noise in the training set). However, high-dimensional data can make overfitting more likely because it gives the model many opportunities to chase tiny, meaningless variations. Reducing feature dimensionality can sometimes help by stripping away that noise and highlighting the core structure the model should learn.
+Dimensionality reduction is useful for many reasons. One, it can be a useful tool for visualizing high-dimensional data (our plots are typically in 2D or 3D, so if we want to visualize a 1000-dimension dataset, it can be helpful to project it to a 2D or 3D space for visualization). Also, for ML, dimensionality reduction can help fight overfitting and eliminate noise from our data. We saw last week that overfitting comes from model complexity (a model with too many flexible parameters can memorize noise in the training set). However, high-dimensional data can make overfitting more likely because it gives the model many opportunities to chase tiny, meaningless variations. Reducing feature dimensionality can sometimes help by stripping away that noise and highlighting the core structure the model should learn.
 
 ### Principal component analysis (PCA)
 Before moving on, consider watching the following introductory video on PCA:
@@ -321,9 +321,9 @@ You can see on the desk in the room there is a small jellyfish lamp. We can imag
 
 In this simplified example, PCA reduces millions of pixel features down to just two numbers: one capturing the room's overall brightness changes, and one capturing the jellyfish's independent light fluctuations. This kind of dramatic dimensionality reduction is possible because of strong correlations in the data. In real datasets, the structure is rarely this clean, so more than two components are usually needed to capture all of the essential information in the dataset.
 
- We are not going to focus on the linear algebra behind PCA. Our goal here has been to build intuition. To continue, and convince you how well it works, we will next walk through a hands-on demo that shows how powerful PCA can be for feature extraction and dimensionality reduction.
+We are not going to focus on the linear algebra behind PCA. Our goal here has been to build intuition. To continue, and convince you how well it works, we will next walk through a hands-on demo that shows how powerful PCA can be for feature extraction and dimensionality reduction.
 
- ## PCA Demo
+## PCA Demo
 
 In this demo, we will work with a synthetic dataset designed to closely mirror the intuition-building example from the lesson: a movie with *massive* redundancy. The movie shows a room where the background lighting slowly rises and falls over time, while a jellyfish lamp on a table fluctuates independently and much more rapidly.
 
@@ -365,7 +365,7 @@ plt.xlabel("Frame (Time)");
 plt.ylabel("Brightness");
 ```
 
-When you view the movie, you will see the dynamics described above: the room's brightness slowly changes from light to dark, while the jellyfish lamp ramdomly fluctuates independently of the room. You can [view it on YouTube](https://www.youtube.com/watch?v=uEFkp0mLzgI), or if you are running this notebook in Jupyter or Kaggle, you can view it inline below:
+When you view the movie, you will see the dynamics described above: the room's brightness slowly changes from light to dark, while the jellyfish lamp randomly fluctuates independently of the room. You can [view it on YouTube](https://www.youtube.com/watch?v=uEFkp0mLzgI), or if you are running this notebook in Jupyter or Kaggle, you can view it inline below:
 
 ```python
 YouTubeVideo("uEFkp0mLzgI", width=600, height=350)
@@ -457,7 +457,7 @@ There might be some variability here, but the typical outputs look like this:
     Explained variance (%): 98.31, 1.52, 0.04, 0.02
     Total (%): 99.88
 
-The first component explains 98.3 percent of the variance, which is pretty amazing, but also makes sense because the room occupies most of the pixels, so its correlated brightness changes account for the majority of the variance. The second component mops up most of the remaining variance (1.5%). The first two components combined capture 99.8% of the variance in the dataset! The remaining two components capture less than 0.06%, which is negligible (feel free to plot them, they look like ghosts of the jellyfish lamp). :smile: 
+The first component explains 98.3 percent of the variance, which is pretty amazing, but also makes sense because the room occupies most of the pixels, so its correlated brightness changes account for the majority of the variance. The second component mops up most of the remaining variance (1.5%). The first two components combined capture 99.8% of the variance in the dataset! The remaining two components capture less than 0.06%, which is negligible (feel free to plot them, they look like ghosts of the jellyfish lamp). 😊
 
 ### Scores and reconstruction
 
@@ -566,20 +566,20 @@ In this lesson you saw that good machine learning does not start with fancy mode
 
 ## Check for Understanding
 
-### Question 1 
-Which of the following are **categorical** features?
+### Question 1
+Which of the following are *categorical* features?
 
-- A) age  
-- B) t-shirt size ("S", "M", "L")  
-- C) temperature  
-- D) city name  
+- A) age
+- B) t-shirt size ("S", "M", "L")
+- C) temperature
+- D) city name
 
 <details>
 <summary>View answer</summary>
 **Answer:** B and D
 </details>
 
-### Question 2  
+### Question 2
 True or false: A categorical feature always has a natural order.
 
 <details>
@@ -588,7 +588,7 @@ True or false: A categorical feature always has a natural order.
 </details>
 
 
-### Question 3  
+### Question 3
 Why might a classifier pay more attention to a feature ranging from 0–1000 than to one ranging from 0–10?
 
 <details>
@@ -597,7 +597,7 @@ Why might a classifier pay more attention to a feature ranging from 0–1000 tha
 </details>
 
 
-### Question 4  
+### Question 4
 What does a z-score of **-1** mean?
 
 <details>
@@ -606,13 +606,13 @@ What does a z-score of **-1** mean?
 </details>
 
 
-#### Question 5  
+### Question 5
 Which model *does not* require scaling?
 
-- A) KNN  
-- B) Neural networks  
-- C) Logistic regression  
-- D) Decision trees  
+- A) KNN
+- B) Neural networks
+- C) Logistic regression
+- D) Decision trees
 
 <details>
 <summary>View answer</summary>
@@ -620,7 +620,7 @@ Which model *does not* require scaling?
 </details>
 
 
-### Question 6  
+### Question 6
 What problem occurs if we encode categories like:
 
 ```
@@ -635,7 +635,7 @@ bird -> 3
 </details>
 
 
-### Question 7  
+### Question 7
 If you one-hot encode the categories ["shirt", "dog", "plane"], how many output columns will you get?
 
 <details>
@@ -644,7 +644,7 @@ If you one-hot encode the categories ["shirt", "dog", "plane"], how many output 
 </details>
 
 
-#### Question 8  
+### Question 8
 What does PCA do with datasets that have many correlated features?
 
 <details>
