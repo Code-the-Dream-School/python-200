@@ -183,6 +183,9 @@ You will likely see a mean closer to 0.97 -- still excellent, but a more honest 
 
 A variant worth knowing is *leave-one-out cross-validation* (LOOCV), where `cv` is set equal to the number of training samples -- each fold contains exactly one example. This gives the most thorough evaluation possible and works well on small datasets, but becomes slow as data grows. For most practical purposes, 5 or 10 folds is a good default.
 
+If you want to learn more about cross-validation, check out the following video: https://www.youtube.com/watch?v=IygUTo-mem0
+
+
 ## Confusion Matrix: Seeing Errors Clearly
 
 The confusion matrix shows where the model is getting confused. Each row represents the true species and each column the predicted species, so numbers along the diagonal are correct predictions and off-diagonal numbers are mistakes.
@@ -233,6 +236,58 @@ print(f"Final test accuracy: {accuracy_score(y_test, final_preds):.3f}")
 ```
 
 On Iris, the CV scores will be nearly flat across all k values -- again, a sign of how clean the data is. On real-world data, this sweep typically reveals a clear peak (or small range of peaks) before accuracy falls off as k grows too large. The test set score at the end is the one number you report: uncontaminated and used exactly once.
+
+## Check for Understanding
+
+1. When KNN classifies a new data point, what does it do?
+
+- A. It fits a line through the training data and predicts where the new point falls
+- B. It finds the k closest training examples and takes a majority vote on their labels
+- C. It builds a tree of decision rules from the training data
+- D. It computes the average label of all training examples
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: B
+</details>
+
+2. What is the main risk of choosing a very small value of k (such as k=1)?
+
+- A. The model becomes too slow to run
+- B. The model ignores all training data
+- C. The model becomes sensitive to noise and individual outliers, leading to overfitting
+- D. The model always predicts the most common class
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: C
+</details>
+
+3. Why is cross-validation a more reliable evaluation strategy than a single train/test split?
+
+- A. It uses more data for the final test evaluation
+- B. It evaluates the model on multiple different held-out subsets and averages the results
+- C. It prevents the model from overfitting to the training data
+- D. It removes the need to tune k
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: B
+</details>
+
+4. Why does KNN require careful attention to feature scaling?
+
+- A. Scaling is required by the scikit-learn implementation of KNN
+- B. KNN uses a sigmoid function that requires normalized inputs
+- C. Features with larger numerical ranges can dominate distance calculations, regardless of how informative they are
+- D. Scaling speeds up the nearest-neighbor search
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: C
+</details>
+
+5. In a confusion matrix, what do the numbers along the diagonal represent?
+
+- A. The features the model found most important
+- B. The cases where the model was uncertain between two classes
+- C. Correct predictions -- cases where the predicted label matches the true label
+- D. The number of training examples per class
+<details> <summary><strong>Click to reveal answer</strong></summary>
+Correct answer: C
+</details>
 
 ## What We've Learned
 
