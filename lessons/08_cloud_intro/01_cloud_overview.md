@@ -4,6 +4,12 @@ Over the past seven weeks you've built machine learning models, worked with data
 
 This week you'll start learning about cloud computing, which is where a lot of that work happens in practice in industry. This lesson gives you the conceptual foundation: what the cloud is, why it exists, and how it's organized. The lessons that follow will provide hands-on practice with Azure.
 
+> add video on cloud basics
+
+Think back to the last time a major app went down -- Netflix on a holiday weekend, or your bank's website on a busy shopping day. These outages make headlines partly because they're rare, and they're rare because large services run on infrastructure designed to scale and recover automatically: the cloud. The cloud has become the default environment for building and running data-intensive software, and understanding why is a good place to start.
+
+The core idea is simple: instead of buying and maintaining your own computing resources, you rent resources from a provider -- storage, processing power, networking -- and pay for what you use. Need to train a machine learning model that would melt your laptop? Rent a GPU cluster for an afternoon, then shut it down. Need to store a terabyte of data? No hard drives required. This *pay-as-you-go model*, combined with virtually unlimited scale, is what makes cloud computing so powerful.
+
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
@@ -15,15 +21,6 @@ By the end of this lesson, you will be able to:
 
 ## What is Cloud Computing?
 
-> 📺 **[VIDEO PLACEHOLDER]** A short (~5 min) intro video on what cloud computing is and why it matters. Suggested search: “cloud computing explained for beginners” -- IBM Technology and Fireship both have good ones.
-
-Think back to the last time a major app went down -- Netflix on a holiday weekend, or your bank's website on a busy shopping day. These outages make headlines partly because they're rare, and they're rare because large services run on infrastructure designed to scale and recover automatically: the cloud. The cloud has become the default environment for building and running data-intensive software, and understanding why is a good place to start.
-
-The core idea is simple: instead of buying and maintaining your own computing resources, you rent resources from a provider -- storage, processing power, networking -- and pay for what you use. Need to train a machine learning model that would melt your laptop? Rent a GPU cluster for an afternoon, then shut it down. Need to store a terabyte of data? No hard drives required. This *pay-as-you-go model*, combined with virtually unlimited scale, is what makes cloud computing so powerful.
-
-
-### How Services are Structured
-
 Cloud computing means renting computing infrastructure from a provider rather than owning it. The three dominant providers -- Amazon Web Services (AWS), Google Cloud Platform (GCP), and Microsoft Azure -- each operate a global network of data centers: physical facilities packed with servers, storage hardware, and networking equipment. When you spin up a virtual machine or upload a file to cloud storage, you're using hardware in one of these facilities, somewhere in the world. Providers organize their infrastructure into *regions* -- named geographic locations like “US East” or “West Europe” -- and you'll choose a region whenever you create a cloud resource.
 
 All three providers offer largely the same catalog of services, just under different names. The diagram below maps equivalent services across AWS, GCP, and Azure -- don't try to memorize it. Just notice that the categories are consistent: storage, compute, databases, networking, machine learning, and so on. In this course we use Azure for hands-on work, but the concepts transfer directly to the other platforms.
@@ -32,15 +29,13 @@ All three providers offer largely the same catalog of services, just under diffe
 
 ### What Cloud Does Well
 
-So why has so much of the industry moved to cloud? A few properties stand out.
+So why have so many industry services moved to the cloud? A few properties stand out.
 
 *Scalability* is the headline benefit. Cloud infrastructure can grow (or shrink) with your workload in ways that physical hardware simply can't. There are two flavors: *vertical scaling* means upgrading the machine itself -- more CPU, more RAM, a bigger GPU -- while *horizontal scaling* means adding more machines and splitting the work across them. The latter is how large services handle unpredictable demand: when traffic spikes, the cloud provisions additional instances automatically and winds them back down when things quiet. You pay for what you use, not for peak capacity sitting idle most of the time.
 
 *Reliability* is the other major draw. Cloud providers operate redundant data centers and typically guarantee uptime above 99.9%. For a pipeline that needs to run on a schedule or a service that needs to be reachable around the clock, that reliability is hard to replicate on your own hardware.
 
 Beyond those two, cloud infrastructure offers things that are harder to quantify but genuinely matter: you can spin up a new environment in minutes rather than waiting weeks for hardware to arrive and be configured; you can go global by simply choosing a different region; and you offload the maintenance burden -- security patches, hardware failures, capacity planning -- to the provider. AWS has a useful [summary of the advantages of cloud computing](https://aws.amazon.com/what-is-cloud-computing/) if you want a more complete picture.
-
-
 
 ### How Cloud Services Are Delivered
 
@@ -54,21 +49,19 @@ In between sits *Platform as a Service (PaaS)*: the provider manages the infrast
 
 The key question for each level is just: “what do I have to manage?” With IaaS, everything from the OS up. With PaaS, your code and configuration. With SaaS, almost nothing.
 
-> 📺 **[VIDEO PLACEHOLDER]** A short video explaining IaaS, PaaS, and SaaS visually. Suggested search: “IaaS PaaS SaaS explained” -- several good 3-5 min explainers exist on YouTube.
+> Add video on paas/saas/iaas
 
 ### Limitations and Costs
 
-Just like AI isn't a universal software solution, the cloud isn't the right tool for every problem. 
+The cloud isn't the right tool for every problem. 
 
-If your dataset fits comfortably on a single machine and you do not have massive compute demands, local processing is often faster and cheaper. This can be very helpful when setting up an initial prototype. 
+If your dataset fits comfortably on a single machine and you do not have massive compute demands, local processing is often faster and cheaper. This is often the best approach when setting up an initial prototype. 
 
-Trying to do very simple things in the cloud can take a long time, as you have to figure out the right resources and jargon initially. Getting support is not as easy as with common Python packages like Matplotlib, so there can be delays if you need help. 
+The learning curve for cloud infrastructure can be very steep. Even doing simple things in the cloud can take a long time, as you have to figure out the right resources and jargon initially. Getting support is not as easy as with common Python packages like Matplotlib, so there can be delays if you need help. While AI can be extremely helpful for explaining cloud concepts, cloud platforms are notorious for how fast they change, so just beware that AI models will not always give you the most up-to-date advice. 
 
-While AI platforms like ChatGPT can be extremely helpful for explaining cloud concepts, cloud platforms are notorious for how fast they change, so just beware that AI models will not always give you the most up-to-date advice. 
+Be prepared to be patient, and to learn a new style of "programming" in the coming weeks. We put "programming" in quotes because cloud computing is not just about writing code, it's about finding the right levers in a large ecosystem of resources to get the job done. If your internet provider or cloud providor goes down, you may need to take a break.  
 
-Be prepared to be patient, and to learn a new style of "programming" in the coming weeks. Cloud computing is not just about writing code, it's about finding the right place in a large ecosystem of resources to get the job done. A lot of it involves navigating a web portal and finding the right resource to click on. If the internet is down, you will need to take a break. If Azure goes down, the same. 
-
-Finally, while cloud advocates will often say the cloud is cheap (because you only pay for what you use), cloud costs can spiral fast if you're not careful. Leaving a GPU cluster running overnight or forgetting to clean up storage [can generate surprising bills](https://tacetra.com/blogs/the-1-million-mistake-5-cloud-cost-horror-stories-that-will-haunt-your-budget/). 
+Finally, while cloud advocates will often say the cloud is cheap (because you only pay for what you use), cloud costs can spiral fast if you're not careful. Leaving a GPU cluster running overnight or forgetting to clean up storage [can generate surprising bills](https://tacetra.com/blogs/the-1-million-mistake-5-cloud-cost-horror-stories-that-will-haunt-your-budget/). That said, you can easily set up guardrails and cost alerts to minimize the chances of such things happening. 
 
 ## Cloud Providers vs Managed Data Platforms
 
@@ -76,14 +69,11 @@ In practice, you'll encounter two distinct flavors of cloud infrastructure: the 
 
 Cloud providers give you the full toolkit: compute, storage, networking, machine learning services, databases, and dozens of other services. They're highly flexible but require significant configuration. You're assembling your own stack from pieces, which gives you control but takes time and expertise to set up well.
 
-Managed data platforms take a different approach: they pre-wire the pieces for you, optimizing specifically for data and analytics workloads. Databricks, for example, runs on top of AWS, GCP, or Azure -- it's not a separate cloud, it's a curated layer that provisions and manages cloud resources on your behalf. This makes it much faster to get started with large-scale data processing or machine learning, at the cost of some flexibility and, typically, higher per-unit cost.
-
-Neither is strictly better. For many projects, a managed platform will get you productive faster. But understanding the raw cloud layer, which is what we will be focusing on, gives you the mental model to understand what those platforms are doing underneath, and the skills to work directly with cloud services when that's what the job requires.
+Managed data platforms take a different approach: they pre-wire the pieces for you, optimizing specifically for data and analytics workloads. Databricks, for example, runs on top of AWS, GCP, or Azure -- it's not a separate cloud, it's a curated layer that provisions and manages cloud resources on your behalf. This makes it much faster to get started with large-scale data processing or machine learning, at the cost of some flexibility and, potentially higher costs.
 
 ## Wrap-up
 
-Before diving into the hands-on Azure work in the next lesson, take some time to work through Microsoft's own learning modules on cloud fundamentals. These are interactive and include short quizzes -- they'll reinforce what you've read here and fill in any gaps.
+Before diving into the hands-on Azure work in the next lesson, take some time to work through Microsoft's learning module on cloud fundamentals. It will reinforce what you've read here and fill in any gaps.
 
 - [Introduction to Microsoft Azure: Describe Cloud Concepts](https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/)
-- [Describe the core architectural components of Azure](https://learn.microsoft.com/en-us/training/modules/describe-core-architectural-components-of-azure/)
 
