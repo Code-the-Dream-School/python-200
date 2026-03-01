@@ -42,7 +42,7 @@ Now look at the curve. It's smooth, soft, and shaped like the letter "S." What t
 
 The formula is:  ![Formula](resources/Formula.png)
 
-But you don't need to memorize it. What you need to understand is its *behavior*.
+The math isn't particularly important, and you definitely don't need to memorize it. What you need to understand is its *behavior*.
 
 If the weighted sum of features produces a small value (something like -3), the sigmoid outputs a tiny probability, maybe around 0.05. If the model produces a large value (like +4), the sigmoid outputs something like 0.98. These are clean, intuitive probabilities.
 
@@ -62,13 +62,11 @@ Most commonly, logistic regression uses 0.5 as a threshold:
 - Probability > 0.5 → class 1
 - Probability < 0.5 → class 0
 
-But here is where logistic regression shows its structure. Because the "z" value inside the sigmoid comes from a linear combination of features, the surface separating the two classes is a straight line (or a plane, in higher dimensions). 
+But here is where logistic regression shows its structure. Recall from linear regression that adding a second input feature extends the model's output from a line into a plane -- each feature gets its own weight, all combined in a single expression. Logistic regression works exactly the same way: it computes `z = b0 + b1*x1 + b2*x2 + ...`, one weight per feature, just like multiple regression. The sigmoid then maps that combined score to a probability, and the decision boundary -- where probability equals 0.5, i.e., where z=0 -- is that same flat surface: a line in 2D, a plane in 3D, a hyperplane with more features. Adding features shifts and rotates that boundary, but never curves it.
 
 This means logistic regression is looking for one clean dividing boundary.
 
-If KNN makes decisions by looking at the closest neighbors,
-and Decision Trees build decisions by splitting the data into rule-based steps,
-logistic regression draws one smooth linear boundary between the classes.
+Where KNN makes decisions by looking at the closest neighbors, logistic regression draws one clean linear boundary between the classes.
 
 This makes it incredibly easy to interpret:
 - If a weight is positive, that feature pushes the example toward class 1
@@ -103,13 +101,13 @@ It then adjusts the weights a little bit to reduce future errors. This is done u
 Even without the math, think of the model learning like a student practicing flashcards, improving a bit every time it makes a mistake.
 
 
-## When Logistic Regression Is a Great Choice
+## When to Use Logistic Regression
 
-Logistic Regression is usually a great choice when the relationship between your features and the outcome is *roughly linear*. That doesn't mean perfect straight lines everywhere, but it does mean that as a feature increases, the likelihood of the outcome tends to increase or decrease in a steady, predictable way. In those situations, Logistic Regression fits naturally. It also shines when you want something fast to train, simple to understand, and not too computationally heavy. If your dataset isn't enormous or if the classes are separated reasonably well in the feature space, Logistic Regression can perform surprisingly well. One of its strengths is that it gives probabilities rather than just a yes/no answer, which helps it express uncertainty in a realistic way.
+Logistic Regression is usually a good choice when the relationship between your features and the outcome is *roughly linear*. That doesn't mean perfect straight lines everywhere, but it does mean that as a feature increases, the likelihood of the outcome tends to increase or decrease in a steady, predictable way. In those situations, Logistic Regression fits naturally. It also shines when you want something fast to train, simple to understand, and not too computationally heavy. If your dataset isn't enormous or if the classes are separated reasonably well in the feature space, Logistic Regression can perform surprisingly well. One of its strengths is that it gives probabilities rather than just a yes/no answer, which helps it express uncertainty in a realistic way.
 
-But like any model, it has limitations. Logistic Regression can only draw linear boundaries between classes, which means if the data falls into swirling or curved patterns, the model will struggle unless you create new features or use polynomial transformations. It can also become unstable when your features are highly correlated with each other, which is why regularization is often helpful. Outliers can pull the decision boundary too far in one direction, and extremely imbalanced classes can cause the model to assign misleading probabilities unless you handle the imbalance with care.
+But like any model, it has limitations. Logistic Regression can only draw linear boundaries between classes, which means if the data falls into swirling or curved patterns, the model will struggle unless you create new features. It can also become unstable when features are highly correlated, or when outliers pull coefficients to extreme values -- both cases where something known as *regularization* helps. We will describe what regularization is in more detail below. 
 
-Now that you understand the intuition, strengths, and weaknesses of Logistic Regression, we're ready to put everything into action. In the next section, we'll walk through a complete coding example where we load a dataset, train a logistic regression classifier, visualize some results, and interpret what the model learned.
+In the next section, we'll walk through a complete coding example where we load a dataset, train a logistic regression classifier, visualize some results, and interpret what the model learned.
 
 ## 1. Importing the Tools We Need
 
@@ -125,7 +123,7 @@ from io import BytesIO
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import (
     confusion_matrix,
     accuracy_score,
@@ -278,9 +276,9 @@ X1_test = X_test[feature_1]
 
 ## 6. Feature Scaling 
 
-Before we train our Logistic Regression model, we need to take one more important step: feature scaling.
-Even though we are currently working with just one feature, the scale of that feature still matters. Logistic Regression learns by adjusting weights based on numerical values, and features with larger numeric ranges can dominate the learning process if they are left unscaled.
-To prevent this, we standardize the feature so the model learns from relative patterns, not raw magnitudes.
+Before we train our Logistic Regression model, we need to take one more important step: feature scaling. We discussed this in the [Preprocessing](01_preprocessing.md) lesson. 
+
+Even though we are currently working with just one feature, when we combine multiple features it will become important. Logistic Regression learns by adjusting weights based on numerical values, and features with larger numeric ranges can dominate the learning process if they are left unscaled. To prevent this, we standardize the feature so the model learns from relative patterns, not raw magnitudes.
 
 ```python
 # Feature Scaling
@@ -294,7 +292,7 @@ X1_test_scaled = scaler_1.transform(X1_test)
 
 Here we use something called `StandardScaler`, which is a very common and beginner-friendly way to scale data.
 
-When we call `scaler_1.fit_transform(X_train)`, the scaler learns the statistics only from the training set. This prevents information from the test set from leaking into the model. If we were to fit the scaler on all the data, the model would indirectly "peek" at the test set, which would make our evaluation unreliable.
+When we call `scaler_1.fit_transform(X1_train)`, the scaler learns the statistics only from the training set. This prevents information from the test set from leaking into the model. If we were to fit the scaler on all the data, the model would indirectly "peek" at the test set, which would make our evaluation unreliable.
 
 After fitting the scaler on `X1_train`, we use the same scaler to transform both the training and test sets. This keeps them comparable while maintaining fairness.
 
@@ -460,11 +458,21 @@ X_test_scaled = scaler_full.transform(X_test)
 
 ```python
 # Train full model
-log_reg_full = LogisticRegression(max_iter=1000, solver="liblinear")
+log_reg_full = LogisticRegression(C=1.0, max_iter=1000, solver="liblinear")
 log_reg_full.fit(X_train_scaled, y_train)
 ```
 
 Logistic Regression combines signals from words, characters, and capitalization patterns to find the best linear boundary separating spam from non-spam emails.
+
+### A Note on Regularization
+
+You may have noticed that in the full model we have included a parameter `C`. That `C=1.0` parameter controls something called *regularization* -- an important concept that applies to many models beyond logistic regression.
+
+Regularization discourages the model from assigning very large weights to individual features. If the model learns an enormous coefficient for one feature, it becomes over-reliant on that signal, and any noise or outlier in that feature can swing the entire prediction. Regularization adds a penalty for large coefficient values, keeping them contained and making the model more stable. This is exactly the outlier sensitivity mentioned earlier -- regularization is the standard remedy.
+
+The `C` parameter controls how strong this penalty is, but the direction is counterintuitive: `C` is the *inverse* of regularization strength. A small `C` (like 0.01) applies heavy regularization, pushing all coefficients toward zero. A large `C` (like 100) applies almost none. `C=1.0` is the default and a reasonable starting point, which is why we set it explicitly here. On noisier datasets, tuning `C` with cross-validation -- the same way we tuned `k` in KNN -- can improve results meaningfully. 
+
+In ML pipelines, `C` is known as a "hyperparameter" because it's not technically a parameter of the model itself (it's not a weight in your logistic model), but it's something that strongly influences the model.
 
 ## 15. Interpreting the Model Using Feature Coefficients
 
@@ -523,6 +531,20 @@ The F1 score is 0.91, which balances precision and recall into a single number. 
 The classification report breaks this down further by class. For non-spam (class 0), the model achieves 95% recall, meaning it almost always correctly recognizes legitimate emails. For spam (class 1), the recall is 90%, which is still strong and expected in real-world spam filtering. The weighted averages across both classes remain around 0.93, showing consistent performance across the dataset.
 
 Overall, these results show that Logistic Regression performs very well on this problem. It learns a clean linear boundary, provides strong predictive performance, and most importantly, gives us interpretable metrics that help us understand exactly how and where the model succeeds or fails.
+
+## 17. Cross-Validation Sanity Check
+
+In the KNN lesson, we used cross-validation to get a more reliable accuracy estimate than any single train/test split can provide. The same principle applies here. With 4,601 samples, our 80/20 split is large enough that a single split is already fairly stable -- but a quick CV run confirms that the result isn't a lucky draw from one particular partition.
+
+```python
+cv_scores = cross_val_score(log_reg_full, X_train_scaled, y_train, cv=5)
+
+print(cv_scores)
+print(f"Mean: {cv_scores.mean():.3f}")
+print(f"Std:  {cv_scores.std():.3f}")
+```
+
+You should see fold scores clustered tightly around 0.93 with a low standard deviation -- consistent with the test-set result and confirming that the model's performance is stable across different subsets of the data.
 
 ## Check for Understanding
 

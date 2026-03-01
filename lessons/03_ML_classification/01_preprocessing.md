@@ -77,7 +77,21 @@ Some models are much less sensitive to scale, such as decision trees.
 
 Even numeric features require thoughtful preparation. Scaling helps many models learn fairly from all features instead of just listening to the biggest numbers.
 
-### Standardization example 
+### Scaling in real ML workflows
+
+In the examples above, we called `scaler.fit_transform(X)` on the full dataset. That is fine for illustrating the concept, but in a real machine learning project you will first split your data into training and test sets, and then fit the scaler *only on the training data*:
+
+```python
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)  # learns mean and std from training data only
+X_test_scaled  = scaler.transform(X_test)        # applies the same scaling to test data
+```
+
+The reason is subtle but important. The scaler learns two numbers from your data -- the mean and standard deviation of each feature. If you fit it on all the data, those statistics are influenced by the test set. When you later evaluate on the test set, the model has indirectly "seen" it, which can make your evaluation results look better than they actually are. This is called *data leakage*.
+
+By fitting on the training data only, the test set remains truly unseen -- a clean measure of how the model would perform on new data in the real world. You will apply this pattern when building KNN and logistic regression models in the upcoming lessons.
+
+### Standardization example
 To make this concrete, let us look at the distributions of two numeric features:
 
 - `age` (in years)  
