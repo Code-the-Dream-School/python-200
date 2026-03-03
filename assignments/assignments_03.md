@@ -2,7 +2,7 @@
 
 This week's assignments cover the week 3 material, including:
 
-- Data preprocessing: scaling and train/test splitting
+- Data preprocessing: scaling, train/test splitting, and dimensionality reduction with PCA
 - k-Nearest Neighbors (KNN) and classifier evaluation
 - Cross-validation and hyperparameter tuning
 - Logistic Regression and regularization
@@ -23,15 +23,16 @@ When finished, commit and open a PR as described in the [assignments README](REA
 
 Put all warmup exercises in a single file: `warmup_03.py`. Use comments to mark each section and question (e.g. `# --- Preprocessing ---` and `# Q1`). Use `print()` to display all outputs.
 
-All questions in this warmup use the Iris dataset. Run this setup block once at the top of your file and reuse the variables throughout:
+The first five sections use the Iris dataset; the PCA section has its own data-loading block. Run this setup block once at the top of your file:
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_iris, load_digits
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
@@ -93,6 +94,59 @@ Create a `DecisionTreeClassifier(max_depth=3, random_state=42)`, fit it on the u
 
 Train three logistic regression models on the scaled Iris data, identical in every way except for the `C` parameter: `C=0.01`, `C=1.0`, and `C=100`. Use `max_iter=1000` and `solver='liblinear'` for all three. For each model, print the `C` value and the total size of all coefficients using `np.abs(model.coef_).sum()`. Add a comment: what happens to the total coefficient magnitude as `C` increases? What does this tell you about what regularization is doing?
 
+## PCA
+
+The digits dataset is a collection of 1797 small handwritten digit images, each 8x8 pixels, bundled directly with scikit-learn (no download needed). Each image is stored as a flat array of 64 pixel values, so each sample lives in a 64-dimensional space -- a natural fit for dimensionality reduction. Pixel values range from 0 to 16, with higher values representing brighter pixels. The target labels are the digits 0 through 9.
+
+Add this data-loading block right before your PCA questions in `warmup_03.py`:
+
+```python
+digits = load_digits()
+X_digits = digits.data    # 1797 images, each flattened to 64 pixel values
+y_digits = digits.target  # digit labels 0-9
+images   = digits.images  # same data shaped as 8x8 images for plotting
+```
+
+### PCA Question 1
+
+Print the shape of `X_digits` and `images`. Then create a 1-row subplot showing one example of each digit class (0-9), using `cmap='gray_r'` with each digit's label as the title. Save the figure to `outputs/sample_digits.png`. (`gray_r` is the reversed grayscale colormap -- it renders higher pixel values as darker, so digits appear as dark ink on a light background, which is more readable than the default.)
+
+### PCA Question 2
+
+Fit `PCA()` on `X_digits` (with no `n_components` argument) then get the scores with `scores = pca.transform(X_digits)`. As in the lesson, scores tell you how strongly each component is weighted for each sample -- `scores[i, 0]` is the weighting for PC1 in sample i, `scores[i, 1]` is the weighting for PC2, and so on.
+
+Use `scores[:, 0]` and `scores[:, 1]` to make a scatter plot, coloring each point by its digit label and adding a colorbar. Here is the pattern for coloring by a label array and attaching a colorbar:
+
+```python
+scatter = plt.scatter(scores[:, 0], scores[:, 1], c=y_digits, cmap='tab10', s=10)  # c = color array
+plt.colorbar(scatter, label='Digit')
+```
+
+Save the figure to `outputs/pca_2d_projection.png`. Add a comment: do same-digit images tend to cluster together in this 2D space?
+
+### PCA Question 3
+
+Using the PCA object you fit in Question 2, plot cumulative explained variance vs. number of components using `np.cumsum(pca.explained_variance_ratio_)`. Save to `outputs/pca_variance_explained.png`. Add a comment: approximately how many components do you need to explain 80% of the variance?
+
+### PCA Question 4
+
+The preprocessing lesson showed that a reconstruction is built by starting from the mean and adding each component weighted by its score. Here is the same idea generalized to n components -- add this function to your file:
+
+```python
+def reconstruct_digit(sample_idx, scores, pca, n_components):
+    """Reconstruct one digit using the first n_components principal components."""
+    reconstruction = pca.mean_.copy()
+    for i in range(n_components):
+        reconstruction = reconstruction + scores[sample_idx, i] * pca.components_[i]
+    return reconstruction.reshape(8, 8)
+```
+
+Using this function, the PCA object, and the scores from Question 2, reconstruct the first 5 digits in `X_digits` using reconstruction through principal components n = 2, 5, 15, and 40. 
+
+Build a grid of subplots where rows correspond to each n value and columns show those 5 digits. Add an "Original" row at the top (use `images[i]`, which is already shaped as (8, 8)). Save to `outputs/pca_reconstructions.png`. 
+
+Add a comment: at what n do the digits become clearly recognizable, and does that match where the variance curve levels off?
+
 # Part 2: Mini-Project -- Spam or Ham? A Classifier Shootout
 
 This project uses the [Spambase dataset](https://archive.ics.uci.edu/dataset/94/spambase) from the UCI Machine Learning Repository -- the same dataset introduced in the logistic regression lesson. Each row represents an email. The 57 numeric features describe measurable properties: how often certain words appear, how often certain characters appear, or statistics about runs of capital letters. The target variable is `spam_label` (1 = spam, 0 = not spam).
@@ -115,17 +169,41 @@ Then look at the raw scale of the features more broadly. Notice that many emails
 
 Before building any models, prepare your data for the experiments in Task 3. You will need a train/test split and will need to think about how to handle the feature scales you noticed in Task 1. Document your choices in comments.
 
+### PCA preprocessing
+
+Not every classifier benefits from dimensionality reduction. Decision trees and random forests split on feature thresholds -- they are insensitive to feature scale or correlation, so PCA is unlikely to help them. KNN and logistic regression are different: both operate in a space where feature magnitudes matter and can benefit from reduced dimensionality.
+
+One rule applies whenever you use PCA: always scale the data first. PCA finds directions of maximum variance, so features with larger raw values will dominate unless you standardize first -- the same reason scaling is often used for KNN. For Spambase, where word frequencies are tiny fractions and `capital_run_length_total` can reach the thousands, this ordering is essential.
+
+Fit PCA on the training data only -- same reason as the scaler: fitting on all the data lets test-set information leak into the components.
+
+```python
+pca = PCA()
+pca.fit(X_train_scaled)
+```
+
+Plot the cumulative explained variance, save it to `outputs/`, and print `n` -- the number of components where it first reaches 90%.
+
+With `n` determined, transform both sets and slice to the first `n` components:
+
+```python
+X_train_pca = pca.transform(X_train_scaled)[:, :n]
+X_test_pca  = pca.transform(X_test_scaled)[:, :n]
+```
+
+Keep both the full scaled arrays and the PCA-reduced arrays -- you will use both in Task 3.
+
 ## Task 3: A Classifier Comparison
 
 Build and evaluate the following five classifiers. For each, print the accuracy and the full classification report.
 
 - `KNeighborsClassifier(n_neighbors=5)` trained on the *unscaled* data
-- `KNeighborsClassifier(n_neighbors=5)` trained on the *scaled* data
+- `KNeighborsClassifier(n_neighbors=5)` trained on the *scaled* data, and again on the *PCA-reduced* data from Task 2 -- compare the two
 - `DecisionTreeClassifier(random_state=42)` -- before settling on a final depth, try `max_depth` values of `3`, `5`, `10`, and `None` (unlimited). For each, print both the training accuracy and the test accuracy. What do you notice as depth increases? What does that tell you about overfitting? Pick the depth you would use in production and add a comment explaining your reasoning. Then, using your chosen depth, print the accuracy and full classification report as you did for the other classifiers.
 - `RandomForestClassifier` (introduced below)
-- `LogisticRegression(C=1.0, max_iter=1000, solver='liblinear')`
+- `LogisticRegression(C=1.0, max_iter=1000, solver='liblinear')` trained on the *scaled* data, and again on the *PCA-reduced* data -- compare the two
 
-After you have results for all five, write a comment summarizing what you see. Which model performs best? For a spam filter specifically, is accuracy the right metric to optimize -- or would you rather minimize false positives (legitimate email marked as spam) or false negatives (spam that gets through)? Take a position and defend it.
+After you have results for all your classifiers, write a comment summarizing what you see. Which model performs best? For the classifiers where you compared PCA vs. non-PCA, which worked better -- and does that match your hypothesis from Task 2? For a spam filter specifically, is accuracy the right metric to optimize -- or would you rather minimize false positives (legitimate email marked as spam) or false negatives (spam that gets through)? Take a position and defend it.
 
 For your best-performing classifier, create a confusion matrix using `ConfusionMatrixDisplay` and save it to `outputs/best_model_confusion_matrix.png`. Given the costs described above, which type of error does your best model make more often?
 
@@ -145,8 +223,7 @@ The tree learns these questions from data. At each step, it tries many possible 
 
 ```text
 Before split (high Gini impurity -- very uncertain):
-Spam:     ██████████
-Not spam: ██████████
+Spam:     ██████████  Not spam: ██████████
 ```
 
 After a well-chosen split (say, on whether `char_freq_$` is high), the two groups become much more certain -- Gini impurity drops:
@@ -218,10 +295,26 @@ In scikit-learn, evaluation is typically handled outside the pipeline. The pipel
 
 One exception is that a pipeline does have a built-in method for calculating accuracy: `pipeline.score(X_test, y_test)`. `score()` does quite a bit in one call: it runs `X_test` through the pipeline, generates predictions, and compares them against `y_test`, returning accuracy.
 
+### PCA as a pipeline step
+
+Adding PCA to a pipeline is straightforward -- just insert it as a step between the scaler and the classifier, using the number of components you chose in Task 2:
+
+```python
+from sklearn.decomposition import PCA
+
+pca_pipeline = Pipeline([
+    ("scaler",     StandardScaler()),
+    ("pca",        PCA(n_components=...)),  # use your n_components from Task 2
+    ("classifier", LogisticRegression(C=1.0, max_iter=1000, solver='liblinear'))
+])
+```
+
+The pipeline handles the correct ordering automatically -- the scaler and PCA both fit on training data only, and the same transformations are applied in sequence to the test set when you call `predict`.
+
 ### Build your pipelines
 
-Build two pipelines: one for your best tree-based classifier and one for your best non-tree-based classifier. For each, fit on the training data and print the full classification report on the test set. Confirm the results match your earlier manual approach.
+Build two pipelines: one for your best tree-based classifier and one for your best non-tree-based classifier. For each, fit on the training data and print the full classification report on the test set. Confirm the results match your earlier manual approach. If your Task 3 experiments showed that PCA improved your non-tree model, include it as a step in that pipeline.
 
-Comment on your results: do the two pipelines have the same structure? Why or why not? What is the practical value of packaging a model this way, especially when handing it off to someone else or deploying it?
+Comment on your pipelines: do they have the same structure? Why or why not? What is the practical value of packaging a model this way, especially when handing it off to someone else or deploying it?
 
 Good luck on this mini-project!

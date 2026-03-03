@@ -475,7 +475,7 @@ The first component explains 98.3 percent of the variance, which is pretty amazi
 
 ### Scores and reconstruction
 
-PCA also provides *scores*, which tell us how strongly each component is expressed in each frame:
+PCA also provides *scores*, which tell us how strongly each component is weighted in each frame:
 
 ```python
 scores = pca.transform(X)
