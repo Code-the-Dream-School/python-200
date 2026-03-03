@@ -1,7 +1,7 @@
 # Week 3: Machine Learning: Classification
 Welcome to Week 3 of Python 200! Last week we built intuition for machine learning using regression -- predicting a continuous value from data. This week we turn to *classification*: predicting which category something belongs to. Is this email spam? Is this tumor malignant? Will this customer churn? Classification is one of the most common tasks in applied ML, and this week you will build real classifiers and learn how to evaluate whether they are actually working.
 
-Along the way, we will also dig into two topics that matter for nearly every ML project: data preprocessing and feature engineering (transforming raw data into something a model can actually learn from), and classifier evaluation (moving beyond simple accuracy to metrics that give you a clearer picture of model performance).
+Along the way, we will also dig into two topics that matter for nearly every ML project: data preprocessing and feature engineering (transforming raw data into something a model can actually learn from), and classifier evaluation (from accuracy to metrics that give you a more robust picture of model performance).
 
 > For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
 
