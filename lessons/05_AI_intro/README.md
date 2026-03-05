@@ -5,23 +5,19 @@ As a data engineer, you will increasingly be asked to build pipelines that incor
 
 We will end by taking a look at some of the important ethical questions that come with deploying AI systems. Some people argue we should reconsider the use of large language models. Why? We want to create space for that perspective in this class, while also making sure you have the skills to use these tools if you do chose to use them. 
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
-
 ## Topics
-1. [Introduction to language processing and LLMs](01_intro_nlp_llms.md)  
+1. [Introduction to language processing and LLMs](https://github.com/Code-the-Dream-School/python-200/blob/06b78eccb45e3f47389ca45320ce53fbcbdee417/lessons/05_AI_intro/01_intro_nlp_llms.md)  
 Overview of the field of natural language processing (NLP), and the recent explosion of interest in large language models (LLM). We do a fairly deep dive into how LLMs work, from tokenization to embedding, as this is the basis for so many pipelines.
 
-2. [OpenAI Chat Completions API](02_completions_api.md)  
+2. [OpenAI Chat Completions API](https://github.com/Code-the-Dream-School/python-200/blob/06b78eccb45e3f47389ca45320ce53fbcbdee417/lessons/05_AI_intro/02_completions_api.md)  
 Intro and overview of the OpenAI chat completions API: this is the bread and butter of how we will interact with an LLM. We also discuss and demonstrate the moderations endpoint to filter out inappropriate content.
 
-3. [Chatbots](03_chatbots.md)  
+3. [Chatbots](https://github.com/Code-the-Dream-School/python-200/blob/06b78eccb45e3f47389ca45320ce53fbcbdee417/lessons/05_AI_intro/03_chatbots.md)  
 By default, LLMs have no memory of previous messages. This lesson covers how to work around that limitation to build a chatbot that can hold a coherent conversation.
 
-4. [Prompt engineering](04_prompt_engineering.md)  
+4. [Prompt engineering](https://github.com/Code-the-Dream-School/python-200/blob/06b78eccb45e3f47389ca45320ce53fbcbdee417/lessons/05_AI_intro/04_prompt_engineering.md)  
 There are better and worse ways to get responses from a model, here we'll go over the fundamentals of *prompt engineering*. Zero shot, one shot, few-shot, and chain of thought prompting.
 
-5. [Ethics, bias, and responsible AI](05_ai_ethics.md)    
+5. [Ethics, bias, and responsible AI](https://github.com/Code-the-Dream-School/python-200/blob/06b78eccb45e3f47389ca45320ce53fbcbdee417/lessons/05_AI_intro/05_ai_and_ethics.md)    
 LLMs are just ML models trained on data, so they are subject to the same biases as other models -- and they come with additional concerns around energy use, misinformation, and labor displacement. A lot of people are telling us how AI is going to change our lives for the better, but there are real ethical questions to consider in this new landscape.
 
-## Week 5 Assignments
-Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
