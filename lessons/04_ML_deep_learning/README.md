@@ -7,23 +7,18 @@ Things will be a bit different this week: we will be using PyTorch on Kaggle for
 
 However, if you want to install PyTorch on your own machine for practice, you can find out how at their [official installation page](https://pytorch.org/get-started/locally/). Just bear in mind that your mentors probably won't be able to provide debugging and support for PyTorch issues.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.  
-
 ## Topics
-1. [Introduction to neural networks and deep learning](01_deep_intro.md)  
+1. [Introduction to neural networks and deep learning](https://github.com/Code-the-Dream-School/python-200/blob/d99045dc5f1dc886d22a0ff4d7d6039cd102d9c1/lessons/04_ML_deep_learning/01_deep_intro.md)  
 A brief introduction to neural networks and deep learning. What are they, how do they work, how do they learn?
 
-2. [Introduction to pytorch](02_pytorch_intro.md)  
+2. [Introduction to pytorch](https://github.com/Code-the-Dream-School/python-200/blob/d99045dc5f1dc886d22a0ff4d7d6039cd102d9c1/lessons/04_ML_deep_learning/02_pytorch_intro.md)  
 An overview of the PyTorch library, mainly focusing on tensor operations. Note this week you will see "Open in Kaggle" buttons for the material, where you will be running the code. 
 
-3. [Training your first neural network](03_first_neural_network.md)  
+3. [Training your first neural network](https://github.com/Code-the-Dream-School/python-200/blob/d99045dc5f1dc886d22a0ff4d7d6039cd102d9c1/lessons/04_ML_deep_learning/03_first_neural_network.md)  
 Before diving into more complex models, we will start by training a simple neural network in PyTorch to gain an understanding of the basic workflow for training and evaluating a model -- a workflow that carries over to much more complex architectures as well.
 
-4. [Machine vision intro](04_cnn_inference.md)  
+4. [Machine vision intro](https://github.com/Code-the-Dream-School/python-200/blob/d99045dc5f1dc886d22a0ff4d7d6039cd102d9c1/lessons/04_ML_deep_learning/04_cnn_inference.md)  
 For this section, we will use a pre-trained convolutional neural network (CNN) to classify images, to show how deep neural networks can be used for computer vision tasks.
 
-5. [Transfer learning: learning new tasks](05_transfer_learning.md)
+5. [Transfer learning: learning new tasks](https://github.com/Code-the-Dream-School/python-200/blob/d99045dc5f1dc886d22a0ff4d7d6039cd102d9c1/lessons/04_ML_deep_learning/05_transfer_learning.md)
 Here, we will explore transfer learning, which is a technique that allows us to use a pre-trained models for new tasks with limited data. We will fine-tune a pre-trained CNN to learn to classify clothing types.
-
-## Week 4 Assignments
-Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
