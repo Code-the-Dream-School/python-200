@@ -32,6 +32,3 @@ What does it mean for two variables to be related? We'll look at Pearson correla
 7. [Pipelines](https://github.com/Code-the-Dream-School/python-200/blob/9c642d5de83ef61cc6eac75d4f7263b5b74bcff2/lessons/01_analysis_intro/07_pipelines.md)
 Once your analysis works, you'll want to run it again reliably — on new data, on a schedule, or in the cloud. This lesson introduces data pipelines with Prefect.
 
-## Week 1 Assignments
-Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material. 
-
