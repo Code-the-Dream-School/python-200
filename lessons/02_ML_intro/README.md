@@ -9,16 +9,13 @@ The first couple of weeks we will cover *classical* ML. This is still the workho
 
 ## Topics
 
-1. [Introduction to machine learning](01_machine_learning.md)
+1. [Introduction to machine learning](https://github.com/Code-the-Dream-School/python-200/blob/2686b9db3d0caeb24576172c7530d91e703ba64a/lessons/02_ML_intro/01_machine_learning.md)
 A big-picture overview of the ML landscape: what machine learning is, how it relates to AI and deep learning, and the main types of learning (supervised, unsupervised, reinforcement). 
 
-2. [Introduction to scikit-learn](02_scikit_learn.md)
+2. [Introduction to scikit-learn](https://github.com/Code-the-Dream-School/python-200/blob/2686b9db3d0caeb24576172c7530d91e703ba64a/lessons/02_ML_intro/02_scikit_learn.md)
 An introduction to scikit-learn, the go-to library for classical ML in Python. We will look at its API and see it in action with a couple of quick examples.
 
-3. [Intro to Linear Regression](03_linear_regression.md)
+3. [Intro to Linear Regression](https://github.com/Code-the-Dream-School/python-200/blob/ba5cc2100afd35f0fc4094c9f614dd9f89a2e6e4/lessons/02_ML_intro/03_linear_regression.md)
 Our first real ML model. We will train a linear regression model on housing data, evaluate it with standard metrics, and develop intuition for what those metrics mean.
-
-## Week 2 Assignments
-Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
 
 
