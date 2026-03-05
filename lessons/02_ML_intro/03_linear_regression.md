@@ -1,6 +1,6 @@
 # Linear Regression
 
-For a helpful overview before diving in: [Linear Regression explained (YouTube)](https://youtu.be/ukZn2RJb7TU?si=Jz65OxZeGuUKDbO7)
+For a helpful overview before diving in: [Linear Regression explained (YouTube)](https://www.youtube.com/watch?v=ukZn2RJb7TU?si=Jz65OxZeGuUKDbO7)
 
 ### Recap
 
