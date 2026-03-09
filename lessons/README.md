@@ -129,10 +129,10 @@ lesson to a Jupyter notebook using [jupytext](https://jupytext.readthedocs.io/),
 included in the course environment:
 
 ```bash
-jupytext --to notebook --output ~/p200_working/01_pandas.ipynb lessons/01_analysis_intro/01_pandas.md
+jupytext --to notebook --output <path_to_p200_working>/01_pandas.ipynb lessons/01_analysis_intro/01_pandas.md
 ```
 
-This creates a `.ipynb` file in your `p200_working/` directory that you can open in
+This creates a `.ipynb` file in your working directory that you can open in
 JupyterLab or VS Code.
 
 All our Markdown lessons are written so they should run successfully when converted to Jupyter notebooks using jupytext. Please let us know if there are any problems. 
