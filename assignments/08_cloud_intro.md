@@ -5,7 +5,7 @@ This week's assignments cover the cloud computing concepts from the two Week 8 l
 - Core cloud concepts: what cloud computing is, how services are delivered, and when it makes sense
 - Getting oriented in Azure: the portal, Cloud Shell, the Azure CLI, and SSH keys
 
-The warmup is a check for understanding -- short written answers, no code. The project introduces something new to the cloud weeks: a short video. More on that below.
+The warmup is basically a check for understanding -- short written answers, no code. The mini-project introduces something new to the cloud weeks: a short video. More on that below.
 
 # Submission Instructions
 
@@ -70,17 +70,17 @@ az account show
 
 Paste the output into your answer. Then describe in one sentence what changes when you add `--output table`.
 
-# Part 2: Project -- Cloud Orientation
+# Part 2: Project -- Intro and Cost Analysis
 
 This week's project is intentionally light. The goal is simply to get you logged in, oriented, and set up in Azure -- and to give you some breathing room to catch up on anything from previous weeks if needed. Enjoy! :smile: 
 
 ## A Note on Cloud Assignments
 
-Starting this week, each cloud assignment includes a short video. If you did Python 100, you've done this before -- same idea.
+Starting this week, each cloud assignment includes a short video. If you took Python 100, you've done this before. 
 
-Cloud proficiency is different from Python proficiency. It is not primarily about writing code -- it is about navigating an ecosystem: finding the right resources, understanding what things cost, knowing which lever to pull. That is genuinely harder to demonstrate in a `.py` file than it is on screen. Videos let us see that you can actually find your way around.
+Cloud proficiency is different from Python proficiency. It is not *primarily* about writing code -- it is about navigating an ecosystem: finding the right resources, understanding what things cost, knowing which lever to pull. In many cases, videos are a much easier way for you to demonstrate that you know your way around.
 
-Keep it concise. The target is 3 minutes; the hard limit is 5. Brevity is part of the skill -- if a professional cloud engineer can't show you something clearly in a few minutes, that's a problem. Your mentors will thank you.
+Please keep it short. The target is 3 minutes; the **hard limit** is 5. Clearly explaining complex concepts in a short amount of time is an important skill in the job force, so this is good practice.  
 
 ## The Video 
 
@@ -92,23 +92,26 @@ Post your video somewhere accessible (whatever you used in Python 100) and paste
 
 Show the following on screen:
 
-1. Navigate to your resource group in the portal. Point out the storage account inside it.
-2. Open Cloud Shell. Run `ls ~/clouddrive` and show that your `test.txt` from the persistence exercise is still there.
-3. Run `az group list --output table` and briefly say what it shows.
-4. Explain anything else you find interesting or curious. 
+1. Your Azure portal. Point out where the main menu is, and where to find our account information. 
+2. Navigate to your resource group in the portal. Point out the storage account inside it.
+3. Open the Cloud Shell. Run `ls ~/clouddrive` and show that your `test.txt` from the persistence exercise is still there.
+4. Run `az group list --output table` and briefly say what it shows.
+5. Feel free to discuss anything else you find interesting or curious. 
 
 ### Part 2: Cost Analysis
 
-The [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/) is a standalone tool -- separate from the Azure portal, no login needed. You search for a service, and click "Add to estimate" -- you can configure it and add it as the running total accumulates in the *Estimate* section at the bottom of the page. Before recording, build estimates for the two scenarios below, then feel free to keep exploring. There are hundreds of services in there -- throw in whatever looks interesting and see what happens to the total. This is a sandbox, not a test.
+The [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/) is a standalone tool -- separate from the Azure portal (no login needed). 
 
-Imagine you are scoping infrastructure for a data pipeline. Start with these two scenarios (East US, Linux):
+The way it works is that you search for a service, and click "Add to estimate" -- you configure the particular service (e.g., compute) and add it as the running total accumulates in the *Estimate* section at the bottom of the page. 
 
-**Scenario A -- Lightweight ETL:** A Standard_B1s VM (1 vCPU, 1 GB RAM) running 8 hours a day, 5 days a week (about 160 hours a month).
+Before recording, build estimates for the two scenarios below, then feel free to keep exploring. There are hundreds of services in there -- throw in whatever looks interesting and see what happens to the total. This is meant to be a fun exercise in cost exploration.
+
+In business contexts, you will often be asked to give a low and a high-end estimage of a budget for a workflow, so spinning out cost scenarios like this is a very useful practical skill. 
+
+For your project, imaging you are scoping infrastructure for a data pipeline. Start with these two scenarios (East US, Linux), which are meant to be low and high end estimates for the infrastructure costs:
+
+**Scenario A -- Lightweight Compute:** A Standard_B1s VM (1 vCPU, 1 GB RAM) running 8 hours a day, 5 days a week (about 160 hours a month).
 
 **Scenario B -- Heavy analytics workload:** A GPU-enabled VM (Standard_NC6s_v3: 6 vCPU, 1 V100 GPU) running 24/7 for the full month (730 hours), an Azure SQL Database (General Purpose tier, 4 vCores), and an Azure Blob Storage account with 1 TB of data.
 
-From there, go wherever curiosity takes you. In your video, pull up the completed estimates and briefly walk through what each scenario costs. In `project_08.md`, write up a summary about the costs and call out anything surprising or interesting you found while poking around.
-
-
-
-
+In your video, pull up the completed estimates and briefly walk through what each scenario costs. In `project_08.md`, write up a summary about the costs and discuss anything surprising or interesting you found in your exploration. 
