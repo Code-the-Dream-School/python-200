@@ -109,14 +109,13 @@ We actively maintain this environment and will update `requirements.txt` as need
 Lessons in this course are written as Markdown files (`.md`), which are easy to read in
 GitHub and in VS Code. When you want to run the code interactively, you can convert a
 lesson to a Jupyter notebook using [jupytext](https://jupytext.readthedocs.io/), which is
-included in the course environment. For instance, if you wanted to convert the lesson `01_pandas.md` in the first week to a Jupyter notebook:
+included in the course environment. For instance, to convert `lesson.md` to a Jupyter notebook:
 
 ```bash
-jupytext --to notebook --output <path>/lesson.ipynb <lesson>.md
+jupytext --to notebook --output <path>/lesson.ipynb lesson.md
 ```
 
-This creates a `.ipynb` file in `<path>` that you can open in
-JupyterLab or VS Code.
+This creates a `.ipynb` file in `<path>` that you can open in JupyterLab or VS Code.
 
 All our Markdown lessons are written so they should run successfully when converted to Jupyter notebooks using jupytext. Please let us know if there are any problems.
 
