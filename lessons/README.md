@@ -2,8 +2,7 @@
 
 As described on the [course home page](../README.md), Python 200 is organized into four
 modules covering data analysis, machine learning, AI, and cloud computing. This page
-is your home base for the lessons themselves -- links to each week below, and
-instructions for setting up your development environment further down.
+is your home base for the lessons themselves -- you will find links to content for each week below, and instructions for setting up your development environment further down.
 
 > This course assumes you have completed Python 100 and are comfortable with basic Python,
 > Git, and the command line.
@@ -22,7 +21,7 @@ instructions for setting up your development environment further down.
 10. [Week 10: Cloud ML](10_cloud_ML/README.md) *(coming soon)*
 11. [Week 11: Cloud ETL](11_cloud_ETL/README.md) *(coming soon)*
 
-Each week of content has its own directory with multiple shorter lessons. Each week's README provides a brief introduction to the week's topics and a table of contents for the lessons. Each week, we recommend that you start with the README to get your bearings, then work through the lessons in order.
+Each week of content is in its own directory and includes multiple shorter lessons in individual markdown files. Every week's README provides a brief introduction to the week's topics and a table of contents for the lessons. For each week, we recommend that you start with the README to get your bearings, then work through the lessons in order.
 
 > Tip: to read Markdown files with full formatting in VS Code, open the file and press
 > `Ctrl+Shift+V` (Windows/Linux) or `Cmd+Shift+V` (Mac), or click the preview icon in
@@ -53,35 +52,19 @@ To pull in new lessons or updates:
 git pull upstream main
 ```
 
-One important note: keep a separate working directory outside the repo -- something like
-`p200_working/` -- for Jupyter notebooks, jupytext output (see below), and any other
-files you generate while working through the course. This keeps your fork clean and
-avoids accidentally committing generated files or triggering unwanted pull requests.
+One important note: as you likely did with Python 100, you will probably want to keep a separate working directory outside the repo -- something like `p200_working/`. This is a place you will be able to save jupytext output (see below), and any other files you generate while working through the course. This keeps your fork clean and avoids accidentally committing generated files or triggering unwanted pull requests. Alternatively, if you prefer to keep your working directory inside the repo, you can add it to `.git/info/exclude` -- this tells Git to ignore it locally without modifying `.gitignore`, so it won't affect other contributors.
 
 ## Package management with uv
 
-We are recommending that you use [uv](https://docs.astral.sh/uv/) for Python and package management. If you have
-only used `pip` before, uv is a significant upgrade. It was written in
-Rust and is 10-100x faster than pip at resolving and installing packages. More
-importantly, it handles Python installation directly -- no separate `pyenv` or
-`conda` needed. You tell it which Python version you want, and it installs it. It also
-creates and manages virtual environments with a single command.
+We recommend that you use [uv](https://docs.astral.sh/uv/) as a one-stop shop for managing your Python programming environment: it installs Python itself, manages virtual environments, and installs packages -- all with a single tool. Written in Rust, it is 10-100x faster than pip at resolving and installing dependencies. More importantly, it replaces the old tangle of pip, pyenv, and conda with a single, consistent workflow. No more version conflicts, no more "which Python is this?" confusion.
 
-The result is that setting up a project takes about 30 seconds instead of 10 minutes, and
-you can be confident your environment exactly matches what the course expects. uv is
-rapidly becoming the standard tool for Python project management.
+uv has rapidly become the standard tool for Python project management.
 
 ### Installing uv
 
 Follow the [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/)
 for your OS. The quick version:
 
-*Mac and Linux:*
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-*Windows (Git Bash):*
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
@@ -126,24 +109,18 @@ We actively maintain this environment and will update `requirements.txt` as need
 Lessons in this course are written as Markdown files (`.md`), which are easy to read in
 GitHub and in VS Code. When you want to run the code interactively, you can convert a
 lesson to a Jupyter notebook using [jupytext](https://jupytext.readthedocs.io/), which is
-included in the course environment:
+included in the course environment. For instance, if you wanted to convert the lesson `01_pandas.md` in the first week to a Jupyter notebook:
 
 ```bash
-jupytext --to notebook --output <path_to_p200_working>/01_pandas.ipynb lessons/01_analysis_intro/01_pandas.md
+jupytext --to notebook --output <path>/lesson.ipynb <lesson>.md
 ```
 
-This creates a `.ipynb` file in your working directory that you can open in
+This creates a `.ipynb` file in `<path>` that you can open in
 JupyterLab or VS Code.
 
-All our Markdown lessons are written so they should run successfully when converted to Jupyter notebooks using jupytext. Please let us know if there are any problems. 
+All our Markdown lessons are written so they should run successfully when converted to Jupyter notebooks using jupytext. Please let us know if there are any problems.
 
-### A note on deep learning (Week 4)
+## You're all set!
 
-PyTorch, torchvision, and related packages are *not* in `requirements.txt`. Deep learning
-work is done on [Kaggle](https://www.kaggle.com/), which provides free GPU access and
-comes with PyTorch pre-installed. The Week 4 lesson will walk you through using it. 
+That's everything you need to get started. Work through each week in order, run the code, break things, and ask questions of your mentors -- that's how we all learn. Good luck!
 
-### A note on cloud tools (Weeks 8-11)
-
-Azure SDK packages are also not in `requirements.txt` -- you won't
-need them until Week 9+. The Week 8 lesson will tell you exactly what to install and how.
