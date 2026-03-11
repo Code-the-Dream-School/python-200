@@ -19,7 +19,7 @@ Before it becomes a classifier, it behaves like a linear model: taking all your 
 Something like this:
 
 ```
-z=b0​+b1​x1​+b2​x2​+…
+z = b0 + b1*x1 + b2*x2 + ...
 ```
 
 If this were ordinary linear regression, the model would output that number directly.
@@ -68,10 +68,7 @@ This means logistic regression is looking for one clean dividing boundary.
 
 Where KNN makes decisions by looking at the closest neighbors, logistic regression draws one clean linear boundary between the classes.
 
-This makes it incredibly easy to interpret:
-- If a weight is positive, that feature pushes the example toward class 1
-- If it's negative, that feature pushes it toward class 0
-- The magnitude of the weight tells you how influential the feature is 
+This makes it incredibly easy to interpret: a positive weight means that feature pushes the prediction toward class 1, a negative weight pushes it toward class 0, and the magnitude tells you how influential the feature is.
 
 You can watch this [YouTube video](https://www.youtube.com/watch?v=yIYKR4sgzI8) for another high-level, visual explanation of logistic regression and how it works.
 
@@ -83,10 +80,7 @@ Suppose you're building a spam detector. Logistic regression might notice:
 - Emails with frequent business terms → less likely spam
 - Emails with "free," "credit," or "money" → more likely spam
 
-Each of these gets a weight:
-
-- A positive weight means "more of this pushes toward spam"
-- A negative weight means "more of this pushes toward not spam"
+Each of these gets a weight -- positive for signals that indicate spam, negative for those associated with legitimate email.
 
 All these weighted pieces get added together into the "z" score. The sigmoid then converts that score into something like 0.89, meaning an 89% chance of spam.
 
@@ -96,9 +90,11 @@ The model starts with random weights. It sees each training email and asks:
 
 > "How wrong was my guess?"
 
-It then adjusts the weights a little bit to reduce future errors. This is done using a method called gradient descent, which is basically the model taking tiny steps downhill on an error curve.
+It then adjusts the weights a little bit to reduce future errors. This is done using a method called gradient descent, which is basically the model taking tiny steps downhill on an error curve. We will see more about this next week. 
 
 Even without the math, think of the model learning like a student practicing flashcards, improving a bit every time it makes a mistake.
+
+The function that measures how wrong the model's guess was is called the *loss function*. For logistic regression, this is *cross-entropy loss*, which penalizes confident wrong predictions heavily and rewards confident correct ones. When the model assigns a high probability to the correct class, the loss is small; when it confidently predicts the wrong class, the loss is large. This is the classification counterpart to RMSE in linear regression -- a quantity the optimizer minimizes by adjusting weights. You will encounter cross-entropy again in the deep learning week, where it is the standard loss function for neural network classifiers.
 
 
 ## When to Use Logistic Regression
@@ -109,7 +105,7 @@ But like any model, it has limitations. Logistic Regression can only draw linear
 
 In the next section, we'll walk through a complete coding example where we load a dataset, train a logistic regression classifier, visualize some results, and interpret what the model learned.
 
-## 1. Importing the Tools We Need
+## Importing the Tools We Need
 
 A few of these imports will be new -- `requests`, `BytesIO`, `StandardScaler`, and `DecisionBoundaryDisplay` -- and we'll explain each one when we use it.
 
@@ -137,7 +133,7 @@ from sklearn.inspection import DecisionBoundaryDisplay
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 ```
 
-## 2. Loading the Dataset
+## Loading the Dataset
 
 For this lesson, we'll use a classic dataset for spam detection. Each row represents an email, and each feature describes something measurable about that email like how often certain words appear or how many capital letters it contains.
 
@@ -223,7 +219,7 @@ When you run this cell, you'll see the first few rows of the dataset.
 This is your first chance to visually confirm that the data looks reasonable and structured.
 
 
-## 3. Separating Features and Target
+## Separating Features and Target
 
 Now we split the data into two parts:
 - X: the input features (what the model learns from)
@@ -236,7 +232,7 @@ y = df["spam_label"]
 ```
 This step is simple, but extremely important. Logistic Regression learns a relationship between X and y, so they must be clearly separated.
 
-## 4. Protecting Ourselves from Data Leakage: Train/Test Split
+## Protecting Ourselves from Data Leakage: Train/Test Split
 
 Next, we split the data into training and testing sets.
 
@@ -254,7 +250,7 @@ We also use stratification to make sure the proportion of spam and non-spam emai
 
 Once the split is done, the test data is off-limits until evaluation time.
 
-## 5. Manually Selecting a Single Feature
+## Manually Selecting a Single Feature
 
 At this point, we have all features available in `X_train` and `X_test`.
 However, instead of immediately training a model with dozens of features, we are going to slow down and take a deliberate step.
@@ -274,7 +270,7 @@ X1_train = X_train[feature_1]
 X1_test = X_test[feature_1]
 ```
 
-## 6. Feature Scaling 
+## Feature Scaling
 
 Before we train our Logistic Regression model, we need to take one more important step: feature scaling. We discussed this in the [Preprocessing](01_preprocessing.md) lesson. 
 
@@ -296,7 +292,7 @@ When we call `scaler_1.fit_transform(X1_train)`, the scaler learns the statistic
 
 After fitting the scaler on `X1_train`, we use the same scaler to transform both the training and test sets. This keeps them comparable while maintaining fairness.
 
-## 7. Training the Logistic Regression using one Feature
+## Training the Logistic Regression using one Feature
 
 Now that our feature is scaled and ready, we can train our Logistic Regression model.
 
@@ -310,13 +306,14 @@ log_reg_1.fit(X1_train_scaled, y_train)
 ```
 
 Here, we create a Logistic Regression model and set a couple of important parameters. `max_iter` controls how many optimization steps the model is allowed to take while learning. We increase this value to make sure the model has enough opportunity to converge.
+
 The `liblinear` solver is a reliable choice for smaller datasets and works well when using one or a few features.
 
-The real learning happens when we call the `.fit()`function. In machine learning,`.fit()` is a very common function name, and it always means the same idea: *learn patterns from the training data*. When we write `log_reg_1.fit(X1_train_scaled, y_train)`, we are explicitly telling the model, "Here are the inputs, and here are the correct answers, figure out the best way to connect them."
+The real learning happens when we call the `.fit()` function. In machine learning,`.fit()` is a very common function name, and it always means the same idea: *learn patterns from the training data*. When we write `log_reg_1.fit(X1_train_scaled, y_train)`, we are explicitly telling the model, "Here are the inputs, and here are the correct answers, figure out the best way to connect them."
 
 At this point, the model has learned a decision boundary based only on `capital_run_length_longest`, and it is ready to be evaluated on unseen data.
 
-## 8. Visualizing the Sigmoid Curve
+## Visualizing the Sigmoid Curve
 
 Now that the model is trained, we want to see what it has learned. Since we are using only one feature, we can directly visualize how Logistic Regression converts feature values into probabilities.
 
@@ -361,7 +358,7 @@ The x-axis represents the scaled feature values, and the y-axis shows the predic
 
 The red curve is the sigmoid -- as capitalization increases, predicted spam probability rises from near 0 and quickly approaches 1. The dashed line at 0.5 is the decision threshold: once the curve crosses it, the model classifies the email as spam. The steep slope tells us this feature carries a strong signal.
 
-## 9. Adding a Second Feature to the Model
+## Adding a Second Feature to the Model
 
 So far, we trained Logistic Regression using a single feature. Now, we take the next step by adding a second intuitive feature to give the model more information.
 
@@ -382,7 +379,7 @@ X2_test = X_test[features_2]
 
 By combining capitalization patterns with dollar-sign frequency, we move from a one-dimensional view of the problem to a two-dimensional one -- which means we can visualize a decision boundary instead of a simple probability curve.
 
-## 10. Scaling the Two Selected Features
+## Scaling the Two Selected Features
 
 We apply the same scaling process as before -- fit only on training data, then transform both sets.
 
@@ -393,7 +390,7 @@ X2_train_scaled = scaler_2.fit_transform(X2_train)
 X2_test_scaled = scaler_2.transform(X2_test)
 ```
 
-## 11. Training Logistic Regression with Two Features
+## Training Logistic Regression with Two Features
 
 ```python
 # Train Logistic Regression with 2 features
@@ -403,7 +400,7 @@ log_reg_2.fit(X2_train_scaled, y_train)
 
 The model now learns how both features work together, finding a decision boundary in two dimensions rather than one.
 
-## 12. Plotting the Decision Boundary for Two Features
+## Plotting the Decision Boundary for Two Features
 
 `DecisionBoundaryDisplay` sweeps a grid of points through the feature space, asks the model to classify each one, and colors the background accordingly -- no manual prediction loop required.
 
@@ -441,9 +438,9 @@ plt.show()
 
 ![Decision Boundary using Two Spam Indicator](resources/Decision_Boundary.png)
 
-Each dot is a real training email; the background color shows the model's prediction for that region. The line where the colors shift is the decision boundary -- emails on one side are classified as spam, those on the other as not spam. Because Logistic Regression always learns a linear boundary, that dividing line is straight regardless of how many features you add.
+Each dot is a real training email; the background color shows the model's prediction for that region. The line where the colors shift is the decision boundary -- emails on one side are classified as spam, those on the other as not spam. Because Logistic Regression always learns a linear boundary, that dividing line is straight. In higher dimensions it becomes a plane, but the idea is the same: a flat boundary separating the two classes.
 
-## 13. Scaling All Features for the Full Model
+## Scaling All Features for the Full Model
 
 Up to this point, we explored Logistic Regression using one and then two carefully chosen features to build intuition. Now we train on all 57.
 
@@ -454,7 +451,7 @@ X_train_scaled = scaler_full.fit_transform(X_train)
 X_test_scaled = scaler_full.transform(X_test)
 ```
 
-## 14. Training the Full Logistic Regression Model
+## Training the Full Logistic Regression Model
 
 ```python
 # Train full model
@@ -474,7 +471,7 @@ The `C` parameter controls how strong this penalty is, but the direction is coun
 
 In ML pipelines, `C` is known as a "hyperparameter" because it's not technically a parameter of the model itself (it's not a weight in your logistic model), but it's something that strongly influences the model.
 
-## 15. Interpreting the Model Using Feature Coefficients
+## Interpreting the Model Using Feature Coefficients
 
 After training the full Logistic Regression model, we can examine which features influence the model's decisions the most.
 
@@ -493,7 +490,7 @@ coef_df.sort_values("abs_importance", ascending=False).head(10)
 
 Each row pairs a feature with its learned coefficient -- a measure of how strongly that feature pushes the prediction toward spam or non-spam. We sort by absolute value so features with strong influence in either direction rise to the top.
 
-## 16. Final step: Evaluating the Model on Unseen Data
+## Evaluating the Model on Unseen Data
 
 So far, everything we've seen used training data. Now comes the most important moment: evaluation on untouched test data.
 
@@ -532,7 +529,7 @@ The classification report breaks this down further by class. For non-spam (class
 
 Overall, these results show that Logistic Regression performs very well on this problem. It learns a clean linear boundary, provides strong predictive performance, and most importantly, gives us interpretable metrics that help us understand exactly how and where the model succeeds or fails.
 
-## 17. Cross-Validation Sanity Check
+## Cross-Validation Sanity Check
 
 In the KNN lesson, we used cross-validation to get a more reliable accuracy estimate than any single train/test split can provide. The same principle applies here. With 4,601 samples, our 80/20 split is large enough that a single split is already fairly stable -- but a quick CV run confirms that the result isn't a lucky draw from one particular partition.
 
