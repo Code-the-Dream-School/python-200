@@ -16,6 +16,18 @@ To get started, accept your invitation:
 3. You *may* be prompted to set up multi-factor authentication (MFA). Follow the prompts to configure it -- this is required for guest access to the CTD tenant.
 4. Once that's done, go to [https://portal.azure.com](https://portal.azure.com) and sign in with the same email address the invitation was sent to (you might be logged in automatically).
 
+### Troubleshooting: existing Microsoft or Azure accounts
+
+If you already have a Microsoft or Azure account associated with your email, you may run into problems during login -- this is a known rough edge. The most reliable fix is to navigate directly to the CTD portal using the tenant ID in the URL:
+
+```
+https://portal.azure.com/0f040ddd-301f-4665-8677-7b21f129d605
+```
+
+This drops you straight into the CTD tenant. Bookmark it.
+
+If you're still seeing strange errors or the portal is behaving unexpectedly, session state from your existing account is likely interfering. We strongly recommend setting up a dedicated Chrome profile for CTD work: click your profile icon in the top-right corner of Chrome, create a new profile, and use it exclusively for the CTD Azure account. This will keep the two accounts from stepping on each other.
+
 ## The Azure Portal
 
 The Azure Portal is the web-based control panel for everything you'll do in Azure. It's where you create and manage resources, monitor costs, configure permissions, and launch tools like Cloud Shell. Professional cloud engineers spend a significant amount of time here, so getting comfortable navigating it early is worthwhile.
