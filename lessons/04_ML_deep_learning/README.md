@@ -3,7 +3,7 @@ Welcome to Week 4 of Python 200! This week we will explore the world of deep lea
 
 Deep learning is the foundation of all modern AI systems like ChatGPT (text-based LLMs), DALL-E (image-generating AI), and many others. By understanding deep learning, you will gain insights into how these systems work and how to help build pipelines and applications that leverage them. The focus is on building intuition and understanding -- not deep mathematical theory.
 
-Things will be a bit different this week: we will be using Kaggle for our hands-on lessons and assignments. This lets us sidestep the complex installation issues that arise with GPU-based computation, letting us focus on the content. On Kaggle, there is 30 hours of free GPU usage, which is essential for hands-on deep learning.
+Lessons are structured a bit differently this week. The standard markdown page introduces the lesson, but the main work is happening in Juptyer notebooks. Each lesson landing page has an "Open in Kaggle" button that loads the notebook directly into your account -- the notebooks live in `resources/notebooks/` and are named to match their lesson. This lets us sidestep the complex installation issues that arise with GPU-based computation. Kaggle provides 30 hours of free GPU time per week, which is more than enough for this course.
 
 > If you want to install PyTorch on your own machine for practice, you can find out how at their [official installation page](https://pytorch.org/get-started/locally/). Just bear in mind that your mentors won't be able to provide support for debugging local PyTorch issues. 
 

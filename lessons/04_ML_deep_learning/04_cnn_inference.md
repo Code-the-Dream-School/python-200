@@ -19,7 +19,7 @@ To avoid installation and environment issues, we recommend running the notebook 
 
 You can open the lesson notebook directly in Kaggle using the link below.
 
-[Open in Kaggle](https://www.kaggle.com/code/niharikamatcha/lesson-3-cnn-inference-pretrained)
+[![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/04_ML_deep_learning/resources/notebooks/04_cnn_inference.ipynb)
 
 Once opened in Kaggle, you will be able to run the notebook cells, experiment with different images, and observe how a pretrained CNN produces predictions.
 

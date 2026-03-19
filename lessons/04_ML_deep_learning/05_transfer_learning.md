@@ -27,7 +27,7 @@ We will:
 To avoid installation and environment issues, we recommend running the notebook on Kaggle, which provides PyTorch and GPU support out of the box.
 
 You can open the lesson notebook directly in Kaggle using the link below.
-[Open in Kaggle](https://www.kaggle.com/code/niharikamatcha/04-transfer-learning-fashion-mnist)
+[![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/kernels/welcome?src=https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/04_ML_deep_learning/resources/notebooks/05_transfer_learning.ipynb)
 
 
 ## What is Transfer Learning?
