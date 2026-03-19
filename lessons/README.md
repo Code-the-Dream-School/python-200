@@ -63,7 +63,7 @@ uv has rapidly become the standard tool for Python project management.
 ### Installing uv
 
 Follow the [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/)
-for your OS. The quick version:
+for your OS. The quick version (Windows users: run this in Git Bash):
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -109,13 +109,13 @@ We actively maintain this environment and will update `requirements.txt` as need
 Lessons in this course are written as Markdown files (`.md`), which are easy to read in
 GitHub and in VS Code. When you want to run the code interactively, you can convert a
 lesson to a Jupyter notebook using [jupytext](https://jupytext.readthedocs.io/), which is
-included in the course environment. For instance, to convert `lesson.md` to a Jupyter notebook:
+included in the course environment. For instance, to convert the first pandas lesson to a Jupyter notebook:
 
 ```bash
-jupytext --to notebook --output <path>/lesson.ipynb lesson.md
+jupytext --to notebook --output ~/p200_working/01_pandas.ipynb lessons/01_analysis_intro/01_pandas.md
 ```
 
-This creates a `.ipynb` file in `<path>` that you can open in JupyterLab or VS Code.
+This creates a `.ipynb` file in your working directory that you can open in JupyterLab or VS Code.
 
 All our Markdown lessons are written so they should run successfully when converted to Jupyter notebooks using jupytext. Please let us know if there are any problems.
 
