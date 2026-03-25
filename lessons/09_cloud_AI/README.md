@@ -4,8 +4,8 @@
 
 ## Topics
 
-1. [Connecting from Azure to Python](https://github.com/Code-the-Dream-School/python-200/blob/reidrussom-cloud-patch/lessons/09_cloud_AI/01_connecting_azure.md)
-2. [Azure Blob Storage](https://github.com/Code-the-Dream-School/python-200/blob/reidrussom-cloud-patch/lessons/09_cloud_AI/02_blob_storage.md)
-3. [Loading Pipeline Data to Blob Storage](https://github.com/Code-the-Dream-School/python-200/blob/reidrussom-cloud-patch/lessons/09_cloud_AI/03_loading_pipeline.md)
+1. [Connecting from Azure to Python](01_connecting_azure.md)
+2. [Azure Blob Storage](02_blob_storage.md)
+3. [Loading Pipeline Data to Blob Storage](03_loading_pipeline.md)
 
 ## Week 9 Assignments
