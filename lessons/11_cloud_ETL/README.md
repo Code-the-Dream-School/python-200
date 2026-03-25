@@ -4,8 +4,8 @@
 
 ## Topics
 
-1. Prefect, Revisited
-2. Building the Pipeline
-3. Making Pipelines Production-Ready
+1. [Prefect, Revisited](01_prefect_revisited.md)
+2. [Building the Pipeline](02_build_pipeline.md)
+3. [Making Pipelines Production-Ready](03_production_ready.md)
 
 ## Assessment
