@@ -2,7 +2,7 @@
 Thanks for your interest in helping to develop Python 200! We're excited to have you on board! :tada: If you ever need help with any of the steps here, please reach out and ask for help! Contributors are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## How to contribute
-GitHub contributions will mainly come through PRs. Before making a PR, you need to first set up a local version of the repo. There, you can work on feature branches, such as individual lesson plans, that will get merged into `main`. 
+Code contributions should come through PRs. Before making a PR, you need to first set up a local version of the repo (as described below). There, you can work on feature branches, such as individual lesson plans, that will get merged into `main` after review. 
 
 ### Fork and clone repo
 Firs, set things up so you have a local copy of the repo based on a fork of the CTD repo:
