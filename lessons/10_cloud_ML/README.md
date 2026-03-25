@@ -4,8 +4,8 @@
 
 ## Topics
 
-1. LLMs as a Transform Step
-2. Transforming Blob Data with OpenAI
-3. Azure OpenAI: A Note for Production
+1. [LLMs as a Transform Step](01_llms_transform.md)
+2. [Transforming Blob Data with OpenAI](02_blob_data.md)
+3. [Azure OpenAI: A Note for Production](03_Azure_OpenAI.md)
 
 ## Assignment
