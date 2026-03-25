@@ -1,7 +1,7 @@
 # Week 1: Introduction to Analysis
 Welcome to the first week of Python 200! This week we will lay the groundwork for the rest of the course. We'll review core concepts from Python 100, explore basic ideas from probability and statistics, and end with reproducible analysis utilities using pipelines.
 
-> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page. 
+> For an introduction to the course as a whole, and a discussion of how to set up your environment, please see the [Welcome](https://github.com/Code-the-Dream-School/python-200/blob/e072675df8c08073483cf708d18e28916635a203/README.md) page. 
 
 ## Topics
 
