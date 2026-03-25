@@ -1,4 +1,4 @@
-# Week 9: Cloud Storage with Python
+# Week 9: Data in the Cloud
 
 *Connects from Week 8 (portal + CLI orientation) to hands-on Python. The missing piece between everything students already know how to build and the capstone is a place to put data in the cloud.*
 
