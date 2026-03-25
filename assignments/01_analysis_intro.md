@@ -19,7 +19,7 @@ In your `python200-homework` repository, create a folder called `assignments_01/
 3. `project_01.py`     : for the project exercise
 4. `outputs/`          : for any plots or data files your code generates
 
-When finished, commit the files to your repo and open a PR as discussed in the assignment's [README page](README.md). 
+When finished, commit the files to your repo and open a PR as discussed in the assignment's [README page](https://github.com/Code-the-Dream-School/python-200/blob/e072675df8c08073483cf708d18e28916635a203/assignments/README.md). 
 
 Note it is very helpful for your mentors if you write your thoughts/comments in your code. This helps us understand your thought process and give you better feedback.
 
