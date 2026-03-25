@@ -4,8 +4,7 @@
 
 ## Topics
 
-### 1. Connecting from Azure to Python
+1. Connecting from Azure to Python
 *Covers how Python code authenticates to Azure. Bridges the `az login` from Week 8 into programmatic access.*
-
-### 2. Azure Blob Storage
+2. Azure Blob Storage
 *Covers the core concepts and CRUD operations for Blob Storage.*
