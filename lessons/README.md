@@ -17,9 +17,9 @@ is your home base for the lessons themselves -- you will find links to content f
 6. [Week 6: Augmenting AI Knowledge](06_AI_augmentation/README.md)
 7. [Week 7: AI Agents](07_AI_agents/README.md)
 8. [Week 8: Introduction to Cloud](08_cloud_intro/README.md)
-9. [Week 9: Cloud AI](09_cloud_AI/README.md) *(coming soon)*
-10. [Week 10: Cloud ML](10_cloud_ML/README.md) *(coming soon)*
-11. [Week 11: Cloud ETL](11_cloud_ETL/README.md) *(coming soon)*
+9. [Week 9: Data in the Cloud](09_cloud_AI/README.md)
+10. [Week 10: LLMs in Pipelines](10_cloud_ML/README.md)
+11. [Week 11: Cloud ETL](11_cloud_ETL/README.md)
 
 Each week of content is in its own directory and includes multiple shorter lessons in individual markdown files. Every week's README provides a brief introduction to the week's topics and a table of contents for the lessons. For each week, we recommend that you start with the README to get your bearings, then work through the lessons in order.
 
