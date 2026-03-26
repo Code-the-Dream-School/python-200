@@ -10,6 +10,10 @@ This week's assignments will cover the week 1 material, including:
 As discussed in the overview of how to approach assignments, the first part of this assignment is a set of warmup exercises to review the week 1 material. The second part is a mini-project that applies the concepts in a more realistic context (setting up a pipeline). 
 
 Good luck, and have fun with it! This is the time to get hands-on practice with the material, feel free to experiment and explore as you work through the material: that is often the best way to learn! 
+
+# Start Here: Create a `python200-homework` repository
+
+**First-Time Setup**: Before submitting your first assignment, create a public GitHub repository called `python200-homework` — you'll use this same repo for all weekly submissions. If you'd like a full overview of the assignment structure and weekly workflow before diving in, check out the [assignments README](https://github.com/Code-the-Dream-School/python-200/blob/e072675df8c08073483cf708d18e28916635a203/assignments/README.md).
   
 # Submission instructions
 In your `python200-homework` repository, create a folder called `assignments_01/`. Inside that folder, create three files and an outputs directory:
