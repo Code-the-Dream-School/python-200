@@ -14,7 +14,7 @@ is your home base for the lessons themselves -- you will find links to content f
 3. [Week 3: Classification](03_ML_classification/README.md)
 4. [Week 4: Deep Learning](04_ML_deep_learning/README.md)
 5. [Week 5: Introduction to AI and LLMs](05_AI_intro/README.md)
-6. [Week 6: Augmenting AI Knowledge](06_AI_augmentation/README.md)
+6. [Week 6: Retrieval-Augmented Generation (RAG)](06_AI_augmentation/README.md)
 7. [Week 7: AI Agents](07_AI_agents/README.md)
 8. [Week 8: Introduction to Cloud](08_cloud_intro/README.md)
 9. [Week 9: Data in the Cloud](09_cloud_AI/README.md)
