@@ -790,3 +790,7 @@ Write a brief summary in a markdown cell or as a comment block addressing the fo
 - One limitation or risk you would flag before the team ships it
 
 The goal here is not to give the "right" answer — it is to practice translating what you observed in code into a decision with reasoning behind it.
+
+---
+
+Good luck! Deep learning can feel like a wall of math and jargon, but you have now done the actual thing: loaded a real pretrained model, run it on real images, benchmarked it against alternatives, and made a production recommendation. That is exactly the kind of hands-on experience that makes these tools feel approachable the next time you encounter them on the job.
