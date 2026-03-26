@@ -4,7 +4,7 @@ In the previous lesson, we learned about the basic theory of LLMs. Now we'll see
 
 Here are some additional resources you can check out on chat completions: [Medium blog](https://medium.com/the-ai-archives/getting-started-with-openais-chat-completions-api-in-2024-462aae00bf0a), [Youtube video](https://www.youtube.com/watch?v=zTa97AOi61w)
 
-> **NOTE:** To get the most out of this lesson, it is recommended that you run the examples yourself. Before beginning with the exercises, ensure that you have your OpenAI API key. If you don't have this, please reach out to your mentor. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI` and `dotenv`.
+> **NOTE:** To get the most out of this lesson, run the examples yourself. Before beginning with the exercises, ensure that you have your OpenAI API key. CTD will provide you with an API key at the start of this week. You'll receive it via Slack. Treat it like a password — never commit it to GitHub. To run the exercises, you will need to create a virtual environment with the following packages installed: `OpenAI` and `dotenv`.
 
 ## What is a completion?
 
