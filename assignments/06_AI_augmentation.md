@@ -265,7 +265,7 @@ Groundwork Coffee Co. is a small, community-focused coffee shop. They have put t
 
 This is the kind of project you might build in a real job. A business has a folder of internal documents and wants an AI assistant that can answer questions without reading every file manually — and without the AI making things up. By the end of this project, you will have built that system from scratch.
 
-The Groundwork documents are in `assignments_06/resources/groundwork_docs/`. Read through them before writing any code. Understanding your data before you start coding will save you time — this is the same principle as the pre-preprocessing step from Week 1.
+The Groundwork documents are in `lessons/06_AI_augmentation/resources/groundwork_docs` (link [here](lessons/06_AI_augmentation/resources/groundwork_docs)). Read through them before writing any code. Understanding your data before you start coding will save you time — this is the same principle as the pre-preprocessing step from Week 1.
 
 Place all your code in `assignments_06/project_06.py`.
 
