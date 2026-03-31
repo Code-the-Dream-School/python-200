@@ -17,7 +17,7 @@ Here are some of the most important uses of NumPy:
 - **7️ Linear algebra** – Solve equations, find eigenvalues, and more using built-in functions.  
 - **8️ Broadcasting** – Automatically apply operations across arrays of different sizes (a NumPy superpower!).  
 - **9️ Mathematical operations** – Use advanced math functions like sine, cosine, log, and exponential.  
-- ** Searching, sorting & counting** – Locate specific elements, sort datasets, or count occurrences efficiently.
+- **Searching, sorting & counting** – Locate specific elements, sort datasets, or count occurrences efficiently.
 
 > **Pro tip:** NumPy is what makes pandas so fast, pandas is actually built on top of NumPy!
 
