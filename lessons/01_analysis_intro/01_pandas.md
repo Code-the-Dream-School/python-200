@@ -26,9 +26,9 @@ It’s used in data analytics, machine learning, finance, science, and pretty mu
 
 **DataFrame**  
 You can think of a DataFrame as a two-dimensional table or a spreadsheet in Python.  
-- It has rows and columns.  
-- Each column has a name.  
-- Each row has an index number.  
+- It has labeled rows and columns.  
+- Each column typically has a string name.  
+- Each row has an index label.  By default, the index is an integer, but it does not need to be an integer.  
 
 ![DataFrame Example](./resources/01_pandas_1_dataframe.png)
 
@@ -39,8 +39,8 @@ Rule of Thumb: a DataFrame has two axes, just like a table.
 👉 More on DataFrames: [GeeksforGeeks Pandas DataFrame](https://www.geeksforgeeks.org/pandas/python-pandas-dataframe/)  
 
 **Series**  
-You can think of a Series as just one column from a DataFrame.  
-- It has values and an index, but only one column.  
+You can think of a Series as just one row or column from a DataFrame.  It can be selected from either axis.    
+- It has values and an index, but only one dimension.  
 - Can store heterogeneous data types.  
 - A Series is like a fancy list that knows the name of each item.
 
@@ -177,7 +177,7 @@ print(ages)
 ## Why Series are Important
 
 - A DataFrame is really just a collection of Series.  
-- Series can have **labels** (indexes) which make it easy to access values.  
+- Series can have **labels** (indices) which make it easy to access values.  
 - Series handle **missing data** with NaN gracefully.  
 - Let’s test this concept
 ```python
@@ -314,11 +314,13 @@ age, grade, city, score
 Datasets can be huge, with millions of rows and many columns.  
 To work effectively, we often need to grab **specific pieces** of data: rows, columns, or even individual cells.
 
-Both `.loc[]` (label-based) and `.iloc[]` (index-based) are powerful tools for this.  
+Both `.loc[]` (label-based) and `.iloc[]` (positional index-based) are powerful tools for this.  
 Think of them like coordinates:
 
 - `.loc[row_label, column_label]`
 - `.iloc[row_number, column_number]`
+
+The word **index** can be confusing here since it is sometimes used to refer to row labels.  To be clear, `.iloc[]` uses a **zero based**, **sequential**, **integer positional index**.
 
 ---
 
@@ -376,7 +378,7 @@ This helps us find rows based on conditions.
 print(students_df[students_df["age"] > 30])
 ```
 
-** Example: Students with grade “A”**  
+**Example: Students with grade “A”**  
 ```python
 print(students_df[students_df["grade"] == "A"])
 ```
@@ -387,11 +389,11 @@ print(students_df[students_df["grade"] == "A"])
 
 We can sort rows by any column. Sorting helps you see patterns.  
 
-** Example:  
+**Example:**  
 - Sort students by **score** to see the top performers.  
 - Sort by **age** to see youngest/oldest.  
 
-** Example Sort by score (descending):**  
+**Example Sort by score (descending):**  
 ```python
 students_df.sort_values("score", ascending=False)
 ```
