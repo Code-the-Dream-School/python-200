@@ -201,7 +201,7 @@ ax.set_title("Sine Wave")
 ax.set_xlabel("X-axis")
 ax.set_ylabel("Y-axis")
 plt.show()
-
+```
 
 
 ### 2. Visualizing 2D Arrays with `imshow`
@@ -216,6 +216,7 @@ plt.imshow(arr, cmap="viridis")
 plt.colorbar()  # Show color scale
 plt.title("Random 2D Array (like an image)")
 plt.show()
+```
 
 ### 3. Subplots
 
@@ -236,7 +237,7 @@ axes[1].plot(x, y2, color="green")
 axes[1].set_title("Cosine")
 
 plt.show()
-
+```
 
 ### 4. Customizing Line Styles
 
@@ -257,6 +258,7 @@ plt.ylabel("Height", fontsize=12)
 plt.title("Wave Height at Different Times", fontsize=16)
 plt.legend(loc='upper right')
 plt.show()
+```
 
 ---
 
