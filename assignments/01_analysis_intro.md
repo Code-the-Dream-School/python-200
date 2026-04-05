@@ -343,7 +343,7 @@ Finally, add a comment block at the bottom of `prefect_warmup.py` answering thes
 
 
 # Part 2: Mini-Project: World Happiness Pipeline
-In this project, you will build a Prefect pipeline that performs an end-to-end analysis of the World Happiness dataset (the data are located in `assignments/resources/happiness_project/`).
+In this project, you will build a Prefect pipeline that performs an end-to-end analysis of the World Happiness dataset (the data are located in [assignments/resources/happiness_project](https://github.com/Code-the-Dream-School/python-200/tree/main/assignments/resources/happiness_project)).
 
 In your python-200 homework repo, place your project code in `assignments_01/project_01.py`. Any outputs you generate should be saved in `assignments_01/outputs/`.
 
