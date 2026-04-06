@@ -28,7 +28,7 @@ When finished, commit the files to your repo and open a PR as discussed in the a
 Note it is very helpful for your mentors if you write your thoughts/comments in your code. This helps us understand your thought process and give you better feedback.
 
 # Part 1: Warmup Exercises
-Put all warmup exercises  in a single file: `warmups_01.py`. Use comments to mark each section and question (e.g. `# --- Pandas ---` and `# Pandas Q1`). Use `print()` to display all outputs. 
+Put all warmup exercises  in a single file: `warmup_01.py`. Use comments to mark each section and question (e.g. `# --- Pandas ---` and `# Pandas Q1`). Use `print()` to display all outputs. 
 
 ## Pandas Review
 
