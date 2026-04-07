@@ -5,7 +5,7 @@ Machine learning (ML) models are embedded in many pipelines that you will help b
 
 The first couple of weeks we will cover *classical* ML. This is still the workhorse of most production systems, and it is the right place to build intuition before we move on to deep learning and large language models in later weeks.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
+> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](https://github.com/Code-the-Dream-School/python-200/blob/7bfa4151e1b7877629c377aebc7b506e2263072f/lessons/README.md) page.
 
 ## Topics
 
