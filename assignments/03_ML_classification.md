@@ -17,7 +17,7 @@ In your `python200-homework` repository, create a folder called `assignments_03/
 2. `project_03.py` : for the mini-project
 3. `outputs/`      : for any plots or data files your code generates
 
-When finished, commit and open a PR as described in the [assignments README](README.md).
+When finished, commit and open a PR as described in the [assignments README](https://github.com/Code-the-Dream-School/python-200/blob/75ba1ca1b7ed0156605d7e3ab94b30fdce9105c0/assignments/README.md).
 
 # Part 1: Warmup Exercises
 
