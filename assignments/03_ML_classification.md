@@ -267,7 +267,7 @@ Using `cross_val_score` with `cv=5`, run cross-validation on the training data f
 
 So far you have been managing preprocessing manually: fit the scaler on training data, transform training data, transform test data, then pass the results to a classifier. This works, but it requires careful bookkeeping -- it is easy to forget a step, apply transformations in the wrong order, or accidentally leak information from the test set into the scaler.
 
-In the [Week 1 pipelines lesson](../../lessons/01_analysis_intro/07_pipelines.md) you learned that a pipeline is a series of connected steps where the output of one becomes the input of the next. scikit-learn's `Pipeline` class brings this idea directly into model building for ML.
+In the [Week 1 pipelines lesson](https://github.com/Code-the-Dream-School/python-200/blob/75ba1ca1b7ed0156605d7e3ab94b30fdce9105c0/lessons/01_analysis_intro/07_pipelines.md) you learned that a pipeline is a series of connected steps where the output of one becomes the input of the next. scikit-learn's `Pipeline` class brings this idea directly into model building for ML.
 
 A pipeline is defined as a list of *named steps*, where each step is a `("name", object)` pair. The name is a label you choose; the object is any sklearn transformer or model. Steps run in the order they are listed.
 
