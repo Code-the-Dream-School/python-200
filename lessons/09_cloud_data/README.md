@@ -4,8 +4,6 @@ In Week 8 you got your Azure environment set up -- portal access, Cloud Shell, t
 
 The goal is to add cloud storage to the pipeline toolkit you have been building all course. By the end of the week, you will be able to authenticate a Python script to Azure, read and write files in Blob Storage, and build a simple pipeline that extracts data from a public API and loads it into the cloud. That Extract + Load pattern is the foundation of the capstone pipeline you will build in Week 11.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
-
 ## Topics
 
 1. [Connecting to Azure from Python](01_connecting_azure.md)
