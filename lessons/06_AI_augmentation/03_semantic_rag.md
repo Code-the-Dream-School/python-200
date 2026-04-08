@@ -357,19 +357,23 @@ We could try to install PostgreSQL and pgvector separately on every local machin
 
 ### Setting up the database on Docker
 
-For our purposes, Docker has one job in this lesson: run a PostgreSQL server that already has the pgvector extension installed. 
+> **Prerequisites — install Docker before continuing**
+>
+> Docker must be installed and running on your machine before you can follow the steps below. Install it for your operating system:
+>
+> - **Mac:** [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+> - **Windows:** [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/) — enable WSL2 during installation (it is the default). Without WSL2, Docker won’t run containers properly. WSL is the Windows Subsystem for Linux, which allows Linux programs to run on Windows.
+> - **Linux:** No Docker Desktop needed — install the Docker Engine directly using the [DigitalOcean guide for Ubuntu](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04) or your distro’s official docs.
+>
+> After installation, open a terminal and run:
+> ```
+> docker --version
+> ```
+> You should see a version number (e.g. `Docker version 27.x.x`). If you get a "command not found" error, Docker is not installed correctly — revisit the install guide before continuing.
+>
+> On Mac and Windows, Docker Desktop must also be **open and running** (look for the Docker whale icon in your system tray or menu bar) before the next step will work.
 
-To install Docker, follow the instructions for:
-
-- [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
-- [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
-On Linux 
-
-> **Important:** On Windows you must enable WSL2  during installation (it is the default). Without WSL2, Docker won’t run containers properly. (WSL is the Windows Subsystem for Linux, which allows you to run Linux on Windows).
-
-If you are on Linux, you don't need Docker desktop, you can just set up the Docker engine to interface in your cli [as discussed here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04).
-
-In Windows you need to start the Docker engine for the next step. This merely means starting Docker Desktop.
+For our purposes, Docker has one job in this lesson: run a PostgreSQL server that already has the pgvector extension installed.
 
 In your local machine, set up a folder structure like:
 
