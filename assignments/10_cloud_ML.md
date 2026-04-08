@@ -1,7 +1,5 @@
 # Week 10 Assignments
 
-# Week 10 Assignments
-
 This week you learned to use an LLM as a data transformation step -- reading from Blob Storage, enriching records with a model call, and writing results back. You also saw how two lines of code separate the OpenAI API from Azure OpenAI, and why that distinction matters in enterprise environments.
 
 The warmup checks your judgment about when LLMs belong in a pipeline and what makes Azure OpenAI different. The project has you build the Transform step end-to-end, connecting it to the Week 9 data you already have in Blob Storage.
