@@ -4,8 +4,6 @@ You have built all the pieces. In Week 1 you wrote a Prefect pipeline that ran l
 
 That is what this week is about. The three lessons take you from a brief Prefect refresher, through filling in the complete pipeline with real cloud tasks, to the production patterns that separate a working prototype from something reliable enough to run on a schedule. By the end, you will have a cloud ETL pipeline you built from scratch -- extract, transform, load, orchestrated, and observable. 🏁
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
-
 ## Topics
 
 1. [Prefect, Revisited](01_prefect_revisited.md)
