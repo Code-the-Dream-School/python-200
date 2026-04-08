@@ -4,8 +4,6 @@ In Weeks 5 through 7, you used LLMs interactively -- building chatbots, augmenti
 
 The core idea is a shift in how you think about language models: not as a conversational partner, but as a data processing step. LLMs are remarkably good at certain transformation tasks -- classifying freeform text, extracting structured fields from messy data, normalizing inconsistent values -- that would be tedious or impossible to handle with deterministic code. When one of those tasks sits in the middle of a data pipeline, an LLM call is a legitimate engineering choice.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
-
 ## Topics
 
 1. [LLMs as a Transform Step](01_llms_transform.md)
