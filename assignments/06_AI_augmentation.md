@@ -257,6 +257,24 @@ Try a query you think the pipeline might struggle with — something vague, some
 
 Add a comment explaining what you expected, what actually happened, and what you would change about the system to handle this kind of query better.
 
+### LlamaIndex Question 4
+
+Using the same index and query engine you built in Q1, evaluate one response using LlamaIndex's built-in evaluators.
+
+Import and instantiate a `FaithfulnessEvaluator` and a `RelevancyEvaluator`, both using `gpt-4o-mini` as the judge LLM (refer to the "RAG Evaluation using LlamaIndex" section of lesson 4 for the exact import and setup pattern). Run them on this query:
+
+```python
+q = "What employee benefits does BrightLeaf offer?"
+```
+
+Print both scores. Then run the evaluators again on a query you expect to produce a lower-quality response — for example, a question about something that is clearly not in the Brightleaf documents.
+
+After printing both sets of scores, add a comment block answering:
+- What does a faithfulness score of 1.0 mean? What would a score of 0.0 indicate?
+- What does a relevancy score measure, and how is it different from faithfulness?
+- Did the scores change between your two queries? If so, why do you think that happened?
+- What is the "LLM-as-a-judge" approach, and why is it used for RAG evaluation instead of a simple accuracy metric?
+
 ---
 
 # Part 2: Mini-Project: Groundwork Coffee Co. Q&A Assistant
