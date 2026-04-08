@@ -13,6 +13,7 @@ In your `python200-homework` repository, create a folder called `assignments_08/
 
 1. `warmup_08.md` : for the warmup questions
 2. `project_08.md` : for the project (cost analysis write-up and video link)
+3. `project_08.py` : a short script you will run in Cloud Shell (details in Part 2)
 
 When finished, commit and open a PR as described in the [assignments README](README.md).
 
@@ -32,9 +33,24 @@ What is the core economic model of cloud computing, and how does it differ from 
 
 What is the difference between vertical scaling and horizontal scaling? Give a concrete example of when you might choose each.
 
+Then, for the three scenarios below, write one sentence saying which type of scaling applies and why.
+
+- A web app that normally handles 1,000 users per day suddenly needs to handle 100,000 after a viral product launch.
+- A data scientist's model training job is running too slowly, and they want a machine with a faster GPU and more RAM.
+- A data pipeline that processes 10 files per run now needs to process 10,000 files per run, and the work can be split across machines.
+
 ### Cloud Concepts Question 3
 
-Describe IaaS, PaaS, and SaaS in your own words. For each, give one example from the lesson and describe what you, as the developer, are responsible for managing.
+Before writing your definitions, classify each item in the list below as **IaaS**, **PaaS**, or **SaaS**. One sentence of reasoning is enough for each.
+
+- Gmail
+- Azure Virtual Machines
+- Azure App Service
+- AWS S3 (Simple Storage Service)
+- GitHub Codespaces
+- Snowflake
+
+Now describe IaaS, PaaS, and SaaS in your own words. For each, give one example (from the lesson or the list above) and describe what you, as the developer, are responsible for managing.
 
 ### Cloud Concepts Question 4
 
@@ -84,19 +100,20 @@ Please keep it short. The target is 3 minutes; the **hard limit** is 5. Clearly 
 
 ## The Video 
 
-Record a single video (target: 3 minutes, max: 5) with two parts. Part one is a portal walkthrough; part two is a cost analysis on screen. Details below.
+Record a single video (target: 3 minutes, max: 5) with audio. Briefly narrate what you are showing as you go through each part.
 
 Post your video somewhere accessible (whatever you used in Python 100) and paste the link in `project_08.md`.
 
 ### Part 1: Portal Walkthrough
 
-Show the following on screen:
+Show the following on screen, narrating briefly as you go:
 
-1. Your Azure portal. Point out where the main menu is, and where to find our account information. 
-2. Navigate to your resource group in the portal. Point out the storage account inside it.
-3. Open the Cloud Shell. Run `ls ~/clouddrive` and show that your `test.txt` from the persistence exercise is still there.
-4. Run `az group list --output table` and briefly say what it shows.
-5. Feel free to discuss anything else you find interesting or curious. 
+1. Your Azure portal, logged in under the Code the Dream tenant ("Code the Dream" should be visible in the account/directory selector at the top right).
+2. Navigate to your personal resource group (`p200-year-<yourname>-rg`). Point out the storage account inside it.
+3. Open Cloud Shell. Run `ls ~/clouddrive` and show that your `test.txt` from the persistence exercise is still there.
+4. Run `ls ~/.ssh` and show that both your private and public key files are present.
+5. Run `az group list --output table` and briefly explain what it shows.
+6. Feel free to click around and point out anything else you find interesting or puzzling.
 
 ### Part 2: Cost Analysis
 
@@ -115,3 +132,69 @@ For your project, imaging you are scoping infrastructure for a data pipeline. St
 **Scenario B -- Heavy analytics workload:** A GPU-enabled VM (Standard_NC6s_v3: 6 vCPU, 1 V100 GPU) running 24/7 for the full month (730 hours), an Azure SQL Database (General Purpose tier, 4 vCores), and an Azure Blob Storage account with 1 TB of data.
 
 In your video, pull up the completed estimates and briefly walk through what each scenario costs. In `project_08.md`, write up a summary about the costs and discuss anything surprising or interesting you found in your exploration. 
+
+### Part 3: Python in Cloud Shell
+
+Write `project_08.py` using the hourly rates you found in the Pricing Calculator. The script is short -- just fill in your two rates and run it.
+
+```python
+# project_08.py
+# Run this in Azure Cloud Shell after completing the Cost Analysis above.
+
+# Fill in the hourly rates from your two Pricing Calculator estimates.
+rate_a = 0.0    # Standard_B1s hourly rate (Scenario A)
+rate_b = 0.0    # Standard_NC6s_v3 hourly rate (Scenario B, VM only)
+
+hours_a = 160   # Scenario A: 8h/day, 5 days/week, ~4 weeks
+hours_b = 730   # Scenario B: always on
+
+cost_a = rate_a * hours_a
+cost_b = rate_b * hours_b
+
+print("=== Monthly Cost Estimates ===")
+print(f"Scenario A (lightweight):       ${cost_a:.2f}")
+print(f"Scenario B (GPU VM only):       ${cost_b:.2f}")
+
+if cost_a > 0:
+    print(f"Scenario B VM costs {cost_b / cost_a:.1f}x more than Scenario A")
+```
+
+To run it in Cloud Shell, you have two options:
+
+**Option A (recommended): Pull from GitHub**
+
+Commit `project_08.py` to your repo first, then in Cloud Shell:
+
+```bash
+# First time
+git clone https://github.com/<your-username>/python200-homework.git
+
+# If you have cloned it before
+cd python200-homework
+git pull
+```
+
+Then run the script:
+
+```bash
+cd assignments_08
+python3 project_08.py
+```
+
+**Option B (backup): Upload via the toolbar**
+
+Cloud Shell has a file upload button in the top-right corner of the shell panel. Click it, upload `project_08.py`, and run:
+
+```bash
+python3 project_08.py
+```
+
+Show the terminal output in your video -- this is the main thing to capture for Part 3.
+
+## Write-Up
+
+In `project_08.md`, write a short summary (a few sentences to a paragraph) covering:
+
+- What each scenario costs, and whether the numbers surprised you.
+- Anything interesting you found while exploring the Pricing Calculator beyond the two required scenarios.
+- What the script printed, and whether the calculated costs matched what you saw in the Pricing Calculator. (They should -- if they don't, note the discrepancy.)
