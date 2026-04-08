@@ -309,7 +309,7 @@ Implement the following three functions and then connect them in a `data_pipelin
 
 Call `data_pipeline(arr)` and print each key and its value from the result.
 
-This is the last answer to put in `warmups_01.py`. Congrats!!!
+This is the last answer to put in `warmup_01.py`. Congrats!!!
 
 The next question will be in `prefect_warmup.py`, but will implement the same functionality using Prefect instead of plain Python.
 
