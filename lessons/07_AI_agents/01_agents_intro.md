@@ -38,9 +38,7 @@ Building an agent from scratch is a useful way to build intuition for how they w
 
 **[LangChain](https://www.langchain.com/agents)** is a general-purpose framework for building LLM-powered applications, including agents. LangChain provides many tools for building production-grade systems quickly. The trade-off is complexity of framework: we initially planned to use LangChain for Code the Dream, but we found smolagents more suitable for a one-week lesson. 
 
-**[LlamaIndex](https://developers.llamaindex.ai/python/framework/understanding/agent/)**: while LlamaIndex is best known for RAG applications, it also can be used to build agents. We will show how in the assignments this week. 
-
-All three frameworks solve the same core problem: turning LLMs into systems that can act with the help of external tools.  
+These frameworks solve the same core problem: turning LLMs into systems that can act with the help of external tools.  
 
 ### Abstractions and interfaces for agents
 As agents become more common, an important practical question arises: how do agents actually connect to tools, data sources, and external systems in a consistent way? Most LLM frameworks have their own methods for interacting with tools, which can lead to fragmentation and compatibility issues. To deal with this, there are a few possible solutions. 
