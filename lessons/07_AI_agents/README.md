@@ -8,7 +8,7 @@ Agents are increasingly showing up in data engineering workflows: automated ETL 
 
 ## Topics
 1. [Overview](01_agents_intro.md)  
-What is an agent, and how does it differ from a simple LLM call? We introduce the core concepts: tools, the ReAct (reason + act) loop, and the distinction between tool-based and code-based agents. We also survey the main frameworks (smolagents, LangChain, LlamaIndex) before choosing one for the rest of the week.
+What is an agent, and how does it differ from a simple LLM call? We introduce the core concepts: tools, the ReAct (reason + act) loop, and the distinction between tool-based and code-based agents. We also survey the main frameworks (smolagents, LangChain) before choosing one for the rest of the week.
 
 2. [Hello, agent](02_minimal_agent.md)  
 The "Hello world" of agents -- we build and call a simple tool from scratch to see the basic mechanics before adding complexity.
