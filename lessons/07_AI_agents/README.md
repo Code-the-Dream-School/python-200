@@ -4,8 +4,6 @@ Welcome to Week 7 of Python 200! Last week we gave LLMs access to external infor
 
 Agents are increasingly showing up in data engineering workflows: automated ETL pipelines, data quality monitoring, code generation, and more. By the end of the week you will have built agents from scratch and with a production framework, and you will have a clear picture of where they are genuinely useful and where they are not.
 
-> For an introduction to the course, and a discussion of how to set up your environment, please see the [Welcome](../README.md) page.
-
 ## Topics
 1. [Overview](01_agents_intro.md)  
 What is an agent, and how does it differ from a simple LLM call? We introduce the core concepts: tools, the ReAct (reason + act) loop, and the distinction between tool-based and code-based agents. We also survey the main frameworks (smolagents, LangChain) before choosing one for the rest of the week.
