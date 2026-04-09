@@ -25,7 +25,7 @@ In your `python200-homework` repository, create a folder called `assignments_04/
 
 To download a notebook from Kaggle: **File → Download Notebook** saves a `.ipynb` file you can commit directly.
 
-When finished, commit and open a PR as described in the [assignments README](README.md).
+When finished, commit and open a PR as described in the [assignments README](https://github.com/Code-the-Dream-School/python-200/blob/f66ee7ffb10616d8ae253e663b26f48fb17e57cc/assignments/README.md).
 
 **Primary submission**: A link to your open GitHub PR.
 
