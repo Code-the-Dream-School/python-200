@@ -24,4 +24,4 @@ For this section, we will use a pre-trained convolutional neural network (CNN) t
 You rarely train a complex neural network from scratch. Here, we will explore *transfer learning*, in which a neural network trained on one task is fine-tuned on a similar task, but requires much less data. Many deep-learning pipelines are really just transfer learning pipelines under the hood.
 
 ## Week 4 Assignments
-Once you finish the lessons, head on over to the [assignments](../../assignments/README.md) to get more hands-on practice with the material.
+Once you finish the lessons, continue below to the assignment for this week.
