@@ -36,6 +36,8 @@ That `create → fit → predict` pattern is what makes scikit-learn so pleasant
 
 If you'd like to explore the official documentation (highly recommended!), visit: [scikit-learn.org](https://scikit-learn.org/stable/)
 
+In particular, this page provides a summary of the available models and when to use them: [Choosing the Right Estimator](https://scikit-learn.org/stable/machine_learning_map.html)
+
 ### Seeing the API in action
 
 Let's warm up with a tiny example. Imagine you own a bakery and want to predict cupcake sales based on the temperature outside. We'll use *linear regression* for that. We'll take a deeper dive into linear regression in the next lesson. Don't worry about the details, we're just looking at the pattern here.
