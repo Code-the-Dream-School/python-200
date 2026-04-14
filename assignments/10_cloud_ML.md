@@ -82,7 +82,7 @@ CONTAINER = "pipeline-data"
 
 ## Step 1: Read
 
-Download the raw weather data you uploaded in Week 9 from `raw/<today>/weather.json`. Parse the JSON and reshape the `"hourly"` parallel lists into a list of per-hour record dictionaries (each with `"time"`, `"temperature_2m"`, and `"precipitation"`).
+Download the raw weather data you uploaded in Week 9 from `raw/<today>/weather.json`. Parse the JSON and reshape the `"hourly"` parallel lists into a list of per-hour record dictionaries (each with `"time"`, `"temperature_2m"`, and `"precipitation"`). If today's date doesn't match when you uploaded in Week 9, use the fallback dataset.
 
 If you did not complete Week 9, a fallback dataset is available at `assignments/resources/weather_raw.json` -- load it with `json.load()` and reshape it the same way.
 
