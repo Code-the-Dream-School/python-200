@@ -299,6 +299,7 @@ print("Size:", arr.size)       # 6 elements total
 print("Dimensions:", arr.ndim) # 2D array
 print("Shape:", arr.shape)     # (2 rows, 3 columns)
 print("Data type:", arr.dtype) # int64 (depends on system)
+```
 
 
 ### Broadcasting in NumPy
