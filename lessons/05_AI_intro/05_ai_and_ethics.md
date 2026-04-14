@@ -1,19 +1,23 @@
 ### What is AI Ethics?
 
-Ethics are moral principles which help us differentiatie between what is right or wrong. We follow those principles to be on the right track. The AI Ethics field studies on optimizing the impact of AI, which helps reduce risks and adverse outcomes. 
+Ethics are principles that guide us in deciding what is right or wrong, and AI ethics applies those principles to how AI systems are built and used. 
 
-### AI Ethics Includes:
+Academics and policymakers who study AI ethics usually start from the [Belmont Report](https://www.hhs.gov/ohrp/sites/default/files/the-belmont-report-508c_FINAL.pdf), a document published in 1979 that outlined three key principles for AI ethics:
 
-AI is a huge umbrella including machine learning and more fields which exposes to a wide space outside where these algorithms can make decisions and also can guide humans. For further issues of concern whcih can withhold legal exposure resulting in costly penalties due to lack of diligence. 
+1. **Respect for Persons**. This includes the right of individuals to know how their data is used to train or interact with AI models. It also focuses on protections for people who could potentially by harmed by AI models, including children.
+2. **Beneficence**. This means people working on AI should minimize harms and maximize benefits. It connects to the Hippocratic Oath sworn by medical professionals: "first, do no harm."
+3. **Justice and Inclusion**. The benefits of AI should go to everyone, people who work on AI should do everything they can to prevent discrimination and replicating injustices from the broader world.
 
 ### Ethical issues arose due to Generative AI:
 
-1. Bias, Misrepresentation
+**Bias, Misrepresentation**
 
-When collected datasets are used for training the AI Models. AImodels sometimes misrepresent, underrepresent certain socail identites and practices, which leads for the models reflecting biases. For eg: AI was used in bank to give loan on studying the data. It interpreted that only males should be approved for loan. This led to male-dominated situation, leading to bias. 
-The decision-making choices get biased by the AI models. 
+When collected datasets are used for training the AI Models. AI models sometimes misrepresent or underrepresent certain social identites and practices, which leads for the models reflecting biases. 
 
-https://unesdoc.unesco.org/ark:/48223/pf0000388971
+For example: AI was used in bank to give loan on studying the data. It interpreted that only males should be approved for loan. This led to male-dominated situation, leading to bias. 
+The decision-making choices get biased by the AI models.
+
+*Further reading*: https://unesdoc.unesco.org/ark:/48223/pf0000388971
 
 2. Misinformation and Disinformation
 
@@ -24,7 +28,7 @@ Here's to understand more why Hallucinations take place: https://arxiv.org/abs/2
 
 3. Privacy and Data Extraction
 
-When large datasets containing personal information from the web are given to large langauge models, they can infer user details like age, gender, location, and more. This makes a data leak take place. Researchers have found specific methods that allow prompt systems to directly reveal all their training data.
+When large datasets containing personal information from the web are given to large language models, they can infer user details like age, gender, location, and more. This makes a data leak take place. Researchers have found specific methods that allow prompt systems to directly reveal all their training data.
 
 Study below shares how chats are publicly available - https://arstechnica.com/tech-policy/2025/08/chatgpt-users-shocked-to-learn-their-chats-were-in-google-search-results/
 
