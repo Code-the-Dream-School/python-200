@@ -2,13 +2,16 @@
 
 Over the past seven weeks you've built machine learning models, worked with data pipelines, and built AI tools -- all on your local machine.
 
-This week you'll start learning about cloud computing, which is where a lot of that work happens in practice in industry. This lesson gives you the conceptual foundation: what the cloud is, why it exists, and how it's organized. The lessons that follow will provide hands-on practice with Azure.
-
-> add video on cloud basics
+This week you'll start learning about **cloud computing**, which is where a lot of that work happens in practice in industry. This lesson gives you the conceptual foundation: what the cloud is, why it exists, and how it's organized. The lessons that follow will provide hands-on practice with **Azure**, a popular cloud computing platform.
 
 Think back to the last time a major app went down -- Netflix on a holiday weekend, or your bank's website on a busy shopping day. These outages make headlines partly because they're rare, and they're rare because large services run on infrastructure designed to scale and recover automatically: the cloud. The cloud has become the default environment for building and running data-intensive software, and understanding why is a good place to start.
 
 The core idea is simple: instead of buying and maintaining your own computing resources, you rent resources from a provider -- storage, processing power, networking -- and pay for what you use. Need to train a machine learning model that would melt your laptop? Rent a GPU cluster for an afternoon, then shut it down. Need to store a terabyte of data? No hard drives required. This *pay-as-you-go model*, combined with virtually unlimited scale, is what makes cloud computing so powerful.
+
+As you get started, these two videos are a great starting point for learning about cloud:
+
+1. ["Cloud Computing Basics," from CodeBagel.](https://youtu.be/N0SYCyS2xZA?si=33wKRGxjzfEvhX3z) This is a brief (2 minute) video explaining what cloud computing is and why developers use the cloud.
+2. ["Cloud Computing Explained," from Be A Better Dev](https://youtu.be/ZaA0kNm18pE?si=cUM1ISwuScq40Vih). This longer video (45 minutes) is a more in-depth breakdown of how cloud computing actually works and introduces you to some key concepts we'll discuss in these lessions.
 
 ## Learning Objectives
 
@@ -49,7 +52,7 @@ In between sits *Platform as a Service (PaaS)*: the provider manages the infrast
 
 The key question for each level is just: “what do I have to manage?” With IaaS, everything from the OS up. With PaaS, your code and configuration. With SaaS, almost nothing.
 
-> Add video on paas/saas/iaas
+**Check out [this CertBros video](https://youtu.be/lex-DYi1UpU?si=Xa-bg-y0UldTI53K&t=395) for a review of IaaS, PaaS, and SaaS (start at 6:35 if you want to skip the review of cloud basics).**
 
 ### Limitations and Costs
 
