@@ -27,13 +27,13 @@ Since artificial intelligence is trained on human-created datasets, it can somet
 Here are two examples of this type of bias in AI:
 
 1. Amazon used an AI tool to automatically filter job applications. But the dataset of "good" resumes they used were mostly men, and [the AI tool showed bias against women applicants](https://incidentdatabase.ai/cite/37/). Amazon later scrapped the tool.
-2. Joy Buolamwini, a computer scientist at MIT, found that AI facial recognition tools were worse at recognizing dark-skinned faces because they were primarily trained on datasets of light-skinned faces. You can watch the PBS documentary [Coded Bias](Joy Buolamwini) for more details on this fascinating story.
+2. Joy Buolamwini, a computer scientist at MIT, found that AI facial recognition tools were worse at recognizing dark-skinned faces because they were primarily trained on datasets of light-skinned faces. You can watch the PBS documentary [Coded Bias](https://www.pbs.org/independentlens/documentaries/coded-bias/) for more details on this fascinating story.
 
 ### Energy
 
 It requires tremendous amounts of electricity to run the data centers that power AI tools. These data centers also use water to cool their supercomputers, leading to worries about water shortages in dry areas.
 
-In 2025, just over 4% of total electricity use in the United States was related to AI. But MIT estimates that might triple to 12% by 2028, and continue growing afterward. [Source](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/)
+In 2025, just over 4% of total electricity use in the United States was related to AI. But MIT estimates that might [triple to 12% by 2028](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/), and continue growing afterward.
 
 The bulk of an LLM’s energy consumption occurs long before a user types a prompt, specifically during the months-long training process involving thousands of GPUs. Once the model is live, the electrical footprint shifts to the user’s specific needs; for example, generating a brief text snippet is significantly more energy-efficient than creating an image.
 
