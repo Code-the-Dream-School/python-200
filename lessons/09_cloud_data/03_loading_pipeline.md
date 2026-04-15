@@ -4,10 +4,10 @@ In Week 1, you used Prefect to build a data pipeline that ran entirely on your l
 
 In production, pipelines need durable, accessible storage -- data that persists after the job finishes, is readable by the next step in the pipeline, and is not tied to any single machine. That is exactly what Blob Storage provides. This lesson builds the Extract + Load pattern you will use as the foundation of the capstone pipeline in Week 11.
 
-> TODO: add short video on ETL concepts (Extract, Transform, Load -- ~5-10 min)
+**[This video is a concise explanation of Extract, Load, Transform (ETL) pipelines.](https://youtu.be/OW5OgsLpDCQ?si=HgAnExKKWgEk_um9)**
 
 For reference:
-- [requests library documentation](https://requests.readthedocs.io/en/latest/)
+- [Requests library documentation](https://requests.readthedocs.io/en/latest/)
 - [Open-Meteo API documentation](https://open-meteo.com/en/docs)
 
 ## Learning Objectives
