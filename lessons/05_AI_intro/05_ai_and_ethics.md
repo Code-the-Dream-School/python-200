@@ -26,7 +26,7 @@ Since artificial intelligence is trained on human-created datasets, it can somet
 
 Here are two examples of this type of bias in AI:
 
-1. Amazon used an AI tool to automatically filter job applications. But the dataset of "good" resumes they used were mostly men, and the AI tool showed bias against women applicants. Amazon later scrapped the tool. [Source](https://incidentdatabase.ai/cite/37/)
+1. Amazon used an AI tool to automatically filter job applications. But the dataset of "good" resumes they used were mostly men, and [the AI tool showed bias against women applicants](https://incidentdatabase.ai/cite/37/). Amazon later scrapped the tool.
 2. Joy Buolamwini, a computer scientist at MIT, found that AI facial recognition tools were worse at recognizing dark-skinned faces because they were primarily trained on datasets of light-skinned faces. You can watch the PBS documentary [Coded Bias](Joy Buolamwini) for more details on this fascinating story.
 
 ### Energy
