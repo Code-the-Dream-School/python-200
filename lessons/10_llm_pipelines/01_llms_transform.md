@@ -6,8 +6,6 @@ This week, the framing shifts. An LLM is no longer the end product -- it is a pr
 
 This is a genuinely useful pattern in data engineering, but it comes with a different set of constraints than interactive use. This lesson covers what those constraints are and how to work with them.
 
-> TODO: add short video on LLMs for data processing / structured output (~5-10 min)
-
 For reference:
 - [OpenAI Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs)
 - [OpenAI API rate limits and best practices](https://platform.openai.com/docs/guides/rate-limits)
