@@ -4,9 +4,9 @@ In Week 8, you logged into the Azure Portal and ran commands in Cloud Shell. Eve
 
 That shift creates an immediate problem: how does a script prove to Azure that it has permission to do something? You cannot type a password into an automated process, and hardcoding credentials in source code is a serious security risk. Cloud platforms solve this with a different model entirely -- one based on *identity* rather than passwords.
 
-> TODO: add short video on Azure authentication and the identity model (Azure Entra ID overview, ~5-10 min)
+**[This short video covers the basics of authetnication in Azure through Microsoft Entra ID.](https://youtu.be/fbSVgC8nGz4?si=PWhVURSF2mATxQTb)**
 
-For background reading:
+For additional background reading:
 - [Azure Identity client library for Python](https://learn.microsoft.com/en-us/python/api/overview/azure/identity-readme)
 - [Authenticate Python apps to Azure services](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication/overview)
 
