@@ -4,7 +4,7 @@ Now that Python can authenticate to Azure, you need somewhere to put data. Azure
 
 Blob Storage is Azure's service for storing unstructured data in the cloud -- files of any kind: JSON exports from APIs, CSVs, images, model artifacts, log files, pipeline outputs. It is the default landing zone for data in Azure pipelines, and you will use it throughout the rest of this course.
 
-> TODO: add short video overview of Azure Blob Storage (~5 min)
+**[This video introduces you to the basics and key concepts of Blob Storage in Azure.](https://youtu.be/sEImMaovc1Q?si=FUFu5Tjd8HpFnJou)**
 
 For more on what Blob Storage is and when to use it:
 - [Introduction to Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction)
