@@ -35,7 +35,7 @@ It requires tremendous amounts of electricity to run the data centers that power
 
 In 2025, just over 4% of total electricity use in the United States was related to AI. But MIT estimates that might [triple to 12% by 2028](https://www.technologyreview.com/2025/05/20/1116327/ai-energy-usage-climate-footprint-big-tech/), and continue growing afterward.
 
-The bulk of an LLM’s energy consumption occurs long before a user types a prompt, specifically during the months-long training process involving thousands of GPUs. Once the model is live, the electrical footprint shifts to the user’s specific needs; for example, generating a brief text snippet is significantly more energy-efficient than creating an image.
+**The bulk of an LLM’s energy consumption occurs long before a user types a prompt**, specifically during the months-long training process involving thousands of GPUs. Once the model is live, the electrical footprint shifts to the user’s specific needs; for example, generating a brief text snippet is significantly more energy-efficient than creating an image.
 
 Misinformation is *everywhere* in the conversation about AI energy use. Educational YouTuber Hank Green has an [excellent video breaking down some of the misconceptions about AI water use.](https://www.youtube.com/watch?v=H_c6MWk7PQc)
 
