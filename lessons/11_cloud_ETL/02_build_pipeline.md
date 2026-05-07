@@ -2,18 +2,21 @@
 
 You have already written all three pieces of this pipeline. In Week 9 you extracted data from the Open-Meteo API and loaded it to Blob Storage. In Week 10 you read that data back, classified it with OpenAI, and wrote enriched results to a processed path. This lesson wires those pieces into a single Prefect flow.
 
+At this point, the main goal is not learning brand-new concepts -- it is learning how the pieces connect together into a real workflow. This is much closer to how production data pipelines are structured in practice.
+
 For reference:
-- [Prefect tasks documentation](https://docs.prefect.io/v3/concepts/tasks)
-- [Week 9: Loading Pipeline Data to Blob Storage](../09_cloud_data/03_loading_pipeline.md)
-- [Week 10: Transforming Blob Data with OpenAI](../10_llm_pipelines/02_blob_data.md)
+
+* [Prefect tasks documentation](https://docs.prefect.io/v3/concepts/tasks)
+* [Week 9: Loading Pipeline Data to Blob Storage](../09_cloud_data/03_loading_pipeline.md)
+* [Week 10: Transforming Blob Data with OpenAI](../10_llm_pipelines/02_blob_data.md)
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
-- Implement extract, transform, and load as Prefect tasks using real cloud operations
-- Wire the three tasks into a @flow and run the complete pipeline
-- Read a Prefect UI run to confirm success or identify a failure
+* Implement extract, transform, and load as Prefect tasks using real cloud operations
+* Wire the three tasks into a `@flow` and run the complete pipeline
+* Read a Prefect UI run to confirm success or identify a failure
 
 ## Setup
 
@@ -41,8 +44,11 @@ SYSTEM_PROMPT = (
     "classify the conditions as exactly one of: good, marginal, or bad. "
     "Reply with that one word only -- no punctuation, no explanation."
 )
+
 VALID_LABELS = {"good", "marginal", "bad"}
 ```
+
+Keeping shared constants near the top of the file makes the pipeline easier to configure and maintain. In production systems, values like API endpoints, container names, and model names are often centralized this way.
 
 ## The Extract Task
 
@@ -60,11 +66,15 @@ def extract(latitude: float, longitude: float) -> dict:
         f"&hourly=temperature_2m,precipitation"
         f"&forecast_days=7"
     )
+
     response = requests.get(url)
     response.raise_for_status()
+
     print(f"Extracted forecast data for ({latitude}, {longitude})")
     return response.json()
 ```
+
+Notice that the task itself stays fairly small and focused: one responsibility, one output. This is a common design principle in orchestration systems like Prefect and Airflow.
 
 ## The Transform Task
 
@@ -79,6 +89,7 @@ def transform(data: dict, max_records: int) -> list:
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
     hourly = data["hourly"]
+
     records = []
     for i in range(min(max_records, len(hourly["time"]))):
         records.append({
@@ -88,11 +99,13 @@ def transform(data: dict, max_records: int) -> list:
         })
 
     enriched = []
+
     for i, record in enumerate(records):
         user_msg = (
             f"Temperature: {record['temperature_2m']}C, "
             f"Precipitation: {record['precipitation']}mm"
         )
+
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -100,15 +113,25 @@ def transform(data: dict, max_records: int) -> list:
                 {"role": "user", "content": user_msg},
             ]
         )
+
         raw_label = response.choices[0].message.content.strip().lower()
         label = raw_label if raw_label in VALID_LABELS else "unknown"
+
         enriched.append({**record, "conditions": label})
+
         if (i + 1) % 6 == 0:
             print(f"  Classified {i + 1}/{len(records)} records")
 
     print(f"Transform complete: {len(enriched)} records enriched")
     return enriched
 ```
+
+There are several production-style patterns worth noticing here:
+
+* The task reshapes the data before processing it, making later logic simpler.
+* The prompt constrains the model output to a small set of expected labels.
+* The `"unknown"` fallback prevents one malformed response from crashing the entire pipeline.
+* Progress logs make long-running tasks easier to monitor in the Prefect UI.
 
 In a production environment with Azure OpenAI, swap `OpenAI` for `AzureOpenAI` using the two-line change from [Week 10, Lesson 3](../10_llm_pipelines/03_Azure_OpenAI.md).
 
@@ -125,12 +148,25 @@ from prefect import task
 @task
 def load(records: list, blob_path: str) -> None:
     credential = DefaultAzureCredential()
-    container = ContainerClient(ACCOUNT_URL, CONTAINER, credential=credential)
+
+    container = ContainerClient(
+        ACCOUNT_URL,
+        CONTAINER,
+        credential=credential
+    )
 
     payload = json.dumps(records).encode("utf-8")
-    container.upload_blob(blob_path, payload, overwrite=True)
+
+    container.upload_blob(
+        blob_path,
+        payload,
+        overwrite=True
+    )
+
     print(f"Loaded {len(payload)} bytes to {blob_path}")
 ```
+
+`overwrite=True` is important because pipelines often get re-run after failures or bug fixes. Without it, a second run could fail simply because the blob already exists.
 
 ## Wiring the Flow
 
@@ -141,12 +177,21 @@ from datetime import date
 from prefect import flow
 
 @flow(log_prints=True)
-def etl_pipeline(latitude: float = 35.2271, longitude: float = -80.8431):
+def etl_pipeline(
+    latitude: float = 35.2271,
+    longitude: float = -80.8431
+):
     today = date.today().isoformat()
+
     blob_path = f"final/{today}/weather_etl.json"
 
     data = extract(latitude, longitude)
-    enriched = transform(data, max_records=MAX_RECORDS)
+
+    enriched = transform(
+        data,
+        max_records=MAX_RECORDS
+    )
+
     load(enriched, blob_path)
 
     print(f"Pipeline complete. Results at {blob_path}")
@@ -156,6 +201,14 @@ if __name__ == "__main__":
 ```
 
 `log_prints=True` on the flow means every `print()` call in the flow and its tasks is captured as a Prefect log entry. You will see these in the Prefect UI alongside the task state transitions.
+
+This flow structure is intentionally simple:
+
+1. Extract raw data
+2. Transform/enrich it
+3. Load the result
+
+That Extract → Transform → Load pattern is the foundation of many real-world data engineering systems.
 
 ## Running the Pipeline
 
@@ -173,10 +226,18 @@ python etl_pipeline.py
 
 You should see Prefect's output in the terminal as each task starts and completes. The full run typically takes 1-3 minutes, depending on OpenAI response times.
 
+The transform step will usually take the longest because it makes multiple sequential API calls. That delay is normal and becomes an important scaling consideration in larger pipelines.
+
 ## Reading the Prefect UI
 
 Open `http://localhost:4200` and click into the `etl-pipeline` run. A successful run shows all three tasks in *Completed* state. Click any task to see its logs -- you should see the print statements from each task captured there.
 
 If a task fails, it shows in *Failed* state (red). Click the failed task and open the *Logs* tab to find the exception traceback. The other tasks that completed successfully remain green, so you can see exactly where in the pipeline the failure occurred without re-running the whole thing.
 
-Try deliberately breaking the pipeline -- pass an invalid latitude, or temporarily remove your `.env` API key -- and observe what the UI shows. Reading failed runs is a skill, and the best way to develop it is to cause a few failures intentionally.
+One useful habit while learning orchestration tools is intentionally causing small failures and observing how the system responds. For example:
+
+* pass an invalid latitude
+* temporarily remove your `.env` API key
+* change the blob container name to something invalid
+
+Reading failed runs is a real engineering skill, and Prefect's UI is designed to make debugging easier.
