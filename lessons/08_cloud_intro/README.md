@@ -9,10 +9,10 @@ Cloud platforms are the infrastructure that makes modern data engineering possib
 This first week will be about getting situated. By the end of it, you will understand the core concepts of cloud computing, have your own workspace set up in Azure, and be ready to hit the ground running in the coming weeks with your environment all set up.
 
 ## Topics
-1. [Cloud overview](01_cloud_overview.md)
+1. [Cloud overview](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/08_cloud_intro/01_cloud_overview.md)
 A platform-agnostic introduction to cloud computing: what it is, why it matters, and what changes when you move from running code on your laptop to running it in the cloud. We cover the core concepts you will encounter regardless of which cloud provider you use.
 
-2. [A Practical Introduction to Azure](02_azure_intro.md)
+2. [A Practical Introduction to Azure](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/08_cloud_intro/02_azure_intro.md)
 A hands-on introduction to Azure. We will make sure you can log in, navigate the Portal, and get set up with your the sandbox you will use for the rest of the course.
 
 ## Week 8 Assignments
