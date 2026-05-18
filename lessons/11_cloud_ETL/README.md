@@ -6,13 +6,13 @@ That is what this week is about. The three lessons take you from a brief Prefect
 
 ## Topics
 
-1. [Prefect, Revisited](01_prefect_revisited.md)
+1. [Prefect, Revisited](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/11_cloud_ETL/01_prefect_revisited.md)
 A quick bridge from the Week 1 Prefect introduction to the cloud context. Reviews the core concepts (@task, @flow, retries, logging, the dashboard) without re-explaining them from scratch, then shows what changes when your tasks do real cloud I/O instead of local file operations.
 
-2. [Building the Pipeline](02_build_pipeline.md)
+2. [Building the Pipeline](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/11_cloud_ETL/02_build_pipeline.md)
 Fills in the ETL skeleton with the real tasks from Weeks 9 and 10 -- extract from Open-Meteo, transform with OpenAI, load to Blob Storage -- wired together in a single @flow. Covers how to run it, and how to read a successful (and a failed) run in the Prefect UI.
 
-3. [Making Pipelines Production-Ready](03_production_ready.md)
+3. [Making Pipelines Production-Ready](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/11_cloud_ETL/03_production_ready.md)
 Introduces four patterns that distinguish a working pipeline from a reliable one: retries for transient failures, raise_for_status() for clean error propagation, structured logging, and idempotent blob writes. Closes with a brief look at what comes next -- scheduling, Prefect Cloud, and parameterized deployments.
 
 ## Week 11 Assignment
