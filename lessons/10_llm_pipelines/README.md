@@ -6,13 +6,13 @@ The core idea is a shift in how you think about language models: not as a conver
 
 ## Topics
 
-1. [LLMs as a Transform Step](01_llms_transform.md)
+1. [LLMs as a Transform Step](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/10_llm_pipelines/01_llms_transform.md)
 Reframes the LLM skills from Weeks 5-7 for a pipeline context. Covers where LLMs belong in ETL, what kinds of tasks they handle well vs. poorly, the practical realities of cost and latency at scale, and how to design prompts that produce reliable, parseable output.
 
-2. [Transforming Blob Data with OpenAI](02_blob_data.md)
+2. [Transforming Blob Data with OpenAI](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/10_llm_pipelines/02_blob_data.md)
 The hands-on lesson. Reads the weather data you loaded in Week 9, applies an LLM classification step to each record, handles unexpected responses gracefully, writes enriched results back to a processed Blob Storage path, and spot-checks the output with pandas.
 
-3. [Azure OpenAI: A Note for Production](03_Azure_OpenAI.md)
+3. [Azure OpenAI: A Note for Production](https://github.com/Code-the-Dream-School/python-200/blob/main/lessons/10_llm_pipelines/03_Azure_OpenAI.md)
 A short reading lesson. Explains what Azure OpenAI is, why most enterprise environments use it instead of the public OpenAI API, and what two lines of code change when you make the switch. No hands-on exercise required.
 
 ## Week 10 Assignments
