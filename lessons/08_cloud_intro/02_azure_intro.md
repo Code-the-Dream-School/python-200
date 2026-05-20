@@ -4,6 +4,7 @@ The previous lesson covered the conceptual landscape of cloud computing -- what 
 
 Your instructors have already provisioned an Azure environment for you. A quick note on two terms you'll see constantly: an Azure *subscription* is the billing account that owns all the resources in an organization -- CTD has one subscription, and everything in this course lives inside it. Within that subscription, each student gets their own *resource group*, a sandbox that bundles all your related cloud resources together -- think of it as a project directory. Inside your personal resource group, the storage infrastructure you need for Cloud Shell is already set up. Our main task today is to log in and get everything set up properly.
 
+This setup process is a little more procedural than earlier parts of the course, and it’s normal if it feels slower than writing Python code. The goal this week is simply to get comfortable navigating the environment and understanding how the pieces fit together.
 
 ## Accepting Your Invitation
 
@@ -12,15 +13,18 @@ Your instructors have added you to the Code the Dream Azure *tenant*. A tenant i
 To get started, accept your invitation:
 
 1. Check your email for a message inviting you to join Azure Code the Dream. The subject line will be something like "Code the Dream Inc invited you to access applications within their organization". This email will contain an "Accept invitation" link.
+
+Azure account setup can sometimes feel surprisingly finicky, especially if you already use Microsoft services personally or through work/school. If something looks confusing or behaves unexpectedly, that is very common at this stage.
+
 2. Click that link. It will take you to a Microsoft page that looks like a generic application screen with multiple panes -- this is normal, if a bit perplexing.
 3. You *may* be prompted to set up multi-factor authentication (MFA). Follow the prompts to configure it -- this is required for guest access to the CTD tenant.
-4. Once that's done, go to [https://portal.azure.com](https://portal.azure.com) and sign in with the same email address the invitation was sent to (you might be logged in automatically).
+4. Once that's done, go to https://portal.azure.com and sign in with the same email address the invitation was sent to (you might be logged in automatically).
 
 ### Troubleshooting: existing Microsoft or Azure accounts
 
 If you already have a Microsoft or Azure account associated with your email, you may run into problems during login -- this is a known rough edge. The most reliable fix is to navigate directly to the CTD portal using the tenant ID in the URL:
 
-```
+```text
 https://portal.azure.com/0f040ddd-301f-4665-8677-7b21f129d605
 ```
 
@@ -33,8 +37,9 @@ If you're still seeing strange errors or the portal is behaving unexpectedly, se
 The Azure Portal is the web-based control panel for everything you'll do in Azure. It's where you create and manage resources, monitor costs, configure permissions, and launch tools like Cloud Shell. Professional cloud engineers spend a significant amount of time here, so getting comfortable navigating it early is worthwhile.
 
 Before moving on, feel free to check out the following overviews of the Azure portal:
-- [Azure Portal overview (text)](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-overview)
-- [Azure portal overview (video)](https://www.youtube.com/watch?v=_Dy_1VIJ-m4)
+
+* [Azure Portal overview (text)](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-overview)
+* [Azure portal overview (video)](https://www.youtube.com/watch?v=_Dy_1VIJ-m4)
 
 Take some time to orient yourself before moving on.
 
@@ -56,24 +61,26 @@ The solution is to connect Cloud Shell to a *file share* -- a named storage fold
 
 Click the Cloud Shell icon (`>_`) in the top menu bar. If this is your first time opening it, you'll see a Welcome setup screen. Choose *Bash* when prompted for the shell type.
 
-A `Getting Started` screen will open. You'll be asked how to handle storage. Click on the "Mount  storage account" option (and select the `CTD Nonprofit Sponsorship` in the subscription field). Click `Apply`.
+A `Getting Started` screen will open. You'll be asked how to handle storage. Click on the "Mount storage account" option (and select the `CTD Nonprofit Sponsorship` in the subscription field). Click `Apply`.
 
-In the "Mount Storage Account" screen that folows, click "select existing storage account" and "Next."
+In the "Mount Storage Account" screen that follows, click "select existing storage account" and "Next."
 
 In the "Select storage account" screen:
 
-- *Subscription:* CTD Nonprofit Sponsorship
-- *Resource group:* `p200-year-<yourname>-rg`
-- *Storage account:* Select the name that follows the pattern `<yourname>ctd<year>sa`. Storage account names must be unique accross all of azure so it might be slightly different.
-- *File share:* `home`
+* *Subscription:* CTD Nonprofit Sponsorship
+* *Resource group:* `p200-year-<yourname>-rg`
+* *Storage account:* Select the name that follows the pattern `<yourname>ctd<year>sa`. Storage account names must be unique across all of Azure so it might be slightly different.
+* *File share:* `home`
 
 Click *Select*. You will see it deploying, and then Azure will confirm that Cloud Shell is now backed by your storage account. From this point on, your home directory is persistent!
 
-This is the first main hurdle in setting things up. You should then see a standard bash prompt at the bottom of your screen -- something like `$`.
+> **Troubleshooting note:** Azure setup steps can occasionally be slow or behave inconsistently. If Cloud Shell seems stuck while deploying or mounting storage, wait a minute or two, then refresh and retry if needed.
 
-This means you are ready to work in the cloud! YOu can enter standard bash commands. If you enter `ls` you will see `clouddrive` which was a default drive created in your home directory during setup.
+This is one of the main setup hurdles, so once this is working you're in good shape. You should then see a standard bash prompt at the bottom of your screen -- something like `$`.
 
-For work in the cloud, you can create/use anything in your home directory (`~`)
+This means you are ready to work in the cloud! You can now enter standard bash commands. If you enter `ls` you will see `clouddrive`, which was a default drive created in your home directory during setup.
+
+For work in the cloud, you can create/use anything in your home directory (`~`).
 
 ### Verifying Persistence
 
@@ -90,7 +97,6 @@ ls ~/clouddrive
 ```
 
 If `test.txt` is still there, your storage is properly connected.
-
 
 ## Exploring the Shell
 
@@ -111,10 +117,13 @@ az group list --output table            # list resource groups you can access
 
 The `--output table` flag formats results as a readable table rather than raw JSON. None of these commands create or modify anything -- they just display information.
 
+If the Azure CLI output looks overwhelming at first, don’t worry about understanding every field yet. Right now the goal is simply to get comfortable running commands and recognizing the kinds of information Azure exposes.
+
 For more on the Azure CLI:
+
 > [Getting started with the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/get-started-with-azure-cli)
 
-In our third week in the cloud, we will show how to connect to your cloud account from your local machine and not be tethered to the portal. This will involve setting up the azure CLI in your local machine.
+In our third week in the cloud, we will show how to connect to your cloud account from your local machine and not be tethered to the portal. This will involve setting up the Azure CLI on your local machine.
 
 ## SSH Keys
 
@@ -125,6 +134,8 @@ With persistent storage in place, you can now create SSH keys that will be avail
 SSH (Secure Shell) is an encrypted protocol for communicating securely between computers over a network. It replaced older, insecure login methods like `telnet` by adding encryption and cryptographic identity verification. Today it underlies secure connections to servers, cloud platforms, and developer tools like GitHub.
 
 SSH uses a *key pair* to prove identity without transmitting a password. Your *private key* stays on your machine and should never be shared. Your *public key* is uploaded to the systems you want to access. When you connect, SSH verifies that the two match -- confirming who you are without a password ever crossing the network.
+
+SSH keys can feel intimidating the first time you encounter them, but in practice you’ll usually generate them once and reuse them for a long time. Most developers rely on tools to manage the details day-to-day.
 
 > [What is SSH?](https://www.cloudflare.com/learning/access-management/what-is-ssh/)
 
