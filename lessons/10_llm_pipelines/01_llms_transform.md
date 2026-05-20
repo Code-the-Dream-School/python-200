@@ -4,28 +4,31 @@ In Weeks 5 through 7, you used language models the way most people first encount
 
 This week, the framing shifts. An LLM is no longer the end product -- it is a processing step inside a larger pipeline. A script reads a dataset from Blob Storage, sends each record through a model call, and writes the enriched results back. The model never sees a user. It just does work.
 
+This is one of the biggest conceptual shifts in the course. Instead of treating an LLM like a chatbot, you should start thinking about it as a probabilistic data-processing tool inside a larger system.
+
 This is a genuinely useful pattern in data engineering, but it comes with a different set of constraints than interactive use. This lesson covers what those constraints are and how to work with them.
 
 For reference:
-- [OpenAI Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs)
-- [OpenAI API rate limits and best practices](https://platform.openai.com/docs/guides/rate-limits)
+
+* [OpenAI Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs)
+* [OpenAI API rate limits and best practices](https://platform.openai.com/docs/guides/rate-limits)
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
-- Place LLMs correctly in an ETL pipeline (Transform, not Extract or Load)
-- Identify which data tasks are good candidates for LLM processing and which are not
-- Describe the cost and latency implications of LLM calls at scale
-- Design prompts that return constrained, parseable output
+* Place LLMs correctly in an ETL pipeline (Transform, not Extract or Load)
+* Identify which data tasks are good candidates for LLM processing and which are not
+* Describe the cost and latency implications of LLM calls at scale
+* Design prompts that return constrained, parseable output
 
 ## Where LLMs Fit in ETL
 
 A data pipeline typically has three stages:
 
-- *Extract*: pull data from a source (an API, a database, a file)
-- *Transform*: clean, enrich, or reshape the data
-- *Load*: write the result to a destination (a database, a storage service, a downstream system)
+* *Extract*: pull data from a source (an API, a database, a file)
+* *Transform*: clean, enrich, or reshape the data
+* *Load*: write the result to a destination (a database, a storage service, a downstream system)
 
 LLMs belong in the Transform step. They receive data, process it, and return something new. They are not well-suited for Extract or Load: those steps involve I/O operations -- making HTTP calls, reading files, writing to storage -- which are handled deterministically by the surrounding code. The LLM just handles the transformation logic.
 
@@ -47,6 +50,8 @@ The flip side is equally important. LLMs are the wrong tool when the task has a 
 
 Arithmetic belongs in code. Date parsing belongs in code. Sorting, filtering, and aggregating structured data belongs in pandas or SQL. If you can write a function that produces the right answer deterministically, you should. LLM calls add latency, cost, and the possibility of inconsistent output. Use them only when the task genuinely requires language understanding.
 
+A common beginner instinct is to use an LLM for everything once it becomes available. In practice, experienced engineers usually try deterministic code first and only introduce an LLM when traditional approaches become difficult or brittle.
+
 A useful heuristic: if you can write a unit test with a single expected output, use code. If the "correct" answer requires judgment or reading comprehension, consider an LLM.
 
 ## Cost and Latency at Scale
@@ -55,17 +60,21 @@ When you use an LLM interactively, one API call goes unnoticed. In a pipeline pr
 
 As a rough reference using `gpt-4o-mini` (pricing as of 2024 -- check the [OpenAI pricing page](https://openai.com/api/pricing/) for current rates):
 
-- A short classification call with a ~200-token input and a 5-token output costs about $0.00003.
-- For 10,000 records: roughly $0.30 in API costs.
-- For 100,000 records: roughly $3.00.
+* A short classification call with a ~200-token input and a 5-token output costs about $0.00003.
+* For 10,000 records: roughly $0.30 in API costs.
+* For 100,000 records: roughly $3.00.
 
 Cost is usually manageable with efficient, smaller models. Latency is the bigger concern. Each API call takes roughly 0.5 to 2 seconds. Calling an LLM sequentially for 10,000 records takes two to six hours of wall-clock time. For most pipeline use cases, that is too slow.
+
+This is why many production AI systems are designed around batching, parallelism, caching, or smaller models. The challenge is often less about "can the model do this?" and more about "can it do this fast and cheaply enough to be practical?"
 
 The practical solution for large datasets is to use OpenAI's [Batch API](https://platform.openai.com/docs/guides/batch), which processes requests asynchronously at reduced cost. For smaller datasets -- the kind you are working with in this course -- sequential calls are fine. The important thing is to be aware of the tradeoff before committing to an LLM step in a high-volume pipeline.
 
 ## Designing Prompts for Pipelines
 
 Interactive LLM use rewards rich, open-ended prompts. Pipeline use rewards the opposite: precise, constrained prompts that return output your code can parse without ambiguity.
+
+This style of prompting can feel less creative than conversational AI, but it is much more reliable for automation. In pipelines, consistency is usually more important than expressiveness.
 
 Consider the difference between these two prompts for sentiment analysis:
 
@@ -86,5 +95,7 @@ For more complex output, asking for JSON is even better:
 ```
 
 JSON output is easy to parse with `json.loads()` and makes it straightforward to add multiple fields to a single call. The tradeoff is that it adds a small amount of prompt overhead and occasionally the model produces malformed JSON, which you need to handle.
+
+Even with carefully designed prompts, models occasionally return malformed or unexpected output. Production pipelines typically include validation and fallback logic to handle these cases gracefully.
 
 For this week, we will use single-word constrained output. It is simpler to implement and robust enough for the task at hand. When you encounter a pipeline task that needs multiple structured fields per record, JSON output is worth the extra parsing code.

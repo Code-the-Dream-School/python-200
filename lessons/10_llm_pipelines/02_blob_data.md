@@ -4,18 +4,21 @@ In Week 9, you built an Extract + Load pipeline that pulled weather data from th
 
 This is the pattern you will use as the Transform step in the Week 11 capstone. By the end of this lesson, the full ETL skeleton will be in place.
 
+This lesson is intentionally closer to a real production workflow than earlier AI lessons in the course. Instead of chatting with a model interactively, you are integrating an LLM into an automated data pipeline.
+
 For reference:
-- [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat)
+
+* [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat)
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
-- Read raw data from Blob Storage and reshape it into individual records
-- Design a constrained prompt for a pipeline classification task
-- Iterate over records, call the OpenAI API for each, and collect results
-- Handle unexpected model responses gracefully with a fallback value
-- Write enriched records back to Blob Storage and spot-check the results
+* Read raw data from Blob Storage and reshape it into individual records
+* Design a constrained prompt for a pipeline classification task
+* Iterate over records, call the OpenAI API for each, and collect results
+* Handle unexpected model responses gracefully with a fallback value
+* Write enriched records back to Blob Storage and spot-check the results
 
 ## Setup
 
@@ -24,6 +27,8 @@ Make sure your `.env` file contains your OpenAI API key (same setup as Weeks 5-7
 ```bash
 uv pip install openai python-dotenv azure-storage-blob azure-identity
 ```
+
+You are now combining several pieces from earlier weeks -- Blob Storage, APIs, environment variables, and LLM calls -- into a single workflow. If the setup feels more complex than earlier assignments, that is expected. Real-world pipelines often involve coordinating multiple services at once.
 
 ## Reading Raw Data from Blob Storage
 
@@ -63,6 +68,8 @@ print(f"Loaded {len(records)} hourly records")
 
 `records` is now a list of 168 dictionaries (7 days * 24 hours), one per hour.
 
+This reshape step is a very common data-engineering pattern. APIs are often optimized for transport size or efficiency rather than the format most convenient for analysis, so reshaping data into record-oriented structures is a routine part of ETL work.
+
 ## Designing the Prompt
 
 The task: classify each hourly record as `good`, `marginal`, or `bad` for outdoor running, based on temperature and precipitation. This is a reasonable LLM task because the classification requires judgment -- there is no exact formula for what makes conditions "good" for running. People weigh temperature, rain, and personal preference differently.
@@ -87,6 +94,8 @@ def make_user_message(record):
         f"Precipitation: {record['precipitation']}mm"
     )
 ```
+
+In production pipelines, constrained prompts like this are usually much more reliable than open-ended prompts. The goal is not creativity -- it is consistency and predictability.
 
 ## Iterating Over Records
 
@@ -116,6 +125,8 @@ for record in records:
 
 `{**record, "conditions": label}` creates a new dictionary with all the original fields plus the new `"conditions"` key. The original `record` is not modified.
 
+Sequential API calls are fine for small datasets like this course project. At larger scales, engineers typically introduce batching, concurrency, queues, or asynchronous processing to reduce runtime.
+
 ## Handling Unexpected Responses
 
 The constrained prompt works well in practice, but models occasionally produce output that does not match the expected format -- an extra word, a sentence, a capitalization variant. In a pipeline, you do not want one unexpected response to crash the entire run. Add a validation step:
@@ -138,6 +149,8 @@ for record in records:
 
 Any response outside the expected set is recorded as `"unknown"` rather than raising an error. You can review `"unknown"` records later to see whether the prompt needs adjustment.
 
+This kind of fallback handling is an important production habit. In real pipelines, robustness is often more valuable than perfection -- especially when processing large datasets automatically.
+
 ## Writing Enriched Results Back to Blob Storage
 
 Upload the enriched records to a `processed/` path, keeping the same date folder:
@@ -148,6 +161,8 @@ payload = json.dumps(enriched).encode("utf-8")
 container.upload_blob(processed_path, payload, overwrite=True)
 print(f"Uploaded {len(payload)} bytes to {processed_path}")
 ```
+
+Notice the separation between `raw/` and `processed/` storage paths. This is another common ETL pattern: preserving original source data while writing transformed outputs separately. Keeping raw data untouched makes debugging and reprocessing much easier later.
 
 ## Spot-Checking the Results
 
@@ -162,6 +177,8 @@ print(df.head(10))
 ```
 
 If the distribution looks wildly off -- for example, everything classified as "bad" on a mild sunny day -- that is a signal the prompt needs tuning. A quick sanity check like this is cheap and often catches problems early.
+
+Spot-checking outputs is an important part of working with LLM pipelines. Even when code runs successfully, the actual classifications may still be incorrect or inconsistent, so human verification remains valuable.
 
 ## Putting It Together
 
@@ -241,4 +258,5 @@ df = pd.DataFrame(enriched)
 print("\nLabel distribution:")
 print(df["conditions"].value_counts())
 ```
+
 In Week 11, you will take this Transform script and the Week 9 Extract + Load script and wire them together into a single orchestrated Prefect flow.
