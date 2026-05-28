@@ -153,7 +153,7 @@ def simple_keyword_retrieval(query, documents, verbose=True):
 Run `simple_keyword_retrieval` with `verbose=True` on the query and documents below. Print the name of the selected document.
 
 ```python
-query = "What are your hours on the weekend?"
+query = "What are your hours on weekends?"
 
 documents = {
     "menu.txt": "We serve espresso, lattes, cappuccinos, and cold brew. Pastries include croissants and muffins baked fresh daily. Oat milk and almond milk are available.",
